@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.FL_Datatracker" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#c0392b</item>
+    </style>
+
+    <style name="Theme.CustomSplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#c0392b</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/datatracker_white</item>
+        <item name="windowSplashScreenAnimationDuration">600</item>
+        <item name="postSplashScreenTheme">@style/Theme.FL_Datatracker</item>
+    </style>
+</resources>

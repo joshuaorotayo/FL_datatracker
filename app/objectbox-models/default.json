@@ -1,0 +1,109 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1836036785919789974",
+      "lastPropertyId": "1:5907844839170191946",
+      "name": "Data",
+      "properties": [
+        {
+          "id": "1:5907844839170191946",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:4039532829865463052",
+          "name": "dataFields",
+          "targetId": "2:2862204584643486414"
+        }
+      ]
+    },
+    {
+      "id": "2:2862204584643486414",
+      "lastPropertyId": "6:7706388068492938950",
+      "name": "DataField",
+      "properties": [
+        {
+          "id": "1:10058102058590306",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7957925598385216464",
+          "name": "fieldName",
+          "type": 9
+        },
+        {
+          "id": "3:2280220941885546333",
+          "name": "niceFieldName",
+          "type": 9
+        },
+        {
+          "id": "4:7206206865051492110",
+          "name": "dataFieldType",
+          "type": 9
+        },
+        {
+          "id": "5:7945499335910962593",
+          "name": "isEnabled",
+          "type": 1
+        },
+        {
+          "id": "6:7706388068492938950",
+          "name": "dataValue",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:637254059834866532",
+      "lastPropertyId": "3:8878345351885860453",
+      "name": "Settings",
+      "properties": [
+        {
+          "id": "1:4987237186566766331",
+          "name": "Id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1699718107414633558",
+          "name": "settingName",
+          "type": 9
+        },
+        {
+          "id": "3:8878345351885860453",
+          "name": "settingValue",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:637254059834866532",
+  "lastIndexId": "0:0",
+  "lastRelationId": "2:3224160668466469051",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    380722130570794055
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    6560190555563065120,
+    5966335500367519944,
+    8960199918076695456
+  ],
+  "retiredRelationUids": [
+    3224160668466469051
+  ],
+  "version": 1
+}
