@@ -2,7 +2,7 @@ package com.jorotayo.fl_datatracker.screens.welcomeScreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph
-import androidx.compose.material.icons.filled.MeetingRoom
+import androidx.compose.material.icons.filled.DataExploration
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material.icons.filled.ToggleOn
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -13,7 +13,7 @@ sealed class OnBoardingPage(
     val description: String
 ) {
     object First : OnBoardingPage(
-        image = Icons.Default.MeetingRoom,
+        image = Icons.Default.DataExploration,
         title = "Add Data",
         description = "Click the floating action button to add new Data"
     )

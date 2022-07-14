@@ -53,7 +53,8 @@ fun WelcomeScreen(
         )
         OnBoardingComplete(
             modifier = Modifier.weight(1f),
-            viewModel = welcomeViewModel
+            viewModel = welcomeViewModel,
+            pagerState = pagerState
         )
         FinishButton(
             modifier = Modifier.weight(1f),
@@ -106,19 +107,26 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
 @ExperimentalPagerApi
 @Composable
 fun OnBoardingComplete(
-    modifier: Modifier,
-    viewModel: WelcomeViewModel
+    viewModel: WelcomeViewModel,
+    pagerState: PagerState,
+    modifier: Modifier
 ) {
-    Row(
-        modifier = modifier.padding(20.dp)
+    AnimatedVisibility(
+        modifier = Modifier.fillMaxWidth(),
+        visible = pagerState.currentPage == 3
     ) {
-        Text(text = "Don't show on next run")
-        Checkbox(
-            checked = viewModel.checkedState.value,
-            onCheckedChange = {
-                viewModel.saveOnBoardingState()
-            }
-        )
+        Row(
+            modifier = modifier.padding(20.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(text = "Don't show on next run")
+            Checkbox(
+                checked = viewModel.checkedState.value,
+                onCheckedChange = {
+                    viewModel.saveOnBoardingState()
+                }
+            )
+        }
     }
 }
 
