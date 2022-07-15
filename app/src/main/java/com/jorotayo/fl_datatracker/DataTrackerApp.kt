@@ -1,8 +1,10 @@
 package com.jorotayo.fl_datatracker
 
 import android.app.Application
-import com.jorotayo.fl_datatracker.domain.model.Settings
+import com.jorotayo.fl_datatracker.domain.model.SettingsBool
+import com.jorotayo.fl_datatracker.domain.model.SettingsBool_
 import dagger.hilt.android.HiltAndroidApp
+import io.objectbox.Box
 
 @HiltAndroidApp
 class DataTrackerApp : Application() {
@@ -15,14 +17,20 @@ class DataTrackerApp : Application() {
     }
 
     private fun defaultValues() {
-        val settingBox = ObjectBox.get().boxFor(Settings::class.java)
+        val settingBox: Box<SettingsBool> = ObjectBox.get().boxFor(SettingsBool::class.java)
+        val query =
+            settingBox.query(SettingsBool_.settingName.equal("isOnBoardingComplete")).build()
+        val isOnBoardingComplete = query.findFirst()
 
-        settingBox.put(
-            Settings(
-                Id = 0,
-                settingName = "isOnboardingComplete",
-                settingValue = "False"
+        if (isOnBoardingComplete == null) {
+            settingBox.put(
+                SettingsBool(
+                    Id = 0,
+                    settingName = "isOnBoardingComplete",
+                    settingValue = false
+                )
             )
-        )
+        }
+
     }
 }

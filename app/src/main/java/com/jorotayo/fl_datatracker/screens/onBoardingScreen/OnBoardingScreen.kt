@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.welcomeScreen
+package com.jorotayo.fl_datatracker.screens.onBoardingScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -6,6 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,10 +22,11 @@ import com.google.accompanist.pager.*
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
-fun WelcomeScreen(
+fun OnBoardingScreen(
     navController: NavHostController,
     welcomeViewModel: WelcomeViewModel = hiltViewModel()
 ) {
@@ -38,11 +41,13 @@ fun WelcomeScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
-            modifier = Modifier.weight(10f),
+            modifier = Modifier
+                .weight(10f),
             count = 4,
             state = pagerState,
-            verticalAlignment = Alignment.Top
-        ) { position ->
+            verticalAlignment = Alignment.Top,
+
+            ) { position ->
             PagerScreen(onBoardingPage = pages[position])
         }
         HorizontalPagerIndicator(
@@ -53,8 +58,8 @@ fun WelcomeScreen(
         )
         OnBoardingComplete(
             modifier = Modifier.weight(1f),
-            viewModel = welcomeViewModel,
-            pagerState = pagerState
+            pagerState = pagerState,
+            viewModel = welcomeViewModel
         )
         FinishButton(
             modifier = Modifier.weight(1f),
@@ -107,8 +112,8 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
 @ExperimentalPagerApi
 @Composable
 fun OnBoardingComplete(
-    viewModel: WelcomeViewModel,
     pagerState: PagerState,
+    viewModel: WelcomeViewModel,
     modifier: Modifier
 ) {
     AnimatedVisibility(
@@ -118,13 +123,20 @@ fun OnBoardingComplete(
         Row(
             modifier = modifier.padding(20.dp),
             horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            val checkedState = remember { mutableStateOf(false) }
             Text(text = "Don't show on next run")
             Checkbox(
-                checked = viewModel.checkedState.value,
+                checked = checkedState.value,
                 onCheckedChange = {
+                    checkedState.value = it
                     viewModel.saveOnBoardingState()
-                }
+                },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colors.primary,
+                    checkmarkColor = Color.White
+                )
             )
         }
     }

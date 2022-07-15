@@ -4,37 +4,41 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.domain.model.SettingsBool
+import com.jorotayo.fl_datatracker.domain.model.SettingsBool_
+import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.navigation.SetupNavGraph
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.viewModels.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import io.objectbox.Box
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    @Inject
-    lateinit var splashViewModel: SplashViewModel
-
 
     @kotlin.OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
-        var DataBox = ObjectBox.get().boxFor(Data::class.java)
+
+        val settingBox: Box<SettingsBool> = ObjectBox.get().boxFor(SettingsBool::class.java)
+        val query =
+            settingBox.query(SettingsBool_.settingName.equal("isOnBoardingComplete")).build()
+        val isOnBoardingComplete = query.findFirst()
+
         setContent {
             FL_DatatrackerTheme {
-
-                val screen by splashViewModel.startDestination
                 val navController = rememberNavController()
+
+                val screen = if (isOnBoardingComplete!!.settingValue) {
+                    Screen.Home.route
+                } else {
+                    Screen.OnBoarding.route
+                }
                 SetupNavGraph(navController = navController, startDestination = screen)
-                // A surface container using the 'background' color from the theme
             }
         }
     }

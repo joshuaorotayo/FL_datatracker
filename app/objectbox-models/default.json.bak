@@ -25,7 +25,7 @@
     },
     {
       "id": "2:2862204584643486414",
-      "lastPropertyId": "5:7945499335910962593",
+      "lastPropertyId": "6:7706388068492938950",
       "name": "DataField",
       "properties": [
         {
@@ -53,29 +53,10 @@
           "id": "5:7945499335910962593",
           "name": "isEnabled",
           "type": 1
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "3:380722130570794055",
-      "lastPropertyId": "3:8960199918076695456",
-      "name": "SettingField",
-      "properties": [
-        {
-          "id": "1:6560190555563065120",
-          "name": "Id",
-          "type": 6,
-          "flags": 1
         },
         {
-          "id": "2:5966335500367519944",
-          "name": "settingName",
-          "type": 9
-        },
-        {
-          "id": "3:8960199918076695456",
-          "name": "dataFieldType",
+          "id": "6:7706388068492938950",
+          "name": "dataValue",
           "type": 9
         }
       ],
@@ -83,23 +64,27 @@
     },
     {
       "id": "4:637254059834866532",
-      "lastPropertyId": "1:4987237186566766331",
+      "lastPropertyId": "3:8878345351885860453",
       "name": "Settings",
       "properties": [
         {
           "id": "1:4987237186566766331",
           "name": "Id",
           "type": 6,
-          "flags": 1
+          "flags": 129
+        },
+        {
+          "id": "2:1699718107414633558",
+          "name": "settingName",
+          "type": 9
+        },
+        {
+          "id": "3:8878345351885860453",
+          "name": "settingValue",
+          "type": 9
         }
       ],
-      "relations": [
-        {
-          "id": "2:3224160668466469051",
-          "name": "settingFields",
-          "targetId": "3:380722130570794055"
-        }
-      ]
+      "relations": []
     }
   ],
   "lastEntityId": "4:637254059834866532",
@@ -108,9 +93,17 @@
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    380722130570794055
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
-  "retiredRelationUids": [],
+  "retiredPropertyUids": [
+    6560190555563065120,
+    5966335500367519944,
+    8960199918076695456
+  ],
+  "retiredRelationUids": [
+    3224160668466469051
+  ],
   "version": 1
 }

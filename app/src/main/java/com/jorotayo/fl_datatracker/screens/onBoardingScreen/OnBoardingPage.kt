@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.welcomeScreen
+package com.jorotayo.fl_datatracker.screens.onBoardingScreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph

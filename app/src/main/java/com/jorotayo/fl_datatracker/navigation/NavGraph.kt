@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
-import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
+import com.jorotayo.fl_datatracker.screens.onBoardingScreen.OnBoardingScreen
 
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -18,10 +18,10 @@ fun SetupNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Welcome.route
+        startDestination = startDestination
     ) {
-        composable(route = Screen.Welcome.route) {
-            WelcomeScreen(navController = navController)
+        composable(route = Screen.OnBoarding.route) {
+            OnBoardingScreen(navController = navController)
         }
         composable(route = Screen.Home.route) {
             HomeScreen()
