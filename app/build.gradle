@@ -106,7 +106,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 
     // ObjectBox
-    implementation("io.objectbox:objectbox-android-objectbrowser:3.2.1")
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:3.2.1")
     releaseImplementation("io.objectbox:objectbox-android:3.2.1")
 }
 

@@ -22,7 +22,6 @@ import com.google.accompanist.pager.*
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
