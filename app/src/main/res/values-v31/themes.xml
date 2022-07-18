@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.FL_Datatracker" parent="Theme.Material3.DayNight">
-        <item name="android:statusBarColor">#c0392b</item>
-        <item name="colorPrimary">#c0392b</item>
-        <item name="colorPrimaryVariant">#F35646</item>
-        <item name="colorOnBackground">#FFFFFF</item>
-        <item name="backgroundColor">#000000</item>
-        <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnSurface">#000000</item>
-    </style>
-
     <style name="Theme.CustomSplashScreenTheme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#c0392b</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/datatracker_white</item>

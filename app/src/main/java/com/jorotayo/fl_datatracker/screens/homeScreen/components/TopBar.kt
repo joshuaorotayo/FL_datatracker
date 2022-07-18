@@ -1,5 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +13,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
@@ -20,23 +23,23 @@ import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 fun PreviewTopBar() {
     TopBar(
         viewModel = hiltViewModel(),
-        isSearchVisible = false
+        context = LocalContext.current
     )
 }
 
 @Composable
 fun TopBar(
     viewModel: HomeScreenViewModel,
-    isSearchVisible: Boolean
+    context: Context
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth(0.9f),
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {
         SimpleIconButton(
-            modifier = Modifier,
+            modifier = Modifier.weight(1f),
             icon = Icons.Default.Checklist,
             tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Menu Icon for editing the Data Fields"
@@ -45,16 +48,18 @@ fun TopBar(
         }
         Text(
             text = "FL DataTracker",
-            modifier = Modifier.fillMaxWidth(0.8f),
-            color = MaterialTheme.colors.onPrimary
+            modifier = Modifier.weight(8f),
+            color = MaterialTheme.colors.onPrimary,
+            style = MaterialTheme.typography.h5
         )
         SimpleIconButton(
-            modifier = Modifier,
+            modifier = Modifier.weight(1f),
             icon = Icons.Default.Search,
             tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Search Icon to toggle Search Bar and search for Data"
         ) {
-            viewModel.onEvent(HomeScreenEvent.ToggleSearchBar(!isSearchVisible))
+            viewModel.onEvent(HomeScreenEvent.ToggleSearchBarShow)
+            Toast.makeText(context, "Showing toast....", Toast.LENGTH_SHORT).show()
         }
     }
 }

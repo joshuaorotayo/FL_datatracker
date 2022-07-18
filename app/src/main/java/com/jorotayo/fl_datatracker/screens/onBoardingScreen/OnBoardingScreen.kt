@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
 import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.screens.onBoardingScreen.components.OnBoardingPage
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 
 @ExperimentalAnimationApi
@@ -45,8 +46,8 @@ fun OnBoardingScreen(
             count = 4,
             state = pagerState,
             verticalAlignment = Alignment.Top,
-
-            ) { position ->
+        )
+        { position ->
             PagerScreen(onBoardingPage = pages[position])
         }
         HorizontalPagerIndicator(

@@ -25,7 +25,10 @@ fun SetupNavGraph(
             OnBoardingScreen(navController = navController)
         }
         composable(route = Screen.Home.route) {
-            HomeScreen(viewModel = HomeScreenViewModel())
+            HomeScreen(
+                viewModel = HomeScreenViewModel(),
+                navController = navController
+            )
         }
     }
 }

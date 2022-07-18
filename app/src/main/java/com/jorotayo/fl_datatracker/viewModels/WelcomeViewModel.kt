@@ -24,7 +24,6 @@ class WelcomeViewModel @Inject constructor(
         settingBox.query(SettingsBool_.settingName.equal("isOnBoardingComplete")).build()
     private val isOnBoardingComplete = query.findFirst()
 
-
     /***
      * @param checkedState Value returned from the checkbox in the landing page section
      */
@@ -43,5 +42,4 @@ class WelcomeViewModel @Inject constructor(
             settingBox.put(isOnBoardingComplete)
         }
     }
-
 }
