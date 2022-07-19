@@ -27,10 +27,6 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen()
 
-        /*.setKeepOnScreenCondition{
-        !splashViewModel.isLoading.value
-    }*/
-
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination

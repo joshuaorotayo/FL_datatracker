@@ -39,7 +39,8 @@ fun TopBar(
         Alignment.CenterVertically
     ) {
         SimpleIconButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f),
             icon = Icons.Default.Checklist,
             tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Menu Icon for editing the Data Fields"
@@ -48,12 +49,13 @@ fun TopBar(
         }
         Text(
             text = "FL DataTracker",
-            modifier = Modifier.weight(8f),
+            modifier = Modifier.weight(10f),
             color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.h5
         )
         SimpleIconButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f),
             icon = Icons.Default.Search,
             tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Search Icon to toggle Search Bar and search for Data"

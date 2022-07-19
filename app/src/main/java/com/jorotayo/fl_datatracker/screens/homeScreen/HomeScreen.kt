@@ -1,5 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,8 +13,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchVisible
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
@@ -21,7 +21,7 @@ import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    navController: NavHostController
+    context: Context
 ) {
     val scaffoldState = rememberScaffoldState()
 
@@ -29,20 +29,14 @@ fun HomeScreen(
 
     val searchFieldState = viewModel.searchFieldState.value
 
-    /* BottomSheetScaffold(
-         sheetPeekHeight = 10.dp,
-         sheetBackgroundColor = Color.White,
-         sheetElevation = 0.dp,
-         sheetShape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp),
-         sheetContent = {
-         }
-     ) {*/
+    val itemCount = viewModel.dataItems.value
+
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    Toast.makeText(context, "Showing toast....", Toast.LENGTH_SHORT).show()
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -62,12 +56,13 @@ fun HomeScreen(
                 .background(MaterialTheme.colors.primary)
 
         ) {
+            // Top Bar/Search Bar Area
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp, start = 10.dp, end = 10.dp)
-            ) {
-
+                    .padding(top = 32.dp, start = 10.dp)
+            )
+            {
                 if (searchBarState.isSearchVisible == SearchVisible.SearchBarHidden) {
                     TopBar(
                         viewModel = viewModel,
@@ -80,14 +75,27 @@ fun HomeScreen(
                     )
                 }
             }
+            // Item Count Area
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp, start = 20.dp)
+            )
+            {
+                Text(
+                    "$itemCount items showing",
+                    style = MaterialTheme.typography.h5
+                )
+            }
         }
     }
-
 }
 
 @Composable
 @Preview(showBackground = false)
 fun HomeScreenPreview() {
-    val navController = rememberNavController()
-    HomeScreen(viewModel = hiltViewModel(), navController = navController)
+    HomeScreen(
+        viewModel = hiltViewModel(),
+        context = LocalContext.current
+    )
 }

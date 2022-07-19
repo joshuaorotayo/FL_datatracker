@@ -21,6 +21,9 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
     private val _searchBarState = mutableStateOf(SearchBarState())
     val searchBarState: State<SearchBarState> = _searchBarState
 
+    private val _dataItems = mutableStateOf(6) // data items Value
+    val dataItems: State<Int> = _dataItems
+
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
             is HomeScreenEvent.ResetSearchBar -> {
@@ -50,6 +53,7 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
                 )
             }
             is HomeScreenEvent.ToggleSearchBar -> TODO()
+            HomeScreenEvent.EditDataItem -> TODO()
         }
     }
 }
