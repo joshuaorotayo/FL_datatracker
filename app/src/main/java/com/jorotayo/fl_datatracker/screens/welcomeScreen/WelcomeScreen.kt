@@ -153,45 +153,6 @@ fun OnBoardingScreen(
     }
 }
 
-/*
-@Composable
-fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.primary),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.7f),
-            imageVector = onBoardingPage.image,
-            contentDescription = "Pager Image",
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-        )
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = onBoardingPage.title,
-            fontSize = MaterialTheme.typography.h4.fontSize,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .padding(top = 20.dp),
-            text = onBoardingPage.description,
-            fontSize = MaterialTheme.typography.subtitle1.fontSize,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center
-        )
-    }
-}*/
-
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
@@ -262,7 +223,6 @@ fun FinishButton(
 }
 
 //Previews
-
 @Composable
 @Preview(showBackground = true)
 fun PreviewOnBoardingScreen() {
