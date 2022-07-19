@@ -1,7 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -13,6 +11,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchVisible
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
@@ -21,7 +22,7 @@ import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    context: Context
+    navController: NavController
 ) {
     val scaffoldState = rememberScaffoldState()
 
@@ -36,7 +37,8 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Toast.makeText(context, "Showing toast....", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.DataEntry.route)
+                    //Toast.makeText(context, "Showing toast....", Toast.LENGTH_SHORT).show()
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -84,7 +86,8 @@ fun HomeScreen(
             {
                 Text(
                     "$itemCount items showing",
-                    style = MaterialTheme.typography.h5
+                    style = MaterialTheme.typography.h5,
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
         }
@@ -96,6 +99,6 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     HomeScreen(
         viewModel = hiltViewModel(),
-        context = LocalContext.current
+        navController = rememberNavController()
     )
 }

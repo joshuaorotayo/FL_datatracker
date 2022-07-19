@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.homeScreen.components.formElements
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -6,10 +6,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,14 +22,17 @@ import androidx.compose.ui.unit.dp
 @Preview
 @Composable
 fun PreviewFormShortTextRow() {
-    FormShortTextRow()
+    FormShortTextRow(rowHint = "Row Hint")
 }
 
 @Composable
-fun FormShortTextRow() {
-    val maxChar = 30
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun FormShortTextRow(
+    rowHint: String?
+) {
+    val maxChar = 50
+    var (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
+    val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier.wrapContentSize(),
         contentAlignment = Alignment.Center
@@ -51,17 +58,18 @@ fun FormShortTextRow() {
             ) {
                 TextField(
                     modifier = Modifier
-                        .weight(0.5f)
+                        .weight(1f, fill = false)
                         .background(MaterialTheme.colors.onPrimary)
                         .padding(0.dp),
                     value = text,
                     onValueChange = {
-                        if (text.text.length <= maxChar) text = it
+                        //if (text.text.length <= maxChar) text = it
+                            newText ->
+                        setText(newText.ofMaxLength(maxLength = maxChar))
                     },
-                    singleLine = true,
                     placeholder = {
                         Text(
-                            text = "placeholder text",
+                            text = rowHint ?: "placeholder text",
                             textAlign = TextAlign.Center
                         )
                     },
@@ -82,5 +90,29 @@ fun FormShortTextRow() {
         }
     }
 
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(10.dp)
+    )
+}
 
+fun TextFieldValue.ofMaxLength(maxLength: Int): TextFieldValue {
+    val overLength = text.length - maxLength
+    return if (overLength > 0) {
+        val headIndex = selection.end - overLength
+        val trailIndex = selection.end
+        // Under normal conditions, headIndex >= 0
+        if (headIndex >= 0) {
+            copy(
+                text = text.substring(0, headIndex) + text.substring(trailIndex, text.length),
+                selection = TextRange(headIndex)
+            )
+        } else {
+            // exceptional
+            copy(text.take(maxLength), selection = TextRange(maxLength))
+        }
+    } else {
+        this
+    }
 }

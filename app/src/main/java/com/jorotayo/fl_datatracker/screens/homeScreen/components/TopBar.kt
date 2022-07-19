@@ -2,9 +2,7 @@ package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -15,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
@@ -34,12 +33,14 @@ fun TopBar(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(0.9f),
+            .padding(horizontal = 10.dp)
+            .fillMaxWidth(),
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {
         SimpleIconButton(
             modifier = Modifier
+                .size(36.dp)
                 .weight(1f),
             icon = Icons.Default.Checklist,
             tint = MaterialTheme.colors.onPrimary,
@@ -49,12 +50,15 @@ fun TopBar(
         }
         Text(
             text = "FL DataTracker",
-            modifier = Modifier.weight(10f),
+            modifier = Modifier
+                .padding(start = 20.dp)
+                .weight(10f),
             color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.h5
         )
         SimpleIconButton(
             modifier = Modifier
+                .size(36.dp)
                 .weight(1f),
             icon = Icons.Default.Search,
             tint = MaterialTheme.colors.onPrimary,

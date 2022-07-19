@@ -4,11 +4,18 @@
     <style name="Theme.FL_Datatracker" parent="Theme.Material3.DayNight">
         <item name="android:statusBarColor">#c0392b</item>
         <item name="colorPrimary">#c0392b</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorPrimaryVariant">#F35646</item>
         <item name="colorOnBackground">#FFFFFF</item>
         <item name="backgroundColor">#000000</item>
         <item name="colorSurface">#FFFFFF</item>
         <item name="colorOnSurface">#000000</item>
+    </style>
+
+    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+
+        <item name="colorPrimary">#c0392b</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
     </style>
 
     <style name="Theme.CustomSplashScreenTheme" parent="Theme.SplashScreen">

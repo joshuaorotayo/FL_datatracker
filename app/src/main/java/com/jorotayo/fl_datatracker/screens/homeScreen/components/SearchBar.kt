@@ -1,9 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,17 +31,25 @@ fun SearchBar(
     AnimatedVisibility(visible = true) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(0.9f),
+                .height(intrinsicSize = IntrinsicSize.Min)
+                .padding(horizontal = 10.dp)
+                .fillMaxWidth(),
         ) {
             OutlinedTextField(
                 modifier = Modifier
                     .weight(10f)
                     .offset(y = (-8).dp),
-                textStyle = MaterialTheme.typography.h5,
+                textStyle = MaterialTheme.typography.h6,
                 value = searchFieldState.text,
                 maxLines = 1,
                 label = {
-                    Text(searchFieldState.hint)
+                    Text(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .fillMaxHeight(),
+                        text = searchFieldState.hint,
+                        style = MaterialTheme.typography.h6
+                    )
                 },
                 onValueChange = {
                     viewModel.onEvent(HomeScreenEvent.SearchItemEntered(it))
@@ -64,6 +70,7 @@ fun SearchBar(
                     ) {
                         Icon(
                             modifier = Modifier
+                                .size(36.dp)
                                 .weight(1f),
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Close Search View",
@@ -78,6 +85,7 @@ fun SearchBar(
                     }) {
                         Icon(
                             modifier = Modifier
+                                .size(36.dp)
                                 .weight(1f),
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Clear Search View",

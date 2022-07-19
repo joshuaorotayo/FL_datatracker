@@ -1,0 +1,188 @@
+<html>
+<head>
+    <title>FormDateRow.kt</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+
+
+
+
+    </style>
+</head>
+<body bgcolor="#2b2b2b">
+<table BGCOLOR="#606060" CELLPADDING=5 CELLSPACING=0 COLS=1 WIDTH="100%">
+    <tr>
+        <td>
+            <center>
+                <font color="#000000" face="Arial, Helvetica">
+                    FormDateRow.kt</font>
+            </center>
+        </td>
+    </tr>
+</table>
+<pre><span class="s0">package </span><span class="s1">com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements</span>
+
+<span class="s1">import android.app.DatePickerDialog</span>
+<span class="s1">import android.widget.DatePicker</span>
+<span class="s1">import androidx.compose.foundation.background</span>
+<span class="s1">import androidx.compose.foundation.layout.*</span>
+<span class="s1">import androidx.compose.material.*</span>
+<span class="s1">import androidx.compose.material.icons.Icons</span>
+<span class="s1">import androidx.compose.material.icons.filled.EditCalendar</span>
+<span class="s1">import androidx.compose.runtime.*</span>
+<span class="s1">import androidx.compose.ui.Alignment</span>
+<span class="s1">import androidx.compose.ui.Modifier</span>
+<span class="s1">import androidx.compose.ui.draw.shadow</span>
+<span class="s1">import androidx.compose.ui.platform.LocalContext</span>
+<span class="s1">import androidx.compose.ui.text.style.TextAlign</span>
+<span class="s1">import androidx.compose.ui.tooling.preview.Preview</span>
+<span class="s1">import androidx.compose.ui.unit.dp</span>
+<span class="s1">import androidx.compose.ui.unit.sp</span>
+<span class="s1">import java.text.DateFormat</span>
+<span class="s1">import java.util.*</span>
+
+<span class="s1">@Preview</span>
+<span class="s1">@Composable</span>
+<span class="s0">fun </span><span class="s1">PreviewFormDateRow() {</span>
+    <span class="s1">FormDateRow()</span>
+<span class="s1">}</span>
+
+<span class="s1">@Composable</span>
+<span class="s0">fun </span><span class="s1">FormDateRow() {</span>
+    <span class="s0">var </span><span class="s1">text by remember { mutableStateOf(</span><span
+            class="s2">&quot;&quot;</span><span class="s1">) }</span>
+
+    <span class="s3">// Fetching the Local Context</span>
+    <span class="s0">val </span><span class="s1">mContext = LocalContext.current</span>
+
+    <span class="s3">// Declaring integer values</span>
+    <span class="s3">// for year, month and day</span>
+    <span class="s0">val </span><span class="s1">mYear: Int</span>
+    <span class="s0">val </span><span class="s1">mMonth: Int</span>
+    <span class="s0">val </span><span class="s1">mDay: Int</span>
+
+    <span class="s3">// Initializing a Calendar</span>
+    <span class="s0">val </span><span class="s1">mCalendar = Calendar.getInstance()</span>
+
+    <span class="s0">val </span><span class="s1">formatDate: Calendar = Calendar.getInstance( Locale.getDefault(Locale.Category.FORMAT))</span>
+
+
+    <span class="s3">// Fetching current year, month and day</span>
+    <span class="s1">mYear = mCalendar.get(Calendar.YEAR)</span>
+    <span class="s1">mMonth = mCalendar.get(Calendar.MONTH)</span>
+    <span class="s1">mDay = mCalendar.get(Calendar.DAY_OF_MONTH)</span>
+
+    <span class="s1">mCalendar.time = Date()</span>
+
+    <span class="s3">// Declaring a string value to</span>
+    <span class="s3">// store date in string format</span>
+    <span class="s0">val </span><span class="s1">mDate = remember { mutableStateOf(</span><span
+            class="s2">&quot;&quot;</span><span class="s1">) }</span>
+    
+    <span class="s0">val </span><span class="s1">random = formatDate.get(mMonth)</span>
+
+    <span class="s0">val </span><span class="s1">date: Date</span>
+    <span class="s3">// Declaring DatePickerDialog and setting</span>
+    <span class="s3">// initial values as current values (present year, month and day)</span>
+    <span class="s0">val </span><span class="s1">mDatePickerDialog = DatePickerDialog(</span>
+        <span class="s1">mContext</span><span class="s0">,</span>
+        <span class="s1">{ _: DatePicker</span><span class="s0">, </span><span
+            class="s1">mYear: Int</span><span class="s0">, </span><span
+            class="s1">mMonth: Int</span><span class="s0">, </span><span class="s1">mDayOfMonth: Int -&gt;</span>
+            <span class="s1">mDate.value = </span><span class="s2">&quot;</span><span
+            class="s0">$</span><span class="s1">mDayOfMonth </span><span class="s0">${</span><span
+            class="s1">mMonth + </span><span class="s4">1</span><span class="s0">}</span><span
+            class="s2">, </span><span class="s0">$</span><span class="s1">mYear</span><span
+            class="s2">&quot;</span>
+        <span class="s1">}</span><span class="s0">, </span><span class="s1">mYear</span><span
+            class="s0">, </span><span class="s1">mMonth</span><span class="s0">, </span><span
+            class="s1">mDay</span>
+
+    <span class="s1">)</span>
+
+
+
+    <span class="s1">Box(</span>
+        <span class="s1">modifier = Modifier.wrapContentSize()</span><span class="s0">,</span>
+        <span class="s1">contentAlignment = Alignment.Center</span>
+    <span class="s1">) {</span>
+        <span class="s1">Row(</span>
+            <span class="s1">modifier = Modifier</span>
+                <span class="s1">.fillMaxWidth()</span>
+                <span class="s1">.height(IntrinsicSize.Min)</span>
+                <span class="s1">.shadow(elevation = </span><span class="s4">4</span><span
+            class="s1">.dp)</span>
+                <span class="s1">.background(MaterialTheme.colors.primary)</span><span
+            class="s0">,</span>
+            <span class="s1">verticalAlignment = Alignment.CenterVertically</span>
+        <span class="s1">) {</span>
+            <span class="s1">Text(</span>
+                <span class="s1">modifier = Modifier</span>
+                    <span class="s1">.fillMaxWidth(</span><span class="s4">0.5f</span><span
+            class="s1">)</span><span class="s0">,</span>
+                <span class="s1">text = </span><span class="s2">&quot;TEST&quot;</span><span
+            class="s0">,</span>
+                <span class="s1">textAlign = TextAlign.Center</span><span class="s0">,</span>
+                <span class="s1">color = MaterialTheme.colors.onPrimary</span>
+            <span class="s1">)</span>
+            <span class="s1">Column(</span>
+                <span class="s1">modifier = Modifier</span>
+                    <span class="s1">.shadow(elevation = ((-</span><span class="s4">4</span><span
+            class="s1">).dp))</span>
+            <span class="s1">) {</span>
+
+                <span class="s1">TextField(</span>
+                    <span class="s1">modifier = Modifier</span>
+                        <span class="s1">.fillMaxSize()</span>
+                        <span class="s1">.background(MaterialTheme.colors.onPrimary)</span>
+                        <span class="s1">.padding(</span><span class="s4">0</span><span class="s1">.dp)</span><span
+            class="s0">,</span>
+                    <span class="s1">value = mDate.value</span><span class="s0">,</span>
+                    <span class="s1">onValueChange = {</span>
+                        <span class="s1">mDate.value = it</span>
+                    <span class="s1">}</span><span class="s0">,</span>
+                    <span class="s3">//editable = false,</span>
+                    <span class="s1">singleLine = </span><span class="s0">true,</span>
+                    <span class="s1">placeholder = {</span>
+                        <span class="s1">Text(</span>
+                            <span class="s1">text = </span><span class="s2">&quot;DD, Month, Year&quot;</span><span
+            class="s0">,</span>
+                            <span class="s1">textAlign = TextAlign.Center</span><span
+            class="s0">,</span>
+                            <span class="s1">fontSize = </span><span class="s4">16</span><span
+            class="s1">.sp</span>
+                        <span class="s1">)</span>
+                    <span class="s1">}</span><span class="s0">,</span>
+                    <span class="s1">colors = TextFieldDefaults.textFieldColors(</span>
+                        <span class="s1">backgroundColor = MaterialTheme.colors.onPrimary</span>
+                    <span class="s1">)</span><span class="s0">,</span>
+                    <span class="s1">trailingIcon = {</span>
+                        <span class="s1">IconButton(</span>
+                            <span class="s1">onClick = {</span>
+                                <span class="s1">mDatePickerDialog.show()</span>
+                            <span class="s1">}</span><span class="s0">,</span>
+                        <span class="s1">)</span>
+                        <span class="s1">{</span>
+                            <span class="s1">Icon(</span>
+                                <span class="s1">modifier = Modifier</span><span class="s0">,</span>
+                                <span class="s1">imageVector = Icons.Default.EditCalendar</span><span
+            class="s0">,</span>
+                                <span class="s1">contentDescription = </span><span class="s2">&quot;Select a Date&quot;</span><span
+            class="s0">,</span>
+                                <span class="s1">tint = MaterialTheme.colors.primary</span>
+                            <span class="s1">)</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">)</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

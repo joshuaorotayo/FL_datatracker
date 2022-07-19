@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -7,7 +8,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette2 = darkColors(
     primary = Color(66, 66, 66, 255),
     onPrimary = Color.White,
     primaryVariant = Color(37, 37, 37, 255),
@@ -17,6 +18,20 @@ private val DarkColorPalette = darkColors(
     onSurface = Color.Black,
     secondary = Teal200,
     onSecondary = Color.Black,
+)
+
+@SuppressLint("ConflictingOnColor")
+private val DarkColorPalette = darkColors(
+    primary = Color.Black,
+    onPrimary = Color(192, 57, 43, 255),
+    primaryVariant = Color(243, 86, 70, 255),
+    onBackground = Color(192, 57, 43, 255),
+    background = Color.Black,
+    surface = Color.Black,
+    onSurface = Color.White,
+
+    /* Other default colors to override
+    */
 )
 
 private val LightColorPalette = lightColors(

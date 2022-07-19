@@ -4,13 +4,13 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
-import com.jorotayo.fl_datatracker.screens.welcomeScreen.OnBoardingScreen
+import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
@@ -22,9 +22,6 @@ fun SetupNavGraph(
     navController: NavHostController,
     startDestination: String
 ) {
-    val context = LocalContext.current
-
-
     val pages = ArrayList<WelcomeScreenData>()
     pages.add(
         WelcomeScreenData(
@@ -71,7 +68,7 @@ fun SetupNavGraph(
         startDestination = startDestination
     ) {
         composable(route = Screen.Welcome.route) {
-            OnBoardingScreen(
+            WelcomeScreen(
                 navController = navController,
                 viewModel = WelcomeViewModel(),
                 pages = pages
@@ -80,8 +77,11 @@ fun SetupNavGraph(
         composable(route = Screen.Home.route) {
             HomeScreen(
                 viewModel = HomeScreenViewModel(),
-                context = context,
+                navController = navController
             )
+        }
+        composable(route = Screen.DataEntry.route) {
+            DataEntryScreen()
         }
     }
 

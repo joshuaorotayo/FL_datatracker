@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
-fun OnBoardingScreen(
+fun WelcomeScreen(
     navController: NavHostController,
     viewModel: WelcomeViewModel,
     pages: List<WelcomeScreenData>
