@@ -50,6 +50,7 @@ fun FormRadioRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
                 .shadow(elevation = 4.dp)
                 .background(MaterialTheme.colors.primary),
             verticalAlignment = Alignment.CenterVertically
@@ -78,7 +79,7 @@ fun FormRadioRow(
                     options.forEach { text ->
                         Text(
                             text = text,
-                            style = MaterialTheme.typography.body1.merge(),
+                            style = MaterialTheme.typography.body1,
                             color = Color.White,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
@@ -88,7 +89,7 @@ fun FormRadioRow(
                                 }
                                 .background(
                                     if (text == selectedOption) {
-                                        MaterialTheme.colors.onSurface
+                                        MaterialTheme.colors.primaryVariant
                                     } else {
                                         MaterialTheme.colors.primary
                                     }

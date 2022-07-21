@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +40,7 @@ fun FormCountRow() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
+                .clip(shape = RoundedCornerShape(10.dp))
                 .shadow(elevation = 4.dp)
                 .background(MaterialTheme.colors.primary),
             verticalAlignment = Alignment.CenterVertically

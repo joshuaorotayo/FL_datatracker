@@ -2,20 +2,20 @@
 <resources>
 
     <style name="Theme.FL_Datatracker" parent="Theme.Material3.DayNight">
-        <item name="android:statusBarColor">#c0392b</item>
-        <item name="colorPrimary">#c0392b</item>
+        <item name="android:statusBarColor">#890001</item>
+        <item name="colorPrimary">#890001</item>
         <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorPrimaryVariant">#890001</item>
+        <item name="colorPrimaryVariant">#c0392b</item>
         <item name="colorOnBackground">#FFFFFF</item>
         <item name="backgroundColor">#000000</item>
         <item name="colorSurface">#FFFFFF</item>
         <item name="colorOnSurface">#000000</item>
-        <item name="android:datePickerDialogTheme">@style/DatePickerTheme</item>
-        <item name="android:timePickerDialogTheme">@style/TimePickerTheme</item>
+        <item name="android:datePickerDialogTheme">@style/DatePickerThemeDayNight</item>
+        <item name="android:timePickerDialogTheme">@style/TimePickerThemeDayNight</item>
     </style>
 
     <style name="Theme.CustomSplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#c0392b</item>
+        <item name="windowSplashScreenBackground">#890001</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/datatracker_white</item>
         <item name="android:windowSplashScreenBrandingImage">@drawable/datatracker_branding_image
         </item>

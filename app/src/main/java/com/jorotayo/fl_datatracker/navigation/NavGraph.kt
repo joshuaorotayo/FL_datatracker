@@ -83,6 +83,9 @@ fun SetupNavGraph(
         composable(route = Screen.DataEntry.route) {
             DataEntryScreen()
         }
+        composable(route = Screen.DataEntry.route) {
+            DataEntryScreen()
+        }
     }
 
 }

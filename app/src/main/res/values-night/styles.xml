@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DatePickerThemeDayNight" parent="@style/Theme.AppCompat.Dialog.Alert">
+        <item name="android:colorAccent">#890001</item>
+        <item name="colorAccent">#890001</item>
+    </style>
+
+    <style name="TimePickerThemeDayNight" parent="@style/Theme.AppCompat.Dialog.Alert">
+        <item name="android:colorAccent">#890001</item>
+        <item name="colorAccent">#890001</item>
+    </style>
+
+</resources>

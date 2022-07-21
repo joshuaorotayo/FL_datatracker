@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -11,7 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -40,7 +43,8 @@ fun FormShortTextRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min)
+                .wrapContentHeight()
+                .clip(shape = RoundedCornerShape(10.dp))
                 .shadow(elevation = 4.dp)
                 .background(MaterialTheme.colors.primary),
             verticalAlignment = Alignment.CenterVertically
@@ -52,40 +56,46 @@ fun FormShortTextRow(
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onPrimary
             )
-            Column(
+            Row(
                 modifier = Modifier
-                    .shadow(elevation = ((-4).dp))
+                    .fillMaxWidth(1f)
+                    .wrapContentHeight()
+                    .background(MaterialTheme.colors.onPrimary),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextField(
                     modifier = Modifier
                         .weight(1f, fill = false)
                         .background(MaterialTheme.colors.onPrimary)
                         .padding(0.dp),
-                    value = text,
-                    onValueChange = {
+                    value = text, onValueChange = {
                         //if (text.text.length <= maxChar) text = it
                             newText ->
                         setText(newText.ofMaxLength(maxLength = maxChar))
                     },
+                    colors = TextFieldDefaults.textFieldColors(
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        backgroundColor = MaterialTheme.colors.onPrimary
+                    ),
                     placeholder = {
                         Text(
                             text = rowHint ?: "placeholder text",
+                            color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
                             textAlign = TextAlign.Center
                         )
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.onPrimary
-                    )
+                    }
                 )
-                Text(
-                    text = "${text.text.length} / $maxChar",
-                    textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.caption,
-                    color = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.onPrimary)
-                )
+                /*  Text(
+                      text = "${text.text.length} / $maxChar",
+                      textAlign = TextAlign.End,
+                      style = MaterialTheme.typography.caption,
+                      color = MaterialTheme.colors.primary,
+                      modifier = Modifier
+                          .fillMaxWidth()
+                          .background(MaterialTheme.colors.onPrimary)
+                  )*/
             }
         }
     }

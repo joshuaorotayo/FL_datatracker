@@ -8,43 +8,61 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorPalette2 = darkColors(
-    primary = Color(66, 66, 66, 255),
-    onPrimary = Color.White,
-    primaryVariant = Color(37, 37, 37, 255),
-    background = Color(66, 66, 66, 255),
-    onBackground = Color.White,
-    surface = Color.White,
-    onSurface = Color.Black,
-    secondary = Teal200,
-    onSecondary = Color.Black,
-)
-
-@SuppressLint("ConflictingOnColor")
+/*@SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = Color.Black,
-    onPrimary = Color(192, 57, 43, 255),
-    primaryVariant = Color(243, 86, 70, 255),
-    onBackground = Color(192, 57, 43, 255),
-    background = Color.Black,
-    surface = Color.Black,
-    onSurface = Color.White,
+    primary = primaryDarkRed,
+    onPrimary = Color.White,
+    primaryVariant = primaryLightRed,
+    background = Color.DarkGray,
+    onBackground = Color.LightGray,
+    surface = Color.DarkGray,
+    onSurface = Color.Gray.copy(alpha = 0.5f),
 
-    /* Other default colors to override
-    */
+    *//* Other default colors to override
+    *//*
 )
 
 private val LightColorPalette = lightColors(
-    primary = Color(192, 57, 43, 255),
+    primary = primaryLightRed,
     onPrimary = Color.White,
-    primaryVariant = Color(243, 86, 70, 255),
-    background = Color(192, 57, 43, 255),
+    primaryVariant = primaryDarkRed,
+    background = primaryLightRed,
     onBackground = Color.White,
     surface = Color.White,
     onSurface = Color.Black,
 
-    /* Other default colors to override
+    *//* Other default colors to override
+    *//*
+)*/
+
+
+@SuppressLint("ConflictingOnColor")
+private val DarkColorPalette = darkColors(
+    primary = primaryDarkRed,
+    onPrimary = Color.White,
+    primaryVariant = primaryLightRed,
+    background = primaryDarkRed,
+    onBackground = Color.White,
+    surface = Color.White,
+    onSurface = Color.Black,
+/*
+ Other default colors to override*/
+
+
+)
+
+private val LightColorPalette = lightColors(
+    primary = primaryLightRed,
+    onPrimary = Color.White,
+    primaryVariant = primaryDarkRed,
+    background = primaryLightRed,
+    onBackground = Color.White,
+    surface = Color.White,
+    onSurface = Color.Black,
+/*
+ Other default colors to override
     */
+
 )
 
 @Composable

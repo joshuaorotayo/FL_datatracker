@@ -34,13 +34,16 @@ fun HomeScreen(
 
     Scaffold(
         scaffoldState = scaffoldState,
+        bottomBar = {
+
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     navController.navigate(Screen.DataEntry.route)
                     //Toast.makeText(context, "Showing toast....", Toast.LENGTH_SHORT).show()
                 },
-                backgroundColor = MaterialTheme.colors.primary
+                backgroundColor = MaterialTheme.colors.primaryVariant
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,

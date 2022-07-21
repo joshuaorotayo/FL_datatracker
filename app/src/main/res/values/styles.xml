@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DatePickerTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">#c0392b</item>
+        <item name="colorAccent">#c0392b</item>
+    </style>
+
+    <style name="TimePickerTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">#c0392b</item>
+        <item name="colorAccent">#c0392b</item>
+    </style>
+
+</resources>

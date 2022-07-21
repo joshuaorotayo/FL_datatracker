@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataEntryScreen
+package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,17 +19,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
-import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewDataEntryScreen() {
-    DataEntryScreen()
+fun PreviewDataFieldsScreen() {
+    DataFieldsScreen()
 }
 
 @Composable
-fun DataEntryScreen(
+fun DataFieldsScreen(
 ) {
     val meetingName by remember { mutableStateOf("Fill in the information below:") }
     Column(
@@ -67,13 +65,6 @@ fun DataEntryScreen(
                     )
                 }
 
-                FormDateRow(
-                    viewModel = DataEntryScreenViewModel()
-                )
-                FormCountRow()
-                FormRadioRow(options = listOf("No", "N/A", "Yes"))
-                FormShortTextRow(rowHint = "Short String Hint")
-                FormTimeRow()
             }
         }
     }
