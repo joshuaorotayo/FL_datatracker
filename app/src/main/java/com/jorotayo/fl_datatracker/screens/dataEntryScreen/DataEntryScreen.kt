@@ -44,7 +44,7 @@ fun DataEntryScreen(
                 .fillMaxHeight()
                 .padding(vertical = 20.dp, horizontal = 8.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colors.primaryVariant)
+                .background(MaterialTheme.colors.primaryVariant.copy(alpha = 0.3f))
         )
         {
             // Contents of data entry form
@@ -61,7 +61,7 @@ fun DataEntryScreen(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = meetingName,
-                        color = MaterialTheme.colors.onPrimary,
+                        color = MaterialTheme.colors.surface,
                         style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )

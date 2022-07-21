@@ -9,9 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
+import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 
@@ -74,7 +76,7 @@ fun SetupNavGraph(
                 pages = pages
             )
         }
-        composable(route = Screen.Home.route) {
+        composable(route = Screen.HomeScreen.route) {
             HomeScreen(
                 viewModel = HomeScreenViewModel(),
                 navController = navController
@@ -83,8 +85,11 @@ fun SetupNavGraph(
         composable(route = Screen.DataEntry.route) {
             DataEntryScreen()
         }
-        composable(route = Screen.DataEntry.route) {
-            DataEntryScreen()
+        composable(route = Screen.DataFieldsScreen.route) {
+            DataFieldsScreen(
+                navController = navController,
+                viewModel = DataFieldsViewModel()
+            )
         }
     }
 

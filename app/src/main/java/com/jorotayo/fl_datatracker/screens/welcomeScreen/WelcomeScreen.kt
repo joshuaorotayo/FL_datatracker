@@ -145,7 +145,7 @@ fun WelcomeScreen(
                         lastIndex = pages.lastIndex
                     ) {
                         navController.popBackStack()
-                        navController.navigate(Screen.Home.route)
+                        navController.navigate(Screen.HomeScreen.route)
                     }
                 }
             }

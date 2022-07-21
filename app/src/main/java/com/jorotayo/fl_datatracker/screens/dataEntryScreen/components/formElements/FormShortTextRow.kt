@@ -87,7 +87,9 @@ fun FormShortTextRow(
                         )
                     }
                 )
-                /*  Text(
+                /* //Max Chars count
+
+                  Text(
                       text = "${text.text.length} / $maxChar",
                       textAlign = TextAlign.End,
                       style = MaterialTheme.typography.caption,

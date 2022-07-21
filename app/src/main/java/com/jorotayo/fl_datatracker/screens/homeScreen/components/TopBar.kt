@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,20 +37,9 @@ fun TopBar(
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {
-        SimpleIconButton(
-            modifier = Modifier
-                .size(36.dp)
-                .weight(1f),
-            icon = Icons.Default.Checklist,
-            tint = MaterialTheme.colors.onPrimary,
-            contentDescription = "Menu Icon for editing the Data Fields"
-        ) {
-            //On Click method
-        }
         Text(
             text = "FL DataTracker",
             modifier = Modifier
-                .padding(start = 20.dp)
                 .weight(10f),
             color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.h5
