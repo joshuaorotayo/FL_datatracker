@@ -5,7 +5,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.TableRows
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.TableRows
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(
@@ -28,6 +27,6 @@ sealed class Screen(
         "data_fields_screen",
         "Add/Edit or remove Data Fields Screen",
         selectedIcon = Icons.Filled.TableRows,
-        unselectedIcon = Icons.Outlined.TableRows
+        unselectedIcon = Icons.Filled.TableRows
     )
 }

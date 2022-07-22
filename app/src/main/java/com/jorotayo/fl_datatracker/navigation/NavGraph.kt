@@ -13,6 +13,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
+import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
@@ -83,7 +84,10 @@ fun SetupNavGraph(
             )
         }
         composable(route = Screen.DataEntry.route) {
-            DataEntryScreen()
+            DataEntryScreen(
+                viewModel = DataEntryScreenViewModel(),
+                navController = navController
+            )
         }
         composable(route = Screen.DataFieldsScreen.route) {
             DataFieldsScreen(

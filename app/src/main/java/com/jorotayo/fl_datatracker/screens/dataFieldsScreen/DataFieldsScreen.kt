@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.runtime.Composable
@@ -49,7 +46,7 @@ fun DataFieldsScreen(
         Screen.DataFieldsScreen,
         Screen.HomeScreen,
     )
-    val meetingName by remember { mutableStateOf("Fill in the information below:") }
+    val headingMessage by remember { mutableStateOf("Add/Edit Data Fields:") }
 
     Scaffold(
         bottomBar = {
@@ -75,36 +72,57 @@ fun DataFieldsScreen(
                 // Contents of data entry form
                 Column(
                     modifier = Modifier
+                        .fillMaxSize()
                         .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 10.dp)
-                    ) {
+                            .weight(1f)
+                            .padding(10.dp)
+                    )
+                    {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = meetingName,
+                            text = headingMessage,
                             color = MaterialTheme.colors.surface,
                             style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                             textAlign = TextAlign.Start
                         )
+                        IconButton(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .background(MaterialTheme.colors.onPrimary)
+                                .clip(shape = RoundedCornerShape(10.dp)),
+                            onClick = {
+                                viewModel.onEvent(DataEntryEvent.ToggleAddNewDataField)
+                            }) {
+                            Icon(
+                                imageVector = Icons.Default.AddBox,
+                                contentDescription = "Add New Data Field",
+                                tint = MaterialTheme.colors.primary
+                            )
+
+                        }
                     }
-                    Spacer(modifier = Modifier.height(20.dp))
                     if (viewModel.dataFieldsBox.isEmpty) {
                         //empty Message
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
+                                .wrapContentSize()
                                 .padding(10.dp)
                                 .clip(shape = RoundedCornerShape(10.dp))
                                 .shadow(8.dp)
+                                .weight(2f)
                                 .background(MaterialTheme.colors.surface)
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .fillMaxSize()
+                                    .wrapContentSize()
                                     .padding(10.dp),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -118,13 +136,16 @@ fun DataFieldsScreen(
                                 Text(
                                     modifier = Modifier
                                         .padding(top = 5.dp),
-                                    text = "There are currently no Data Fields, please add some to begin adding data ",
+                                    text = "There are currently no Data Fields. Add Data Fields to begin adding Data ",
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.h5,
                                     color = MaterialTheme.colors.primary
                                 )
                             }
                         }
+                        Spacer(modifier = Modifier.weight(1f))
+                    } else {
+                        //show data fields
                     }
                 }
             }

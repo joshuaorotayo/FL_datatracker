@@ -1,14 +1,30 @@
 package com.jorotayo.fl_datatracker.viewModels
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataEntryEvent
 import io.objectbox.Box
 import javax.inject.Inject
 
 class DataFieldsViewModel @Inject constructor() : ViewModel() {
     val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+
+    private var _isVisible = mutableStateOf(false)
+    private var isVisible: State<Boolean> = _isVisible
+
+
+    fun onEvent(event: DataEntryEvent) {
+        when (event) {
+            DataEntryEvent.ToggleAddNewDataField -> {
+                _isVisible.value = !isVisible.value
+            }
+        }
+    }
+
 }
 
 

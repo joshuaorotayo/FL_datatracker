@@ -1,9 +1,14 @@
 package com.jorotayo.fl_datatracker.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.jorotayo.fl_datatracker.ObjectBox
+import com.jorotayo.fl_datatracker.domain.model.DataField
+import io.objectbox.Box
 import javax.inject.Inject
 
 class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
+
+    val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
 
     private val suffix = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
     private val months = arrayOf(
