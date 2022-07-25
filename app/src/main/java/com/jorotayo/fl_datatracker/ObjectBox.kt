@@ -25,6 +25,6 @@ object ObjectBox {
 
 
     fun get(): BoxStore {
-        return boxStore;
+        return boxStore
     }
 }

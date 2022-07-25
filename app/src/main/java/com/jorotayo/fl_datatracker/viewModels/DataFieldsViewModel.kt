@@ -7,20 +7,23 @@ import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataEntryEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.AddNewDataFieldState
 import io.objectbox.Box
 import javax.inject.Inject
 
 class DataFieldsViewModel @Inject constructor() : ViewModel() {
     val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
 
-    private var _isVisible = mutableStateOf(false)
-    private var isVisible: State<Boolean> = _isVisible
 
+    private val _addDataFieldIsVisible = mutableStateOf(AddNewDataFieldState())
+    val addDataFieldIsVisible: State<AddNewDataFieldState> = _addDataFieldIsVisible
 
     fun onEvent(event: DataEntryEvent) {
         when (event) {
             DataEntryEvent.ToggleAddNewDataField -> {
-                _isVisible.value = !isVisible.value
+                _addDataFieldIsVisible.value = addDataFieldIsVisible.value.copy(
+
+                )
             }
         }
     }

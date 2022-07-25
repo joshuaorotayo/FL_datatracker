@@ -45,6 +45,7 @@ fun DataEntryScreen(
     navController: NavController
 ) {
     val dataEntryHeading by remember { mutableStateOf("Fill in the information below:") }
+
     Scaffold(
         topBar = {
             Row(
@@ -95,7 +96,7 @@ fun DataEntryScreen(
                 ) {
 
                     //Spacer(modifier = Modifier.height(20.dp))
-                    if (viewModel.dataFieldsBox.isEmpty) {
+                    if (!viewModel.dataFieldsBox.isEmpty) {
                         Spacer(modifier = Modifier.weight(1f))
                         //empty Message
                         Box(
@@ -164,18 +165,17 @@ fun DataEntryScreen(
                         FormRadioRow(options = listOf("No", "N/A", "Yes"))
                         FormShortTextRow(rowHint = "Short String Hint")
                         FormTimeRow()
+                        FormLongTextRow(rowHint = "Long text hint")
                     }
 
                 }
             }
         }
     }
-
-
 }
 
 fun initFakeData(): List<DataField> {
-    val dataField = listOf(
+    return listOf(
 
         DataField(
             id = 1,
@@ -250,5 +250,4 @@ fun initFakeData(): List<DataField> {
             isEnabled = true
         )
     )
-    return dataField
 }

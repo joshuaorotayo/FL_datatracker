@@ -77,7 +77,8 @@ fun FormShortTextRow(
                     colors = TextFieldDefaults.textFieldColors(
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
-                        backgroundColor = MaterialTheme.colors.onPrimary
+                        backgroundColor = MaterialTheme.colors.onPrimary,
+                        textColor = Color.Black
                     ),
                     placeholder = {
                         Text(

@@ -28,7 +28,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private val days = arrayOf("Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun")
 
     fun formattedDateString(dayOfWeek: Int, day: Int, month: Int, year: Int): String {
-        val dayStr = days[dayOfWeek]
+        val dayStr = days[dayOfWeek - 1]
         val day2 = day % 100
         val suffixStr = day.toString() + suffix[if (day2 in 4..20) 0 else day2 % 10]
         val monthStr = months[month]

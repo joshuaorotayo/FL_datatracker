@@ -58,7 +58,7 @@ fun FormDateRow(
     mYear = mCalendar.get(Calendar.YEAR)
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-    mDayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK)
+    mDayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)
 
     mCalendar.time = Date()
 

@@ -76,39 +76,38 @@ fun DataFieldsScreen(
                         .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f)
-                            .padding(10.dp)
+                            .wrapContentHeight()
+                            .padding(5.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
                     )
                     {
                         Text(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier,
                             text = headingMessage,
                             color = MaterialTheme.colors.surface,
                             style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                             textAlign = TextAlign.Start
                         )
                         IconButton(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .background(MaterialTheme.colors.onPrimary)
-                                .clip(shape = RoundedCornerShape(10.dp)),
+                            modifier = Modifier,
                             onClick = {
                                 viewModel.onEvent(DataEntryEvent.ToggleAddNewDataField)
                             }) {
                             Icon(
+                                modifier = Modifier
+                                    .size(48.dp),
                                 imageVector = Icons.Default.AddBox,
                                 contentDescription = "Add New Data Field",
-                                tint = MaterialTheme.colors.primary
+                                tint = MaterialTheme.colors.surface
                             )
-
                         }
                     }
+                    /*if(viewModel.isVisble)*/
                     if (viewModel.dataFieldsBox.isEmpty) {
                         //empty Message
                         Box(
