@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NoDataField
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 
@@ -57,95 +57,61 @@ fun DataFieldsScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.primary)
+                .background(color = MaterialTheme.colors.background)
         ) {
-
-            Box(
+            // Contents of data entry form
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(vertical = 20.dp, horizontal = 8.dp)
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colors.primaryVariant.copy(alpha = 0.3f))
-            )
-            {
-                // Contents of data entry form
-                Column(
+                    .fillMaxSize()
+                    .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 32.dp)
+                    .verticalScroll(rememberScrollState())
+                    .clip(shape = RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colors.onBackground),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(5.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                )
+                {
+                    Text(
+                        modifier = Modifier,
+                        text = headingMessage,
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h6.also { FontStyle.Italic },
+                        textAlign = TextAlign.Start
                     )
-                    {
-                        Text(
-                            modifier = Modifier,
-                            text = headingMessage,
-                            color = MaterialTheme.colors.surface,
-                            style = MaterialTheme.typography.h6.also { FontStyle.Italic },
-                            textAlign = TextAlign.Start
-                        )
-                        IconButton(
-                            modifier = Modifier,
-                            onClick = {
-                                viewModel.onEvent(DataEntryEvent.ToggleAddNewDataField)
-                            }) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(48.dp),
-                                imageVector = Icons.Default.AddBox,
-                                contentDescription = "Add New Data Field",
-                                tint = MaterialTheme.colors.surface
-                            )
-                        }
-                    }
-                    /*if(viewModel.isVisble)*/
-                    if (viewModel.dataFieldsBox.isEmpty) {
-                        //empty Message
-                        Box(
+                    IconButton(
+                        modifier = Modifier,
+                        onClick = {
+                            viewModel.onEvent(DataEntryEvent.ToggleAddNewDataField)
+                        }) {
+                        Icon(
                             modifier = Modifier
-                                .wrapContentSize()
-                                .padding(10.dp)
-                                .clip(shape = RoundedCornerShape(10.dp))
-                                .shadow(8.dp)
-                                .weight(2f)
-                                .background(MaterialTheme.colors.surface)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .padding(10.dp),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(128.dp),
-                                    imageVector = Icons.Default.AddBox,
-                                    tint = MaterialTheme.colors.primary,
-                                    contentDescription = "No Data Fields Message",
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .padding(top = 5.dp),
-                                    text = "There are currently no Data Fields. Add Data Fields to begin adding Data ",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h5,
-                                    color = MaterialTheme.colors.primary
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                    } else {
-                        //show data fields
+                                .size(48.dp),
+                            imageVector = Icons.Default.AddBox,
+                            contentDescription = "Add New Data Field",
+                            tint = MaterialTheme.colors.primary
+                        )
                     }
+                }
+                /*if(viewModel.isVisble)*/
+                if (viewModel.dataFieldsBox.isEmpty) {
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    //Show No Data Field Message
+                    NoDataField()
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                } else {
+                    //show data fields
+
                 }
             }
         }

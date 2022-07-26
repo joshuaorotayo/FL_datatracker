@@ -1,6 +1,8 @@
 package com.jorotayo.fl_datatracker
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -23,9 +25,13 @@ class MainActivity : ComponentActivity() {
     lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        var keepSplashOnScreen = true
+        val delay = 1000L
 
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
+        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, delay)
+
+        super.onCreate(savedInstanceState)
 
         setContent {
             FL_DatatrackerTheme {
@@ -35,4 +41,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+fun delaySplash(): Boolean {
+    var boolean = false
+    Handler(Looper.getMainLooper()).postDelayed({
+        boolean = true
+    }, 3000)
+    return boolean
 }

@@ -32,7 +32,6 @@ fun TopBar(
 ) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
             .fillMaxWidth(),
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
@@ -40,7 +39,8 @@ fun TopBar(
         Text(
             text = "FL DataTracker",
             modifier = Modifier
-                .weight(10f),
+                .weight(10f)
+                .padding(start = 20.dp),
             color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.h5
         )

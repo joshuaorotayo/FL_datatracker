@@ -55,10 +55,10 @@ private val LightColorPalette = lightColors(
     primary = primaryLightRed,
     onPrimary = Color.White,
     primaryVariant = primaryDarkRed,
-    background = primaryLightRed,
+    background = Color(245, 236, 235, 250), //light red for background
     onBackground = Color.White,
-    surface = Color.White,
-    onSurface = Color.Black,
+    surface = Color(237, 200, 182, 125), //darker light red for panels/sections
+    onSurface = Color.Black, //text colour for headings, Gray will be subheadings
 /*
  Other default colors to override
     */

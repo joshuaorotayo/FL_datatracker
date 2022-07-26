@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,9 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements.FormCountRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements.FormDateRowV2
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 
 @Preview(showBackground = true)
@@ -46,6 +50,9 @@ fun DataEntryScreen(
 ) {
     val dataEntryHeading by remember { mutableStateOf("Fill in the information below:") }
 
+    val systemUiController = rememberSystemUiController()
+
+    systemUiController.setStatusBarColor(MaterialTheme.colors.background)
     Scaffold(
         topBar = {
             Row(
@@ -55,7 +62,7 @@ fun DataEntryScreen(
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = MaterialTheme.colors.onPrimary,
+                    tint = MaterialTheme.colors.primary,
                     modifier = Modifier
                         .padding(16.dp)
                         .clickable {
@@ -66,7 +73,7 @@ fun DataEntryScreen(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Enter Data",
-                    color = MaterialTheme.colors.surface,
+                    color = MaterialTheme.colors.primary,
                     style = MaterialTheme.typography.h5.also { FontStyle.Italic },
                     textAlign = TextAlign.Start
                 )
@@ -77,7 +84,7 @@ fun DataEntryScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.primary)
+                .background(color = MaterialTheme.colors.background)
         ) {
             Box(
                 modifier = Modifier
@@ -85,7 +92,8 @@ fun DataEntryScreen(
                     .fillMaxHeight()
                     .padding(vertical = 20.dp, horizontal = 8.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colors.primaryVariant.copy(alpha = 0.3f))
+//                    .background(MaterialTheme.colors.primaryVariant.copy(alpha = 0.3f))
+                    .background(MaterialTheme.colors.onBackground)
             ) {
                 // Contents of data entry form
                 Column(
@@ -98,49 +106,9 @@ fun DataEntryScreen(
                     //Spacer(modifier = Modifier.height(20.dp))
                     if (!viewModel.dataFieldsBox.isEmpty) {
                         Spacer(modifier = Modifier.weight(1f))
-                        //empty Message
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(shape = RoundedCornerShape(10.dp))
-                                .shadow(8.dp)
-                                .background(MaterialTheme.colors.surface)
-                        )
-                        {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(10.dp),
-                                verticalArrangement = Arrangement.SpaceEvenly,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                IconButton(onClick = { /*TODO*/ }) {
-                                    Icon(
-                                        modifier = Modifier.size(128.dp),
-                                        imageVector = Icons.Default.AddBox,
-                                        tint = MaterialTheme.colors.primary,
-                                        contentDescription = "No Data Fields Message",
-                                    )
-                                }
 
-                                Text(
-                                    modifier = Modifier,
-                                    text = "Data Form not created",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h4,
-                                    color = MaterialTheme.colors.primary
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .padding(bottom = 10.dp),
-                                    text = "There are currently no Data Fields. Add some Data Fields to begin adding Data",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h5,
-                                    color = MaterialTheme.colors.primary
-                                )
-                            }
-                        }
+                        //No Data Form Message
+                        NoDataForm()
 
                         Spacer(modifier = Modifier.weight(1f))
                     } else {
@@ -152,22 +120,19 @@ fun DataEntryScreen(
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = dataEntryHeading,
-                                color = MaterialTheme.colors.surface,
+                                color = MaterialTheme.colors.onSurface,
                                 style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                                 textAlign = TextAlign.Start
                             )
                         }
 
-                        FormDateRow(
-                            viewModel = DataEntryScreenViewModel()
-                        )
-                        FormCountRow()
-                        FormRadioRow(options = listOf("No", "N/A", "Yes"))
-                        FormShortTextRow(rowHint = "Short String Hint")
-                        FormTimeRow()
-                        FormLongTextRow(rowHint = "Long text hint")
+                        FormCountRowV2()
+                        FormDateRowV2(DataEntryScreenViewModel())
+//                        FormRadioRow(options = listOf("No", "N/A", "Yes"))
+//                        FormShortTextRow(rowHint = "Short String Hint")
+//                        FormTimeRow()
+//                        FormLongTextRow(rowHint = "Long text hint")
                     }
-
                 }
             }
         }

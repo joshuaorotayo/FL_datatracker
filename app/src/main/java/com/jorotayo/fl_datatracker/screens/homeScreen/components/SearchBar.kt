@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -33,7 +34,8 @@ fun SearchBar(
             modifier = Modifier
                 .height(intrinsicSize = IntrinsicSize.Min)
                 .padding(horizontal = 10.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(Color.Transparent.copy(alpha = 0.1f)),
         ) {
             OutlinedTextField(
                 modifier = Modifier
@@ -55,10 +57,10 @@ fun SearchBar(
                     viewModel.onEvent(HomeScreenEvent.SearchItemEntered(it))
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = Color.Transparent,
+                    backgroundColor = MaterialTheme.colors.primary,
                     unfocusedLabelColor = MaterialTheme.colors.onPrimary,
-                    focusedBorderColor = MaterialTheme.colors.onPrimary,
-                    unfocusedBorderColor = MaterialTheme.colors.onPrimary,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
                     focusedLabelColor = MaterialTheme.colors.onPrimary,
                 ),
                 leadingIcon = {
