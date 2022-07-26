@@ -1,16 +1,15 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -28,9 +27,8 @@ fun BottomNavigationBar(
     items: List<Screen>
 ) {
     BottomNavigation(
-        modifier = Modifier,
-        backgroundColor = MaterialTheme.colors.primary,
-        elevation = 22.dp
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background
     ) {
         val currentRoute = navController.currentBackStackEntry?.destination?.route
 
@@ -42,13 +40,22 @@ fun BottomNavigationBar(
                 BottomNavigationItem(
                     icon = {
                         (if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon)?.let {
-                            Icon(
+                            Column(
                                 modifier = Modifier,
-                                //                                imageVector = it,
-                                imageVector = it,
-                                contentDescription = screen.pageDescription,
-                                tint = MaterialTheme.colors.background,
-                            )
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    modifier = Modifier,
+                                    //                                imageVector = it,
+                                    imageVector = it,
+                                    contentDescription = screen.pageDescription,
+                                    tint = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.Gray,
+                                )
+                                Text(
+                                    text = screen.pageName,
+                                    color = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.Gray
+                                )
+                            }
                         }
                     },
                     selected = currentRoute == screen.route,

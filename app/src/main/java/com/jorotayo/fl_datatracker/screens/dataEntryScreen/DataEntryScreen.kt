@@ -30,8 +30,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements.FormCountRowV2
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements.FormDateRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements.*
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 
 @Preview(showBackground = true)
@@ -126,12 +125,12 @@ fun DataEntryScreen(
                             )
                         }
 
+                        FormShortTextRowV2(rowHint = "Short Text row example...")
                         FormCountRowV2()
                         FormDateRowV2(DataEntryScreenViewModel())
-//                        FormRadioRow(options = listOf("No", "N/A", "Yes"))
-//                        FormShortTextRow(rowHint = "Short String Hint")
-//                        FormTimeRow()
-//                        FormLongTextRow(rowHint = "Long text hint")
+                        FormTimeRowV2()
+                        FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
+                        FormLongTextRowV2(rowHint = "Data Capture V2 long text")
                     }
                 }
             }

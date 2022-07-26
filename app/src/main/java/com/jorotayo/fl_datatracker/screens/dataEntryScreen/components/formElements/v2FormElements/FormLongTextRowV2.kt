@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,66 +13,70 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewFormLongTextRow() {
-    FormLongTextRow(rowHint = "Row Hint")
+fun PreviewFormLongTextRowV2() {
+    FormLongTextRowV2(rowHint = "Data capture long text row example...")
 }
 
 @Composable
-fun FormLongTextRow(
+fun FormLongTextRowV2(
     rowHint: String?
-    //insert any import variables
 ) {
     //define any local variables
-
     val maxChar = 250
-    var (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
+    val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
-    Box(
+    Column(
         modifier = Modifier
-            .wrapContentSize(),
-        contentAlignment = Alignment.Center
+            .padding(5.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clip(shape = RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colors.surface)
     ) {
-        Column(
+        Row(
             modifier = Modifier
+                .padding(bottom = 10.dp)
                 .fillMaxWidth()
-                .wrapContentHeight(),
         ) {
             Text(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 5.dp)
-                    .clip(shape = RoundedCornerShape(10.dp))
-                    .shadow(elevation = 4.dp)
-                    .background(MaterialTheme.colors.primary),
-                text = "Long Text Row",
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.onPrimary
+                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .fillMaxWidth(),
+                text = "Data Field for Long Text",
+                textAlign = TextAlign.Start,
+                color = Color.Gray,
             )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //Button Data capture
             TextField(
                 modifier = Modifier
+                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(0.dp)
-                    .clip(shape = RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.onPrimary)
-                    .shadow(elevation = 8.dp),
-                value = text, onValueChange = {
-                        newText ->
+                    .wrapContentHeight(),
+                value = text,
+                onValueChange = { newText ->
                     setText(newText.ofMaxLength(maxLength = maxChar))
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    backgroundColor = MaterialTheme.colors.onPrimary,
+                    focusedIndicatorColor = MaterialTheme.colors.surface,
+                    backgroundColor = Color.Transparent,
                     textColor = Color.Black
                 ),
                 maxLines = 4,
@@ -80,7 +84,7 @@ fun FormLongTextRow(
                     Text(
                         text = rowHint ?: "placeholder text",
                         color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Start
                     )
                 }
             )

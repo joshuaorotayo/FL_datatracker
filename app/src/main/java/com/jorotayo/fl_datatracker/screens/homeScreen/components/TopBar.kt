@@ -41,7 +41,7 @@ fun TopBar(
             modifier = Modifier
                 .weight(10f)
                 .padding(start = 20.dp),
-            color = MaterialTheme.colors.onPrimary,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h5
         )
         SimpleIconButton(
@@ -49,7 +49,7 @@ fun TopBar(
                 .size(36.dp)
                 .weight(1f),
             icon = Icons.Default.Search,
-            tint = MaterialTheme.colors.onPrimary,
+            tint = MaterialTheme.colors.primary,
             contentDescription = "Search Icon to toggle Search Bar and search for Data"
         ) {
             viewModel.onEvent(HomeScreenEvent.ToggleSearchBarShow)

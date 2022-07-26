@@ -42,11 +42,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-fun delaySplash(): Boolean {
-    var boolean = false
-    Handler(Looper.getMainLooper()).postDelayed({
-        boolean = true
-    }, 3000)
-    return boolean
-}

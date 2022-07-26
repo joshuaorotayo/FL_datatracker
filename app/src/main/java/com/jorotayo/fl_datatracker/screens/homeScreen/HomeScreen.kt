@@ -3,7 +3,6 @@ package com.jorotayo.fl_datatracker.screens.homeScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -12,6 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,19 +50,13 @@ fun HomeScreen(
     systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
 
     Scaffold(
-        scaffoldState = scaffoldState,
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier,
-                cutoutShape = CircleShape
-            ) {
-                BottomNavigationBar(navController, bottomNavigationItems)
-            }
+            BottomNavigationBar(navController, bottomNavigationItems)
         },
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier,
-                backgroundColor = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colors.background,
                 onClick = {
                     navController.navigate(Screen.DataEntry.route)
                 }
@@ -70,7 +64,7 @@ fun HomeScreen(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add New Data",
-                    tint = MaterialTheme.colors.onPrimary
+                    tint = Color.Gray
                 )
             }
         },
@@ -79,8 +73,7 @@ fun HomeScreen(
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxSize()
                 .padding(innerPadding)
         ) {
             //...main content
@@ -95,7 +88,7 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colors.primary)
+                        .background(MaterialTheme.colors.background)
                         .height(64.dp)
                 )
                 {
@@ -114,9 +107,7 @@ fun HomeScreen(
                         color = MaterialTheme.colors.primary
                     )
                 }
-
                 // Items example
-
                 Box(
                     modifier = Modifier
                         .padding(10.dp)
@@ -130,9 +121,7 @@ fun HomeScreen(
                     ) {
 
                     }
-
                 }
-
             }
             // Top Bar/Search Bar Area
             Row(

@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,7 +8,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +33,6 @@ fun SearchBar(
                 .height(intrinsicSize = IntrinsicSize.Min)
                 .padding(horizontal = 10.dp)
                 .fillMaxWidth()
-                .background(Color.Transparent.copy(alpha = 0.1f)),
         ) {
             OutlinedTextField(
                 modifier = Modifier
@@ -50,18 +47,19 @@ fun SearchBar(
                             .padding(2.dp)
                             .fillMaxHeight(),
                         text = searchFieldState.hint,
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.primary
                     )
                 },
                 onValueChange = {
                     viewModel.onEvent(HomeScreenEvent.SearchItemEntered(it))
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    unfocusedLabelColor = MaterialTheme.colors.onPrimary,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedLabelColor = MaterialTheme.colors.onPrimary,
+                    backgroundColor = MaterialTheme.colors.background,
+                    unfocusedLabelColor = MaterialTheme.colors.background,
+                    focusedBorderColor = MaterialTheme.colors.background,
+                    unfocusedBorderColor = MaterialTheme.colors.background,
+                    focusedLabelColor = MaterialTheme.colors.background,
                 ),
                 leadingIcon = {
                     IconButton(
@@ -76,7 +74,7 @@ fun SearchBar(
                                 .weight(1f),
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Close Search View",
-                            tint = MaterialTheme.colors.onPrimary
+                            tint = MaterialTheme.colors.primary
                         )
                     }
                 },
@@ -91,7 +89,7 @@ fun SearchBar(
                                 .weight(1f),
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Clear Search View",
-                            tint = MaterialTheme.colors.onPrimary
+                            tint = MaterialTheme.colors.primary
                         )
                     }
                 }
