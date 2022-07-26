@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ fun WelcomeScreen(
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
+    val darkTheme = isSystemInDarkTheme()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +51,7 @@ fun WelcomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.primary),
+                    .background(if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -152,7 +154,7 @@ fun WelcomeScreen(
                     }
                 }
             }
-            }
+        }
     }
 }
 
@@ -185,7 +187,8 @@ fun OnBoardingComplete(
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colors.primary,
-                    checkmarkColor = Color.White
+                    uncheckedColor = Color.Black,
+                    checkmarkColor = MaterialTheme.colors.primaryVariant
                 )
             )
         }

@@ -38,13 +38,13 @@ private val LightColorPalette = lightColors(
 
 @SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = primaryDarkRed,
+    primary = primaryLightRed,
     onPrimary = Color.White,
-    primaryVariant = primaryLightRed,
-    background = primaryDarkRed,
-    onBackground = Color.White,
-    surface = Color.White,
-    onSurface = Color.Black,
+    primaryVariant = primaryDarkRed,
+    background = Color(32, 32, 34, 255),
+    onBackground = Color(42, 42, 44, 255),
+    surface = Color(32, 32, 34, 255),
+    onSurface = Color.White,
 /*
  Other default colors to override*/
 

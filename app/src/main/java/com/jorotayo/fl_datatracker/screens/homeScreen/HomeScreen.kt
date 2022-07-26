@@ -47,7 +47,7 @@ fun HomeScreen(
 
     val systemUiController = rememberSystemUiController()
 
-    systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
+    systemUiController.setStatusBarColor(MaterialTheme.colors.background)
 
     Scaffold(
         bottomBar = {
