@@ -24,7 +24,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
-import com.jorotayo.fl_datatracker.ui.theme.BottomCardShape
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 import kotlinx.coroutines.launch
 
@@ -40,116 +39,120 @@ fun WelcomeScreen(
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            HorizontalPager(state = pagerState, count = pages.size) { page ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.primary),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
-                ) {
-
-                    Image(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .fillMaxHeight(0.6f),
-                        imageVector = pages[page].image,
-                        contentDescription = "Pager Image",
-                        colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-                    )
-                }
-            }
-        }
-        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Card(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    )
+    {
+        HorizontalPager(state = pagerState, count = pages.size)
+        { page ->
+            Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.5f)
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
-                backgroundColor = MaterialTheme.colors.onPrimary,
-                elevation = (8.dp),
-                shape = BottomCardShape.large
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.primary),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
-                Column(
+
+                Image(
                     modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .fillMaxHeight(0.6f),
+                    imageVector = pages[page].image,
+                    contentDescription = "Pager Image",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                )
+            }
+            //here
+
+            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxHeight(0.5f)
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(top = 32.dp)
+                        .align(Alignment.BottomCenter),
+                    backgroundColor = MaterialTheme.colors.onPrimary,
+                    elevation = (8.dp),
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        text = pages[pagerState.currentPage].title,
-                        fontSize = MaterialTheme.typography.h4.fontSize,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 40.dp)
-                            .padding(top = 20.dp),
-                        text = pages[pagerState.currentPage].description,
-                        fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
-                    )
-
-                    HorizontalPagerIndicator(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .weight(1f),
-                        pagerState = pagerState
-                    )
-                    OnBoardingComplete(
-                        modifier = Modifier.weight(1f),
-                        pagerState = pagerState,
-                        viewModel = viewModel,
-                        lastIndex = pages.lastIndex
-                    )
-                    //Next Button Section
-                    AnimatedVisibility(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 20.dp),
-                        visible = pagerState.currentPage < pages.lastIndex,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 50))
+                            .fillMaxHeight()
+                            .padding(top = 32.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            text = pages[pagerState.currentPage].title,
+                            fontSize = MaterialTheme.typography.h4.fontSize,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 40.dp)
+                                .padding(top = 20.dp),
+                            text = pages[pagerState.currentPage].description,
+                            fontSize = MaterialTheme.typography.subtitle1.fontSize,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Center
+                        )
 
-                            Button(
-                                onClick = {
-                                    scope.launch {
-                                        pagerState.scrollToPage(pagerState.currentPage + 1)
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    contentColor = Color.White,
-                                    backgroundColor = MaterialTheme.colors.primary
-                                )
+                        HorizontalPagerIndicator(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .weight(1f),
+                            pagerState = pagerState
+                        )
+                        OnBoardingComplete(
+                            modifier = Modifier.weight(1f),
+                            pagerState = pagerState,
+                            viewModel = viewModel,
+                            lastIndex = pages.lastIndex
+                        )
+                        //Next Button Section
+                        AnimatedVisibility(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 20.dp),
+                            visible = pagerState.currentPage < pages.lastIndex,
+                            enter = fadeIn(animationSpec = tween(durationMillis = 50))
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.Bottom,
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(text = "Next")
+
+                                Button(
+                                    onClick = {
+                                        scope.launch {
+                                            pagerState.scrollToPage(pagerState.currentPage + 1)
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        contentColor = Color.White,
+                                        backgroundColor = MaterialTheme.colors.primary
+                                    )
+                                ) {
+                                    Text(text = "Next")
+                                }
                             }
                         }
-                    }
 
-                    FinishButton(
-                        modifier = Modifier.weight(1f),
-                        pagerState = pagerState,
-                        lastIndex = pages.lastIndex
-                    ) {
-                        navController.popBackStack()
-                        navController.navigate(Screen.HomeScreen.route)
+                        FinishButton(
+                            modifier = Modifier.weight(1f),
+                            pagerState = pagerState,
+                            lastIndex = pages.lastIndex
+                        ) {
+                            navController.popBackStack()
+                            navController.navigate(Screen.HomeScreen.route)
+                        }
                     }
                 }
             }
-        }
+            }
     }
 }
 
