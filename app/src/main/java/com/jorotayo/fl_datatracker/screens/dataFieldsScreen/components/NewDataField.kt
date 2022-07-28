@@ -101,22 +101,32 @@ fun NewDataField(
                 )
             }
         }
+
         Row(
             modifier = Modifier
-                .padding(horizontal = 10.dp)
+                .padding(bottom = 10.dp)
                 .fillMaxWidth()
-                .wrapContentHeight(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
-                //dropdown heading text
                 Text(
-                    text = "Drop down heading text"
+                    modifier = Modifier
+                        .padding(vertical = 5.dp, horizontal = 10.dp)
+                        .fillMaxWidth(),
+                    text = "New Data Field Dropdown",
+                    textAlign = TextAlign.Start,
+                    color = Color.Gray,
                 )
-                //drop down will go here
 
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = 5.dp, horizontal = 10.dp)
+                        .fillMaxWidth(),
+                    text = "*Select the field type that will be used for this data field",
+                    textAlign = TextAlign.Start,
+                    color = Color.Gray,
+                )
             }
+
         }
     }
 

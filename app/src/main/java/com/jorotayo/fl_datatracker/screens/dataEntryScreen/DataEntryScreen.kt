@@ -26,13 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormRadioRowV2
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormShortTextRowV2
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormTimeRowV2
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.FormCountRowV2
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.FormDateRowV2
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.FormLongTextRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 
 @Preview(showBackground = true)

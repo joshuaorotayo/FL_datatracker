@@ -7,8 +7,8 @@
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorPrimaryVariant">#890001</item>
         <item name="colorOnBackground">#FFFFFF</item>
-        <item name="backgroundColor">#000000</item>
-        <item name="colorSurface">#FFFFFF</item>
+        <item name="backgroundColor">#F5ECEB</item>
+        <item name="colorSurface">#EDC8B6</item>
         <item name="colorOnSurface">#000000</item>
         <item name="android:datePickerDialogTheme">@style/DatePickerTheme</item>
         <item name="android:timePickerDialogTheme">@style/TimePickerTheme</item>
