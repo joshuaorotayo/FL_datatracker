@@ -1,6 +1,7 @@
-package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements
 
-import android.app.TimePickerDialog
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,7 +11,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,41 +19,59 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import java.util.*
 
-@Preview(showBackground = true)
+
+@Preview
 @Composable
-fun PreviewFormTimeRow() {
-    FormTimeRow()
+fun PreviewFormDateRow() {
+    FormDateRow(
+        viewModel = hiltViewModel()
+    )
 }
 
 @Composable
-fun FormTimeRow(
-    //insert any import variables
+fun FormDateRow(
+    viewModel: DataEntryScreenViewModel
 ) {
 
-    // Fetching local context
+    // Fetching the Local Context
     val mContext = LocalContext.current
 
-    // Declaring and initializing a calendar
+    // Declaring integer values for year, month and day
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+    val mDayOfWeek: Int
+
+    // Initializing a Calendar
     val mCalendar = Calendar.getInstance()
-    val mHour: Int = mCalendar.get(Calendar.HOUR)
-    val mMinute = mCalendar[Calendar.MINUTE]
 
-    // Value for storing time as a string
-    val mTime = remember { mutableStateOf("") }
+    // Fetching current year, month, day and day of the week
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    mDayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)
 
-    // Creating a TimePicker dialog
-    val mTimePickerDialog = TimePickerDialog(
+    mCalendar.time = Date()
+
+    // Declaring a string value to store date in string format
+    val mDate = remember { mutableStateOf("") }
+
+    // Declaring DatePickerDialog and setting
+    // initial values as current values (present year, month and day)
+    val mDatePickerDialog = DatePickerDialog(
         mContext,
-        { _, mHour: Int, mMinute: Int ->
-            mTime.value = "$mHour:$mMinute"
-        }, mHour, mMinute, false
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = viewModel.formattedDateString(mDayOfWeek, mDayOfMonth, mMonth, mYear)
+        }, mYear, mMonth, mDay
     )
 
     Box(
@@ -63,7 +82,7 @@ fun FormTimeRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
+                .height(IntrinsicSize.Min)
                 .clip(shape = RoundedCornerShape(10.dp))
                 .shadow(elevation = 4.dp)
                 .background(MaterialTheme.colors.primary),
@@ -72,41 +91,41 @@ fun FormTimeRow(
             Text(
                 modifier = Modifier
                     .fillMaxWidth(0.5f),
-                text = "Time Field Example",
+                text = "TEST",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onPrimary
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .wrapContentHeight()
+                    .fillMaxHeight()
                     .background(MaterialTheme.colors.onPrimary),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
             )
             {
                 Text(
-                    text = mTime.value.ifBlank { "HH:MM" },
-                    color = if (mTime.value.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                    text = mDate.value.ifBlank { "DDnd Month, Year" },
+                    color = if (mDate.value.isBlank()) MaterialTheme.colors.primary else Black,
                     modifier = Modifier
                         .padding(start = 5.dp)
                         .weight(1f, fill = false)
                         .clickable(
                             onClick = {
-                                mTimePickerDialog.show()
+                                mDatePickerDialog.show()
                             }
                         ),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1
+                    style = if (mDate.value.isBlank()) MaterialTheme.typography.body1 else MaterialTheme.typography.body1
                 )
                 IconButton(
                     onClick = {
-                        mTimePickerDialog.show()
+                        mDatePickerDialog.show()
                     }) {
                     Icon(
                         modifier = Modifier,
-                        imageVector = Icons.Default.Timer,
-                        contentDescription = "Select Time from Clock",
+                        imageVector = Icons.Default.EditCalendar,
+                        contentDescription = "Select Date from Calendar",
                         tint = MaterialTheme.colors.primary
                     )
                 }
@@ -119,4 +138,5 @@ fun FormTimeRow(
             .fillMaxWidth()
             .height(10.dp)
     )
+
 }

@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -29,8 +26,13 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormRadioRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormShortTextRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormTimeRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements.*
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.FormCountRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.FormDateRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.FormLongTextRowV2
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 
 @Preview(showBackground = true)
@@ -131,6 +133,21 @@ fun DataEntryScreen(
                         FormTimeRowV2()
                         FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
                         FormLongTextRowV2(rowHint = "Data Capture V2 long text")
+
+                        Button(
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(end = 10.dp, bottom = 10.dp),
+                            onClick = {
+                                /*TODO*/
+                            }) {
+                            Text(
+                                text = "Save Data",
+                                style = MaterialTheme.typography.h6,
+                                color = MaterialTheme.colors.onPrimary
+
+                            )
+                        }
                     }
                 }
             }

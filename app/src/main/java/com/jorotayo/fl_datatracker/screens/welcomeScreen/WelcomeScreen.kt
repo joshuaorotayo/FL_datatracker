@@ -39,8 +39,8 @@ fun WelcomeScreen(
 
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
-
     val darkTheme = isSystemInDarkTheme()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,7 +73,7 @@ fun WelcomeScreen(
                         .fillMaxHeight(0.5f)
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter),
-                    backgroundColor = MaterialTheme.colors.onPrimary,
+                    backgroundColor = if (darkTheme) MaterialTheme.colors.background else MaterialTheme.colors.onBackground,
                     elevation = (8.dp),
                 ) {
                     Column(
@@ -88,7 +88,8 @@ fun WelcomeScreen(
                             text = pages[pagerState.currentPage].title,
                             fontSize = MaterialTheme.typography.h4.fontSize,
                             fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.onSurface
                         )
                         Text(
                             modifier = Modifier
@@ -98,13 +99,16 @@ fun WelcomeScreen(
                             text = pages[pagerState.currentPage].description,
                             fontSize = MaterialTheme.typography.subtitle1.fontSize,
                             fontWeight = FontWeight.Medium,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.onSurface
                         )
 
                         HorizontalPagerIndicator(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .weight(1f),
+                            activeColor = if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary,
+                            inactiveColor = MaterialTheme.colors.onSurface,
                             pagerState = pagerState
                         )
                         OnBoardingComplete(
@@ -135,7 +139,7 @@ fun WelcomeScreen(
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         contentColor = Color.White,
-                                        backgroundColor = MaterialTheme.colors.primary
+                                        backgroundColor = if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
                                     )
                                 ) {
                                     Text(text = "Next")
@@ -178,7 +182,10 @@ fun OnBoardingComplete(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val checkedState = remember { mutableStateOf(false) }
-            Text(text = "Don't show on next run")
+            Text(
+                text = "Don't show on next run",
+                color = MaterialTheme.colors.onSurface
+            )
             Checkbox(
                 checked = checkedState.value,
                 onCheckedChange = {
@@ -219,7 +226,7 @@ fun FinishButton(
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
                     contentColor = MaterialTheme.colors.onPrimary,
-                    backgroundColor = MaterialTheme.colors.primary
+                    backgroundColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
                 )
             ) {
                 Text(text = "Finish")

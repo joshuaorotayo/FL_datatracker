@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -1,8 +1,6 @@
-package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.v2FormElements
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements
 
-import android.app.TimePickerDialog
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -10,7 +8,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,40 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import java.util.*
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewFormTimeRowV2() {
-    FormTimeRowV2()
+fun PreviewFormCountRowV2() {
+    FormCountRowV2()
 }
 
 @Composable
-fun FormTimeRowV2(
-
-) {
-    // Fetching local context
-    val mContext = LocalContext.current
-
-    // Declaring and initializing a calendar
-    val mCalendar = Calendar.getInstance()
-    val mHour: Int = mCalendar.get(Calendar.HOUR)
-    val mMinute = mCalendar[Calendar.MINUTE]
-
-    // Value for storing time as a string
-    val mTime = remember { mutableStateOf("") }
-
-    // Creating a TimePicker dialog
-    val mTimePickerDialog = TimePickerDialog(
-        mContext,
-        { _, mHour: Int, mMinute: Int ->
-            mTime.value = "$mHour:$mMinute"
-        }, mHour, mMinute, false
-    )
+fun FormCountRowV2() {
+    var count = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -70,7 +48,7 @@ fun FormTimeRowV2(
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = "Data Field for Time Row",
+                text = "Data Field for Numbers Text",
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )
@@ -82,30 +60,45 @@ fun FormTimeRowV2(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            //Button Data capture
-            Text(
-                text = mTime.value.ifBlank { "HH:MM" },
-                color = if (mTime.value.isBlank()) MaterialTheme.colors.primary else Color.Black,
+            IconButton(
                 modifier = Modifier
-                    .padding(start = 5.dp)
-                    .weight(1f, fill = false)
-                    .clickable(
-                        onClick = {
-                            mTimePickerDialog.show()
-                        }
-                    ),
+                    .size(28.dp)
+                    .background(MaterialTheme.colors.primary)
+                    .padding(vertical = 5.dp),
+                onClick = {
+                    if ((count.value - 1) >= 0) {
+                        count.value = count.value - 1
+                    }
+                })
+            {
+                Icon(
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = "Decrement Count",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
+            Text(
+                text = "" + count.value,
+                color = if (count.value <= 0) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                modifier = Modifier
+                    .weight(1f, fill = false),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.h6
+
             )
             IconButton(
+                modifier = Modifier
+                    .size(28.dp)
+                    .background(MaterialTheme.colors.primary)
+                    .padding(vertical = 5.dp),
                 onClick = {
-                    mTimePickerDialog.show()
-                }) {
+                    count.value = count.value + 1
+                }
+            ) {
                 Icon(
-                    modifier = Modifier,
-                    imageVector = Icons.Default.Timer,
-                    contentDescription = "Select Time from Clock",
-                    tint = MaterialTheme.colors.primary
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Increment Count",
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         }
