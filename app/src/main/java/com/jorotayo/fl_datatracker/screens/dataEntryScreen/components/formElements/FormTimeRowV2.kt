@@ -22,17 +22,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import java.util.*
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormTimeRowV2() {
-    FormTimeRowV2()
+    FormTimeRowV2(viewModel = hiltViewModel())
 }
 
 @Composable
 fun FormTimeRowV2(
-
+    viewModel: DataEntryScreenViewModel
 ) {
     // Fetching local context
     val mContext = LocalContext.current
@@ -49,8 +51,8 @@ fun FormTimeRowV2(
     val mTimePickerDialog = TimePickerDialog(
         mContext,
         { _, mHour: Int, mMinute: Int ->
-            mTime.value = "$mHour:$mMinute"
-        }, mHour, mMinute, false
+            mTime.value = viewModel.formattedTimeString(mHour, mMinute)
+        }, mHour, mMinute, true
     )
 
     Column(
@@ -79,7 +81,7 @@ fun FormTimeRowV2(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             //Button Data capture

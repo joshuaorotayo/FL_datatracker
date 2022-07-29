@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DatePickerThemeDayNight" parent="@style/Theme.AppCompat.Dialog.Alert">
-        <item name="android:colorAccent">#890001</item>
-        <item name="colorAccent">#890001</item>
+    <style name="DatePickerTheme" parent="@style/Theme.Material3.Light.Dialog.Alert">
+        <item name="android:colorAccent">#c0392b</item>
+        <item name="android:windowBackground">#2A2A2C</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#c0392b</item>
+        <item name="android:colorControlActivated">#890001</item>
     </style>
 
-    <style name="TimePickerThemeDayNight" parent="@style/Theme.AppCompat.Dialog.Alert">
-        <item name="android:colorAccent">#890001</item>
-        <item name="colorAccent">#890001</item>
+    <style name="TimePickerTheme" parent="@style/Theme.Material3.Dark.Dialog.Alert">
+        <item name="android:colorAccent">#c0392b</item>
+        <item name="colorAccent">#c0392b</item>
     </style>
 
 </resources>

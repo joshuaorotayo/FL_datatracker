@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.FL_Datatracker" parent="Theme.Material3.DayNight">
+    <style name="Theme.FL_Datatracker" parent="Theme.Material3.Dark">
         <item name="android:statusBarColor">#202022</item>
         <item name="colorPrimary">#c0392b</item>
         <item name="colorOnPrimary">#FFFFFF</item>
@@ -10,8 +10,8 @@
         <item name="colorOnBackground">#2A2A2C</item>
         <item name="colorSurface">#202022</item>
         <item name="colorOnSurface">#FFFFFF</item>
-        <item name="android:datePickerDialogTheme">@style/DatePickerThemeDayNight</item>
-        <item name="android:timePickerDialogTheme">@style/TimePickerThemeDayNight</item>
+        <item name="android:datePickerDialogTheme">@style/DatePickerTheme</item>
+        <item name="android:timePickerDialogTheme">@style/TimePickerTheme</item>
     </style>
 
     <style name="Theme.CustomSplashScreenTheme" parent="Theme.SplashScreen">

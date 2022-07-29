@@ -49,7 +49,6 @@ fun FormDateRowV2(
     val mYear: Int
     val mMonth: Int
     val mDay: Int
-    val mDayOfWeek: Int
 
     // Initializing a Calendar
     val mCalendar = Calendar.getInstance()
@@ -57,8 +56,7 @@ fun FormDateRowV2(
     // Fetching current year, month, day and day of the week
     mYear = mCalendar.get(Calendar.YEAR)
     mMonth = mCalendar.get(Calendar.MONTH)
-    mDay = mCalendar.get(Calendar.DAY_OF_WEEK)
-    mDayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     mCalendar.time = Date()
 
@@ -70,9 +68,12 @@ fun FormDateRowV2(
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = viewModel.formattedDateString(mDayOfWeek, mDayOfMonth, mMonth, mYear)
+            mDate.value = viewModel.formattedDateString(mDayOfMonth, mMonth, mYear)
         }, mYear, mMonth, mDay
     )
+
+
+
     Column(
         modifier = Modifier
             .padding(5.dp)

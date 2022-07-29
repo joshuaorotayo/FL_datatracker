@@ -49,7 +49,6 @@ fun FormDateRow(
     val mYear: Int
     val mMonth: Int
     val mDay: Int
-    val mDayOfWeek: Int
 
     // Initializing a Calendar
     val mCalendar = Calendar.getInstance()
@@ -58,7 +57,6 @@ fun FormDateRow(
     mYear = mCalendar.get(Calendar.YEAR)
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-    mDayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)
 
     mCalendar.time = Date()
 
@@ -70,7 +68,7 @@ fun FormDateRow(
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = viewModel.formattedDateString(mDayOfWeek, mDayOfMonth, mMonth, mYear)
+            mDate.value = viewModel.formattedDateString(mDayOfMonth, mMonth, mYear)
         }, mYear, mMonth, mDay
     )
 

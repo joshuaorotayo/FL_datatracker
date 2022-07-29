@@ -124,7 +124,7 @@ fun DataEntryScreen(
                         FormShortTextRowV2(rowHint = "Short Text row example...")
                         FormCountRowV2()
                         FormDateRowV2(DataEntryScreenViewModel())
-                        FormTimeRowV2()
+                        FormTimeRowV2(DataEntryScreenViewModel())
                         FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
                         FormLongTextRowV2(rowHint = "Data Capture V2 long text")
 
