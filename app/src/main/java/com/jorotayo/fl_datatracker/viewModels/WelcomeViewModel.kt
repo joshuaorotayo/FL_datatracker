@@ -34,10 +34,6 @@ class WelcomeViewModel @Inject constructor(
                 Log.i(TAG, "true launch: saveOnBoardingState: " + isOnBoardingComplete.settingValue)
             } else {
                 isOnBoardingComplete.settingValue = true
-                Log.i(
-                    TAG,
-                    "false launch: saveOnBoardingState: " + isOnBoardingComplete.settingValue
-                )
             }
             settingBox.put(isOnBoardingComplete)
         }

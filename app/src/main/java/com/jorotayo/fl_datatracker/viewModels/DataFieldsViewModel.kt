@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataEntryEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.AddNewDataFieldState
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
 import io.objectbox.Box
 import javax.inject.Inject
 
@@ -15,16 +15,36 @@ class DataFieldsViewModel @Inject constructor() : ViewModel() {
     val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
 
 
-    private val _addDataFieldIsVisible = mutableStateOf(AddNewDataFieldState())
-    val addDataFieldIsVisible: State<AddNewDataFieldState> = _addDataFieldIsVisible
+    private val _isAddDataFieldVisible = mutableStateOf(DataFieldScreenState())
+    var isAddDataFieldVisible: State<DataFieldScreenState> = _isAddDataFieldVisible
 
-    fun onEvent(event: DataEntryEvent) {
+    var tri = Triple("", "", "")
+
+    var duo = Pair("", "")
+
+    fun onEvent(event: DataFieldEvent) {
         when (event) {
-            DataEntryEvent.ToggleAddNewDataField -> {
-                _addDataFieldIsVisible.value = addDataFieldIsVisible.value.copy(
-
+            DataFieldEvent.ToggleAddNewDataField -> {
+                _isAddDataFieldVisible.value = _isAddDataFieldVisible.value.copy(
+                    isAddDataFieldVisible = !isAddDataFieldVisible.value.isAddDataFieldVisible
                 )
             }
+            is DataFieldEvent.TriAddFirstValue -> {
+                tri = tri.copy(first = event.value)
+            }
+            is DataFieldEvent.TriAddSecondValue -> {
+                tri = tri.copy(second = event.value)
+            }
+            is DataFieldEvent.TriAddThirdValue -> {
+                tri = tri.copy(third = event.value)
+            }
+            is DataFieldEvent.PairAddFirstValue -> {
+                duo = duo.copy(first = event.value)
+            }
+            is DataFieldEvent.PairAddSecondValue -> {
+                duo = duo.copy(second = event.value)
+            }
+            DataFieldEvent.SaveDataField -> TODO()
         }
     }
 

@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NoDataField
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
@@ -47,6 +48,8 @@ fun DataFieldsScreen(
         Screen.HomeScreen,
     )
     val headingMessage by remember { mutableStateOf("Add/Edit Data Fields:") }
+
+    var isAddDataFieldVisible = viewModel.isAddDataFieldVisible.value.isAddDataFieldVisible
 
     Scaffold(
         bottomBar = {
@@ -88,7 +91,7 @@ fun DataFieldsScreen(
                     IconButton(
                         modifier = Modifier,
                         onClick = {
-                            viewModel.onEvent(DataEntryEvent.ToggleAddNewDataField)
+                            viewModel.onEvent(DataFieldEvent.ToggleAddNewDataField)
                         }) {
                         Icon(
                             modifier = Modifier
@@ -100,7 +103,7 @@ fun DataFieldsScreen(
                     }
                 }
                 /*if(viewModel.isVisble)*/
-                if (viewModel.dataFieldsBox.isEmpty) {
+                if (viewModel.dataFieldsBox.isEmpty && !isAddDataFieldVisible) {
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -108,10 +111,10 @@ fun DataFieldsScreen(
                     NoDataField()
 
                     Spacer(modifier = Modifier.weight(1f))
-
                 } else {
-                    //show data fields
+                    NewDataField(viewModel = DataFieldsViewModel())
 
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }

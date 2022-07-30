@@ -87,7 +87,7 @@ fun FormTimeRowV2(
             //Button Data capture
             Text(
                 text = mTime.value.ifBlank { "HH:MM" },
-                color = if (mTime.value.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                color = if (mTime.value.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                 modifier = Modifier
                     .padding(start = 5.dp)
                     .weight(1f, fill = false)

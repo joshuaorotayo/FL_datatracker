@@ -12,5 +12,6 @@ data class DataField(
     var niceFieldName: String = "",
     var dataFieldType: String = DataFieldType.SHORTSTRING.type,
     var dataValue: String = "",
+    var dataList: List<String>? = listOf(""),
     var isEnabled: Boolean = true
 )

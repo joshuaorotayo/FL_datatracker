@@ -25,7 +25,7 @@
     },
     {
       "id": "2:2862204584643486414",
-      "lastPropertyId": "6:7706388068492938950",
+      "lastPropertyId": "7:9106421761324420654",
       "name": "DataField",
       "properties": [
         {
@@ -58,6 +58,11 @@
           "id": "6:7706388068492938950",
           "name": "dataValue",
           "type": 9
+        },
+        {
+          "id": "7:9106421761324420654",
+          "name": "dataList",
+          "type": 30
         }
       ],
       "relations": []

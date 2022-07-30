@@ -77,13 +77,13 @@ fun FormLongTextRowV2(
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = MaterialTheme.colors.surface,
                     backgroundColor = Color.Transparent,
-                    textColor = Color.Black
+                    textColor = MaterialTheme.colors.onSurface
                 ),
                 maxLines = 4,
                 placeholder = {
                     Text(
                         text = rowHint ?: "placeholder text",
-                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                         textAlign = TextAlign.Start
                     )
                 }
