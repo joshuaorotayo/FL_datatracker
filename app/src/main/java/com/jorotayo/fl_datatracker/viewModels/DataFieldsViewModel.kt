@@ -8,6 +8,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
 import io.objectbox.Box
 import javax.inject.Inject
 
@@ -18,9 +19,8 @@ class DataFieldsViewModel @Inject constructor() : ViewModel() {
     private val _isAddDataFieldVisible = mutableStateOf(DataFieldScreenState())
     var isAddDataFieldVisible: State<DataFieldScreenState> = _isAddDataFieldVisible
 
-    var tri = Triple("", "", "")
-
-    var duo = Pair("", "")
+    private val _newDataField = mutableStateOf(NewDataFieldState())
+    var newDataField: State<NewDataFieldState> = _newDataField
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
@@ -29,20 +29,30 @@ class DataFieldsViewModel @Inject constructor() : ViewModel() {
                     isAddDataFieldVisible = !isAddDataFieldVisible.value.isAddDataFieldVisible
                 )
             }
-            is DataFieldEvent.TriAddFirstValue -> {
-                tri = tri.copy(first = event.value)
+            is DataFieldEvent.AddFieldName -> {
+                _newDataField.value = newDataField.value.copy(
+                    fieldName = event.value
+                )
             }
-            is DataFieldEvent.TriAddSecondValue -> {
-                tri = tri.copy(second = event.value)
+            is DataFieldEvent.AddFirstValue -> {
+                _newDataField.value = newDataField.value.copy(
+                    firstValue = event.value
+                )
             }
-            is DataFieldEvent.TriAddThirdValue -> {
-                tri = tri.copy(third = event.value)
+            is DataFieldEvent.AddSecondValue -> {
+                _newDataField.value = newDataField.value.copy(
+                    secondValue = event.value
+                )
             }
-            is DataFieldEvent.PairAddFirstValue -> {
-                duo = duo.copy(first = event.value)
+            is DataFieldEvent.AddThirdValue -> {
+                _newDataField.value = newDataField.value.copy(
+                    thirdValue = event.value
+                )
             }
-            is DataFieldEvent.PairAddSecondValue -> {
-                duo = duo.copy(second = event.value)
+            is DataFieldEvent.SelectFieldType -> {
+                _newDataField.value = newDataField.value.copy(
+                    fieldType = event.value
+                )
             }
             DataFieldEvent.SaveDataField -> TODO()
         }

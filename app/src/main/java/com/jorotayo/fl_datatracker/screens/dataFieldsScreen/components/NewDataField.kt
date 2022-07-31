@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +35,7 @@ fun NewDataField(
     viewModel: DataFieldsViewModel
 ) {
     val maxChar = 30
+    val optionsMaxChars = 20
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
     val focusManager = LocalFocusManager.current
@@ -41,8 +44,10 @@ fun NewDataField(
     var expanded by remember { mutableStateOf(false) }
     val items =
         listOf("Short String", "Long String ", "Boolean", "Date", "Time", "Count", "Tri-state")
-    // val disabledValue = "B"
+
     var selectedIndex by remember { mutableStateOf(0) }
+
+    val newDataField = viewModel.newDataField.value
 
     Column(
         modifier = Modifier
@@ -89,7 +94,7 @@ fun NewDataField(
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = MaterialTheme.colors.surface,
                     backgroundColor = Color.Transparent,
-                    textColor = Color.Black
+                    textColor = MaterialTheme.colors.onSurface
                 ),
                 placeholder = {
                     Text(
@@ -108,7 +113,7 @@ fun NewDataField(
                 color = Color.Gray,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 10.dp, end = 10.dp)
                     .background(Color.Transparent)
             )
         }
@@ -141,16 +146,26 @@ fun NewDataField(
                         .fillMaxSize()
                         .wrapContentSize(Alignment.Center),
                 ) {
-                    Text(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
+                            .clickable(onClick = { expanded = true })
                             .clip(shape = RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colors.background)
-                            .clickable(onClick = { expanded = true }),
-                        text = items[selectedIndex],
-                        color = MaterialTheme.colors.primary,
-                        textAlign = TextAlign.Center
-                    )
+                            .background(MaterialTheme.colors.onBackground),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            modifier = Modifier,
+                            text = items[selectedIndex],
+                            color = MaterialTheme.colors.primary,
+                            textAlign = TextAlign.Center
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Drop down arrow for Field Type Dropdown",
+                            tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                        )
+                    }
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
@@ -179,49 +194,111 @@ fun NewDataField(
         }
 
         AnimatedVisibility(visible = selectedIndex == 2) {
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth()
-            ) {
-                TransparentTextField(
-                    modifier = Modifier.weight(1f),
-                    text = viewModel.duo.second,
-                    placeholder = "1st Value",
-                    onValueChange = { viewModel.onEvent(DataFieldEvent.PairAddFirstValue(it)) })
 
-                TransparentTextField(
-                    modifier = Modifier.weight(1f),
-                    text = viewModel.duo.first,
-                    placeholder = "2nd Value",
-                    onValueChange = { viewModel.onEvent(DataFieldEvent.PairAddSecondValue(it)) })
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 5.dp)
+                ) {
+                    Text(
+                        text = "Enter in the values for the boolean e.g. Yes and No",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Gray
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.firstValue,
+                        label = "1st Value",
+                        placeholder = newDataField.firstValue.ifBlank { "1st Value" },
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddFirstValue(it)
+                            )
+                        }
+                    )
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.secondValue,
+                        label = "2nd Value",
+                        placeholder = newDataField.secondValue.ifBlank { "2nd Value" },
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddSecondValue(it)
+                            )
+                        }
+                    )
+                }
             }
         }
 
         AnimatedVisibility(visible = selectedIndex == 6) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
             ) {
-                TransparentTextField(
-                    modifier = Modifier.weight(0.3f),
-                    text = viewModel.tri.first,
-                    placeholder = if (viewModel.tri.first.isNullOrEmpty()) "1st Value" else viewModel.tri.first,
-                    onValueChange = { viewModel.onEvent(DataFieldEvent.TriAddFirstValue(it)) })
-
-                TransparentTextField(
-                    modifier = Modifier.weight(0.3f),
-                    text = viewModel.tri.second,
-                    placeholder = if (viewModel.tri.second.isNullOrEmpty()) "2nd Value" else viewModel.tri.second,
-                    onValueChange = { viewModel.onEvent(DataFieldEvent.TriAddSecondValue(it)) })
-
-                TransparentTextField(
-                    modifier = Modifier.weight(0.3f),
-                    text = viewModel.tri.third,
-                    placeholder = if (viewModel.tri.third.isNullOrEmpty()) "3rd Value" else viewModel.tri.third,
-                    onValueChange = { viewModel.onEvent(DataFieldEvent.TriAddThirdValue(it)) })
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 5.dp)
+                ) {
+                    Text(
+                        text = "Enter in the values for the Tri-state e.g. No, N/A and Yes",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Gray
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.firstValue,
+                        label = "1st Value",
+                        placeholder = newDataField.firstValue.ifBlank { "1st Value" },
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddFirstValue(it)
+                            )
+                        }
+                    )
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.secondValue,
+                        label = "2nd Value",
+                        placeholder = "2nd Value",
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddSecondValue(it)
+                            )
+                        }
+                    )
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.thirdValue,
+                        label = "3rd Value",
+                        placeholder = "3rd Value",
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddThirdValue(it)
+                            )
+                        }
+                    )
+                }
             }
         }
         Row(
