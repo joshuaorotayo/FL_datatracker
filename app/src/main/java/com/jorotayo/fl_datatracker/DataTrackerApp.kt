@@ -18,8 +18,10 @@ class DataTrackerApp : Application() {
 
     private fun defaultValues() {
         val settingBox: Box<SettingsBool> = ObjectBox.get().boxFor(SettingsBool::class.java)
+
         val query =
             settingBox.query(SettingsBool_.settingName.equal("isOnBoardingComplete")).build()
+
         val isOnBoardingComplete = query.findFirst()
 
         if (isOnBoardingComplete == null) {
@@ -31,6 +33,5 @@ class DataTrackerApp : Application() {
                 )
             )
         }
-
     }
 }

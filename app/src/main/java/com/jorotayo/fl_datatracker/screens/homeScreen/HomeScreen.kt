@@ -28,7 +28,7 @@ import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenViewModel,
+    viewModel: HomeScreenViewModel = hiltViewModel(),
     navController: NavController
 ) {
 

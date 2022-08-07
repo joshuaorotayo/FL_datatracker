@@ -3,24 +3,44 @@ package com.jorotayo.fl_datatracker.viewModels
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
+import com.jorotayo.fl_datatracker.domain.util.use_case.AddDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
+import com.jorotayo.fl_datatracker.util.capitaliseWord
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
+import io.objectbox.reactive.DataObserver
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DataFieldsViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel
+class DataFieldsViewModel @Inject constructor(
+    private val addDataField: AddDataField,
+) : ViewModel() {
+
     val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
 
+    val observer = DataObserver<Class<DataField>> {
+        val results: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    }
+
+    private val maxChar = 30
 
     private val _isAddDataFieldVisible = mutableStateOf(DataFieldScreenState())
     var isAddDataFieldVisible: State<DataFieldScreenState> = _isAddDataFieldVisible
 
     private val _newDataField = mutableStateOf(NewDataFieldState())
     var newDataField: State<NewDataFieldState> = _newDataField
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
@@ -29,10 +49,12 @@ class DataFieldsViewModel @Inject constructor() : ViewModel() {
                     isAddDataFieldVisible = !isAddDataFieldVisible.value.isAddDataFieldVisible
                 )
             }
-            is DataFieldEvent.AddFieldName -> {
-                _newDataField.value = newDataField.value.copy(
-                    fieldName = event.value
-                )
+            is DataFieldEvent.SaveDataFieldName -> {
+                if (event.value.length <= maxChar) {
+                    _newDataField.value = newDataField.value.copy(
+                        fieldName = capitaliseWord(event.value)
+                    )
+                }
             }
             is DataFieldEvent.AddFirstValue -> {
                 _newDataField.value = newDataField.value.copy(
@@ -54,87 +76,79 @@ class DataFieldsViewModel @Inject constructor() : ViewModel() {
                     fieldType = event.value
                 )
             }
-            DataFieldEvent.SaveDataField -> TODO()
+            DataFieldEvent.SaveDataField -> {
+                viewModelScope.launch {
+                    try {
+                        addDataField(
+                            dataField =
+                            DataField(
+                                id = 0,
+                                fieldName = _newDataField.value.fieldName,
+                                dataValue = "",
+                                dataFieldType = _newDataField.value.fieldType,
+                                dataList = returnDataList(),
+                                isEnabled = true
+                            )
+                        )
+
+                        _isAddDataFieldVisible.value = _isAddDataFieldVisible.value.copy(
+                            isAddDataFieldVisible = !isAddDataFieldVisible.value.isAddDataFieldVisible
+
+                        )
+                    } catch (e: InvalidDataFieldException) {
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                message = e.message ?: "Couldn't save DataField"
+                            )
+                        )
+                    }
+                }
+            }
+            is DataFieldEvent.EditDataField -> TODO()
+            is DataFieldEvent.EditRowName -> {
+                val dataField = dataFieldsBox.get(event.index)
+                dataField.fieldName = event.value
+                dataFieldsBox.put(dataField)
+            }
+            is DataFieldEvent.EditRowType -> {
+                val dataField = dataFieldsBox.get(event.index)
+                dataField.dataFieldType = event.value
+                dataFieldsBox.put(dataField)
+            }
+            is DataFieldEvent.CheckedChange -> {
+                val dataField = dataFieldsBox.get(event.index)
+                dataField.isEnabled = !dataField.isEnabled
+                dataFieldsBox.put(dataField)
+            }
         }
     }
 
-}
+    private fun returnDataList(): List<String> {
+        //boolean
+        when (_newDataField.value.fieldType) {
+            3 -> {
+                return listOf(
+                    _newDataField.value.firstValue,
+                    _newDataField.value.secondValue
+                )
+            }
+            //tri-state
+            6 -> {
+                return listOf(
+                    _newDataField.value.firstValue,
+                    _newDataField.value.secondValue,
+                    _newDataField.value.thirdValue
+                )
+            }
+            else -> {
+                return listOf()
+            }
+        }
+    }
 
+    sealed class UiEvent {
+        data class ShowSnackbar(val message: String) : UiEvent()
+        object AddDataField : UiEvent()
+    }
 
-fun initFakeData(): List<DataField> {
-    return listOf(
-
-        DataField(
-            id = 1,
-            fieldName = "SERVICE_NAME",
-            niceFieldName = "Service/Meeting Name",
-            dataFieldType = DataFieldType.SHORTSTRING.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 2,
-            fieldName = "PREACHER",
-            niceFieldName = "Preacher/Leader's Name",
-            dataFieldType = DataFieldType.SHORTSTRING.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 3,
-            fieldName = "DATE",
-            niceFieldName = "Date of Service/Meeting",
-            dataFieldType = DataFieldType.DATE.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 4,
-            fieldName = "TIME",
-            niceFieldName = "Time of Service/Meeting",
-            dataFieldType = DataFieldType.TIME.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 5,
-            fieldName = "ATTENDANCE",
-            niceFieldName = "Total Attendance",
-            dataFieldType = DataFieldType.COUNT.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 6,
-            fieldName = "TITHE_PAYERS",
-            niceFieldName = "Number of Tithe Payers",
-            dataFieldType = DataFieldType.COUNT.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 7,
-            fieldName = "COMMUNION",
-            niceFieldName = "Was Communion Taken",
-            dataFieldType = DataFieldType.BOOLEAN.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 8,
-            fieldName = "J-SCHOOL",
-            niceFieldName = "Was J-School Taught?",
-            dataFieldType = DataFieldType.TRISTATE.type,
-            dataValue = "",
-            isEnabled = true
-        ),
-        DataField(
-            id = 8,
-            fieldName = "PREACHING_NOTES",
-            niceFieldName = "NOTES",
-            dataFieldType = DataFieldType.LONGSTRING.type,
-            dataValue = "",
-            isEnabled = true
-        )
-    )
 }

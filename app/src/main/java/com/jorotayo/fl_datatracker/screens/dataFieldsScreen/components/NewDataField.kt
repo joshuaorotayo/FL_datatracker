@@ -18,8 +18,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.ofMaxLength
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
@@ -27,25 +26,26 @@ import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 @Preview
 @Composable
 fun PreviewNewDataField() {
-    NewDataField(viewModel = hiltViewModel())
+    //NewDataField(viewModel = hiltViewModel(), )
 }
 
 @Composable
 fun NewDataField(
-    viewModel: DataFieldsViewModel
+    viewModel: DataFieldsViewModel,
+    onClick: () -> Unit
 ) {
-    val maxChar = 30
     val optionsMaxChars = 20
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
+
+
+    val maxChar = 30
 
     val focusManager = LocalFocusManager.current
 
     // Dropdown Menu
     var expanded by remember { mutableStateOf(false) }
-    val items =
-        listOf("Short String", "Long String ", "Boolean", "Date", "Time", "Count", "Tri-state")
 
-    var selectedIndex by remember { mutableStateOf(0) }
+    val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
 
     val newDataField = viewModel.newDataField.value
 
@@ -87,8 +87,9 @@ fun NewDataField(
             TextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = text, onValueChange = { newText ->
-                    setText(newText.ofMaxLength(maxLength = maxChar))
+                value = newDataField.fieldName,
+                onValueChange = {
+                    viewModel.onEvent(DataFieldEvent.SaveDataFieldName(it))
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,
@@ -99,7 +100,7 @@ fun NewDataField(
                 placeholder = {
                     Text(
                         text = "Add New Data Field Text",
-                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                        color = if (newDataField.fieldName.isBlank()) MaterialTheme.colors.primary else Color.Black,
                         textAlign = TextAlign.Center
                     )
                 },
@@ -107,7 +108,7 @@ fun NewDataField(
             )
             //Max Chars count
             Text(
-                text = "${text.text.length} / $maxChar",
+                text = "${newDataField.fieldName.length} / $maxChar",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.caption,
                 color = Color.Gray,
@@ -156,7 +157,7 @@ fun NewDataField(
                     ) {
                         Text(
                             modifier = Modifier,
-                            text = items[selectedIndex],
+                            text = items[newDataField.fieldType],
                             color = MaterialTheme.colors.primary,
                             textAlign = TextAlign.Center
                         )
@@ -177,7 +178,7 @@ fun NewDataField(
                     ) {
                         items.forEachIndexed { index, s ->
                             DropdownMenuItem(onClick = {
-                                selectedIndex = index
+                                viewModel.onEvent(DataFieldEvent.SelectFieldType(index))
                                 expanded = false
                             })
                             {
@@ -193,12 +194,12 @@ fun NewDataField(
             }
         }
 
-        AnimatedVisibility(visible = selectedIndex == 2) {
+        AnimatedVisibility(visible = newDataField.fieldType == 2) {
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+                    .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -242,11 +243,11 @@ fun NewDataField(
             }
         }
 
-        AnimatedVisibility(visible = selectedIndex == 6) {
+        AnimatedVisibility(visible = newDataField.fieldType == 6) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+                    .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -307,14 +308,15 @@ fun NewDataField(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
+            val scope = rememberCoroutineScope()
             Button(
                 modifier = Modifier
                     .background(MaterialTheme.colors.primary),
-                onClick = {
-                    viewModel.onEvent(DataFieldEvent.SaveDataField)
-                })
+                onClick = onClick
+            )
             {
                 Text(
+                    modifier = Modifier,
                     text = "Save Data Field"
                 )
             }

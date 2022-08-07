@@ -25,7 +25,6 @@ fun PreviewNoDataField() {
 @Composable
 fun NoDataField(
 ) {
-
     Box(
         modifier = Modifier
             .fillMaxWidth()

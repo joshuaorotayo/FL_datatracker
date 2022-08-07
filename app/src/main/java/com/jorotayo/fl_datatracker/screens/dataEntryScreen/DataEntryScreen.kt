@@ -99,7 +99,7 @@ fun DataEntryScreen(
                 ) {
 
                     //Spacer(modifier = Modifier.height(20.dp))
-                    if (!viewModel.dataFieldsBox.isEmpty) {
+                    if (viewModel.dataFieldsBox.isEmpty) {
                         Spacer(modifier = Modifier.weight(1f))
 
                         //No Data Form Message
@@ -155,72 +155,63 @@ fun initFakeData(): List<DataField> {
         DataField(
             id = 1,
             fieldName = "SERVICE_NAME",
-            niceFieldName = "Service/Meeting Name",
-            dataFieldType = DataFieldType.SHORTSTRING.type,
+            dataFieldType = DataFieldType.SHORTSTRING.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 2,
             fieldName = "PREACHER",
-            niceFieldName = "Preacher/Leader's Name",
-            dataFieldType = DataFieldType.SHORTSTRING.type,
+            dataFieldType = DataFieldType.SHORTSTRING.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 3,
             fieldName = "DATE",
-            niceFieldName = "Date of Service/Meeting",
-            dataFieldType = DataFieldType.DATE.type,
+            dataFieldType = DataFieldType.DATE.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 4,
             fieldName = "TIME",
-            niceFieldName = "Time of Service/Meeting",
-            dataFieldType = DataFieldType.TIME.type,
+            dataFieldType = DataFieldType.TIME.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 5,
             fieldName = "ATTENDANCE",
-            niceFieldName = "Total Attendance",
-            dataFieldType = DataFieldType.COUNT.type,
+            dataFieldType = DataFieldType.COUNT.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 6,
             fieldName = "TITHE_PAYERS",
-            niceFieldName = "Number of Tithe Payers",
-            dataFieldType = DataFieldType.COUNT.type,
+            dataFieldType = DataFieldType.COUNT.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 7,
             fieldName = "COMMUNION",
-            niceFieldName = "Was Communion Taken",
-            dataFieldType = DataFieldType.BOOLEAN.type,
+            dataFieldType = DataFieldType.BOOLEAN.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 8,
             fieldName = "J-SCHOOL",
-            niceFieldName = "Was J-School Taught?",
-            dataFieldType = DataFieldType.TRISTATE.type,
+            dataFieldType = DataFieldType.TRISTATE.ordinal,
             dataValue = "",
             isEnabled = true
         ),
         DataField(
             id = 8,
             fieldName = "PREACHING_NOTES",
-            niceFieldName = "NOTES",
-            dataFieldType = DataFieldType.LONGSTRING.type,
+            dataFieldType = DataFieldType.LONGSTRING.ordinal,
             dataValue = "",
             isEnabled = true
         )
