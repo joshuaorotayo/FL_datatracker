@@ -1,5 +1,7 @@
 package com.jorotayo.fl_datatracker.viewModels
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
@@ -9,8 +11,16 @@ import javax.inject.Inject
 
 class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
-    // Date Functions
-    val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
+    var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
+
+    init {
+        loadDataFields()
+    }
+
+    private fun loadDataFields() {
+        _dataFieldsBox2.value = ObjectBox.get().boxFor(DataField::class.java)
+    }
 
     private val days = arrayOf("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat")
 
@@ -35,7 +45,6 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
         val mCalendar = Calendar.getInstance()
 
-
         val day2 = day % 100
         val suffixStr = day.toString() + suffix[if (day2 in 4..20) 0 else day2 % 10]
         val monthStr = months[month]
@@ -48,19 +57,19 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     // Time Functions
     fun formattedTimeString(hour: Int, minute: Int): String {
         val mTime = Calendar.getInstance()
-        var am_pm = ""
+        var amPm = ""
 
         mTime.set(Calendar.HOUR_OF_DAY, hour);
         mTime.set(Calendar.MINUTE, minute);
 
-        am_pm = if (mTime.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
+        amPm = if (mTime.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
 
         val formattedHrs =
             if (mTime.get(Calendar.HOUR) == 0) "12" else mTime.get(Calendar.HOUR).toString()
 
         val formattedMinute = mTime.get(Calendar.MINUTE)
 
-        return "$formattedHrs:$formattedMinute $am_pm"
+        return "$formattedHrs:$formattedMinute $amPm"
 
     }
 }

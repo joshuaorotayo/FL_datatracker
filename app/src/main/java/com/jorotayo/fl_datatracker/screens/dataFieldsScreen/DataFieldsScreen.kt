@@ -1,7 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.jorotayo.fl_datatracker.domain.util.use_case.AddDataField
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRow
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataField
@@ -30,6 +27,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NoDataFie
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -55,23 +53,26 @@ fun DataFieldsScreen(
 
     val isAddDataFieldVisible = viewModel.isAddDataFieldVisible.value.isAddDataFieldVisible
 
-
-    val fields = viewModel.dataFieldsBox
+    val fields = viewModel.dataFieldsBox2
 
     val scaffoldState = rememberScaffoldState()
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is DataFieldsViewModel.UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message
+                        message = event.message,
+                        actionLabel = "hide"
                     )
                 }
-                DataFieldsViewModel.UiEvent.AddDataField -> {
+                DataFieldsViewModel.UiEvent.SaveDataField -> {
                     scaffoldState.snackbarHostState.showSnackbar(
-                        message = "Note Saved!"
+                        message = "Data Field Saved!"
                     )
+                    viewModel.onEvent(DataFieldEvent.ToggleAddNewDataField)
                 }
             }
         }
@@ -87,14 +88,12 @@ fun DataFieldsScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.background)
         ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(10.dp)
                     .clip(shape = RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.onBackground)
             ) {
                 // Header Row
                 item {
@@ -102,9 +101,7 @@ fun DataFieldsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(10.dp)
-                            .clip(shape = RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colors.onBackground),
+                            .padding(10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Top
                     ) {
@@ -131,7 +128,7 @@ fun DataFieldsScreen(
                     }
                 }
                 item {
-                    AnimatedVisibility(visible = !isAddDataFieldVisible && viewModel.dataFieldsBox.isEmpty) {
+                    AnimatedVisibility(visible = !isAddDataFieldVisible && fields.value.isEmpty) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -161,10 +158,12 @@ fun DataFieldsScreen(
                         ) {
                             // Show New Data Field Message
                             NewDataField(
-                                viewModel = DataFieldsViewModel(AddDataField()),
+                                viewModel = DataFieldsViewModel(),
                                 onClick = {
-                                    viewModel.onEvent(DataFieldEvent.SaveDataField)
-                                    Log.i(TAG, "DataFieldsScreen: toggleView")
+                                    scope.launch {
+                                        fields.value.put(it)
+                                        viewModel.onEvent(DataFieldEvent.SaveDataField(it))
+                                    }
                                 }
                             )
                             Spacer(modifier = Modifier.weight(1f))
@@ -173,11 +172,11 @@ fun DataFieldsScreen(
                 }
 
                 item {
-                    AnimatedVisibility(visible = !viewModel.dataFieldsBox.isEmpty) {
+                    AnimatedVisibility(visible = !fields.value.isEmpty && !viewModel.isAddDataFieldVisible.value.isAddDataFieldVisible) {
                         Row(
                             modifier = Modifier
                                 .wrapContentHeight()
-                                .padding(bottom = 5.dp, start = 10.dp, end = 10.dp),
+                                .padding(bottom = 8.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -205,10 +204,11 @@ fun DataFieldsScreen(
                         }
                     }
                 }
-                itemsIndexed(viewModel.dataFieldsBox.all) { index, item ->
+                itemsIndexed(fields.value.all) { index, item ->
                     DataFieldRow(
                         dataField = item,
                         editName = {
+                            item.fieldName = it
                             viewModel.onEvent(
                                 DataFieldEvent.EditRowName(
                                     index = item.id,
@@ -217,6 +217,7 @@ fun DataFieldsScreen(
                             )
                         },
                         editType = {
+                            item.dataFieldType = it
                             viewModel.onEvent(
                                 (DataFieldEvent.EditRowType(
                                     index = item.id,
@@ -225,7 +226,22 @@ fun DataFieldsScreen(
                             )
                         },
                         checkedChange = {
+                            item.isEnabled = !item.isEnabled
                             viewModel.onEvent(DataFieldEvent.CheckedChange(index = item.id))
+                        },
+                        editStateValues = {
+                            val dataList = item.dataList?.toMutableList()
+                            dataList?.set(it.first, it.second)
+                            if (dataList != null) {
+                                item.dataList = dataList.toList()
+                            }
+                            viewModel.onEvent(
+                                DataFieldEvent.EditStateValues(
+                                    index = item.id,
+                                    valIndex = it.first,
+                                    value = it.second
+                                )
+                            )
                         }
                     )
                 }

@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -24,8 +25,10 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigatio
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchVisible
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
+import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
@@ -53,6 +56,7 @@ fun HomeScreen(
         bottomBar = {
             BottomNavigationBar(navController, bottomNavigationItems)
         },
+        scaffoldState = scaffoldState,
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier,
@@ -115,6 +119,11 @@ fun HomeScreen(
                         .clip(shape = RoundedCornerShape(20.dp))
                         .background(MaterialTheme.colors.onBackground)
                 ) {
+                    DefaultSnackbar(
+                        snackbarHostState = scaffoldState.snackbarHostState,
+                        onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    )
                     Column(
                         modifier = Modifier
                             .padding(10.dp)

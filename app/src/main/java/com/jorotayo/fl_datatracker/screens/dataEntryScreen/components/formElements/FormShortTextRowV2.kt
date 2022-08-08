@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,12 +29,9 @@ fun PreviewFormShortTextRowV2() {
 @Composable
 fun FormShortTextRowV2(
     rowHint: String?
-) {
+): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
-
-    val focusManager = LocalFocusManager.current
-
 
     Column(
         modifier = Modifier
@@ -111,4 +107,6 @@ fun FormShortTextRowV2(
             .fillMaxWidth()
             .height(10.dp)
     )
+
+    return text.text
 }

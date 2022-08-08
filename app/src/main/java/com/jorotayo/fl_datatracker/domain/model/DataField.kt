@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.domain.model
 
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import io.objectbox.annotation.ConflictStrategy
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Unique
@@ -9,7 +10,7 @@ import io.objectbox.annotation.Unique
 data class DataField(
     @Id
     var id: Long,
-    @Unique
+    @Unique(onConflict = ConflictStrategy.REPLACE)
     var fieldName: String = "",
     var dataFieldType: Int = DataFieldType.SHORTSTRING.ordinal,
     var dataValue: String = "",

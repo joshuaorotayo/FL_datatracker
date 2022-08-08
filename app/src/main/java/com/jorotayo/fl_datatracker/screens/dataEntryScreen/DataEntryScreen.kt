@@ -4,18 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +23,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -38,6 +34,7 @@ fun PreviewDataEntryScreen() {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataEntryScreen(
     viewModel: DataEntryScreenViewModel,
@@ -46,6 +43,10 @@ fun DataEntryScreen(
     val dataEntryHeading by remember { mutableStateOf("Fill in the information below:") }
 
     val systemUiController = rememberSystemUiController()
+
+    val scaffoldState = rememberScaffoldState()
+
+    val scope = rememberCoroutineScope()
 
     systemUiController.setStatusBarColor(MaterialTheme.colors.background)
     Scaffold(
@@ -73,74 +74,86 @@ fun DataEntryScreen(
                     textAlign = TextAlign.Start
                 )
             }
-        }
+        },
+        scaffoldState = scaffoldState
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(color = MaterialTheme.colors.background)
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(vertical = 20.dp, horizontal = 8.dp)
-                    .clip(shape = RoundedCornerShape(20.dp))
-//                    .background(MaterialTheme.colors.primaryVariant.copy(alpha = 0.3f))
-                    .background(MaterialTheme.colors.onBackground)
+                    .padding(innerPadding)
+                    .wrapContentHeight()
             ) {
-                // Contents of data entry form
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                        .verticalScroll(rememberScrollState())
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(vertical = 20.dp, horizontal = 16.dp)
                 ) {
 
-                    //Spacer(modifier = Modifier.height(20.dp))
-                    if (viewModel.dataFieldsBox.isEmpty) {
-                        Spacer(modifier = Modifier.weight(1f))
+                    // Contents of data entry form
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 8.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
 
-                        //No Data Form Message
-                        NoDataForm()
+                        val testRun = true
+                        //Spacer(modifier = Modifier.height(20.dp))
+                        if (viewModel.dataFieldsBox2.value.isEmpty && !testRun) {
+                            Spacer(modifier = Modifier.weight(1f))
 
-                        Spacer(modifier = Modifier.weight(1f))
-                    } else {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 10.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = dataEntryHeading,
-                                color = MaterialTheme.colors.onSurface,
-                                style = MaterialTheme.typography.h6.also { FontStyle.Italic },
-                                textAlign = TextAlign.Start
-                            )
-                        }
+                            //No Data Form Message
+                            NoDataForm()
 
-                        FormShortTextRowV2(rowHint = "Short Text row example...")
-                        FormCountRowV2()
-                        FormDateRowV2(DataEntryScreenViewModel())
-                        FormTimeRowV2(DataEntryScreenViewModel())
-                        FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
-                        FormLongTextRowV2(rowHint = "Data Capture V2 long text")
+                            Spacer(modifier = Modifier.weight(1f))
+                        } else {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 10.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = dataEntryHeading,
+                                    color = MaterialTheme.colors.onSurface,
+                                    style = MaterialTheme.typography.h6.also { FontStyle.Italic },
+                                    textAlign = TextAlign.Start
+                                )
+                            }
 
-                        Button(
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .padding(end = 10.dp, bottom = 10.dp),
-                            onClick = {
-                                /*TODO*/
-                            }) {
-                            Text(
-                                text = "Save Data",
-                                style = MaterialTheme.typography.h6,
-                                color = MaterialTheme.colors.onPrimary
+                            val shortText =
+                                FormShortTextRowV2(rowHint = "Short Text row example...")
+                            FormCountRowV2()
+                            FormDateRowV2(DataEntryScreenViewModel())
+                            FormTimeRowV2(DataEntryScreenViewModel())
+                            FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
+                            FormLongTextRowV2(rowHint = "Data Capture V2 long text")
 
-                            )
+                            Button(
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                                    .padding(end = 10.dp, bottom = 10.dp),
+                                onClick = {
+                                    scope.launch {
+                                        scaffoldState.snackbarHostState.showSnackbar(
+                                            message = shortText,
+                                            actionLabel = null
+                                        )
+                                    }
+                                }) {
+                                Text(
+                                    text = "Save Data",
+                                    style = MaterialTheme.typography.h6,
+                                    color = MaterialTheme.colors.onPrimary
+
+                                )
+                            }
                         }
                     }
                 }

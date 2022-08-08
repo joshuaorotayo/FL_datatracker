@@ -13,11 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.util.TransparentTextField
@@ -32,15 +31,10 @@ fun PreviewNewDataField() {
 @Composable
 fun NewDataField(
     viewModel: DataFieldsViewModel,
-    onClick: () -> Unit
+    onClick: (DataField) -> Unit
 ) {
     val optionsMaxChars = 20
-    val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
-
-
     val maxChar = 30
-
-    val focusManager = LocalFocusManager.current
 
     // Dropdown Menu
     var expanded by remember { mutableStateOf(false) }
@@ -48,6 +42,13 @@ fun NewDataField(
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
 
     val newDataField = viewModel.newDataField.value
+    val newData = DataField(
+        id = 0,
+        fieldName = newDataField.fieldName,
+        dataFieldType = newDataField.fieldType,
+        dataValue = "",
+        dataList = returnDataList(newDataField)
+    )
 
     Column(
         modifier = Modifier
@@ -312,7 +313,9 @@ fun NewDataField(
             Button(
                 modifier = Modifier
                     .background(MaterialTheme.colors.primary),
-                onClick = onClick
+                onClick = {
+                    onClick(newData)
+                }
             )
             {
                 Text(
@@ -321,11 +324,35 @@ fun NewDataField(
                 )
             }
         }
+    }
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(10.dp)
-        )
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(10.dp)
+    )
+}
+
+
+fun returnDataList(dataField: NewDataFieldState): List<String> {
+    //boolean
+    when (dataField.fieldType) {
+        2 -> {
+            return listOf(
+                dataField.firstValue,
+                dataField.secondValue
+            )
+        }
+        //tri-state
+        6 -> {
+            return listOf(
+                dataField.firstValue,
+                dataField.secondValue,
+                dataField.thirdValue
+            )
+        }
+        else -> {
+            return listOf()
+        }
     }
 }

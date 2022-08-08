@@ -41,7 +41,7 @@ fun FormComponentTemplateV2() {
         ) {
             Text(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .padding(vertical = 5.dp, horizontal = 16.dp)
                     .fillMaxWidth(),
                 text = "Data Field for Numbers Text",
                 textAlign = TextAlign.Start,

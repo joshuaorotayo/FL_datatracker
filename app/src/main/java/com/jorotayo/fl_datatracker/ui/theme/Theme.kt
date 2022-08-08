@@ -8,36 +8,37 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-/*@SuppressLint("ConflictingOnColor")
-private val DarkColorPalette = darkColors(
-    primary = primaryDarkRed,
-    onPrimary = Color.White,
-    primaryVariant = primaryLightRed,
-    background = Color.DarkGray,
-    onBackground = Color.LightGray,
-    surface = Color.DarkGray,
-    onSurface = Color.Gray.copy(alpha = 0.5f),
 
-    *//* Other default colors to override
-    *//*
+@SuppressLint("ConflictingOnColor")
+private val DarkColorPalette = darkColors(
+    primary = primaryLightRed,
+    onPrimary = Color.White,
+    primaryVariant = primaryDarkRed,
+    background = Color(42, 42, 44, 255),
+    onBackground = Color(32, 32, 34, 255),
+    surface = Color(32, 32, 34, 255),
+    onSurface = Color.White,
+/*
+ Other default colors to override*/
 )
 
 private val LightColorPalette = lightColors(
     primary = primaryLightRed,
     onPrimary = Color.White,
     primaryVariant = primaryDarkRed,
-    background = primaryLightRed,
-    onBackground = Color.White,
-    surface = Color.White,
-    onSurface = Color.Black,
+    background = Color.White,
+    onBackground = Color(245, 236, 235, 250),//light red
+    surface = Color(237, 200, 182, 125), //darker light red for panels/sections
+    onSurface = Color.Black, //text colour for headings, Gray will be subheadings
+/*
+ Other default colors to override
+    */
 
-    *//* Other default colors to override
-    *//*
-)*/
+)
 
 
 @SuppressLint("ConflictingOnColor")
-private val DarkColorPalette = darkColors(
+private val DarkColorPaletteOld = darkColors(
     primary = primaryLightRed,
     onPrimary = Color.White,
     primaryVariant = primaryDarkRed,
@@ -47,11 +48,9 @@ private val DarkColorPalette = darkColors(
     onSurface = Color.White,
 /*
  Other default colors to override*/
-
-
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPaletteOld = lightColors(
     primary = primaryLightRed,
     onPrimary = Color.White,
     primaryVariant = primaryDarkRed,

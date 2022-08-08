@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +34,6 @@ fun FormShortTextRow(
     val maxChar = 50
     var (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
-    val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier.wrapContentSize(),
         contentAlignment = Alignment.Center

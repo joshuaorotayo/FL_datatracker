@@ -7,14 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
-import com.jorotayo.fl_datatracker.domain.util.use_case.AddDataField
+import com.jorotayo.fl_datatracker.domain.util.use_case.DataFieldUseCases
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
 import com.jorotayo.fl_datatracker.util.capitaliseWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
-import io.objectbox.reactive.DataObserver
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -22,13 +21,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DataFieldsViewModel @Inject constructor(
-    private val addDataField: AddDataField,
 ) : ViewModel() {
 
-    val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
+    var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
 
-    val observer = DataObserver<Class<DataField>> {
-        val results: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    init {
+        loadDataFields()
+    }
+
+    private fun loadDataFields() {
+        _dataFieldsBox2.value = ObjectBox.get().boxFor(DataField::class.java)
     }
 
     private val maxChar = 30
@@ -76,25 +79,29 @@ class DataFieldsViewModel @Inject constructor(
                     fieldType = event.value
                 )
             }
-            DataFieldEvent.SaveDataField -> {
+            is DataFieldEvent.EditDataField -> TODO()
+            is DataFieldEvent.EditRowName -> {
+                val dataField = dataFieldsBox2.value.get(event.index)
+                dataField.fieldName = event.value
+                dataFieldsBox2.value.put(dataField)
+            }
+            is DataFieldEvent.EditRowType -> {
+                val dataField = dataFieldsBox2.value.get(event.index)
+                dataField.dataFieldType = event.value
+                dataFieldsBox2.value.put(dataField)
+            }
+            is DataFieldEvent.CheckedChange -> {
+                val dataField = dataFieldsBox2.value.get(event.index)
+                dataField.isEnabled = !dataField.isEnabled
+                dataFieldsBox2.value.put(dataField)
+            }
+            is DataFieldEvent.SaveDataField -> {
                 viewModelScope.launch {
                     try {
-                        addDataField(
-                            dataField =
-                            DataField(
-                                id = 0,
-                                fieldName = _newDataField.value.fieldName,
-                                dataValue = "",
-                                dataFieldType = _newDataField.value.fieldType,
-                                dataList = returnDataList(),
-                                isEnabled = true
-                            )
+                        DataFieldUseCases().addDataField(
+                            dataField = event.dataField
                         )
 
-                        _isAddDataFieldVisible.value = _isAddDataFieldVisible.value.copy(
-                            isAddDataFieldVisible = !isAddDataFieldVisible.value.isAddDataFieldVisible
-
-                        )
                     } catch (e: InvalidDataFieldException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
@@ -104,51 +111,22 @@ class DataFieldsViewModel @Inject constructor(
                     }
                 }
             }
-            is DataFieldEvent.EditDataField -> TODO()
-            is DataFieldEvent.EditRowName -> {
-                val dataField = dataFieldsBox.get(event.index)
-                dataField.fieldName = event.value
-                dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditRowType -> {
-                val dataField = dataFieldsBox.get(event.index)
-                dataField.dataFieldType = event.value
-                dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.CheckedChange -> {
-                val dataField = dataFieldsBox.get(event.index)
-                dataField.isEnabled = !dataField.isEnabled
-                dataFieldsBox.put(dataField)
+            is DataFieldEvent.EditStateValues -> {
+                val dataField = dataFieldsBox2.value.get(event.index)
+                val dataList = dataField.dataList?.toMutableList()
+                dataList?.set(event.valIndex, event.value)
+                if (dataList != null) {
+                    dataField.dataList = dataList.toList()
+                }
+                dataFieldsBox2.value.put(dataField)
             }
         }
     }
 
-    private fun returnDataList(): List<String> {
-        //boolean
-        when (_newDataField.value.fieldType) {
-            3 -> {
-                return listOf(
-                    _newDataField.value.firstValue,
-                    _newDataField.value.secondValue
-                )
-            }
-            //tri-state
-            6 -> {
-                return listOf(
-                    _newDataField.value.firstValue,
-                    _newDataField.value.secondValue,
-                    _newDataField.value.thirdValue
-                )
-            }
-            else -> {
-                return listOf()
-            }
-        }
-    }
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
-        object AddDataField : UiEvent()
+        object SaveDataField : UiEvent()
     }
 
 }
