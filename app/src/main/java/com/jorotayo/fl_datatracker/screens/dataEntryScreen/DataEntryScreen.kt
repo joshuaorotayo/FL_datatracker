@@ -22,6 +22,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
+import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.launch
 
@@ -75,7 +76,10 @@ fun DataEntryScreen(
                 )
             }
         },
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        snackbarHost = {
+            scaffoldState.snackbarHostState
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -92,17 +96,14 @@ fun DataEntryScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
-                        .padding(vertical = 20.dp, horizontal = 16.dp)
+                        .padding(vertical = 10.dp)
                 ) {
-
                     // Contents of data entry form
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 8.dp)
                             .verticalScroll(rememberScrollState())
                     ) {
-
                         val testRun = true
                         //Spacer(modifier = Modifier.height(20.dp))
                         if (viewModel.dataFieldsBox2.value.isEmpty && !testRun) {
@@ -116,7 +117,7 @@ fun DataEntryScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 10.dp)
+                                    .padding(vertical = 10.dp, horizontal = 16.dp)
                             ) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
@@ -129,11 +130,14 @@ fun DataEntryScreen(
 
                             val shortText =
                                 FormShortTextRowV2(rowHint = "Short Text row example...")
-                            FormCountRowV2()
+                            FormCountRowV2(fieldName = "COUNT DataField")
                             FormDateRowV2(DataEntryScreenViewModel())
                             FormTimeRowV2(DataEntryScreenViewModel())
                             FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
-                            FormLongTextRowV2(rowHint = "Data Capture V2 long text")
+                            FormLongTextRowV2(
+                                fieldName = "Data Field for Long Text Example",
+                                fieldHint = "Data capture long text row example..."
+                            )
 
                             Button(
                                 modifier = Modifier
@@ -143,7 +147,7 @@ fun DataEntryScreen(
                                     scope.launch {
                                         scaffoldState.snackbarHostState.showSnackbar(
                                             message = shortText,
-                                            actionLabel = null
+                                            actionLabel = "affairs"
                                         )
                                     }
                                 }) {
@@ -154,8 +158,15 @@ fun DataEntryScreen(
 
                                 )
                             }
+
                         }
                     }
+                    DefaultSnackbar(
+                        snackbarHostState = scaffoldState.snackbarHostState,
+                        onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    )
                 }
             }
         }

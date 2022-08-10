@@ -35,15 +35,16 @@ fun FormShortTextRowV2(
 
     Column(
         modifier = Modifier
-            .padding(5.dp)
+            .padding(vertical = 5.dp, horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
+            .padding(10.dp)
     ) {
         Row(
             modifier = Modifier
-                .padding(bottom = 10.dp)
+                .padding(bottom = 8.dp)
                 .fillMaxWidth()
         ) {
             Text(
@@ -105,7 +106,7 @@ fun FormShortTextRowV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(10.dp)
+            .height(5.dp)
     )
 
     return text.text

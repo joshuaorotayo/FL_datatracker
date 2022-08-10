@@ -24,31 +24,34 @@ import androidx.compose.ui.unit.dp
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormCountRowV2() {
-    FormCountRowV2()
+    FormCountRowV2(fieldName = "Data Field for Count Row")
 }
 
 @Composable
-fun FormCountRowV2() {
+fun FormCountRowV2(
+    fieldName: String
+) {
     var count = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
-            .padding(5.dp)
+            .padding(vertical = 5.dp, horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
+            .padding(10.dp)
     ) {
         Row(
             modifier = Modifier
-                .padding(bottom = 10.dp)
+                .padding(bottom = 8.dp)
                 .fillMaxWidth()
         ) {
             Text(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .padding(vertical = 5.dp, horizontal = 16.dp)
                     .fillMaxWidth(),
-                text = "Data Field for Numbers Text",
+                text = fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )

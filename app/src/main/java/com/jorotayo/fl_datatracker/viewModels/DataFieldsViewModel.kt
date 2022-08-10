@@ -9,9 +9,9 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
 import com.jorotayo.fl_datatracker.domain.util.use_case.DataFieldUseCases
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRowState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
-import com.jorotayo.fl_datatracker.util.capitaliseWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,6 +35,7 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private val maxChar = 30
+    private val maxHintChar = 60
 
     private val _isAddDataFieldVisible = mutableStateOf(DataFieldScreenState())
     var isAddDataFieldVisible: State<DataFieldScreenState> = _isAddDataFieldVisible
@@ -44,6 +45,9 @@ class DataFieldsViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _rowState = mutableStateOf(DataFieldRowState())
+    var rowState: State<DataFieldRowState> = _rowState
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
@@ -55,7 +59,14 @@ class DataFieldsViewModel @Inject constructor(
             is DataFieldEvent.SaveDataFieldName -> {
                 if (event.value.length <= maxChar) {
                     _newDataField.value = newDataField.value.copy(
-                        fieldName = capitaliseWord(event.value)
+                        fieldName = event.value
+                    )
+                }
+            }
+            is DataFieldEvent.AddHintText -> {
+                if (event.value.length <= maxHintChar) {
+                    _newDataField.value = newDataField.value.copy(
+                        fieldHint = event.value
                     )
                 }
             }
@@ -80,9 +91,14 @@ class DataFieldsViewModel @Inject constructor(
                 )
             }
             is DataFieldEvent.EditDataField -> TODO()
-            is DataFieldEvent.EditRowName -> {
+            is DataFieldEvent.EditFieldName -> {
                 val dataField = dataFieldsBox2.value.get(event.index)
                 dataField.fieldName = event.value
+                dataFieldsBox2.value.put(dataField)
+            }
+            is DataFieldEvent.EditHintText -> {
+                val dataField = dataFieldsBox2.value.get(event.index)
+                dataField.fieldHint = event.value
                 dataFieldsBox2.value.put(dataField)
             }
             is DataFieldEvent.EditRowType -> {
@@ -119,6 +135,11 @@ class DataFieldsViewModel @Inject constructor(
                     dataField.dataList = dataList.toList()
                 }
                 dataFieldsBox2.value.put(dataField)
+            }
+            DataFieldEvent.ToggleHint -> {
+                _rowState.value = rowState.value.copy(
+                    editHint = true
+                )
             }
         }
     }

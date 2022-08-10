@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,7 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchVisible
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -50,6 +52,8 @@ fun HomeScreen(
 
     val systemUiController = rememberSystemUiController()
 
+    val scope = rememberCoroutineScope()
+
     systemUiController.setStatusBarColor(MaterialTheme.colors.background)
 
     Scaffold(
@@ -57,6 +61,9 @@ fun HomeScreen(
             BottomNavigationBar(navController, bottomNavigationItems)
         },
         scaffoldState = scaffoldState,
+        snackbarHost = {
+            scaffoldState.snackbarHostState
+        },
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier,
@@ -80,6 +87,12 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            DefaultSnackbar(
+                snackbarHostState = scaffoldState.snackbarHostState,
+                onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            )
             //...main content
             Column(
                 modifier = Modifier
@@ -119,16 +132,23 @@ fun HomeScreen(
                         .clip(shape = RoundedCornerShape(20.dp))
                         .background(MaterialTheme.colors.onBackground)
                 ) {
-                    DefaultSnackbar(
-                        snackbarHostState = scaffoldState.snackbarHostState,
-                        onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    )
                     Column(
                         modifier = Modifier
                             .padding(10.dp)
                     ) {
 
+                        Button(onClick = {
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "test",
+                                    actionLabel = "hide"
+                                )
+                            }
+                        }
+                        ) {
+                            Text(text = "test button")
+
+                        }
                     }
                 }
             }

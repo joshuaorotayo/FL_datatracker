@@ -92,7 +92,7 @@ fun DataFieldsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp)
+                    .padding(vertical = 16.dp, horizontal = 10.dp)
                     .clip(shape = RoundedCornerShape(10.dp))
             ) {
                 // Header Row
@@ -103,7 +103,7 @@ fun DataFieldsScreen(
                             .wrapContentHeight()
                             .padding(10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             modifier = Modifier,
@@ -176,7 +176,7 @@ fun DataFieldsScreen(
                         Row(
                             modifier = Modifier
                                 .wrapContentHeight()
-                                .padding(bottom = 8.dp),
+                                .padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -208,26 +208,26 @@ fun DataFieldsScreen(
                     DataFieldRow(
                         dataField = item,
                         editName = {
-                            item.fieldName = it
                             viewModel.onEvent(
-                                DataFieldEvent.EditRowName(
+                                DataFieldEvent.EditFieldName(
                                     index = item.id,
                                     value = it
                                 )
                             )
+                            item.fieldName = it
                         },
                         editType = {
-                            item.dataFieldType = it
                             viewModel.onEvent(
                                 (DataFieldEvent.EditRowType(
                                     index = item.id,
                                     value = it
                                 ))
                             )
+                            item.dataFieldType = it
                         },
                         checkedChange = {
-                            item.isEnabled = !item.isEnabled
                             viewModel.onEvent(DataFieldEvent.CheckedChange(index = item.id))
+                            item.isEnabled = !item.isEnabled
                         },
                         editStateValues = {
                             val dataList = item.dataList?.toMutableList()
@@ -242,6 +242,20 @@ fun DataFieldsScreen(
                                     value = it.second
                                 )
                             )
+                        },
+                        editHint = viewModel.rowState.value.editHint,
+                        editOptions = viewModel.rowState.value.editOptions,
+                        toggleHint = {
+                            viewModel.onEvent(DataFieldEvent.ToggleHint)
+                        },
+                        editHintText = {
+                            viewModel.onEvent(
+                                DataFieldEvent.EditHintText(
+                                    index = item.id,
+                                    value = it
+                                )
+                            )
+                            item.fieldHint = it
                         }
                     )
                 }

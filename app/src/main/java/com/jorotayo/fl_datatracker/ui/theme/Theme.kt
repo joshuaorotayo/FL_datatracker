@@ -33,7 +33,6 @@ private val LightColorPalette = lightColors(
 /*
  Other default colors to override
     */
-
 )
 
 
