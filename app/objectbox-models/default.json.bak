@@ -1,0 +1,136 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:3822546765592249695",
+      "lastPropertyId": "1:3072197082925970955",
+      "name": "Data",
+      "properties": [
+        {
+          "id": "1:3072197082925970955",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:408576031842793958",
+          "name": "dataFields",
+          "targetId": "2:2852525956539110721"
+        }
+      ]
+    },
+    {
+      "id": "2:2852525956539110721",
+      "lastPropertyId": "7:7440509880252825162",
+      "name": "DataField",
+      "properties": [
+        {
+          "id": "1:3999696766960590543",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6254905170803778250",
+          "name": "fieldName",
+          "indexId": "1:4453735789089872318",
+          "type": 9,
+          "flags": 34848
+        },
+        {
+          "id": "3:6602910263826195934",
+          "name": "dataFieldType",
+          "type": 5
+        },
+        {
+          "id": "4:490147175587233654",
+          "name": "dataValue",
+          "type": 9
+        },
+        {
+          "id": "5:7591287214112618563",
+          "name": "dataList",
+          "type": 30
+        },
+        {
+          "id": "6:237312583387670513",
+          "name": "isEnabled",
+          "type": 1
+        },
+        {
+          "id": "7:7440509880252825162",
+          "name": "rowHint",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:9222748239406989890",
+      "lastPropertyId": "3:3481459358932122398",
+      "name": "SettingsBool",
+      "properties": [
+        {
+          "id": "1:5021020402484733637",
+          "name": "Id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:4820273468065908338",
+          "name": "settingName",
+          "indexId": "2:2413846567798584160",
+          "type": 9,
+          "flags": 34848
+        },
+        {
+          "id": "3:3481459358932122398",
+          "name": "settingValue",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:179261494034993148",
+      "lastPropertyId": "3:5895426378627394775",
+      "name": "SettingsStr",
+      "properties": [
+        {
+          "id": "1:3798274039131139848",
+          "name": "Id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:6194652380076558755",
+          "name": "settingName",
+          "indexId": "3:9115277781831240040",
+          "type": 9,
+          "flags": 34848
+        },
+        {
+          "id": "3:5895426378627394775",
+          "name": "settingValue",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:179261494034993148",
+  "lastIndexId": "3:9115277781831240040",
+  "lastRelationId": "1:408576031842793958",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

@@ -21,6 +21,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.ofMaxLength
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 
 @Preview
@@ -250,20 +251,114 @@ fun NewDataField(
                         .background(Color.Transparent)
                 )
             }
-
         }
         AnimatedVisibility(visible = newDataField.fieldType == 2) {
-            BoolValues(
-                viewModel = DataFieldsViewModel(),
-                optionsMaxChars = optionsMaxChars
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 5.dp)
+                ) {
+                    Text(
+                        text = "Enter in the values for the boolean e.g. Yes and No",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Gray
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.firstValue,
+                        label = "1st Value",
+                        placeholder = newDataField.firstValue.ifBlank { "1st Value" },
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddFirstValue(it)
+                            )
+                        }
+                    )
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.secondValue,
+                        label = "2nd Value",
+                        placeholder = newDataField.secondValue.ifBlank { "2nd Value" },
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddSecondValue(it)
+                            )
+                        }
+                    )
+                }
+            }
         }
 
         AnimatedVisibility(visible = newDataField.fieldType == 6) {
-            TriValues(
-                viewModel = DataFieldsViewModel(),
-                optionsMaxChars = optionsMaxChars
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 5.dp)
+                ) {
+                    Text(
+                        text = "Enter in the values for the Tri-state e.g. No, N/A and Yes",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Gray
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.firstValue,
+                        label = "1st Value",
+                        placeholder = newDataField.firstValue.ifBlank { "1st Value" },
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddFirstValue(it)
+                            )
+                        }
+                    )
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.secondValue,
+                        label = "2nd Value",
+                        placeholder = "2nd Value",
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddSecondValue(it)
+                            )
+                        }
+                    )
+                    TransparentTextField(
+                        modifier = Modifier.weight(1f),
+                        text = newDataField.thirdValue,
+                        label = "3rd Value",
+                        placeholder = "3rd Value",
+                        onValueChange = {
+                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                                DataFieldEvent.AddThirdValue(it)
+                            )
+                        }
+                    )
+                }
+            }
         }
         Row(
             modifier = Modifier
@@ -271,7 +366,6 @@ fun NewDataField(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            val scope = rememberCoroutineScope()
             Button(
                 modifier = Modifier
                     .background(MaterialTheme.colors.primary),

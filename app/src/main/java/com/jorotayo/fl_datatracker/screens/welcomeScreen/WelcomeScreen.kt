@@ -97,7 +97,7 @@ fun WelcomeScreen(
                                 .padding(horizontal = 40.dp)
                                 .padding(top = 20.dp),
                             text = pages[pagerState.currentPage].description,
-                            fontSize = MaterialTheme.typography.subtitle1.fontSize,
+                            fontSize = MaterialTheme.typography.h6.fontSize,
                             fontWeight = FontWeight.Medium,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colors.onSurface

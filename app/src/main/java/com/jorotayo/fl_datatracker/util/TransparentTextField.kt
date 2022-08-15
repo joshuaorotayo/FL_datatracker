@@ -34,7 +34,7 @@ fun TransparentTextField(
 ) {
     Box(
         modifier = modifier
-            .padding(2.dp)
+            .padding(horizontal = 2.dp)
     ) {
         OutlinedTextField(
             value = text,

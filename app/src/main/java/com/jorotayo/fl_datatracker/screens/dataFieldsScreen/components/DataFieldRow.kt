@@ -6,20 +6,23 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.ofMaxLength
+import com.jorotayo.fl_datatracker.util.TransparentTextField
 
 //@Preview
 //@Composable
@@ -72,9 +75,7 @@ fun DataFieldRow(
     editType: (Int) -> Unit,
     checkedChange: (Boolean) -> Unit,
     editStateValues: (Pair<Int, String>) -> Unit, //int is the field number, string is edited value
-    editHint: Boolean,
-    editOptions: Boolean,
-    toggleHint: () -> Unit //toggles view
+    deleteIcon: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -89,6 +90,9 @@ fun DataFieldRow(
     val (editHintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
 
     val optionsMaxChars = 20
+
+    val isHintVisible = remember { mutableStateOf(false) }
+    val isEditOptionsVisible = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -143,7 +147,7 @@ fun DataFieldRow(
                     textAlign = TextAlign.Center
                 )
                 Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
+                    imageVector = Default.ArrowDropDown,
                     contentDescription = "Drop down arrow for Field Type Dropdown",
                     tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
                 )
@@ -158,6 +162,7 @@ fun DataFieldRow(
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(onClick = {
                         editType(index)
+                        isHintVisible.value = true
                         expanded = false
                     })
                     {
@@ -185,12 +190,26 @@ fun DataFieldRow(
                     checkedColor = MaterialTheme.colors.primary,
                 )
             )
+
+            IconButton(
+                modifier = Modifier
+                    .weight(0.5f),
+                onClick =
+                deleteIcon
+            ) {
+                Icon(
+                    imageVector = Default.Delete,
+                    contentDescription = "Delete Row",
+                    tint = MaterialTheme.colors.primary
+                )
+
+            }
         }
-        AnimatedVisibility(dataField.dataFieldType <= 1 && !editHint) {
+        AnimatedVisibility(dataField.dataFieldType <= 1 && !isHintVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 24.dp, end = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -203,17 +222,19 @@ fun DataFieldRow(
                 IconButton(
                     modifier = Modifier
                         .weight(2f),
-                    onClick = toggleHint,
+                    onClick = {
+                        isHintVisible.value = !isHintVisible.value
+                    },
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Close,
+                        imageVector = Default.Edit,
                         contentDescription = "Amend row Hint",
                         tint = MaterialTheme.colors.onSurface,
                     )
                 }
             }
         }
-        AnimatedVisibility(visible = dataField.dataFieldType <= 1 && editHint) {
+        AnimatedVisibility(visible = dataField.dataFieldType <= 1 && isHintVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -222,7 +243,7 @@ fun DataFieldRow(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                (if (dataField.fieldHint?.isBlank() == true) "Edit the Hint Text" else dataField!!.fieldHint)?.let { hint ->
+                (if (dataField.fieldHint?.isBlank() == true) "Edit the Hint Text" else dataField.fieldHint)?.let { hint ->
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -237,7 +258,8 @@ fun DataFieldRow(
                             Text(
                                 text = if (fieldHint.isNullOrEmpty()) "Please enter Hint for field: $fieldName" else fieldHint,
                                 color = if (editHintText.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold
                             )
                         },
                         onValueChange =
@@ -250,7 +272,7 @@ fun DataFieldRow(
             }
 
         }
-        AnimatedVisibility(dataField.dataFieldType == 2 && !editOptions) {
+        AnimatedVisibility(dataField.dataFieldType == 2 && !isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -258,6 +280,7 @@ fun DataFieldRow(
             ) {
                 Text(
                     text = "Boolean: ",
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.onSurface
                 )
                 Text(
@@ -266,9 +289,23 @@ fun DataFieldRow(
                     }",
                     color = MaterialTheme.colors.primary
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    modifier = Modifier
+                        .weight(2f),
+                    onClick = {
+                        isEditOptionsVisible.value = true
+                    },
+                ) {
+                    Icon(
+                        imageVector = Default.Edit,
+                        contentDescription = "Amend row Hint",
+                        tint = MaterialTheme.colors.onSurface,
+                    )
+                }
             }
         }
-        AnimatedVisibility(dataField.dataFieldType == 6 && !editOptions) {
+        AnimatedVisibility(dataField.dataFieldType == 6 && !isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -276,32 +313,106 @@ fun DataFieldRow(
             ) {
                 Text(
                     text = "Tristate: ",
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.onSurface
                 )
                 Text(
                     text = "${dataField.dataList?.get(0)?.uppercase()}/${
                         dataField.dataList?.get(1)?.uppercase()
-                    }/${dataField.dataList?.get(2)?.uppercase()}",
+                    }/${dataField.dataList?.get(2)?.uppercase() /* TODO:check for 3rd value */}",
                     color = MaterialTheme.colors.primary
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    modifier = Modifier
+                        .weight(2f),
+                    onClick = {
+                        isEditOptionsVisible.value = true
+                    },
+                ) {
+                    Icon(
+                        imageVector = Default.Edit,
+                        contentDescription = "Amend row Hint",
+                        tint = MaterialTheme.colors.onSurface,
+                    )
+                }
             }
         }
 
-        AnimatedVisibility(dataField.dataFieldType == 2 && editOptions) {
-            EditBoolValues(
-                dataField = dataField,
-                optionsMaxChars = optionsMaxChars,
-                editStateValues = editStateValues
-            )
+        AnimatedVisibility(dataField.dataFieldType == 2 && isEditOptionsVisible.value) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                //boolean text fields for editable
+                TransparentTextField(
+                    modifier = Modifier.weight(1f),
+                    text = dataField.dataList?.get(0) ?: "1st Value",
+                    label = "1st Value",
+                    placeholder = dataField.dataList?.get(0) ?: "1st Value",
+                    onValueChange = {
+                        if (it.length <= optionsMaxChars)
+                            editStateValues(Pair(0, it))
+                    }
+                )
+                TransparentTextField(
+                    modifier = Modifier.weight(1f),
+                    text = dataField.dataList?.get(1) ?: "2nd Value",
+                    label = "2nd Value",
+                    placeholder = dataField.dataList?.get(1) ?: "2nd Value",
+                    onValueChange = {
+                        if (it.length <= optionsMaxChars)
+                            editStateValues(Pair(1, it))
+                    }
+                )
+            }
         }
-        AnimatedVisibility(dataField.dataFieldType == 6 && editOptions) {
-            EditTriValues(
-                dataField = dataField,
-                optionsMaxChars = optionsMaxChars,
-                editStateValues = editStateValues
-            )
+        AnimatedVisibility(dataField.dataFieldType == 6 && isEditOptionsVisible.value) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                //boolean text fields for editable
+                TransparentTextField(
+                    modifier = Modifier.weight(1f),
+                    text = dataField.dataList?.get(0) ?: "1st Value",
+                    label = "1st Value",
+                    placeholder = dataField.dataList?.get(0) ?: "1st Value",
+                    onValueChange = {
+                        if (it.length <= optionsMaxChars)
+                            editStateValues(Pair(0, it))
+                    }
+                )
+                TransparentTextField(
+                    modifier = Modifier.weight(1f),
+                    text = dataField.dataList?.get(1) ?: "2nd Value",
+                    label = "2nd Value",
+                    placeholder = dataField.dataList?.get(1) ?: "2nd Value",
+                    onValueChange = {
+                        if (it.length <= optionsMaxChars)
+                            editStateValues(Pair(1, it))
+                    }
+                )
+                TransparentTextField(
+                    modifier = Modifier.weight(1f),
+                    text = dataField.dataList?.get(2) ?: "3rd Value",
+                    label = "3rd Value",
+                    placeholder = dataField.dataList?.get(2) ?: "3rd Value",
+                    onValueChange = {
+                        if (it.length <= optionsMaxChars)
+                            editStateValues(Pair(2, it))
+
+                    }
+                )
+            }
         }
     }
 }
+
 
 

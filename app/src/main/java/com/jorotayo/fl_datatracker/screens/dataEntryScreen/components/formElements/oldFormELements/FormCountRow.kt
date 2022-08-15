@@ -29,7 +29,7 @@ fun PreviewFormCountRow() {
 
 @Composable
 fun FormCountRow() {
-    var count = remember { mutableStateOf(0) }
+    val count = remember { mutableStateOf(0) }
 
     Box(
         modifier = Modifier

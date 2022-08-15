@@ -6,5 +6,7 @@ data class NewDataFieldState(
     val fieldType: Int = 0,
     val firstValue: String = "",
     val secondValue: String = "",
-    val thirdValue: String = ""
+    val thirdValue: String = "",
+    val editOptions: Boolean = false,
+    val editHint: Boolean = false
 )

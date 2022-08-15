@@ -31,7 +31,7 @@ fun PreviewFormCountRowV2() {
 fun FormCountRowV2(
     fieldName: String
 ) {
-    var count = remember { mutableStateOf(0) }
+    val count = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier

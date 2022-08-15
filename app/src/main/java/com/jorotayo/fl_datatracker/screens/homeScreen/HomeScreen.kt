@@ -91,7 +91,7 @@ fun HomeScreen(
                 snackbarHostState = scaffoldState.snackbarHostState,
                 onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.Center)
             )
             //...main content
             Column(

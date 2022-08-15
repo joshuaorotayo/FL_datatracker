@@ -1,22 +1,16 @@
 package com.jorotayo.fl_datatracker.viewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
-import com.jorotayo.fl_datatracker.domain.util.use_case.DataFieldUseCases
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRowState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,17 +31,20 @@ class DataFieldsViewModel @Inject constructor(
     private val maxChar = 30
     private val maxHintChar = 60
 
+    private val _openDeleteDialog = mutableStateOf(false)
+    var openDeleteDialog: MutableState<Boolean> = _openDeleteDialog
+
     private val _isAddDataFieldVisible = mutableStateOf(DataFieldScreenState())
     var isAddDataFieldVisible: State<DataFieldScreenState> = _isAddDataFieldVisible
 
     private val _newDataField = mutableStateOf(NewDataFieldState())
     var newDataField: State<NewDataFieldState> = _newDataField
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _deletedDataField = mutableStateOf(DataField(id = 0))
+    var deletedDataField: State<DataField> = _deletedDataField
 
-    private val _rowState = mutableStateOf(DataFieldRowState())
-    var rowState: State<DataFieldRowState> = _rowState
+    private val _isShowAlert = mutableStateOf(false)
+    var isShowAlert: MutableState<Boolean> = _isShowAlert
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
@@ -90,7 +87,6 @@ class DataFieldsViewModel @Inject constructor(
                     fieldType = event.value
                 )
             }
-            is DataFieldEvent.EditDataField -> TODO()
             is DataFieldEvent.EditFieldName -> {
                 val dataField = dataFieldsBox2.value.get(event.index)
                 dataField.fieldName = event.value
@@ -111,22 +107,6 @@ class DataFieldsViewModel @Inject constructor(
                 dataField.isEnabled = !dataField.isEnabled
                 dataFieldsBox2.value.put(dataField)
             }
-            is DataFieldEvent.SaveDataField -> {
-                viewModelScope.launch {
-                    try {
-                        DataFieldUseCases().addDataField(
-                            dataField = event.dataField
-                        )
-
-                    } catch (e: InvalidDataFieldException) {
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save DataField"
-                            )
-                        )
-                    }
-                }
-            }
             is DataFieldEvent.EditStateValues -> {
                 val dataField = dataFieldsBox2.value.get(event.index)
                 val dataList = dataField.dataList?.toMutableList()
@@ -136,18 +116,20 @@ class DataFieldsViewModel @Inject constructor(
                 }
                 dataFieldsBox2.value.put(dataField)
             }
+            is DataFieldEvent.ConfirmDelete -> {
+                _openDeleteDialog.value = true
+                _deletedDataField.value = event.dataField
+            }
             DataFieldEvent.ToggleHint -> {
-                _rowState.value = rowState.value.copy(
+                _newDataField.value = newDataField.value.copy(
                     editHint = true
                 )
             }
+            is DataFieldEvent.OpenDeleteDialog -> {
+                _isShowAlert.value = !isShowAlert.value
+                _deletedDataField.value = event.dataField
+            }
+
         }
     }
-
-
-    sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
-        object SaveDataField : UiEvent()
-    }
-
 }

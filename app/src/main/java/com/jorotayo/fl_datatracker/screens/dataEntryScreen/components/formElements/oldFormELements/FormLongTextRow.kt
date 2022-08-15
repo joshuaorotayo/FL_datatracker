@@ -34,7 +34,7 @@ fun FormLongTextRow(
     //define any local variables
 
     val maxChar = 250
-    var (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
+    val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
     Box(
         modifier = Modifier

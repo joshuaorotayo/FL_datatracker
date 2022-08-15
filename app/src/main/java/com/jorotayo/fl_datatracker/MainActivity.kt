@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         if (dataFieldsBox.count() < 20) {
-            dataFieldsBox.removeAll()
+            //dataFieldsBox.removeAll()
             //dataFieldsBox.put(initFakeData())
         }
         setContent {

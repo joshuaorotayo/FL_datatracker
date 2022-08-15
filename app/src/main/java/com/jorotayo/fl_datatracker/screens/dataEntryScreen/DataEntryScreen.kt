@@ -22,7 +22,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
-import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.launch
 
@@ -35,7 +34,6 @@ fun PreviewDataEntryScreen() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataEntryScreen(
     viewModel: DataEntryScreenViewModel,
@@ -147,7 +145,7 @@ fun DataEntryScreen(
                                     scope.launch {
                                         scaffoldState.snackbarHostState.showSnackbar(
                                             message = shortText,
-                                            actionLabel = "affairs"
+                                            actionLabel = "Hide"
                                         )
                                     }
                                 }) {
@@ -161,12 +159,6 @@ fun DataEntryScreen(
 
                         }
                     }
-                    DefaultSnackbar(
-                        snackbarHostState = scaffoldState.snackbarHostState,
-                        onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                    )
                 }
             }
         }

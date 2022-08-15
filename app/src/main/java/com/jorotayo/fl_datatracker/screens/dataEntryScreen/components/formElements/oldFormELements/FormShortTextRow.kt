@@ -32,7 +32,7 @@ fun FormShortTextRow(
     rowHint: String?
 ) {
     val maxChar = 50
-    var (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
+    val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
     Box(
         modifier = Modifier.wrapContentSize(),

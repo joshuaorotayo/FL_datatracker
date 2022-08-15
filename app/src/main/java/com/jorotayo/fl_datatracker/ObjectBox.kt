@@ -8,8 +8,8 @@ import io.objectbox.android.Admin
 
 
 object ObjectBox {
-    lateinit var boxStore: BoxStore
-    lateinit var _admin: Admin
+    private lateinit var boxStore: BoxStore
+    lateinit var admin: Admin
         private set
 
     fun init(context: Context) {

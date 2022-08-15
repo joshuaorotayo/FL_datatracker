@@ -59,8 +59,8 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
         val mTime = Calendar.getInstance()
         var amPm = ""
 
-        mTime.set(Calendar.HOUR_OF_DAY, hour);
-        mTime.set(Calendar.MINUTE, minute);
+        mTime.set(Calendar.HOUR_OF_DAY, hour)
+        mTime.set(Calendar.MINUTE, minute)
 
         amPm = if (mTime.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
 
