@@ -11,7 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,16 +52,12 @@ fun DataFieldsScreen(
         Screen.HomeScreen,
     )
 
-    val headingMessage by remember { mutableStateOf("Add/Edit Data Fields:") }
+    val isAddDataFieldVisible = viewModel.isAddDataFieldVisible.value
 
-    val isAddDataFieldVisible = viewModel.isAddDataFieldVisible.value.isAddDataFieldVisible
-
-    val fields = viewModel.dataFieldsBox2
-
+    val fields by viewModel.dataFieldsBox2
     val scaffoldState = rememberScaffoldState()
 
     val scope = rememberCoroutineScope()
-
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -98,7 +96,7 @@ fun DataFieldsScreen(
                         ) {
                             Text(
                                 modifier = Modifier,
-                                text = headingMessage,
+                                text = "Add/Edit Data Fields:",
                                 color = MaterialTheme.colors.primary,
                                 style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                                 textAlign = TextAlign.Start
@@ -107,7 +105,6 @@ fun DataFieldsScreen(
                                 modifier = Modifier,
                                 onClick = {
                                     viewModel.onEvent(DataFieldEvent.ToggleAddNewDataField)
-
                                 }) {
                                 Icon(
                                     modifier = Modifier
@@ -120,7 +117,7 @@ fun DataFieldsScreen(
                         }
                     }
                     item {
-                        AnimatedVisibility(visible = !isAddDataFieldVisible && fields.value.isEmpty) {
+                        AnimatedVisibility(visible = !isAddDataFieldVisible && fields.isEmpty) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -139,7 +136,7 @@ fun DataFieldsScreen(
                         }
                     }
                     item {
-                        AnimatedVisibility(visible = viewModel.isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                        AnimatedVisibility(visible = isAddDataFieldVisible) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -174,7 +171,7 @@ fun DataFieldsScreen(
                     }
 
                     item {
-                        AnimatedVisibility(visible = !fields.value.isEmpty && !viewModel.isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                        AnimatedVisibility(visible = !fields.isEmpty && !isAddDataFieldVisible) {
                             Row(
                                 modifier = Modifier
                                     .wrapContentHeight()
@@ -213,75 +210,87 @@ fun DataFieldsScreen(
                             }
                         }
                     }
-                    itemsIndexed(fields.value.all) { index, item ->
-                        DataFieldRow(
-                            dataField = item,
-                            editName = {
-                                viewModel.onEvent(
-                                    DataFieldEvent.EditFieldName(
-                                        index = item.id,
-                                        value = it
+                    itemsIndexed(fields.all,
+                        itemContent = { index, item ->
+                            DataFieldRow(
+                                viewModel = DataFieldsViewModel(),
+                                itemIndex = item.id,
+                                editName = {
+                                    viewModel.onEvent(
+                                        DataFieldEvent.EditFieldName(
+                                            index = item.id,
+                                            value = it
+                                        )
                                     )
-                                )
-                                item.fieldName = it
-                            },
-                            editType = {
-                                viewModel.onEvent(
-                                    (DataFieldEvent.EditRowType(
-                                        index = item.id,
-                                        value = it
-                                    ))
-                                )
-                                item.dataFieldType = it
-                            },
-                            checkedChange = {
-                                viewModel.onEvent(DataFieldEvent.CheckedChange(index = item.id))
-                                item.isEnabled = !item.isEnabled
-                            },
-                            editStateValues = {
-                                viewModel.onEvent(
-                                    DataFieldEvent.EditStateValues(
-                                        index = item.id,
-                                        valIndex = it.first,
-                                        value = it.second
+                                    item.fieldName = it
+                                },
+                                editType = {
+                                    viewModel.onEvent(
+                                        (DataFieldEvent.EditRowType(
+                                            index = item.id,
+                                            value = it
+                                        ))
                                     )
-                                )
-                                val dataList = item.dataList?.toMutableList()
-                                dataList?.set(it.first, it.second)
-                                if (dataList != null) {
+                                    item.dataFieldType = it
+                                },
+                                checkedChange = {
+                                    viewModel.onEvent(DataFieldEvent.EditIsEnabled(index = item.id))
+                                    item.isEnabled = !item.isEnabled
+                                },
+                                editStateValues = {
+                                    viewModel.onEvent(
+                                        DataFieldEvent.EditStateValues(
+                                            index = item.id,
+                                            valIndex = it.first,
+                                            value = it.second
+                                        )
+                                    )
+                                    val dataList = item.dataList.toMutableList()
+                                    dataList.set(it.first, it.second)
                                     item.dataList = dataList.toList()
-                                }
-                            },
-                            editHintText = {
-                                viewModel.onEvent(
-                                    DataFieldEvent.EditHintText(
-                                        index = item.id,
-                                        value = it
+                                },
+                                editHintText = {
+                                    viewModel.onEvent(
+                                        DataFieldEvent.EditHintText(
+                                            index = item.id,
+                                            value = it
+                                        )
                                     )
-                                )
-                                item.fieldHint = it
-                            },
-                            deleteIcon = {
-                                // viewModel.onEvent(DataFieldEvent.ConfirmDelete(dataField = item))
-                                //isShowAlert.value = true
-                                viewModel.onEvent(DataFieldEvent.OpenDeleteDialog(dataField = item))
-                                Log.i(TAG, "DataFieldsScreen: delete icon")
-                            }
-                        )
-                    }
+                                    item.fieldHint = it
+                                },
+                                deleteIcon = {
+                                    viewModel.onEvent(
+                                        DataFieldEvent.OpenDeleteDialog(
+                                            dataField = item
+                                        )
+                                    )
+//                                viewModel.dataFieldsBox2.value.remove(item.id)  // triggers recomp
+                                    Log.i(TAG, "DataFieldsScreen: delete icon")
+                                }
+                            )
+                        })
                 }
             }
 
             DeleteDialog(
                 modifier = Modifier.align(Alignment.Center),
-                confirmDelete = { /*TODO*/ },
-                state = viewModel.isShowAlert,
+                confirmDelete = {
+                    viewModel.onEvent(DataFieldEvent.ConfirmDelete(dataField = it))
+                    fields.remove(it.id)
+                },
+                scaffold = scaffoldState,
+                state = viewModel.isDeleteDialogVisible,
                 dataField = viewModel.deletedDataField.value
             )
 
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,
-                onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
+                onDismiss = {
+                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
+                        viewModel.onEvent(DataFieldEvent.RestoreDeletedField)
+                    }
+                },
                 modifier = Modifier
                     .align(Alignment.Center)
             )

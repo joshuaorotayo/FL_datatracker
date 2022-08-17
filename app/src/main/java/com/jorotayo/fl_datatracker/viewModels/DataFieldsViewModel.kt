@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
@@ -18,47 +17,43 @@ class DataFieldsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
-    var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
-
-    init {
-        loadDataFields()
-    }
-
-    private fun loadDataFields() {
-        _dataFieldsBox2.value = ObjectBox.get().boxFor(DataField::class.java)
-    }
+    var dataFieldsBox2: MutableState<Box<DataField>> = _dataFieldsBox2
 
     private val maxChar = 30
     private val maxHintChar = 60
 
-    private val _openDeleteDialog = mutableStateOf(false)
-    var openDeleteDialog: MutableState<Boolean> = _openDeleteDialog
-
-    private val _isAddDataFieldVisible = mutableStateOf(DataFieldScreenState())
-    var isAddDataFieldVisible: State<DataFieldScreenState> = _isAddDataFieldVisible
-
     private val _newDataField = mutableStateOf(NewDataFieldState())
     var newDataField: State<NewDataFieldState> = _newDataField
+
+    private val _openDeleteDialog = mutableStateOf(false)
+    var openDeleteDialog: MutableState<Boolean> = _openDeleteDialog
 
     private val _deletedDataField = mutableStateOf(DataField(id = 0))
     var deletedDataField: State<DataField> = _deletedDataField
 
-    private val _isShowAlert = mutableStateOf(false)
-    var isShowAlert: MutableState<Boolean> = _isShowAlert
+    private val _isAddDataFieldVisible = mutableStateOf(false)
+    var isAddDataFieldVisible: MutableState<Boolean> = _isAddDataFieldVisible
+
+    private val _isDeleteDialogVisible = mutableStateOf(false)
+    var isDeleteDialogVisible: MutableState<Boolean> = _isDeleteDialogVisible
+
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
             DataFieldEvent.ToggleAddNewDataField -> {
-                _isAddDataFieldVisible.value = _isAddDataFieldVisible.value.copy(
-                    isAddDataFieldVisible = !isAddDataFieldVisible.value.isAddDataFieldVisible
-                )
+                _isAddDataFieldVisible.value = !isAddDataFieldVisible.value
             }
-            is DataFieldEvent.SaveDataFieldName -> {
+            is DataFieldEvent.AddFieldName -> {
                 if (event.value.length <= maxChar) {
                     _newDataField.value = newDataField.value.copy(
                         fieldName = event.value
                     )
                 }
+            }
+            is DataFieldEvent.SelectFieldType -> {
+                _newDataField.value = newDataField.value.copy(
+                    fieldType = event.value
+                )
             }
             is DataFieldEvent.AddHintText -> {
                 if (event.value.length <= maxHintChar) {
@@ -82,11 +77,7 @@ class DataFieldsViewModel @Inject constructor(
                     thirdValue = event.value
                 )
             }
-            is DataFieldEvent.SelectFieldType -> {
-                _newDataField.value = newDataField.value.copy(
-                    fieldType = event.value
-                )
-            }
+            // Edit Operations
             is DataFieldEvent.EditFieldName -> {
                 val dataField = dataFieldsBox2.value.get(event.index)
                 dataField.fieldName = event.value
@@ -102,31 +93,27 @@ class DataFieldsViewModel @Inject constructor(
                 dataField.dataFieldType = event.value
                 dataFieldsBox2.value.put(dataField)
             }
-            is DataFieldEvent.CheckedChange -> {
+            is DataFieldEvent.EditIsEnabled -> {
                 val dataField = dataFieldsBox2.value.get(event.index)
                 dataField.isEnabled = !dataField.isEnabled
                 dataFieldsBox2.value.put(dataField)
             }
             is DataFieldEvent.EditStateValues -> {
                 val dataField = dataFieldsBox2.value.get(event.index)
-                val dataList = dataField.dataList?.toMutableList()
-                dataList?.set(event.valIndex, event.value)
-                if (dataList != null) {
-                    dataField.dataList = dataList.toList()
-                }
+                val dataList = dataField.dataList.toMutableList()
+                dataList[event.valIndex] = event.value
+                dataField.dataList = dataList.toList()
                 dataFieldsBox2.value.put(dataField)
             }
             is DataFieldEvent.ConfirmDelete -> {
-                _openDeleteDialog.value = true
                 _deletedDataField.value = event.dataField
+                //dataFieldsBox2.value.remove(deletedDataField.value)
             }
-            DataFieldEvent.ToggleHint -> {
-                _newDataField.value = newDataField.value.copy(
-                    editHint = true
-                )
+            DataFieldEvent.RestoreDeletedField -> {
+                dataFieldsBox2.value.put(deletedDataField.value)
             }
             is DataFieldEvent.OpenDeleteDialog -> {
-                _isShowAlert.value = !isShowAlert.value
+                _isDeleteDialogVisible.value = !isDeleteDialogVisible.value
                 _deletedDataField.value = event.dataField
             }
 

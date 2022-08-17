@@ -53,7 +53,8 @@ fun NewDataField(
         dataFieldType = newDataField.fieldType,
         fieldHint = newDataField.fieldHint,
         dataValue = "",
-        dataList = returnDataList(newDataField)
+        dataList = returnDataList(newDataField),
+        isEnabled = true
     )
 
     Column(
@@ -95,7 +96,7 @@ fun NewDataField(
                     .fillMaxWidth(),
                 value = newDataField.fieldName,
                 onValueChange = {
-                    viewModel.onEvent(DataFieldEvent.SaveDataFieldName(it))
+                    viewModel.onEvent(DataFieldEvent.AddFieldName(it))
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,

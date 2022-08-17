@@ -14,7 +14,7 @@ data class DataField(
     var fieldName: String = "",
     var dataFieldType: Int = DataFieldType.SHORTSTRING.ordinal,
     var dataValue: String = "",
-    var dataList: List<String>? = listOf("", "", ""),
+    var dataList: List<String> = listOf("", "", ""),
     var isEnabled: Boolean = true,
     var fieldHint: String? = "Enter value for $fieldName"
 )

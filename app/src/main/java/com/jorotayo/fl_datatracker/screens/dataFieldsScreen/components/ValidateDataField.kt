@@ -33,22 +33,23 @@ class ValidateDataField {
         }
 
         if (dataField.dataFieldType == 2) {
-            if (dataField.dataList?.get(0)?.isBlank() == true || dataField.dataList?.get(1)
-                    ?.isBlank() == true
+            if (dataField.dataList[0].isBlank() || dataField.dataList[1]
+                    .isBlank()
             ) {
+                mutableListOf(dataField.dataList)
                 isError = true
                 msg = "Please Enter values for both fields"
             }
         } else if (dataField.dataFieldType == 6) {
-            if (dataField.dataList?.get(0)?.isBlank() == true || dataField.dataList?.get(1)
-                    ?.isBlank() == true || dataField.dataList?.get(2)?.isBlank() == true
+            if (dataField.dataList[0].isBlank() || dataField.dataList[1]
+                    .isBlank() || dataField.dataList[2].isBlank()
             ) {
                 isError = true
                 msg = "Please Enter a value for all 3 Fields"
             }
         }
         if (!isError) {
-            if (dataField.dataList.isNullOrEmpty()) {
+            if (dataField.dataList.isEmpty()) {
                 dataField.dataList = listOf("", "", "")
             }
             dataField.fieldName = capitaliseWord(dataField.fieldName)
