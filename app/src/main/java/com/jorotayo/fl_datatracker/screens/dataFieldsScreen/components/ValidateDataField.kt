@@ -33,25 +33,17 @@ class ValidateDataField {
         }
 
         if (dataField.dataFieldType == 2) {
-            if (dataField.dataList[0].isBlank() || dataField.dataList[1]
-                    .isBlank()
-            ) {
-                mutableListOf(dataField.dataList)
+            if (dataField.first.isBlank() || dataField.second.isBlank()) {
                 isError = true
                 msg = "Please Enter values for both fields"
             }
         } else if (dataField.dataFieldType == 6) {
-            if (dataField.dataList[0].isBlank() || dataField.dataList[1]
-                    .isBlank() || dataField.dataList[2].isBlank()
-            ) {
+            if (dataField.first.isBlank() || dataField.second.isBlank() || dataField.third.isBlank()) {
                 isError = true
                 msg = "Please Enter a value for all 3 Fields"
             }
         }
         if (!isError) {
-            if (dataField.dataList.isEmpty()) {
-                dataField.dataList = listOf("", "", "")
-            }
             dataField.fieldName = capitaliseWord(dataField.fieldName)
             dataFieldsBox2.value.put(dataField)
             msg = "Data Field '${dataField.fieldName}' saved!"

@@ -3,17 +3,17 @@ package com.jorotayo.fl_datatracker.viewModels
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.jorotayo.fl_datatracker.ObjectBox
+import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBarState
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchVisible
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor() : ViewModel() {
 
-    private val _searchFieldState = mutableStateOf(
+/*    private val _searchFieldState = mutableStateOf(
         TextFieldState()
     )
     val searchFieldState: State<TextFieldState> = _searchFieldState
@@ -22,37 +22,42 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
     val searchBarState: State<SearchBarState> = _searchBarState
 
     private val _dataItems = mutableStateOf(6) // data items Value
-    val dataItems: State<Int> = _dataItems
+    val dataItems: State<Int> = _dataItems*/
+
+    private var _uiState = mutableStateOf(
+        HomeScreenState(
+            isSearchVisible = false,
+            text = "",
+            hint = "Search for data",
+            isHintVisible = true,
+            dataItems = ObjectBox.get().boxFor(Data::class.java).all
+
+        )
+    )
+    val uiState: State<HomeScreenState> = _uiState
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
             is HomeScreenEvent.ResetSearchBar -> {
-                _searchFieldState.value = searchFieldState.value.copy(
-                    // isHintVisible = true,
+                _uiState.value = uiState.value.copy(
                     text = ""
                 )
             }
             is HomeScreenEvent.SearchItemEntered -> {
-                _searchFieldState.value = searchFieldState.value.copy(
-                    text = event.searchItem,
+                _uiState.value = uiState.value.copy(
+                    text = event.searchItem
                 )
             }
-            is HomeScreenEvent.ToggleSearchBarShow -> {
-                _searchBarState.value = searchBarState.value.copy(
-                    isSearchVisible = SearchVisible.SearchBarShowing
-                )
-            }
-            is HomeScreenEvent.ToggleSearchBarHide -> {
-                _searchBarState.value = searchBarState.value.copy(
-                    isSearchVisible = SearchVisible.SearchBarHidden
+            is HomeScreenEvent.ToggleSearchBar -> {
+                _uiState.value = uiState.value.copy(
+                    isSearchVisible = !uiState.value.isSearchVisible
                 )
             }
             is HomeScreenEvent.SearchFocusChanged -> {
-                _searchFieldState.value = searchFieldState.value.copy(
+                _uiState.value = uiState.value.copy(
                     isHintVisible = !event.focusState.isFocused
                 )
             }
-            is HomeScreenEvent.ToggleSearchBar -> TODO()
             HomeScreenEvent.EditDataItem -> TODO()
         }
     }

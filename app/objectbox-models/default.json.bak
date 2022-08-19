@@ -25,7 +25,7 @@
     },
     {
       "id": "2:2852525956539110721",
-      "lastPropertyId": "7:7440509880252825162",
+      "lastPropertyId": "8:7151408981761751988",
       "name": "DataField",
       "properties": [
         {
@@ -62,8 +62,8 @@
           "type": 1
         },
         {
-          "id": "7:7440509880252825162",
-          "name": "rowHint",
+          "id": "8:7151408981761751988",
+          "name": "fieldHint",
           "type": 9
         }
       ],
@@ -130,7 +130,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    7440509880252825162
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

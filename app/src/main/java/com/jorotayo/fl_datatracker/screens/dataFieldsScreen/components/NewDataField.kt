@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -12,7 +14,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +32,7 @@ import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 @Preview
 @Composable
 fun PreviewNewDataField() {
-    //NewDataField(viewModel = hiltViewModel(), )
+//    NewDataField(viewModel = hiltViewModel())
 }
 
 @Composable
@@ -46,14 +51,19 @@ fun NewDataField(
     val maxHintChar = 60
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
 
+    val focusManager = LocalFocusManager.current
+
     val newDataField = viewModel.newDataField.value
+
     val newData = DataField(
         id = 0,
         fieldName = newDataField.fieldName,
         dataFieldType = newDataField.fieldType,
         fieldHint = newDataField.fieldHint,
         dataValue = "",
-        dataList = returnDataList(newDataField),
+        first = newDataField.firstValue,
+        second = newDataField.secondValue,
+        third = newDataField.thirdValue,
         isEnabled = true
     )
 
@@ -111,7 +121,16 @@ fun NewDataField(
                         textAlign = TextAlign.Center
                     )
                 },
-                maxLines = 1
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
             )
             //Max Chars count
             Text(
@@ -231,7 +250,11 @@ fun NewDataField(
                         backgroundColor = Color.Transparent,
                         textColor = MaterialTheme.colors.onSurface
                     ),
+                    singleLine = true,
                     maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
                     placeholder = {
                         Text(
                             text = "Please enter hint text for Data Field",
@@ -388,28 +411,4 @@ fun NewDataField(
             .fillMaxWidth()
             .height(10.dp)
     )
-}
-
-
-fun returnDataList(dataField: NewDataFieldState): List<String> {
-    //boolean
-    when (dataField.fieldType) {
-        2 -> {
-            return listOf(
-                dataField.firstValue,
-                dataField.secondValue
-            )
-        }
-        //tri-state
-        6 -> {
-            return listOf(
-                dataField.firstValue,
-                dataField.secondValue,
-                dataField.thirdValue
-            )
-        }
-        else -> {
-            return listOf("", "", "")
-        }
-    }
 }

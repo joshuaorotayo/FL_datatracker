@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.oldFormELements.ofMaxLength
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 
@@ -75,7 +76,6 @@ fun DataFieldRow(
     editHintText: (String) -> Unit,
     editType: (Int) -> Unit,
     checkedChange: (Boolean) -> Unit,
-    editStateValues: (Pair<Int, String>) -> Unit, //int is the field number, string is edited value
     deleteIcon: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -84,17 +84,18 @@ fun DataFieldRow(
 
     val optionsMaxChars = 20
 
-    val currentDataField = viewModel.dataFieldsBox2.value.get(itemIndex)
+    val currentDataField = viewModel.dataFieldsBox.value.get(itemIndex)
 
     val currentRowState = remember {
         mutableStateOf(
             DataFieldRowState(
+                id = currentDataField.id,
                 fieldName = currentDataField.fieldName,
                 fieldHint = currentDataField.fieldHint,
                 fieldType = currentDataField.dataFieldType,
-                firstValue = currentDataField.dataList[0],
-                secondValue = currentDataField.dataList[1],
-                thirdValue = if (currentDataField.dataList.size < 3) "" else currentDataField.dataList[2],
+                firstValue = currentDataField.first,
+                secondValue = currentDataField.second,
+                thirdValue = currentDataField.third,
                 isEnabled = currentDataField.isEnabled
             )
         )
@@ -107,6 +108,10 @@ fun DataFieldRow(
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
+
+    val firstText = remember { mutableStateOf("") }
+    val secondText = remember { mutableStateOf("") }
+    val thirdText = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -315,8 +320,8 @@ fun DataFieldRow(
                     color = MaterialTheme.colors.primary
                 )
                 Text(
-                    text = "${currentDataField.dataList[0].uppercase()}/${
-                        currentDataField.dataList[1].uppercase()
+                    text = "${currentDataField.first.uppercase()}/${
+                        currentDataField.second.uppercase()
                     }",
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.primary
@@ -351,9 +356,9 @@ fun DataFieldRow(
                     color = MaterialTheme.colors.primary
                 )
                 Text(
-                    text = "${currentDataField.dataList[0].uppercase()}/${
-                        currentDataField.dataList[1].uppercase()
-                    }/${currentDataField.dataList[2].uppercase() /* TODO:check for 3rd value */}",
+                    text = "${currentDataField.first.uppercase()}/${
+                        currentDataField.second.uppercase()
+                    }/${currentDataField.third.uppercase()}",
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.primary
                 )
@@ -386,24 +391,35 @@ fun DataFieldRow(
                 //boolean text fields for editable
                 TransparentTextField(
                     modifier = Modifier.weight(1f),
-                    text = currentRowState.value.firstValue,
+                    text = firstText.value,
                     label = "1st Value",
-                    placeholder = currentRowState.value.firstValue.ifBlank { "1st Value" },
+                    placeholder = firstText.value.ifBlank { currentRowState.value.firstValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            editStateValues(Pair(0, it))
-                            currentRowState.value.firstValue = "text"
+                            viewModel.onEvent(
+                                DataFieldEvent.EditFirstValue(
+                                    currentRowState.value.id,
+                                    it
+                                )
+                            )
+                            firstText.value = it
                         }
                     }
                 )
                 TransparentTextField(
                     modifier = Modifier.weight(1f),
-                    text = currentRowState.value.secondValue,
+                    text = secondText.value,
                     label = "2nd Value",
-                    placeholder = currentRowState.value.secondValue.ifBlank { "2nd Value" },
+                    placeholder = secondText.value.ifBlank { currentRowState.value.secondValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            editStateValues(Pair(1, it))
+                            viewModel.onEvent(
+                                DataFieldEvent.EditSecondValue(
+                                    currentRowState.value.id,
+                                    it
+                                )
+                            )
+                            secondText.value = it
                         }
                     }
                 )
@@ -419,34 +435,52 @@ fun DataFieldRow(
                 //boolean text fields for editable
                 TransparentTextField(
                     modifier = Modifier.weight(1f),
-                    text = currentRowState.value.firstValue,
+                    text = firstText.value,
                     label = "1st Value",
-                    placeholder = currentRowState.value.firstValue.ifBlank { "1st Value" },
+                    placeholder = firstText.value.ifBlank { currentRowState.value.firstValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            editStateValues(Pair(0, it))
+                            viewModel.onEvent(
+                                DataFieldEvent.EditFirstValue(
+                                    currentRowState.value.id,
+                                    it
+                                )
+                            )
+                            firstText.value = it
                         }
                     }
                 )
                 TransparentTextField(
                     modifier = Modifier.weight(1f),
-                    text = currentRowState.value.secondValue,
+                    text = secondText.value,
                     label = "2nd Value",
-                    placeholder = currentRowState.value.secondValue.ifBlank { "2nd Value" },
+                    placeholder = secondText.value.ifBlank { currentRowState.value.secondValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            editStateValues(Pair(1, it))
+                            viewModel.onEvent(
+                                DataFieldEvent.EditSecondValue(
+                                    currentRowState.value.id,
+                                    it
+                                )
+                            )
+                            secondText.value = it
                         }
                     }
                 )
                 TransparentTextField(
                     modifier = Modifier.weight(1f),
-                    text = currentRowState.value.thirdValue,
+                    text = thirdText.value,
                     label = "3rd Value",
-                    placeholder = currentRowState.value.secondValue.ifBlank { "3rd Value" },
+                    placeholder = thirdText.value.ifBlank { currentRowState.value.thirdValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            editStateValues(Pair(2, it))
+                            viewModel.onEvent(
+                                DataFieldEvent.EditThirdValue(
+                                    currentRowState.value.id,
+                                    it
+                                )
+                            )
+                            thirdText.value = it
                         }
                     }
                 )
@@ -454,6 +488,7 @@ fun DataFieldRow(
         }
     }
 }
+
 
 
 

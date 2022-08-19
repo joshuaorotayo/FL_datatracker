@@ -10,14 +10,20 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @HiltViewModel
 class DataFieldsViewModel @Inject constructor(
 ) : ViewModel() {
 
-    private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
-    var dataFieldsBox2: MutableState<Box<DataField>> = _dataFieldsBox2
+    private val _dataFieldsBox = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
+    var dataFieldsBox: MutableState<Box<DataField>> = _dataFieldsBox
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    // var dataFieldsBox = ObjectBox.get().boxFor(DataField::class.java).store.subscribe().toFlow()
+
+    private var lastID: Long = 0
 
     private val maxChar = 30
     private val maxHintChar = 60
@@ -37,6 +43,8 @@ class DataFieldsViewModel @Inject constructor(
     private val _isDeleteDialogVisible = mutableStateOf(false)
     var isDeleteDialogVisible: MutableState<Boolean> = _isDeleteDialogVisible
 
+    /*  private val _testValue = mutableStateOf(0)
+      var testValue: MutableState<Int> = _testValue*/
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
@@ -79,44 +87,69 @@ class DataFieldsViewModel @Inject constructor(
             }
             // Edit Operations
             is DataFieldEvent.EditFieldName -> {
-                val dataField = dataFieldsBox2.value.get(event.index)
+                val dataField = _dataFieldsBox.value.get(event.index)
                 dataField.fieldName = event.value
-                dataFieldsBox2.value.put(dataField)
+                _dataFieldsBox.value.put(dataField)
             }
             is DataFieldEvent.EditHintText -> {
-                val dataField = dataFieldsBox2.value.get(event.index)
+                val dataField = _dataFieldsBox.value.get(event.index)
                 dataField.fieldHint = event.value
-                dataFieldsBox2.value.put(dataField)
+                _dataFieldsBox.value.put(dataField)
             }
             is DataFieldEvent.EditRowType -> {
-                val dataField = dataFieldsBox2.value.get(event.index)
+                val dataField = _dataFieldsBox.value.get(event.index)
                 dataField.dataFieldType = event.value
-                dataFieldsBox2.value.put(dataField)
+                _dataFieldsBox.value.put(dataField)
             }
             is DataFieldEvent.EditIsEnabled -> {
-                val dataField = dataFieldsBox2.value.get(event.index)
+                val dataField = _dataFieldsBox.value.get(event.index)
                 dataField.isEnabled = !dataField.isEnabled
-                dataFieldsBox2.value.put(dataField)
+                _dataFieldsBox.value.put(dataField)
             }
-            is DataFieldEvent.EditStateValues -> {
-                val dataField = dataFieldsBox2.value.get(event.index)
-                val dataList = dataField.dataList.toMutableList()
-                dataList[event.valIndex] = event.value
-                dataField.dataList = dataList.toList()
-                dataFieldsBox2.value.put(dataField)
+
+            is DataFieldEvent.EditFirstValue -> {
+                val dataField = _dataFieldsBox.value.get(event.index)
+                dataField.first = event.value
+                _dataFieldsBox.value.put(dataField)
             }
+            is DataFieldEvent.EditSecondValue -> {
+                val dataField = _dataFieldsBox.value.get(event.index)
+                dataField.second = event.value
+                _dataFieldsBox.value.put(dataField)
+            }
+            is DataFieldEvent.EditThirdValue -> {
+                val dataField = _dataFieldsBox.value.get(event.index)
+                dataField.third = event.value
+                _dataFieldsBox.value.put(dataField)
+            }
+            /*_isAddDataFieldVisible.value = !isAddDataFieldVisible.value
+            _isAddDataFieldVisible.value = !isAddDataFieldVisible.value*/
+            //_dataFieldsBox2.value = dataFieldsBox2.value
             is DataFieldEvent.ConfirmDelete -> {
                 _deletedDataField.value = event.dataField
-                //dataFieldsBox2.value.remove(deletedDataField.value)
+                _dataFieldsBox.value.remove(event.dataField)
+                _isAddDataFieldVisible.value = !isAddDataFieldVisible.value
+                _isAddDataFieldVisible.value = !isAddDataFieldVisible.value
             }
             DataFieldEvent.RestoreDeletedField -> {
-                dataFieldsBox2.value.put(deletedDataField.value)
+                _dataFieldsBox.value.put(deletedDataField.value)
             }
             is DataFieldEvent.OpenDeleteDialog -> {
                 _isDeleteDialogVisible.value = !isDeleteDialogVisible.value
                 _deletedDataField.value = event.dataField
             }
-
+            /*            DataFieldEvent.IncButton -> {
+       //                _testValue.value = testValue.value.inc()
+                       val rnds = (0..1000).random()
+                       val testDataField = DataField(id = 0, fieldName = rnds.toString())
+                       _dataFieldsBox.put(testDataField)
+                       lastID = testDataField.id
+                   }
+                   DataFieldEvent.DecButton -> {
+                       if (testValue.size >= 2) {
+                           _dataFieldsBox.remove(lastID)
+                       }
+                   }*/
         }
     }
 }

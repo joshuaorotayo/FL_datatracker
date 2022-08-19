@@ -15,13 +15,17 @@ sealed class DataFieldEvent {
     data class AddSecondValue(val value: String) : DataFieldEvent()
     data class AddThirdValue(val value: String) : DataFieldEvent()
 
+    /*
+        data class EditStateValues(val index: Long, val valIndex: Int, val value: String) :
+            DataFieldEvent()
+    */
     // Edit operations for Row
     data class EditFieldName(val index: Long, val value: String) : DataFieldEvent()
     data class EditRowType(val index: Long, val value: Int) : DataFieldEvent()
     data class EditHintText(val index: Long, val value: String) : DataFieldEvent()
-    data class EditStateValues(val index: Long, val valIndex: Int, val value: String) :
-        DataFieldEvent()
-
+    data class EditFirstValue(val index: Long, val value: String) : DataFieldEvent()
+    data class EditSecondValue(val index: Long, val value: String) : DataFieldEvent()
+    data class EditThirdValue(val index: Long, val value: String) : DataFieldEvent()
     data class EditIsEnabled(val index: Long) : DataFieldEvent()
     object RestoreDeletedField : DataFieldEvent()
 }

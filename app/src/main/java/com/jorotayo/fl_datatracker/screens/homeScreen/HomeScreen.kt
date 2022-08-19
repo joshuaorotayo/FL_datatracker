@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,12 +23,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchVisible
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -37,11 +36,7 @@ fun HomeScreen(
     navController: NavController
 ) {
 
-    val searchBarState = viewModel.searchBarState.value
-
-    val searchFieldState = viewModel.searchFieldState.value
-
-    val itemCount = viewModel.dataItems.value
+    val uiState = viewModel.uiState.value
 
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
@@ -119,7 +114,7 @@ fun HomeScreen(
                 )
                 {
                     Text(
-                        "$itemCount items showing",
+                        "${uiState.dataItems.size} items showing",
                         style = MaterialTheme.typography.h5,
                         color = MaterialTheme.colors.primary
                     )
@@ -137,18 +132,7 @@ fun HomeScreen(
                             .padding(10.dp)
                     ) {
 
-                        Button(onClick = {
-                            scope.launch {
-                                scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "test",
-                                    actionLabel = "hide"
-                                )
-                            }
-                        }
-                        ) {
-                            Text(text = "test button")
 
-                        }
                     }
                 }
             }
@@ -156,18 +140,17 @@ fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(vertical = 30.dp)
             )
             {
-                if (searchBarState.isSearchVisible == SearchVisible.SearchBarHidden) {
-                    TopBar(
-                        viewModel = viewModel,
-                        context = LocalContext.current
-                    )
-                } else {
+                AnimatedVisibility(visible = uiState.isSearchVisible) {
                     SearchBar(
                         viewModel = viewModel,
-                        searchFieldState = searchFieldState
+                        searchState = uiState
                     )
+                }
+                AnimatedVisibility(visible = !uiState.isSearchVisible) {
+                    TopBar { viewModel.onEvent(HomeScreenEvent.ToggleSearchBar) }
                 }
             }
         }

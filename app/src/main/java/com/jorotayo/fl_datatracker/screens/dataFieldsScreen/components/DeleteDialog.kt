@@ -95,7 +95,6 @@ fun DeleteDialog(
                         fontWeight = FontWeight.Bold,
                     )
                 }
-                //.......................................................................
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -107,7 +106,6 @@ fun DeleteDialog(
                     TextButton(onClick = {
                         state.value = false
                     }) {
-
                         Text(
                             text = "Cancel",
                             fontWeight = FontWeight.Bold,

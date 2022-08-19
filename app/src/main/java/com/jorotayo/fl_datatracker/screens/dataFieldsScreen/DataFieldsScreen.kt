@@ -12,7 +12,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +53,8 @@ fun DataFieldsScreen(
 
     val isAddDataFieldVisible = viewModel.isAddDataFieldVisible.value
 
-    val fields by viewModel.dataFieldsBox2
+    val fields = viewModel.dataFieldsBox.value
+
     val scaffoldState = rememberScaffoldState()
 
     val scope = rememberCoroutineScope()
@@ -78,6 +78,29 @@ fun DataFieldsScreen(
                     .wrapContentSize()
                     .align(Alignment.TopStart),
             ) {
+//               Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .wrapContentSize()
+//                        .padding(bottom = 10.dp)
+//                ) {
+//                    Text(
+//                        text = "VALUE CURRENTLY IS: ${testValue.size}",
+//                        color = Color.Black
+//                    )
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .wrapContentHeight()
+//                    ){
+//                        Button(onClick = { viewModel.onEvent(DataFieldEvent.IncButton) }) {
+//                            Text(text = "Inc Button")
+//                        }
+//                        Button(onClick = { viewModel.onEvent(DataFieldEvent.DecButton) }) {
+//                            Text(text = "Dec Button")
+//                        }
+//                    }
+//                }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -237,18 +260,6 @@ fun DataFieldsScreen(
                                     viewModel.onEvent(DataFieldEvent.EditIsEnabled(index = item.id))
                                     item.isEnabled = !item.isEnabled
                                 },
-                                editStateValues = {
-                                    viewModel.onEvent(
-                                        DataFieldEvent.EditStateValues(
-                                            index = item.id,
-                                            valIndex = it.first,
-                                            value = it.second
-                                        )
-                                    )
-                                    val dataList = item.dataList.toMutableList()
-                                    dataList.set(it.first, it.second)
-                                    item.dataList = dataList.toList()
-                                },
                                 editHintText = {
                                     viewModel.onEvent(
                                         DataFieldEvent.EditHintText(
@@ -264,11 +275,11 @@ fun DataFieldsScreen(
                                             dataField = item
                                         )
                                     )
-//                                viewModel.dataFieldsBox2.value.remove(item.id)  // triggers recomp
                                     Log.i(TAG, "DataFieldsScreen: delete icon")
                                 }
                             )
-                        })
+                        }
+                    )
                 }
             }
 
@@ -276,7 +287,6 @@ fun DataFieldsScreen(
                 modifier = Modifier.align(Alignment.Center),
                 confirmDelete = {
                     viewModel.onEvent(DataFieldEvent.ConfirmDelete(dataField = it))
-                    fields.remove(it.id)
                 },
                 scaffold = scaffoldState,
                 state = viewModel.isDeleteDialogVisible,
