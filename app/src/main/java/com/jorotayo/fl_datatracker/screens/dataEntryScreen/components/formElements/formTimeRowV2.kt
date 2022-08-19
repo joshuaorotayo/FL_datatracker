@@ -1,6 +1,8 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.app.TimePickerDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -8,8 +10,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,21 +18,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import java.util.*
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewFormCountRowV2() {
-    FormCountRowV2(fieldName = "Data Field for Count Row")
+fun PreviewFormTimeRowV2() {
+    formTimeRowV2(viewModel = hiltViewModel(), fieldName = "Data Field for Time Example")
 }
 
 @Composable
-fun FormCountRowV2(
+fun formTimeRowV2(
+    viewModel: DataEntryScreenViewModel,
     fieldName: String
-) {
-    val count = remember { mutableStateOf(0) }
+): String {
+    // Fetching local context
+    val mContext = LocalContext.current
+
+    // Declaring and initializing a calendar
+    val mCalendar = Calendar.getInstance()
+    val mHour: Int = mCalendar.get(Calendar.HOUR)
+    val mMinute = mCalendar[Calendar.MINUTE]
+
+    // Value for storing time as a string
+    val mTime = remember { mutableStateOf("") }
+
+    // Creating a TimePicker dialog
+    val mTimePickerDialog = TimePickerDialog(
+        mContext,
+        { _, mHour: Int, mMinute: Int ->
+            mTime.value = viewModel.formattedTimeString(mHour, mMinute)
+        }, mHour, mMinute, true
+    )
 
     Column(
         modifier = Modifier
@@ -49,7 +72,7 @@ fun FormCountRowV2(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 16.dp)
+                    .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
                 text = fieldName,
                 textAlign = TextAlign.Start,
@@ -60,48 +83,33 @@ fun FormCountRowV2(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                modifier = Modifier
-                    .size(28.dp)
-                    .background(MaterialTheme.colors.primary)
-                    .padding(vertical = 5.dp),
-                onClick = {
-                    if ((count.value - 1) >= 0) {
-                        count.value = count.value - 1
-                    }
-                })
-            {
-                Icon(
-                    imageVector = Icons.Default.Remove,
-                    contentDescription = "Decrement Count",
-                    tint = MaterialTheme.colors.onPrimary
-                )
-            }
+            //Button Data capture
             Text(
-                text = "" + count.value,
-                color = if (count.value <= 0) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                text = mTime.value.ifBlank { "HH:MM" },
+                color = if (mTime.value.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                 modifier = Modifier
-                    .weight(1f, fill = false),
+                    .padding(start = 5.dp)
+                    .weight(1f, fill = false)
+                    .clickable(
+                        onClick = {
+                            mTimePickerDialog.show()
+                        }
+                    ),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h6
-
+                style = MaterialTheme.typography.body1
             )
             IconButton(
-                modifier = Modifier
-                    .size(28.dp)
-                    .background(MaterialTheme.colors.primary)
-                    .padding(vertical = 5.dp),
                 onClick = {
-                    count.value = count.value + 1
-                }
-            ) {
+                    mTimePickerDialog.show()
+                }) {
                 Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Increment Count",
-                    tint = MaterialTheme.colors.onPrimary
+                    modifier = Modifier,
+                    imageVector = Icons.Default.Timer,
+                    contentDescription = "Select Time from Clock",
+                    tint = MaterialTheme.colors.primary
                 )
             }
         }
@@ -112,4 +120,6 @@ fun FormCountRowV2(
             .fillMaxWidth()
             .height(10.dp)
     )
+
+    return mTime.value
 }

@@ -19,11 +19,13 @@ import androidx.compose.ui.unit.dp
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormComponentTemplateV2() {
-    FormComponentTemplateV2()
+    formComponentTemplateV2(fieldName = "Form Component Template Example")
 }
 
 @Composable
-fun FormComponentTemplateV2() {
+fun formComponentTemplateV2(
+    fieldName: String
+): String {
     var count = remember { mutableStateOf(0) }
 
     Column(
@@ -43,7 +45,7 @@ fun FormComponentTemplateV2() {
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 16.dp)
                     .fillMaxWidth(),
-                text = "Data Field for Numbers Text",
+                text = fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )
@@ -65,4 +67,6 @@ fun FormComponentTemplateV2() {
             .fillMaxWidth()
             .height(10.dp)
     )
+
+    return count.value.toString()
 }

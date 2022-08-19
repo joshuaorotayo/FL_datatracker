@@ -23,11 +23,15 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormShortTextRowV2() {
-    FormShortTextRowV2(rowHint = "Short Text row example...")
+    formShortTextRowV2(
+        fieldName = "Short Text Row",
+        rowHint = "Short Text row example..."
+    )
 }
 
 @Composable
-fun FormShortTextRowV2(
+fun formShortTextRowV2(
+    fieldName: String,
     rowHint: String?
 ): String {
     val maxChar = 50
@@ -51,7 +55,7 @@ fun FormShortTextRowV2(
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = "Data Field for Short Text Row",
+                text = fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )
@@ -81,7 +85,7 @@ fun FormShortTextRowV2(
                     ),
                     placeholder = {
                         Text(
-                            text = rowHint ?: "placeholder text",
+                            text = rowHint ?: "Short Text Row Hint...",
                             color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                             textAlign = TextAlign.Center
                         )

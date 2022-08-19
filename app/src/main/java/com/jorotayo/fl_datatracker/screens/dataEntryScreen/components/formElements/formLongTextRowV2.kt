@@ -25,17 +25,17 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormLongTextRowV2() {
-    FormLongTextRowV2(
+    formLongTextRowV2(
         fieldName = "Data Field for Long Text Example",
         fieldHint = "Data capture long text row example..."
     )
 }
 
 @Composable
-fun FormLongTextRowV2(
+fun formLongTextRowV2(
     fieldName: String,
     fieldHint: String?
-) {
+): String {
     //define any local variables
     val maxChar = 250
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
@@ -94,4 +94,6 @@ fun FormLongTextRowV2(
                 .background(Color.Transparent)
         )
     }
+
+    return text.text
 }

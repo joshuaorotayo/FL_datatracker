@@ -25,13 +25,17 @@ fun PreviewFormRadioRowV2() {
         "Yes"
     )
 
-    FormRadioRowV2(options = testOptions)
+    formRadioRowV2(
+        options = testOptions,
+        fieldName = "Data Field for Radio Row"
+    )
 }
 
 @Composable
-fun FormRadioRowV2(
-    options: List<String>
-) {
+fun formRadioRowV2(
+    options: List<String>,
+    fieldName: String
+): String {
     val defaultSelected = floor(options.size.toDouble() / 2)
 
     var selectedOption by remember {
@@ -60,7 +64,7 @@ fun FormRadioRowV2(
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = "Data Field for Radio Row Text",
+                text = fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )
@@ -112,4 +116,6 @@ fun FormRadioRowV2(
             .fillMaxWidth()
             .height(10.dp)
     )
+
+    return selectedOption
 }

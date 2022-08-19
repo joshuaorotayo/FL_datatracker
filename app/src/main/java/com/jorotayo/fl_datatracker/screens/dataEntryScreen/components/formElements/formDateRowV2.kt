@@ -31,15 +31,17 @@ import java.util.*
 @Preview
 @Composable
 fun PreviewFormDateRowV2() {
-    FormDateRowV2(
-        viewModel = hiltViewModel()
+    formDateRowV2(
+        viewModel = hiltViewModel(),
+        fieldName = "Data FIeld for Date Row Example"
     )
 }
 
 @Composable
-fun FormDateRowV2(
-    viewModel: DataEntryScreenViewModel
-) {
+fun formDateRowV2(
+    viewModel: DataEntryScreenViewModel,
+    fieldName: String
+): String {
 
     // Fetching the Local Context
     val mContext = LocalContext.current
@@ -90,7 +92,7 @@ fun FormDateRowV2(
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = "Data Field for Date Text",
+                text = fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )
@@ -135,4 +137,5 @@ fun FormDateRowV2(
             .height(10.dp)
     )
 
+    return mDate.value
 }

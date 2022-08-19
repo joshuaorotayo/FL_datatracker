@@ -127,12 +127,24 @@ fun DataEntryScreen(
                             }
 
                             val shortText =
-                                FormShortTextRowV2(rowHint = "Short Text row example...")
-                            FormCountRowV2(fieldName = "COUNT DataField")
-                            FormDateRowV2(DataEntryScreenViewModel())
-                            FormTimeRowV2(DataEntryScreenViewModel())
-                            FormRadioRowV2(options = listOf("No", "N/A", "Yes"))
-                            FormLongTextRowV2(
+                                formShortTextRowV2(
+                                    fieldName = "Short Text DataField",
+                                    rowHint = "Short Text row example..."
+                                )
+                            formCountRowV2(fieldName = "Count DataField")
+                            formDateRowV2(
+                                fieldName = "Date Row DataField",
+                                viewModel = DataEntryScreenViewModel()
+                            )
+                            formTimeRowV2(
+                                fieldName = "Time Row  DataField",
+                                viewModel = DataEntryScreenViewModel()
+                            )
+                            formRadioRowV2(
+                                fieldName = "Radio Row DataField",
+                                options = listOf("No", "N/A", "Yes")
+                            )
+                            formLongTextRowV2(
                                 fieldName = "Data Field for Long Text Example",
                                 fieldHint = "Data capture long text row example..."
                             )

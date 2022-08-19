@@ -12,11 +12,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +37,7 @@ fun PreviewNewDataField() {
 //    NewDataField(viewModel = hiltViewModel())
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewDataField(
     viewModel: DataFieldsViewModel,
@@ -52,6 +55,7 @@ fun NewDataField(
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
 
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val newDataField = viewModel.newDataField.value
 
@@ -254,6 +258,13 @@ fun NewDataField(
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                            onClick(newData)
+                        }
                     ),
                     placeholder = {
                         Text(

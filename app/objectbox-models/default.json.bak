@@ -25,7 +25,7 @@
     },
     {
       "id": "2:2852525956539110721",
-      "lastPropertyId": "8:7151408981761751988",
+      "lastPropertyId": "11:6705169485664303494",
       "name": "DataField",
       "properties": [
         {
@@ -52,11 +52,6 @@
           "type": 9
         },
         {
-          "id": "5:7591287214112618563",
-          "name": "dataList",
-          "type": 30
-        },
-        {
           "id": "6:237312583387670513",
           "name": "isEnabled",
           "type": 1
@@ -64,6 +59,21 @@
         {
           "id": "8:7151408981761751988",
           "name": "fieldHint",
+          "type": 9
+        },
+        {
+          "id": "9:4175749837977931401",
+          "name": "first",
+          "type": 9
+        },
+        {
+          "id": "10:5224424476582126022",
+          "name": "second",
+          "type": 9
+        },
+        {
+          "id": "11:6705169485664303494",
+          "name": "third",
           "type": 9
         }
       ],
@@ -131,7 +141,8 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    7440509880252825162
+    7440509880252825162,
+    7591287214112618563
   ],
   "retiredRelationUids": [],
   "version": 1
