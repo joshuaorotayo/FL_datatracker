@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -117,18 +118,20 @@ fun DataFieldRow(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(bottom = 8.dp)
+            .padding(bottom = 12.dp, start = 8.dp, end = 8.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(
-                if (isRowEnabled.value) MaterialTheme.colors.primary.copy(
-                    0.1f
-                ) else MaterialTheme.colors.surface
+                if (isSystemInDarkTheme()) {
+                    if (isRowEnabled.value) MaterialTheme.colors.surface
+                    else MaterialTheme.colors.primary.copy(0.1f)
+                } else if (isRowEnabled.value) MaterialTheme.colors.primary.copy(0.1f)
+                else MaterialTheme.colors.surface
             )
+            .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -235,7 +238,7 @@ fun DataFieldRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 10.dp),
+                    .padding(start = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -264,7 +267,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Edit,
                         contentDescription = "Amend row Hint",
-                        tint = MaterialTheme.colors.onSurface,
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -273,7 +276,7 @@ fun DataFieldRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -310,26 +313,25 @@ fun DataFieldRow(
         AnimatedVisibility(currentDataField.dataFieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Boolean: ",
-                    color = MaterialTheme.colors.primary
-                )
-                Text(
-                    text = "${currentDataField.first.uppercase()}/${
-                        currentDataField.second.uppercase()
-                    }",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
-                )
-                Spacer(modifier = Modifier.weight(1f))
+                Row(modifier = Modifier.wrapContentWidth()) {
+                    Text(
+                        text = "Boolean: ",
+                        color = MaterialTheme.colors.primary
+                    )
+                    Text(
+                        text = "${currentDataField.first.uppercase()}/${
+                            currentDataField.second.uppercase()
+                        }",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.primary
+                    )
+                }
                 IconButton(
-                    modifier = Modifier
-                        .weight(2f),
+                    modifier = Modifier,
                     onClick = {
                         isHintVisible.value = false
                         isEditOptionsVisible.value = true
@@ -338,7 +340,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Edit,
                         contentDescription = "Amend Boolean values",
-                        tint = MaterialTheme.colors.onSurface,
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -346,8 +348,7 @@ fun DataFieldRow(
         AnimatedVisibility(currentDataField.dataFieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -356,9 +357,7 @@ fun DataFieldRow(
                     color = MaterialTheme.colors.primary
                 )
                 Text(
-                    text = "${currentDataField.first.uppercase()}/${
-                        currentDataField.second.uppercase()
-                    }/${currentDataField.third.uppercase()}",
+                    text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.primary
                 )
@@ -374,7 +373,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Edit,
                         contentDescription = "Amend Tri-state",
-                        tint = MaterialTheme.colors.onSurface,
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -385,7 +384,7 @@ fun DataFieldRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 //boolean text fields for editable
@@ -429,7 +428,7 @@ fun DataFieldRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 //boolean text fields for editable

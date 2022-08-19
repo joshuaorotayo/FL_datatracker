@@ -48,7 +48,7 @@ fun DeleteDialog(
         ) {
             Column(
                 modifier
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.background)
             ) {
 
                 //.......................................................................
