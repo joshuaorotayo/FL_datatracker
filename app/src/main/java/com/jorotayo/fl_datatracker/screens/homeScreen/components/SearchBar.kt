@@ -1,11 +1,14 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,20 +39,20 @@ fun SearchBar(
     Row(
         modifier = Modifier
             .height(intrinsicSize = IntrinsicSize.Min)
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
         TextField(
             modifier = Modifier
-                .weight(10f)
-                .offset(y = (-8).dp),
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colors.onBackground),
             textStyle = MaterialTheme.typography.h6,
             value = searchState.text,
             maxLines = 1,
-            label = {
+            placeholder = {
                 Text(
                     modifier = Modifier
-                        .padding(2.dp)
                         .fillMaxHeight(),
                     text = searchState.hint,
                     style = MaterialTheme.typography.h6,
@@ -60,10 +63,11 @@ fun SearchBar(
                 viewModel.onEvent(HomeScreenEvent.SearchItemEntered(it))
             },
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colors.background,
-                unfocusedLabelColor = MaterialTheme.colors.background,
-                focusedLabelColor = MaterialTheme.colors.background,
-                textColor = Color.Black
+                backgroundColor = MaterialTheme.colors.onBackground,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                textColor = Color.Gray
             ),
             leadingIcon = {
                 IconButton(
@@ -74,7 +78,7 @@ fun SearchBar(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(28.dp)
                             .weight(1f),
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Close Search View",

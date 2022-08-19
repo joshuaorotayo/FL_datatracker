@@ -24,6 +24,7 @@ fun PreviewNoDataField() {
 
 @Composable
 fun NoDataField(
+    //onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -49,10 +50,21 @@ fun NoDataField(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    modifier = Modifier.size(128.dp),
+                    modifier = Modifier
+                        .size(128.dp),
+                    //  .clickable(onClick = onClick), consideration for clickable button
                     imageVector = Icons.Default.AddBox,
                     tint = MaterialTheme.colors.primary,
                     contentDescription = "No Data Fields Message",
+
+                    )
+                Text(
+                    modifier = Modifier
+                        .padding(top = 5.dp),
+                    text = "No Data Fields",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.onSurface
                 )
                 Text(
                     modifier = Modifier

@@ -95,13 +95,12 @@ fun HomeScreen(
                     .background(MaterialTheme.colors.background)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top
-
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colors.background)
-                        .height(64.dp)
+                        .height(20.dp)
                 )
                 {
                     //No Content in Row
@@ -110,7 +109,7 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 20.dp, start = 20.dp)
+                        .padding(top = 90.dp, start = 20.dp)
                 )
                 {
                     Text(
@@ -129,7 +128,6 @@ fun HomeScreen(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(10.dp)
                     ) {
 
 
@@ -140,7 +138,7 @@ fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 30.dp)
+                    .padding(top = 40.dp)
             )
             {
                 AnimatedVisibility(visible = uiState.isSearchVisible) {
