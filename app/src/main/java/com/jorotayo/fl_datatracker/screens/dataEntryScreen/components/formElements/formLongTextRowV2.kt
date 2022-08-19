@@ -1,10 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +35,7 @@ fun formLongTextRowV2(
     fieldHint: String?
 ): String {
     //define any local variables
-    val maxChar = 250
+    val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
     Column(
@@ -58,19 +56,24 @@ fun formLongTextRowV2(
             color = Color.Gray,
         )
         // Data Field Name Data Capture
+
+        val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
         TextField(
             modifier = Modifier
                 .padding(horizontal = 5.dp)
                 .fillMaxWidth()
-                .wrapContentHeight(),
+                .sizeIn(minHeight = with(LocalDensity.current) {
+                    (lineHeight * 4).toDp()
+                }),
             value = text,
             onValueChange = { newText ->
                 setText(newText.ofMaxLength(maxLength = maxChar))
             },
             colors = TextFieldDefaults.textFieldColors(
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = MaterialTheme.colors.surface,
                 backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
                 textColor = MaterialTheme.colors.onSurface
             ),
             maxLines = 4,
