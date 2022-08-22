@@ -26,6 +26,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import formNameHeader
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -166,6 +167,8 @@ fun DataEntryScreen(
                                 fieldName = "Data Field for Long Text Example",
                                 fieldHint = "Data capture long text row example..."
                             )*/
+
+                            formNameHeader()
 
                             for (data in dataFields) {
                                 when (data.dataFieldType) {
