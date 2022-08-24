@@ -51,7 +51,7 @@ fun formNameHeader(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                textColor = Color.Gray
+                textColor = Color.Black
             )
         )
     }

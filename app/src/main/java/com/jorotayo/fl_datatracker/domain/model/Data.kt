@@ -7,5 +7,6 @@ import io.objectbox.annotation.Id
 data class Data(
     @Id
     var id: Long = 0,
-    var dataFields: List<DataField> = listOf()
+    var name: String = "",
+    var dataFields: List<DataField> = listOf(),
 )

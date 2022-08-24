@@ -9,6 +9,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
+import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import formNameHeader
 import kotlinx.coroutines.launch
@@ -38,6 +41,7 @@ fun PreviewDataEntryScreen() {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataEntryScreen(
     viewModel: DataEntryScreenViewModel,
@@ -49,6 +53,7 @@ fun DataEntryScreen(
 
     val scope = rememberCoroutineScope()
 
+    val name = remember { mutableStateOf("") }
     val allDataFields = ObjectBox.get().boxFor(DataField::class.java)
     val dataFields =
         allDataFields.query().equal(DataField_.isEnabled, true).build().use { it.find() }
@@ -110,7 +115,6 @@ fun DataEntryScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         val testRun = true
-                        //Spacer(modifier = Modifier.height(20.dp))
                         if (viewModel.dataFieldsBox2.value.isEmpty && !testRun) {
                             Spacer(modifier = Modifier.weight(1f))
 
@@ -144,70 +148,45 @@ fun DataEntryScreen(
                                 textAlign = TextAlign.Start
                             )
 
-/*
-                            val shortText =
-                                formShortTextRowV2(
-                                    fieldName = "Short Text DataField",
-                                    rowHint = "Short Text row example..."
-                                )
-                            formCountRowV2(fieldName = "Count DataField")
-                            formDateRowV2(
-                                fieldName = "Date Row DataField",
-                                viewModel = DataEntryScreenViewModel()
-                            )
-                            formTimeRowV2(
-                                fieldName = "Time Row  DataField",
-                                viewModel = DataEntryScreenViewModel()
-                            )
-                            formRadioRowV2(
-                                fieldName = "Radio Row DataField",
-                                options = listOf("No", "N/A", "Yes")
-                            )
-                            formLongTextRowV2(
-                                fieldName = "Data Field for Long Text Example",
-                                fieldHint = "Data capture long text row example..."
-                            )*/
-
-                            formNameHeader()
+                            name.value = formNameHeader()
 
                             for (data in dataFields) {
                                 when (data.dataFieldType) {
                                     0 -> {
-                                        formShortTextRowV2(
+                                        data.dataValue = formShortTextRowV2(
                                             fieldName = data.fieldName,
                                             rowHint = data.fieldHint
                                         )
                                     }
                                     1 -> {
-                                        formLongTextRowV2(
+                                        data.dataValue = formLongTextRowV2(
                                             fieldName = data.fieldName,
                                             fieldHint = data.fieldHint
                                         )
                                     }
                                     2 -> {
-                                        formRadioRowV2(
+                                        data.dataValue = formRadioRowV2(
                                             options = listOf(data.first, data.second),
                                             fieldName = data.fieldName
                                         )
                                     }
                                     3 -> {
-                                        formDateRowV2(
+                                        data.dataValue = formDateRowV2(
                                             viewModel = DataEntryScreenViewModel(),
                                             fieldName = data.fieldName
                                         )
                                     }
                                     4 -> {
-                                        formTimeRowV2(
+                                        data.dataValue = formTimeRowV2(
                                             viewModel = DataEntryScreenViewModel(),
                                             fieldName = data.fieldName
                                         )
                                     }
                                     5 -> {
-                                        formCountRowV2(fieldName = data.fieldName)
-
+                                        data.dataValue = formCountRowV2(fieldName = data.fieldName)
                                     }
                                     6 -> {
-                                        formRadioRowV2(
+                                        data.dataValue = formRadioRowV2(
                                             options = listOf(
                                                 data.first,
                                                 data.second,
@@ -230,8 +209,10 @@ fun DataEntryScreen(
                                         .padding(end = 10.dp, bottom = 40.dp),
                                     onClick = {
                                         scope.launch {
+                                            val sb = StringBuilder()
+                                            dataFields.forEach { sb.append(it.dataValue + ",") }
                                             scaffoldState.snackbarHostState.showSnackbar(
-                                                message = "Data Saved",
+                                                message = "${name.value} - $sb",
                                                 actionLabel = "Hide"
                                             )
                                         }
@@ -240,7 +221,6 @@ fun DataEntryScreen(
                                         text = "Save Data",
                                         style = MaterialTheme.typography.h6,
                                         color = MaterialTheme.colors.onPrimary
-
                                     )
                                 }
                             }
@@ -248,6 +228,14 @@ fun DataEntryScreen(
                     }
                 }
             }
+            DefaultSnackbar(
+                snackbarHostState = scaffoldState.snackbarHostState,
+                onDismiss = {
+                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                },
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
         }
     }
 
