@@ -9,4 +9,5 @@ data class Data(
     var id: Long = 0,
     var name: String = "",
     var dataFields: List<DataField> = listOf(),
+    var lastEdited: String = "",
 )

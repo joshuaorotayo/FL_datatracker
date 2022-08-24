@@ -3,12 +3,13 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
+import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.util.capitaliseWord
 import io.objectbox.Box
 
-class ValidateDataField {
+class Validate {
     private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
     private var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
 
@@ -20,7 +21,7 @@ class ValidateDataField {
      * @param dataField the datafield being validated and then added
      * @return Pair.first(Boolean) whether or not the method gave an error mess
      */
-    fun invoke(dataField: DataField): Pair<Boolean, String> {
+    fun validateDataField(dataField: DataField): Pair<Boolean, String> {
         var isError = false
         var msg = ""
 
@@ -49,5 +50,17 @@ class ValidateDataField {
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)
+    }
+
+    fun validateData(data: Data): Data {
+        val dataFields = data.dataFields
+        /*   for (df in dataFields) {
+               when (df.dataFieldType) {
+                   0 -> {
+                       df.
+                   }
+               }
+           }*/
+        return data
     }
 }

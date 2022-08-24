@@ -11,11 +11,19 @@ sealed class Screen(
     val route: String,
     val pageName: String,
     val pageDescription: String? = "",
+    val dataID: Long = 0,
     val selectedIcon: ImageVector? = Icons.Filled.Close,
-    val unselectedIcon: ImageVector? = Icons.Outlined.Close
+    val unselectedIcon: ImageVector? = Icons.Outlined.Close,
 ) {
-    object Welcome : Screen(route = "onboarding_screen", pageName = "Welcome")
-    object DataEntry : Screen(route = "dataEntry_screen", pageName = "Data Entry")
+    object Welcome : Screen(
+        route = "onboarding_screen",
+        pageName = "Welcome"
+    )
+
+    object DataEntry : Screen(
+        route = "dataEntry_screen",
+        pageName = "Data Entry"
+    )
 
     object HomeScreen : Screen(
         route = "home_screen",

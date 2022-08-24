@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.ObjectBox
+import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
@@ -155,7 +156,8 @@ fun DataEntryScreen(
                                     0 -> {
                                         data.dataValue = formShortTextRowV2(
                                             fieldName = data.fieldName,
-                                            rowHint = data.fieldHint
+                                            rowHint = data.fieldHint,
+                                            hasError = false
                                         )
                                     }
                                     1 -> {
@@ -209,12 +211,19 @@ fun DataEntryScreen(
                                         .padding(end = 10.dp, bottom = 40.dp),
                                     onClick = {
                                         scope.launch {
+                                            val newData = Data(
+                                                id = 0,
+                                                name = name.value,
+                                                dataFields = dataFields
+                                            )
+                                            viewModel.onEvent(DataEvent.SaveData(value = newData))
                                             val sb = StringBuilder()
                                             dataFields.forEach { sb.append(it.dataValue + ",") }
                                             scaffoldState.snackbarHostState.showSnackbar(
                                                 message = "${name.value} - $sb",
                                                 actionLabel = "Hide"
                                             )
+
                                         }
                                     }) {
                                     Text(

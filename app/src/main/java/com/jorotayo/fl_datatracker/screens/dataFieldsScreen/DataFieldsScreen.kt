@@ -176,7 +176,7 @@ fun DataFieldsScreen(
                                             // fields.value.put(it)
                                             //  viewModel.onEvent(DataFieldEvent.SaveDataField(it))
 
-                                            val msg = ValidateDataField().invoke(dataField = it)
+                                            val msg = Validate().validateDataField(dataField = it)
                                             if (!msg.first) {
                                                 viewModel.onEvent(DataFieldEvent.ToggleAddNewDataField)
                                             }

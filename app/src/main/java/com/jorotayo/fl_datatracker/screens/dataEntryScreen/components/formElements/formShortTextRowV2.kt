@@ -3,10 +3,9 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,14 +24,16 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 fun PreviewFormShortTextRowV2() {
     formShortTextRowV2(
         fieldName = "Short Text Row",
-        rowHint = "Short Text row example..."
+        rowHint = "Short Text row example...",
+        hasError = false
     )
 }
 
 @Composable
 fun formShortTextRowV2(
     fieldName: String,
-    rowHint: String?
+    rowHint: String?,
+    hasError: Boolean,
 ): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
@@ -83,12 +84,25 @@ fun formShortTextRowV2(
                         backgroundColor = Color.Transparent,
                         textColor = MaterialTheme.colors.onSurface
                     ),
+                    isError = hasError,
                     placeholder = {
-                        Text(
-                            text = rowHint ?: "Short Text Row Hint...",
-                            color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                            textAlign = TextAlign.Center
-                        )
+                        if (hasError) {
+                            Text(
+                                text = "Enter a value for $fieldName",
+                                color = Color.Red,
+                                textAlign = TextAlign.Center
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = "Errored $fieldName field"
+                            )
+                        } else {
+                            Text(
+                                text = rowHint ?: "Short Text Row Hint...",
+                                color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     },
                     maxLines = 1
                 )

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import io.objectbox.Box
 import java.util.*
 import javax.inject.Inject
@@ -27,18 +28,8 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private val suffix = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
 
     private val months = arrayOf(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     )
 
     fun formattedDateString(day: Int, month: Int, year: Int): String {
@@ -71,5 +62,13 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
         return "$formattedHrs:$formattedMinute $amPm"
 
+    }
+
+    fun onEvent(event: DataEvent) {
+        when (event) {
+            is DataEvent.SaveData -> {
+
+            }
+        }
     }
 }

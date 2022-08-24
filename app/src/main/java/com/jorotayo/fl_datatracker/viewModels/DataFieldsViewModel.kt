@@ -43,9 +43,6 @@ class DataFieldsViewModel @Inject constructor(
     private val _isDeleteDialogVisible = mutableStateOf(false)
     var isDeleteDialogVisible: MutableState<Boolean> = _isDeleteDialogVisible
 
-    /*  private val _testValue = mutableStateOf(0)
-      var testValue: MutableState<Int> = _testValue*/
-
     fun onEvent(event: DataFieldEvent) {
         when (event) {
             DataFieldEvent.ToggleAddNewDataField -> {
@@ -106,7 +103,6 @@ class DataFieldsViewModel @Inject constructor(
                 dataField.isEnabled = !dataField.isEnabled
                 _dataFieldsBox.value.put(dataField)
             }
-
             is DataFieldEvent.EditFirstValue -> {
                 val dataField = _dataFieldsBox.value.get(event.index)
                 dataField.first = event.value
@@ -122,9 +118,6 @@ class DataFieldsViewModel @Inject constructor(
                 dataField.third = event.value
                 _dataFieldsBox.value.put(dataField)
             }
-            /*_isAddDataFieldVisible.value = !isAddDataFieldVisible.value
-            _isAddDataFieldVisible.value = !isAddDataFieldVisible.value*/
-            //_dataFieldsBox2.value = dataFieldsBox2.value
             is DataFieldEvent.ConfirmDelete -> {
                 _deletedDataField.value = event.dataField
                 _dataFieldsBox.value.remove(event.dataField)
@@ -138,18 +131,6 @@ class DataFieldsViewModel @Inject constructor(
                 _isDeleteDialogVisible.value = !isDeleteDialogVisible.value
                 _deletedDataField.value = event.dataField
             }
-            /*            DataFieldEvent.IncButton -> {
-       //                _testValue.value = testValue.value.inc()
-                       val rnds = (0..1000).random()
-                       val testDataField = DataField(id = 0, fieldName = rnds.toString())
-                       _dataFieldsBox.put(testDataField)
-                       lastID = testDataField.id
-                   }
-                   DataFieldEvent.DecButton -> {
-                       if (testValue.size >= 2) {
-                           _dataFieldsBox.remove(lastID)
-                       }
-                   }*/
         }
     }
 }

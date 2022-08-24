@@ -84,28 +84,30 @@ fun formRadioRowV2(
                     .wrapContentSize()
             ) {
                 options.forEach { text ->
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.body1,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                onSelectionChange(text)
-                            }
-                            .background(
-                                if (text == selectedOption) {
-                                    MaterialTheme.colors.primaryVariant
-                                } else {
-                                    MaterialTheme.colors.primary
+                    if (text.isNotBlank()) {
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.body1,
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    onSelectionChange(text)
                                 }
-                            )
-                            .padding(
-                                vertical = 12.dp,
-                                horizontal = 5.dp,
-                            ),
-                    )
+                                .background(
+                                    if (text == selectedOption) {
+                                        MaterialTheme.colors.primaryVariant
+                                    } else {
+                                        MaterialTheme.colors.primary
+                                    }
+                                )
+                                .padding(
+                                    vertical = 12.dp,
+                                    horizontal = 5.dp,
+                                ),
+                        )
+                    }
                 }
             }
         }
