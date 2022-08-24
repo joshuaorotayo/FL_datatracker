@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
+import com.jorotayo.fl_datatracker.util.validateData
 import io.objectbox.Box
 import java.util.*
 import javax.inject.Inject
@@ -67,7 +68,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     fun onEvent(event: DataEvent) {
         when (event) {
             is DataEvent.SaveData -> {
-
+                validateData(event.value)
             }
         }
     }

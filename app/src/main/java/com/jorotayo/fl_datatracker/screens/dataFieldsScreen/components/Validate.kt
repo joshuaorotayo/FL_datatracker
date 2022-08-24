@@ -3,7 +3,6 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
-import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.util.capitaliseWord
@@ -50,17 +49,5 @@ class Validate {
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)
-    }
-
-    fun validateData(data: Data): Data {
-        val dataFields = data.dataFields
-        /*   for (df in dataFields) {
-               when (df.dataFieldType) {
-                   0 -> {
-                       df.
-                   }
-               }
-           }*/
-        return data
     }
 }

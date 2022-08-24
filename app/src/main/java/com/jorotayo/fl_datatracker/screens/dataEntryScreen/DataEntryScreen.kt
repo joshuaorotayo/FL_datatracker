@@ -23,10 +23,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.ObjectBox
-import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
-import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
@@ -38,7 +36,8 @@ import kotlinx.coroutines.launch
 fun PreviewDataEntryScreen() {
     DataEntryScreen(
         viewModel = hiltViewModel(),
-        navController = rememberNavController()
+        navController = rememberNavController(),
+        dataId = -1
     )
 }
 
@@ -46,7 +45,8 @@ fun PreviewDataEntryScreen() {
 @Composable
 fun DataEntryScreen(
     viewModel: DataEntryScreenViewModel,
-    navController: NavController
+    navController: NavController,
+    dataId: Long,
 ) {
     val systemUiController = rememberSystemUiController()
 
@@ -54,11 +54,10 @@ fun DataEntryScreen(
 
     val scope = rememberCoroutineScope()
 
-    val name = remember { mutableStateOf("") }
+    var name = remember { mutableStateOf("") }
     val allDataFields = ObjectBox.get().boxFor(DataField::class.java)
     val dataFields =
         allDataFields.query().equal(DataField_.isEnabled, true).build().use { it.find() }
-
 
     systemUiController.setStatusBarColor(MaterialTheme.colors.background)
     Scaffold(
@@ -168,7 +167,10 @@ fun DataEntryScreen(
                                     }
                                     2 -> {
                                         data.dataValue = formRadioRowV2(
-                                            options = listOf(data.first, data.second),
+                                            options = listOf(
+                                                data.first,
+                                                data.second
+                                            ),
                                             fieldName = data.fieldName
                                         )
                                     }
@@ -211,12 +213,23 @@ fun DataEntryScreen(
                                         .padding(end = 10.dp, bottom = 40.dp),
                                     onClick = {
                                         scope.launch {
-                                            val newData = Data(
-                                                id = 0,
-                                                name = name.value,
-                                                dataFields = dataFields
+
+                                            val list = ArrayList<DataRowState>()
+                                            for (df in dataFields) {
+                                                list.add(DataRowState(
+                                                    dataField = df,
+                                                    hasError = false,
+                                                    errorMsg = ""
+                                                ))
+
+                                            }
+
+                                            val newDataEntryScreenState = DataEntryScreenState(
+                                                dataName = name.value,
+                                                dataRows = list
                                             )
-                                            viewModel.onEvent(DataEvent.SaveData(value = newData))
+
+                                            viewModel.onEvent(DataEvent.SaveData(value = newDataEntryScreenState))
                                             val sb = StringBuilder()
                                             dataFields.forEach { sb.append(it.dataValue + ",") }
                                             scaffoldState.snackbarHostState.showSnackbar(
@@ -246,74 +259,5 @@ fun DataEntryScreen(
                     .align(Alignment.Center)
             )
         }
-    }
-
-    fun initFakeData(): List<DataField> {
-        return listOf(
-
-            DataField(
-                id = 1,
-                fieldName = "SERVICE_NAME",
-                dataFieldType = DataFieldType.SHORTSTRING.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 2,
-                fieldName = "PREACHER",
-                dataFieldType = DataFieldType.SHORTSTRING.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 3,
-                fieldName = "DATE",
-                dataFieldType = DataFieldType.DATE.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 4,
-                fieldName = "TIME",
-                dataFieldType = DataFieldType.TIME.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 5,
-                fieldName = "ATTENDANCE",
-                dataFieldType = DataFieldType.COUNT.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 6,
-                fieldName = "TITHE_PAYERS",
-                dataFieldType = DataFieldType.COUNT.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 7,
-                fieldName = "COMMUNION",
-                dataFieldType = DataFieldType.BOOLEAN.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 8,
-                fieldName = "J-SCHOOL",
-                dataFieldType = DataFieldType.TRISTATE.ordinal,
-                dataValue = "",
-                isEnabled = true
-            ),
-            DataField(
-                id = 8,
-                fieldName = "PREACHING_NOTES",
-                dataFieldType = DataFieldType.LONGSTRING.ordinal,
-                dataValue = "",
-                isEnabled = true
-            )
-        )
     }
 }

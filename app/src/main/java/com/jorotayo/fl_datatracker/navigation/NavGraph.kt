@@ -5,8 +5,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
@@ -83,10 +85,21 @@ fun SetupNavGraph(
                 navController = navController
             )
         }
-        composable(route = Screen.DataEntry.route) {
+        composable(
+            route = Screen.DataEntry.route + "?dataId={dataId}",
+            arguments = listOf(
+                navArgument(
+                    name = "dataId"
+                ) {
+                    type = NavType.LongType
+                    defaultValue = -1
+                })
+        ) {
+            val dataId = it.arguments?.getLong("dataId") ?: -1
             DataEntryScreen(
                 viewModel = DataEntryScreenViewModel(),
-                navController = navController
+                navController = navController,
+                dataId = dataId
             )
         }
         composable(route = Screen.DataFieldsScreen.route) {

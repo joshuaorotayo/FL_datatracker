@@ -3,6 +3,8 @@ package com.jorotayo.fl_datatracker.screens.homeScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,10 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.navigation.Screen
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.*
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
@@ -33,7 +32,7 @@ import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
 ) {
 
     val uiState = viewModel.uiState.value
@@ -130,7 +129,22 @@ fun HomeScreen(
                         modifier = Modifier
                     ) {
 
-
+                        if (uiState.dataItems.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(vertical = 16.dp, horizontal = 10.dp)
+                                    .clip(shape = RoundedCornerShape(10.dp))
+                            ) {
+                                itemsIndexed(uiState.dataItems,
+                                    itemContent = { index, item ->
+                                        DataRow(data = item, editData = {
+                                            navController.navigate(Screen.DataEntry.route + "?dataId=${item.id}")
+                                        })
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
