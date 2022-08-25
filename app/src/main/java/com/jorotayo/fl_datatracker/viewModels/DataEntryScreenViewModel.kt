@@ -21,11 +21,12 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
 
     private var _dataBox = mutableStateOf(ObjectBox.get().boxFor(Data::class.java))
-    private val dataBox: State<Box<Data>> = _dataBox
+    val dataBox: State<Box<Data>> = _dataBox
 
     private val _currentDataId = mutableStateOf(Long.MIN_VALUE)
     var currentDataId: MutableState<Long> = _currentDataId
 
+    var currentDataFields = listOf<DataField>()
     private val _dataName = mutableStateOf("")
     var dataName: MutableState<String> = _dataName
 
@@ -112,10 +113,11 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
             // val dataFields = dataBox.value.get(currentDataId.value).dataFields.filter { it.isEnabled }
 
             // All stored fields should be enabled
-            val dataFields = dataBox.value.get(currentDataId.value).dataFields
+
+            currentDataFields = dataBox.value.get(currentDataId.value).dataFields
 
             //uses the Data fields values to populate the Data Rows
-            for (df in dataFields) {
+            for (df in currentDataFields) {
                 list.add(DataRowState(
                     dataField = df,
                     hasError = false,
@@ -123,12 +125,11 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                 ))
             }
         } else {
-
-            val allDataFields =
+            currentDataFields =
                 _dataFieldsBox2.value.query().equal(DataField_.isEnabled, true).build()
                     .use { it.find() }
             //uses the Data fields values to populate the Data Rows
-            for (df in allDataFields) {
+            for (df in currentDataFields) {
                 list.add(DataRowState(
                     dataField = df,
                     hasError = false,
@@ -137,6 +138,19 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
             }
         }
 
+        return list
+    }
+
+    fun returnList(): List<DataField> {
+        val list = ArrayList<DataField>()
+
+        var newDataField = DataField(
+            id = 0
+        )
+        for (dataRow in uiState.value.dataRows) {
+            newDataField = dataRow.dataField
+            list.add(newDataField)
+        }
         return list
     }
 }

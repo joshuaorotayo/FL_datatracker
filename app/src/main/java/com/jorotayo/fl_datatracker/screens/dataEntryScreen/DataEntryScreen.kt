@@ -30,6 +30,8 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
+import com.jorotayo.fl_datatracker.util.getCurrentDateTime
+import com.jorotayo.fl_datatracker.util.toString
 import com.jorotayo.fl_datatracker.util.validateData
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import formNameHeader
@@ -239,11 +241,14 @@ fun DataEntryScreen(
                                     val returnedValue: Pair<Boolean, DataEntryScreenState> =
                                         validateData(uiState.value.value)
 
+                                    val date = getCurrentDateTime()
+                                    val dateInString = date.toString("dd/MM/yyyy HH:mm:ss")
+
                                     val newData = Data(
                                         id = 0,
-                                        dataFields = dataFields,
-                                        name = uiState.value.value.dataName,
-                                        lastEdited = "TIME_NOW"
+                                        dataFields = viewModel.returnList(),
+                                        name = name.value,
+                                        lastEdited = dateInString
                                     )
                                     if (returnedValue.first) { //means there were no errors
                                         viewModel.onEvent(DataEvent.SaveData(newData))
