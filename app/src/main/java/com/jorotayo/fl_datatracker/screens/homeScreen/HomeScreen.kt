@@ -3,8 +3,6 @@ package com.jorotayo.fl_datatracker.screens.homeScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -129,7 +127,17 @@ fun HomeScreen(
                         modifier = Modifier
                     ) {
 
+
                         if (uiState.dataItems.isNotEmpty()) {
+                            for (dataItem in uiState.dataItems) {
+                                DataRow(data = dataItem, editData = {
+                                    navController.navigate(Screen.DataEntry.route + "?dataId=${dataItem.id}")
+                                })
+                            }
+                        }
+
+
+                        /*if (uiState.dataItems.isNotEmpty()) {
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -144,7 +152,8 @@ fun HomeScreen(
                                     }
                                 )
                             }
-                        }
+                        }*/
+
                     }
                 }
             }
@@ -162,7 +171,10 @@ fun HomeScreen(
                     )
                 }
                 AnimatedVisibility(visible = !uiState.isSearchVisible) {
-                    TopBar { viewModel.onEvent(HomeScreenEvent.ToggleSearchBar) }
+                    TopBar(
+                        toggleSearchBar = { viewModel.onEvent(HomeScreenEvent.ToggleSearchBar) },
+                        showSettingsView = { viewModel.onEvent(HomeScreenEvent.ShowSettingsView) }
+                    )
                 }
             }
         }

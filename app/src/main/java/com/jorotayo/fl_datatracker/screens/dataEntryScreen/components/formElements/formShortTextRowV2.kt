@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +25,7 @@ fun PreviewFormShortTextRowV2() {
     formShortTextRowV2(
         fieldName = "Short Text Row",
         rowHint = "Short Text row example...",
-        hasError = false
+        hasError = true
     )
 }
 
@@ -79,28 +80,37 @@ fun formShortTextRowV2(
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = MaterialTheme.colors.surface,
+                        focusedIndicatorColor = Color.Transparent,
                         backgroundColor = Color.Transparent,
                         textColor = MaterialTheme.colors.onSurface
                     ),
                     isError = hasError,
                     placeholder = {
                         if (hasError) {
-                            Text(
-                                text = "Enter a value for $fieldName",
-                                color = Color.Red,
-                                textAlign = TextAlign.Center
-                            )
-                            Icon(
-                                imageVector = Icons.Default.Warning,
-                                contentDescription = "Errored $fieldName field"
-                            )
+                            AnimatedVisibility(visible = true) {
+                                Row {
+                                    Text(
+                                        text = "Enter a value for $fieldName",
+                                        color = Color.Red,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Default.Warning,
+                                        contentDescription = "Errored $fieldName field",
+                                        tint = MaterialTheme.colors.primary
+                                    )
+                                }
+                            }
+
                         } else {
-                            Text(
-                                text = rowHint ?: "Short Text Row Hint...",
-                                color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                                textAlign = TextAlign.Center
-                            )
+                            AnimatedVisibility(visible = true) {
+                                Text(
+                                    text = rowHint ?: "Short Text Row Hint...",
+                                    color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
                         }
                     },
                     maxLines = 1

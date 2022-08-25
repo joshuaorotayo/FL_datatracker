@@ -13,17 +13,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor() : ViewModel() {
 
-/*    private val _searchFieldState = mutableStateOf(
-        TextFieldState()
-    )
-    val searchFieldState: State<TextFieldState> = _searchFieldState
-
-    private val _searchBarState = mutableStateOf(SearchBarState())
-    val searchBarState: State<SearchBarState> = _searchBarState
-
-    private val _dataItems = mutableStateOf(6) // data items Value
-    val dataItems: State<Int> = _dataItems*/
-
     private var _uiState = mutableStateOf(
         HomeScreenState(
             isSearchVisible = false,
@@ -59,6 +48,9 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
                 )
             }
             HomeScreenEvent.EditDataItem -> TODO()
+            HomeScreenEvent.ShowSettingsView -> {
+                //show Settings TODO()
+            }
         }
     }
 }

@@ -116,7 +116,7 @@ fun formRadioRowV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(10.dp)
+            .height(5.dp)
     )
 
     return selectedOption

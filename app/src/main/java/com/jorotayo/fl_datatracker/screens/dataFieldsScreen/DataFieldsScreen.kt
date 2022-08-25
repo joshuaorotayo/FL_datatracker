@@ -78,29 +78,6 @@ fun DataFieldsScreen(
                     .wrapContentSize()
                     .align(Alignment.TopStart),
             ) {
-//               Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .wrapContentSize()
-//                        .padding(bottom = 10.dp)
-//                ) {
-//                    Text(
-//                        text = "VALUE CURRENTLY IS: ${testValue.size}",
-//                        color = Color.Black
-//                    )
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .wrapContentHeight()
-//                    ){
-//                        Button(onClick = { viewModel.onEvent(DataFieldEvent.IncButton) }) {
-//                            Text(text = "Inc Button")
-//                        }
-//                        Button(onClick = { viewModel.onEvent(DataFieldEvent.DecButton) }) {
-//                            Text(text = "Dec Button")
-//                        }
-//                    }
-//                }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()

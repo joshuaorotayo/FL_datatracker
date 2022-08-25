@@ -9,13 +9,18 @@ fun capitaliseWord(word: String): String {
 }
 
 fun validateData(data: DataEntryScreenState): Pair<Boolean, DataEntryScreenState> {
-    var hasErrors = false
+    var noErrors = true
     val dataRows = data.dataRows
 
+    if (data.dataName.isBlank()) {
+        noErrors = false
+        data.nameError = true
+
+    }
     for (dr in dataRows) {
         if (dr.dataField.dataValue.isBlank()) {
             dr.hasError = true
-            hasErrors = true
+            noErrors = false
 
             when (dr.dataField.dataFieldType) {
                 0 -> {
@@ -31,5 +36,5 @@ fun validateData(data: DataEntryScreenState): Pair<Boolean, DataEntryScreenState
         }
     }
     data.dataRows = dataRows
-    return Pair(hasErrors, data)
+    return Pair(noErrors, data)
 }

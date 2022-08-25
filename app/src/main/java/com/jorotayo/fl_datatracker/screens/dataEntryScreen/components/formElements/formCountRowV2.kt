@@ -29,7 +29,7 @@ fun PreviewFormCountRowV2() {
 
 @Composable
 fun formCountRowV2(
-    fieldName: String
+    fieldName: String,
 ): String {
     val count = remember { mutableStateOf(0) }
 

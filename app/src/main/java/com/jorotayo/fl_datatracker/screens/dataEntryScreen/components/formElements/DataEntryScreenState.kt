@@ -2,5 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 data class DataEntryScreenState(
     var dataName: String,
-    var dataRows: List<DataRowState>,
+    var dataRows: MutableList<DataRowState>,
+    var nameError: Boolean,
 )
