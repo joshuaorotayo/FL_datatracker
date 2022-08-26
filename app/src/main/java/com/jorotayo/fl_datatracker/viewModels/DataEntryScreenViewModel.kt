@@ -11,6 +11,8 @@ import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
+import com.jorotayo.fl_datatracker.util.getCurrentDateTime
+import com.jorotayo.fl_datatracker.util.toString
 import io.objectbox.Box
 import java.util.*
 import javax.inject.Inject
@@ -90,7 +92,18 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     fun onEvent(event: DataEvent) {
         when (event) {
             is DataEvent.SaveData -> {
-                dataBox.value.put(event.value)
+
+                val date = getCurrentDateTime()
+                val dateInString = date.toString("dd/MM/yyyy HH:mm:ss")
+
+                val newData = Data(
+                    id = 0,
+                    dataFields = returnDataFieldList(),
+                    name = event.value.dataName,
+                    lastEdited = dateInString
+                )
+
+                dataBox.value.put(newData)
             }
             is DataEvent.SetName -> {
                 _uiState.value = uiState.value.copy(
@@ -141,7 +154,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
         return list
     }
 
-    fun returnList(): List<DataField> {
+    fun returnDataFieldList(): List<DataField> {
         val list = ArrayList<DataField>()
 
         var newDataField = DataField(
