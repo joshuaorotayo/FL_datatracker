@@ -240,6 +240,9 @@ fun DataEntryScreen(
                                     if (returnedValue.first) { //means there were no errors
                                         viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value,
                                             dataFieldList = returnDataFieldList(uiState.value.value)))
+
+                                        navController.popBackStack()
+
                                         scope.launch {
                                             scaffoldState.snackbarHostState.showSnackbar(
                                                 message = "${uiState.value.value.dataName} Added!",

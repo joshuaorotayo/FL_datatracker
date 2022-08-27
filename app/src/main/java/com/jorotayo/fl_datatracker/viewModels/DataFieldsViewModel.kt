@@ -10,7 +10,6 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,9 +18,6 @@ class DataFieldsViewModel @Inject constructor(
 
     private val _dataFieldsBox = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
     var dataFieldsBox: MutableState<Box<DataField>> = _dataFieldsBox
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    // var dataFieldsBox = ObjectBox.get().boxFor(DataField::class.java).store.subscribe().toFlow()
 
     private var lastID: Long = 0
 

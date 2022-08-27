@@ -87,7 +87,9 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
         val formattedHrs =
             if (mTime.get(Calendar.HOUR) == 0) "12" else mTime.get(Calendar.HOUR).toString()
 
-        val formattedMinute = mTime.get(Calendar.MINUTE)
+        val formattedMinute =
+            if (mTime.get(Calendar.MINUTE) < 10) "0" + mTime.get(Calendar.MINUTE) else "" + mTime.get(
+                Calendar.MINUTE)
 
         return "$formattedHrs:$formattedMinute $amPm"
 
@@ -158,7 +160,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 }
 
 fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
-    val list = java.util.ArrayList<DataField>()
+    val list = ArrayList<DataField>()
 
     for (dataRow in uiState.dataRows) {
         val newDataField = DataField(
