@@ -18,19 +18,24 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.domain.model.DataField
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormLongTextRowV2() {
-    formLongTextRowV2(
+    val datafield = DataField(
+        id = 0,
         fieldName = "Data Field for Long Text Example",
         fieldHint = "Data capture long text row example..."
+    )
+    formLongTextRowV2(
+        data = datafield
     )
 }
 
 @Composable
 fun formLongTextRowV2(
-    fieldName: String,
-    fieldHint: String?
+    data: DataField,
 ): String {
     //define any local variables
     val maxChar = 200
@@ -38,7 +43,7 @@ fun formLongTextRowV2(
 
     Column(
         modifier = Modifier
-            .padding(vertical = 5.dp, horizontal = 16.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
@@ -49,7 +54,7 @@ fun formLongTextRowV2(
             modifier = Modifier
                 .padding(vertical = 5.dp, horizontal = 10.dp)
                 .fillMaxWidth(),
-            text = fieldName,
+            text = data.fieldName,
             textAlign = TextAlign.Start,
             color = Color.Gray,
         )
@@ -76,11 +81,13 @@ fun formLongTextRowV2(
             ),
             maxLines = 4,
             placeholder = {
-                Text(
-                    text = if (fieldHint?.isEmpty() == true) fieldHint else "Please enter content for field: $fieldName",
-                    color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                    textAlign = TextAlign.Start
-                )
+                (if (data.fieldHint?.isEmpty() == true) data.fieldHint else "Please enter content for field: ${data.fieldName}")?.let {
+                    Text(
+                        text = it,
+                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
         )
         //Max Chars count

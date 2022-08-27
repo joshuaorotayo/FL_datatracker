@@ -118,7 +118,7 @@ fun HomeScreen(
                 // Items example
                 Box(
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(16.dp)
                         .fillMaxSize()
                         .clip(shape = RoundedCornerShape(20.dp))
                         .background(MaterialTheme.colors.onBackground)
@@ -126,34 +126,13 @@ fun HomeScreen(
                     Column(
                         modifier = Modifier
                     ) {
-
-
                         if (uiState.dataItems.isNotEmpty()) {
                             for (dataItem in uiState.dataItems) {
-                                DataRow(data = dataItem, editData = {
+                                ComplexDataRow(data = dataItem, editData = {
                                     navController.navigate(Screen.DataEntry.route + "?dataId=${dataItem.id}")
                                 })
                             }
                         }
-
-
-                        /*if (uiState.dataItems.isNotEmpty()) {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(vertical = 16.dp, horizontal = 10.dp)
-                                    .clip(shape = RoundedCornerShape(10.dp))
-                            ) {
-                                itemsIndexed(uiState.dataItems,
-                                    itemContent = { index, item ->
-                                        DataRow(data = item, editData = {
-                                            navController.navigate(Screen.DataEntry.route + "?dataId=${item.id}")
-                                        })
-                                    }
-                                )
-                            }
-                        }*/
-
                     }
                 }
             }
@@ -161,6 +140,7 @@ fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(MaterialTheme.colors.background)
                     .padding(top = 40.dp)
             )
             {

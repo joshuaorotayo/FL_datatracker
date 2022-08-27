@@ -24,9 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.util.validateData
@@ -61,14 +59,15 @@ fun DataEntryScreen(
     val name = remember { mutableStateOf("") }
 
     //Gets All data fields
-    val allDataFields = ObjectBox.get().boxFor(DataField::class.java)
+/*    val allDataFields = ObjectBox.get().boxFor(DataField::class.java)
     val dataFields =
-        allDataFields.query().equal(DataField_.isEnabled, true).build().use { it.find() }
+        allDataFields.query().equal(DataField_.isEnabled, true).build().use { it.find() }*/
 
     var uiState = remember { mutableStateOf(viewModel.uiState) }
     viewModel.currentDataId.value = dataId
 
     systemUiController.setStatusBarColor(MaterialTheme.colors.background)
+
     Scaffold(
         topBar = {
 
@@ -97,7 +96,7 @@ fun DataEntryScreen(
                     )
                 }
                 val testRun = false
-                if (dataFields.isEmpty() && !testRun) {
+                if (uiState.value.value.dataRows.isEmpty() && !testRun) {
                     Spacer(modifier = Modifier.weight(1f))
 
                     //No Data Form Message
@@ -149,7 +148,7 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(vertical = 16.dp)
+                    .padding(bottom = 16.dp, top = 5.dp)
                     .clip(shape = RoundedCornerShape(10.dp))
             ) {
                 item {
@@ -170,27 +169,29 @@ fun DataEntryScreen(
                 }
 
                 items(uiState.value.value.dataRows) { data ->
+                    /* var found = viewModel.currentDataFields.first {
+                         it.id == data.dataField.id
+                     }*/
                     when (data.dataField.dataFieldType) {
+                        /*    items(viewModel.currentDataFields.value) { data ->
+                              *//*  var found = viewModel.currentDataFields.first {
+                        it.id == data.dataField.id
+                    }*//*
+                    when (data.dataFieldType) {*/
                         0 -> {
                             data.dataField.dataValue = formShortTextRowV2(
-                                fieldName = data.dataField.fieldName,
-                                rowHint = data.dataField.fieldHint,
+                                data = data.dataField,
                                 hasError = data.hasError
                             )
                         }
                         1 -> {
                             data.dataField.dataValue = formLongTextRowV2(
-                                fieldName = data.dataField.fieldName,
-                                fieldHint = data.dataField.fieldHint
+                                data = data.dataField,
                             )
                         }
                         2 -> {
                             data.dataField.dataValue = formRadioRowV2(
-                                options = listOf(
-                                    data.dataField.first,
-                                    data.dataField.second
-                                ),
-                                fieldName = data.dataField.fieldName
+                                data = data.dataField
                             )
                         }
                         3 -> {
@@ -207,16 +208,11 @@ fun DataEntryScreen(
                         }
                         5 -> {
                             data.dataField.dataValue =
-                                formCountRowV2(fieldName = data.dataField.fieldName)
+                                formCountRowV2(data = data.dataField)
                         }
                         6 -> {
                             data.dataField.dataValue = formRadioRowV2(
-                                options = listOf(
-                                    data.dataField.first,
-                                    data.dataField.second,
-                                    data.dataField.third
-                                ),
-                                fieldName = data.dataField.fieldName
+                                data = data.dataField
                             )
                         }
                     }
@@ -227,7 +223,8 @@ fun DataEntryScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.End
                     ) {
                         Button(
                             modifier = Modifier
@@ -239,8 +236,10 @@ fun DataEntryScreen(
                                     val returnedValue: Pair<Boolean, DataEntryScreenState> =
                                         validateData(uiState.value.value)
 
+
                                     if (returnedValue.first) { //means there were no errors
-                                        viewModel.onEvent(DataEvent.SaveData(uiState.value.value))
+                                        viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value,
+                                            dataFieldList = returnDataFieldList(uiState.value.value)))
                                         scope.launch {
                                             scaffoldState.snackbarHostState.showSnackbar(
                                                 message = "${uiState.value.value.dataName} Added!",
@@ -280,5 +279,25 @@ fun DataEntryScreen(
             )
         }
     }
+}
+
+fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
+    val list = ArrayList<DataField>()
+
+    for (dataRow in uiState.dataRows) {
+        val newDataField = DataField(
+            id = dataRow.dataField.id,
+            fieldName = dataRow.dataField.fieldName,
+            dataFieldType = dataRow.dataField.dataFieldType,
+            dataValue = dataRow.dataField.dataValue,
+            first = dataRow.dataField.first,
+            second = dataRow.dataField.second,
+            third = dataRow.dataField.third,
+            isEnabled = dataRow.dataField.isEnabled,
+            fieldHint = dataRow.dataField.fieldHint
+        )
+        list.add(newDataField)
+    }
+    return list
 }
 

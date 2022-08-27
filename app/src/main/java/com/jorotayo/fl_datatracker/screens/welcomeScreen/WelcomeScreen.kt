@@ -195,7 +195,7 @@ fun OnBoardingComplete(
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colors.primary,
                     uncheckedColor = Color.Black,
-                    checkmarkColor = MaterialTheme.colors.primaryVariant
+                    checkmarkColor = MaterialTheme.colors.onPrimary
                 )
             )
         }

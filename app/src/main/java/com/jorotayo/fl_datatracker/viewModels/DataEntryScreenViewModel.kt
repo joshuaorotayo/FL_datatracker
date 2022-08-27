@@ -25,10 +25,12 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private var _dataBox = mutableStateOf(ObjectBox.get().boxFor(Data::class.java))
     val dataBox: State<Box<Data>> = _dataBox
 
-    private val _currentDataId = mutableStateOf(Long.MIN_VALUE)
+    private val _currentDataId = mutableStateOf(0.toLong())
     var currentDataId: MutableState<Long> = _currentDataId
 
-    var currentDataFields = listOf<DataField>()
+    private val _currentDataFields = mutableStateOf(listOf<DataField>())
+    var currentDataFields: MutableState<List<DataField>> = _currentDataFields
+
     private val _dataName = mutableStateOf("")
     var dataName: MutableState<String> = _dataName
 
@@ -39,6 +41,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     ))
     val uiState: State<DataEntryScreenState> = _uiState
 
+/*
 
     init {
         loadDataFields()
@@ -47,6 +50,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private fun loadDataFields() {
         _dataFieldsBox2.value = ObjectBox.get().boxFor(DataField::class.java)
     }
+*/
 
     private val days = arrayOf("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat")
 
@@ -98,8 +102,8 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
                 val newData = Data(
                     id = 0,
-                    dataFields = returnDataFieldList(),
-                    name = event.value.dataName,
+                    dataFields = returnDataFieldList(event.dataEntryScreenState),
+                    name = event.dataEntryScreenState.dataName,
                     lastEdited = dateInString
                 )
 
@@ -120,17 +124,15 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
     private fun makeDataRows(): MutableList<DataRowState> {
         val list: MutableList<DataRowState> = ArrayList()
-
-        if (currentDataId.value != Long.MIN_VALUE) {
+        if (currentDataId.value != (0).toLong()) {
             //Returns all enabled data fields in the data item
             // val dataFields = dataBox.value.get(currentDataId.value).dataFields.filter { it.isEnabled }
 
             // All stored fields should be enabled
-
-            currentDataFields = dataBox.value.get(currentDataId.value).dataFields
+            currentDataFields.value = dataBox.value.get(currentDataId.value).dataFields.toList()
 
             //uses the Data fields values to populate the Data Rows
-            for (df in currentDataFields) {
+            for (df in currentDataFields.value) {
                 list.add(DataRowState(
                     dataField = df,
                     hasError = false,
@@ -138,11 +140,11 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                 ))
             }
         } else {
-            currentDataFields =
+            currentDataFields.value =
                 _dataFieldsBox2.value.query().equal(DataField_.isEnabled, true).build()
                     .use { it.find() }
             //uses the Data fields values to populate the Data Rows
-            for (df in currentDataFields) {
+            for (df in currentDataFields.value) {
                 list.add(DataRowState(
                     dataField = df,
                     hasError = false,
@@ -153,17 +155,24 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
         return list
     }
+}
 
-    fun returnDataFieldList(): List<DataField> {
-        val list = ArrayList<DataField>()
+fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
+    val list = java.util.ArrayList<DataField>()
 
-        var newDataField = DataField(
-            id = 0
+    for (dataRow in uiState.dataRows) {
+        val newDataField = DataField(
+            id = dataRow.dataField.id,
+            fieldName = dataRow.dataField.fieldName,
+            dataFieldType = dataRow.dataField.dataFieldType,
+            dataValue = dataRow.dataField.dataValue,
+            first = dataRow.dataField.first,
+            second = dataRow.dataField.second,
+            third = dataRow.dataField.third,
+            isEnabled = dataRow.dataField.isEnabled,
+            fieldHint = dataRow.dataField.fieldHint
         )
-        for (dataRow in uiState.value.dataRows) {
-            newDataField = dataRow.dataField
-            list.add(newDataField)
-        }
-        return list
+        list.add(newDataField)
     }
+    return list
 }

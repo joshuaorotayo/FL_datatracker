@@ -76,7 +76,7 @@ fun formDateRowV2(
 
     Column(
         modifier = Modifier
-            .padding(vertical = 5.dp, horizontal = 16.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))

@@ -42,11 +42,9 @@ fun formNameHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp
-            )
+            .padding(top = 8.dp, start = 16.dp, end = 16.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
-            .padding(16.dp)
     ) {
         TextField(
             modifier = Modifier.fillMaxWidth(),

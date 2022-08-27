@@ -14,33 +14,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.domain.model.DataField
 import kotlin.math.floor
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormRadioRowV2() {
-    val testOptions = listOf(
-        "No",
-        "N/A",
-        "Yes"
-    )
-
     formRadioRowV2(
-        options = testOptions,
-        fieldName = "Data Field for Radio Row"
+        data = DataField(
+            id = 0,
+            fieldName = "Data Field for Radio Row",
+            first = "No",
+            second = "N/A",
+            third = "Yes",
+        )
     )
 }
 
 @Composable
 fun formRadioRowV2(
-    options: List<String>,
-    fieldName: String
+    data: DataField,
 ): String {
+    val options = listOf(data.first, data.second, data.third)
+
     val defaultSelected = floor(options.size.toDouble() / 2)
 
     var selectedOption by remember {
         mutableStateOf(options[defaultSelected.toInt()])
     }
+
 
     val onSelectionChange = { text: String ->
         selectedOption = text
@@ -48,7 +50,7 @@ fun formRadioRowV2(
 
     Column(
         modifier = Modifier
-            .padding(vertical = 5.dp, horizontal = 16.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
@@ -64,7 +66,7 @@ fun formRadioRowV2(
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = fieldName,
+                text = data.fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )

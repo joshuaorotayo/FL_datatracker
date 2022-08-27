@@ -18,5 +18,6 @@ data class DataField(
     var second: String = "",
     var third: String = "",
     var isEnabled: Boolean = true,
-    var fieldHint: String? = "Enter value for $fieldName"
+    var fieldHint: String? = "Enter value for $fieldName",
 )
+

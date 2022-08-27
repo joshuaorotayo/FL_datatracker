@@ -118,7 +118,7 @@ fun DataFieldRow(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(bottom = 12.dp, start = 8.dp, end = 8.dp)
+            .padding(bottom = 5.dp, start = 8.dp, end = 8.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(
                 if (isSystemInDarkTheme()) {

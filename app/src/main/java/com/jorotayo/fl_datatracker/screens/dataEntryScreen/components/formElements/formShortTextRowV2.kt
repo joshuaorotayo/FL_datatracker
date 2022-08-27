@@ -18,29 +18,33 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.domain.model.DataField
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormShortTextRowV2() {
-    formShortTextRowV2(
+    val datafield = DataField(
+        id = 0,
         fieldName = "Short Text Row",
-        rowHint = "Short Text row example...",
+        fieldHint = "Short Text row example..."
+    )
+    formShortTextRowV2(
+        data = datafield,
         hasError = true
     )
 }
 
 @Composable
 fun formShortTextRowV2(
-    fieldName: String,
-    rowHint: String?,
     hasError: Boolean,
+    data: DataField,
 ): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
 
     Column(
         modifier = Modifier
-            .padding(vertical = 5.dp, horizontal = 16.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
@@ -56,7 +60,7 @@ fun formShortTextRowV2(
                 modifier = Modifier
                     .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = fieldName,
+                text = data.fieldName,
                 textAlign = TextAlign.Start,
                 color = Color.Gray,
             )
@@ -90,13 +94,13 @@ fun formShortTextRowV2(
                             AnimatedVisibility(visible = true) {
                                 Row {
                                     Text(
-                                        text = "Enter a value for $fieldName",
+                                        text = "Enter a value for ${data.fieldName}",
                                         color = Color.Red,
                                         textAlign = TextAlign.Center
                                     )
                                     Icon(
                                         imageVector = Icons.Default.Warning,
-                                        contentDescription = "Errored $fieldName field",
+                                        contentDescription = "Errored ${data.fieldName} field",
                                         tint = MaterialTheme.colors.primary
                                     )
                                 }
@@ -105,7 +109,7 @@ fun formShortTextRowV2(
                         } else {
                             AnimatedVisibility(visible = true) {
                                 Text(
-                                    text = rowHint ?: "Short Text Row Hint...",
+                                    text = data.fieldHint ?: "Short Text Row Hint...",
                                     color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                                     textAlign = TextAlign.Center
                                 )

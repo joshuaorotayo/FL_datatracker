@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">FL_Datatracker</string>
     <string name="landing_enable_explanation">Click the floating action button to add new Data</string>
+    <string name="dataRow_lastEdited"> <b>Last Edited: </b></string>
 </resources>
