@@ -38,20 +38,17 @@ class DataTrackerApp : Application() {
             )
         }
         if (currentPreset == null) {
+            presetBox.put(
+                Preset(
+                    presetId = 0,
+                    presetName = "Default"
+                )
+            )
             settingBox.put(
                 Setting(
                     Id = 1,
-                    settingName = "isOnBoardingComplete",
-                    settingBoolValue = false,
-                    settingStringValue = "General"
-                )
-            )
-        }
-        if (currentPreset == null) {
-            settingBox.put(
-                Setting(
-                    Id = 2,
                     settingName = "currentPreset",
+                    settingBoolValue = false,
                     settingStringValue = "Default"
                 )
             )

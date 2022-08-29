@@ -19,13 +19,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormCountRowV2() {
-    val data = DataField(
-        dataFieldId = 0,
+    val data = DataItem(
+        dataItemId = 0,
         presetId = 0,
         fieldName = "Data Field for Count Row"
     )
@@ -34,7 +34,7 @@ fun PreviewFormCountRowV2() {
 
 @Composable
 fun formCountRowV2(
-    data: DataField,
+    data: DataItem,
 ): String {
     var count = remember { mutableStateOf(0) }
 

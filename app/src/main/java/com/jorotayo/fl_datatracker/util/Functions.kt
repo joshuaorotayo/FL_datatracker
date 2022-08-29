@@ -23,15 +23,15 @@ fun validateData(data: DataEntryScreenState): Pair<Boolean, DataEntryScreenState
             dr.hasError = true
             noErrors = false
 
-            when (dr.dataItem.dataField.dataFieldType) {
+            when (dr.dataItem.dataFieldType) {
                 0 -> {
-                    dr.errorMsg = "Please enter a value for ${dr.dataItem.dataField.fieldName}"
+                    dr.errorMsg = "Please enter a value for ${dr.dataItem.fieldName}"
                 }
                 3 -> {
-                    dr.errorMsg = "Please pick a Date for ${dr.dataItem.dataField.fieldName}"
+                    dr.errorMsg = "Please pick a Date for ${dr.dataItem.fieldName}"
                 }
                 4 -> {
-                    dr.errorMsg = "Please pick a Time for ${dr.dataItem.dataField.fieldName}"
+                    dr.errorMsg = "Please pick a Time for ${dr.dataItem.fieldName}"
                 }
             }
         }

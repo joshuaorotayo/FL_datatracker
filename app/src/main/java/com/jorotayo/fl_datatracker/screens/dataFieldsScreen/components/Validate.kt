@@ -14,8 +14,13 @@ class Validate {
     val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
     val presetBox: Box<Preset> = ObjectBox.get().boxFor(Preset::class.java)
 
-    val currentPreset =
-        settingBox.query(Setting_.settingName.equal("currentPreset")).build().findFirst()
+    val currentPresetSetting =
+        settingBox.query(Setting_.settingName.equal("currentPreset")).build()
+            .findFirst()?.settingName
+
+    val currentPresetId =
+        currentPresetSetting?.let { Preset_.presetName.equal(it) }
+            ?.let { presetBox.query(it).build().findFirst()?.presetId ?: 0 }
 
     private val fieldNames =
         dataFieldsBox2.value.query().build().property(DataField_.fieldName).findStrings().toList()
@@ -50,8 +55,7 @@ class Validate {
         }
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
-            if (currentPreset != null) dataField.presetId =
-                currentPreset.Id else dataField.presetId = 0
+            dataField.presetId = currentPresetId!!
             dataFieldsBox2.value.put(dataField)
             msg = "Data Field '${dataField.fieldName}' saved!"
         }

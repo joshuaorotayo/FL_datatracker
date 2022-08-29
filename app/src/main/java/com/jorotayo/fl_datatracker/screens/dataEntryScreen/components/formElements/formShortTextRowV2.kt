@@ -18,19 +18,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormShortTextRowV2() {
-    val datafield = DataField(
-        dataFieldId = 0,
+    val dataItem = DataItem(
+        presetId = 0,
+        dataItemId = 0,
         fieldName = "Short Text Row",
         fieldHint = "Short Text row example...",
-        presetId = 0
     )
     formShortTextRowV2(
-        data = datafield,
+        data = dataItem,
         hasError = true
     )
 }
@@ -38,7 +38,7 @@ fun PreviewFormShortTextRowV2() {
 @Composable
 fun formShortTextRowV2(
     hasError: Boolean,
-    data: DataField,
+    data: DataItem,
 ): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }

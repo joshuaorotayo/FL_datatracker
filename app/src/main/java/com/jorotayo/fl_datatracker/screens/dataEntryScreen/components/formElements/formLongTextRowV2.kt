@@ -18,25 +18,25 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormLongTextRowV2() {
-    val datafield = DataField(
-        dataFieldId = 0,
+    val data = DataItem(
+        dataItemId = 0,
+        presetId = 0,
         fieldName = "Data Field for Long Text Example",
-        fieldHint = "Data capture long text row example...",
-        presetId = 0
+        fieldHint = "Data capture long text row example..."
     )
     formLongTextRowV2(
-        data = datafield
+        data = data
     )
 }
 
 @Composable
 fun formLongTextRowV2(
-    data: DataField,
+    data: DataItem,
 ): String {
     //define any local variables
     val maxChar = 200

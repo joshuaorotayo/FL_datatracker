@@ -14,15 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 import kotlin.math.floor
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormRadioRowV2() {
     formRadioRowV2(
-        data = DataField(
-            dataFieldId = 0,
+        data = DataItem(
+            dataItemId = 0,
             fieldName = "Data Field for Radio Row",
             first = "No",
             second = "N/A",
@@ -34,7 +34,7 @@ fun PreviewFormRadioRowV2() {
 
 @Composable
 fun formRadioRowV2(
-    data: DataField,
+    data: DataItem,
 ): String {
     val options = listOf(data.first, data.second, data.third)
 

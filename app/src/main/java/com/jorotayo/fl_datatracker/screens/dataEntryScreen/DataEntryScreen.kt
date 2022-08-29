@@ -172,7 +172,7 @@ fun DataEntryScreen(
                     /* var found = viewModel.currentDataFields.first {
                          it.id == data.dataField.id
                      }*/
-                    when (data.dataItem.dataField.dataFieldType) {
+                    when (data.dataItem.dataFieldType) {
                         /*    items(viewModel.currentDataFields.value) { data ->
                               *//*  var found = viewModel.currentDataFields.first {
                         it.id == data.dataField.id
@@ -180,39 +180,39 @@ fun DataEntryScreen(
                     when (data.dataFieldType) {*/
                         0 -> {
                             data.dataItem.dataValue = formShortTextRowV2(
-                                data = data.dataItem.dataField,
+                                data = data.dataItem,
                                 hasError = data.hasError
                             )
                         }
                         1 -> {
                             data.dataItem.dataValue = formLongTextRowV2(
-                                data = data.dataItem.dataField,
+                                data = data.dataItem,
                             )
                         }
                         2 -> {
                             data.dataItem.dataValue = formRadioRowV2(
-                                data = data.dataItem.dataField,
+                                data = data.dataItem,
                             )
                         }
                         3 -> {
                             data.dataItem.dataValue = formDateRowV2(
                                 viewModel = DataEntryScreenViewModel(),
-                                fieldName = data.dataItem.dataField.fieldName
+                                fieldName = data.dataItem.fieldName
                             )
                         }
                         4 -> {
                             data.dataItem.dataValue = formTimeRowV2(
                                 viewModel = DataEntryScreenViewModel(),
-                                fieldName = data.dataItem.dataField.fieldName
+                                fieldName = data.dataItem.fieldName
                             )
                         }
                         5 -> {
                             data.dataItem.dataValue =
-                                formCountRowV2(data = data.dataItem.dataField)
+                                formCountRowV2(data = data.dataItem)
                         }
                         6 -> {
                             data.dataItem.dataValue = formRadioRowV2(
-                                data = data.dataItem.dataField
+                                data = data.dataItem
                             )
                         }
                     }
@@ -289,15 +289,15 @@ fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
 
     for (dataRow in uiState.dataRows) {
         val newDataField = DataField(
-            dataFieldId = dataRow.dataItem.dataField.dataFieldId,
-            fieldName = dataRow.dataItem.dataField.fieldName,
-            dataFieldType = dataRow.dataItem.dataField.dataFieldType,
-            first = dataRow.dataItem.dataField.first,
-            second = dataRow.dataItem.dataField.second,
-            third = dataRow.dataItem.dataField.third,
-            isEnabled = dataRow.dataItem.dataField.isEnabled,
-            fieldHint = dataRow.dataItem.dataField.fieldHint,
-            presetId = 0
+            dataFieldId = 0,
+            presetId = 0,
+            fieldName = dataRow.dataItem.fieldName,
+            dataFieldType = dataRow.dataItem.dataFieldType,
+            first = dataRow.dataItem.first,
+            second = dataRow.dataItem.second,
+            third = dataRow.dataItem.third,
+            isEnabled = dataRow.dataItem.isEnabled,
+            fieldHint = dataRow.dataItem.fieldHint
         )
         list.add(newDataField)
     }
