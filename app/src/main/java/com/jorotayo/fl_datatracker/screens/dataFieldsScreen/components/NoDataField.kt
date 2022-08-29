@@ -24,7 +24,6 @@ fun PreviewNoDataField() {
 
 @Composable
 fun NoDataField(
-    //onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier

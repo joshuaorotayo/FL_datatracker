@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -27,43 +28,53 @@ fun PreviewNoDataForm() {
 @Composable
 fun NoDataForm() {
     Box(
-        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .fillMaxSize()
-            .clip(shape = RoundedCornerShape(10.dp))
+            .wrapContentSize()
+            .padding(vertical = 20.dp, horizontal = 8.dp)
+            .clip(shape = RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colors.onBackground)
     )
     {
-        Column(
+
+        //empty Message
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .wrapContentSize()
+                .padding(10.dp)
+                .clip(shape = RoundedCornerShape(10.dp))
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    modifier = Modifier.size(128.dp),
-                    imageVector = Icons.Default.AddBox,
-                    tint = MaterialTheme.colors.primary,
-                    contentDescription = "No Data Fields Message",
+            Column(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        modifier = Modifier.size(128.dp),
+                        imageVector = Icons.Default.AddBox,
+                        tint = MaterialTheme.colors.primary,
+                        contentDescription = "No Data Fields Message",
+                    )
+                }
+
+                Text(
+                    modifier = Modifier,
+                    text = "Data Form not created",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.onSurface
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(bottom = 10.dp),
+                    text = "There are currently no Data Fields. Add some Data Fields to begin adding Data",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h5,
+                    color = Color.DarkGray
                 )
             }
-
-            Text(
-                modifier = Modifier,
-                text = "Data Form not created",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h4,
-                color = MaterialTheme.colors.onSurface
-            )
-            Text(
-                modifier = Modifier
-                    .padding(bottom = 10.dp),
-                text = "There are currently no Data Fields. Add some Data Fields to begin adding Data",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h5,
-                color = Color.DarkGray
-            )
         }
     }
 }
