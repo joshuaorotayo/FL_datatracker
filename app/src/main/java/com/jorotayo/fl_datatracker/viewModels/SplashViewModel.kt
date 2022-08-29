@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.ObjectBox
-import com.jorotayo.fl_datatracker.domain.model.SettingsBool
-import com.jorotayo.fl_datatracker.domain.model.SettingsBool_
+import com.jorotayo.fl_datatracker.domain.model.Setting
+import com.jorotayo.fl_datatracker.domain.model.Setting_
 import com.jorotayo.fl_datatracker.navigation.Screen
 import io.objectbox.Box
 import io.objectbox.query.Query
@@ -22,14 +22,14 @@ class SplashViewModel @Inject constructor(
     private val _startDestination: MutableState<String> = mutableStateOf(Screen.Welcome.route)
     val startDestination: State<String> = _startDestination
 
-    private val settingBox: Box<SettingsBool> = ObjectBox.get().boxFor(SettingsBool::class.java)
-    private val query: Query<SettingsBool> =
-        settingBox.query(SettingsBool_.settingName.equal("isOnBoardingComplete")).build()
+    private val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
+    private val query: Query<Setting> =
+        settingBox.query(Setting_.settingName.equal("isOnBoardingComplete")).build()
     private val isOnBoardingComplete = query.findFirst()
 
     init {
         viewModelScope.launch {
-            if (isOnBoardingComplete?.settingValue == true) {
+            if (isOnBoardingComplete?.settingBoolValue == true) {
                 _startDestination.value = Screen.HomeScreen.route
             } else {
                 _startDestination.value = Screen.Welcome.route

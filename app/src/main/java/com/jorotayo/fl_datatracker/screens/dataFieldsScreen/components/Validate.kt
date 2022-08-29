@@ -3,14 +3,19 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
-import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.model.DataField_
+import com.jorotayo.fl_datatracker.domain.model.*
 import com.jorotayo.fl_datatracker.util.capitaliseWord
 import io.objectbox.Box
 
 class Validate {
     private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
     private var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
+
+    val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
+    val presetBox: Box<Preset> = ObjectBox.get().boxFor(Preset::class.java)
+
+    val currentPreset =
+        settingBox.query(Setting_.settingName.equal("currentPreset")).build().findFirst()
 
     private val fieldNames =
         dataFieldsBox2.value.query().build().property(DataField_.fieldName).findStrings().toList()
@@ -45,6 +50,8 @@ class Validate {
         }
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
+            if (currentPreset != null) dataField.presetId =
+                currentPreset.Id else dataField.presetId = 0
             dataFieldsBox2.value.put(dataField)
             msg = "Data Field '${dataField.fieldName}' saved!"
         }

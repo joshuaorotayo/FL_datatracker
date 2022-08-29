@@ -24,9 +24,10 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 @Composable
 fun PreviewFormLongTextRowV2() {
     val datafield = DataField(
-        id = 0,
+        dataFieldId = 0,
         fieldName = "Data Field for Long Text Example",
-        fieldHint = "Data capture long text row example..."
+        fieldHint = "Data capture long text row example...",
+        presetId = 0
     )
     formLongTextRowV2(
         data = datafield

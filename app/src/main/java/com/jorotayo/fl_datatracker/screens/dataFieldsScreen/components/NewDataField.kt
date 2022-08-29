@@ -60,11 +60,11 @@ fun NewDataField(
     val newDataField = viewModel.newDataField.value
 
     val newData = DataField(
-        id = 0,
+        dataFieldId = 0,
+        presetId = 0,
         fieldName = newDataField.fieldName,
         dataFieldType = newDataField.fieldType,
         fieldHint = newDataField.fieldHint,
-        dataValue = "",
         first = newDataField.firstValue,
         second = newDataField.secondValue,
         third = newDataField.thirdValue,

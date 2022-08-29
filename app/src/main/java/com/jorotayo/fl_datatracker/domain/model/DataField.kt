@@ -9,11 +9,11 @@ import io.objectbox.annotation.Unique
 @Entity
 data class DataField(
     @Id
-    var id: Long,
+    var dataFieldId: Long,
     @Unique(onConflict = ConflictStrategy.REPLACE)
     var fieldName: String = "",
     var dataFieldType: Int = DataFieldType.SHORTSTRING.ordinal,
-    var dataValue: String = "",
+    var presetId: Long,
     var first: String = "",
     var second: String = "",
     var third: String = "",

@@ -19,19 +19,19 @@ fun validateData(data: DataEntryScreenState): Pair<Boolean, DataEntryScreenState
 
     }
     for (dr in dataRows) {
-        if (dr.dataField.dataValue.isBlank()) {
+        if (dr.dataItem.dataValue.isBlank()) {
             dr.hasError = true
             noErrors = false
 
-            when (dr.dataField.dataFieldType) {
+            when (dr.dataItem.dataField.dataFieldType) {
                 0 -> {
-                    dr.errorMsg = "Please enter a value for ${dr.dataField.fieldName}"
+                    dr.errorMsg = "Please enter a value for ${dr.dataItem.dataField.fieldName}"
                 }
                 3 -> {
-                    dr.errorMsg = "Please pick a Date for ${dr.dataField.fieldName}"
+                    dr.errorMsg = "Please pick a Date for ${dr.dataItem.dataField.fieldName}"
                 }
                 4 -> {
-                    dr.errorMsg = "Please pick a Time for ${dr.dataField.fieldName}"
+                    dr.errorMsg = "Please pick a Time for ${dr.dataItem.dataField.fieldName}"
                 }
             }
         }

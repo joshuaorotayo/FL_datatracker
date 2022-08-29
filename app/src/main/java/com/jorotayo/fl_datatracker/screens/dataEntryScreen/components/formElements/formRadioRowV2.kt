@@ -22,11 +22,12 @@ import kotlin.math.floor
 fun PreviewFormRadioRowV2() {
     formRadioRowV2(
         data = DataField(
-            id = 0,
+            dataFieldId = 0,
             fieldName = "Data Field for Radio Row",
             first = "No",
             second = "N/A",
             third = "Yes",
+            presetId = 0
         )
     )
 }

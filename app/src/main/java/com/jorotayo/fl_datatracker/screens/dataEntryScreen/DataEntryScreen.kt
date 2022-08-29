@@ -172,47 +172,47 @@ fun DataEntryScreen(
                     /* var found = viewModel.currentDataFields.first {
                          it.id == data.dataField.id
                      }*/
-                    when (data.dataField.dataFieldType) {
+                    when (data.dataItem.dataField.dataFieldType) {
                         /*    items(viewModel.currentDataFields.value) { data ->
                               *//*  var found = viewModel.currentDataFields.first {
                         it.id == data.dataField.id
                     }*//*
                     when (data.dataFieldType) {*/
                         0 -> {
-                            data.dataField.dataValue = formShortTextRowV2(
-                                data = data.dataField,
+                            data.dataItem.dataValue = formShortTextRowV2(
+                                data = data.dataItem.dataField,
                                 hasError = data.hasError
                             )
                         }
                         1 -> {
-                            data.dataField.dataValue = formLongTextRowV2(
-                                data = data.dataField,
+                            data.dataItem.dataValue = formLongTextRowV2(
+                                data = data.dataItem.dataField,
                             )
                         }
                         2 -> {
-                            data.dataField.dataValue = formRadioRowV2(
-                                data = data.dataField
+                            data.dataItem.dataValue = formRadioRowV2(
+                                data = data.dataItem.dataField,
                             )
                         }
                         3 -> {
-                            data.dataField.dataValue = formDateRowV2(
+                            data.dataItem.dataValue = formDateRowV2(
                                 viewModel = DataEntryScreenViewModel(),
-                                fieldName = data.dataField.fieldName
+                                fieldName = data.dataItem.dataField.fieldName
                             )
                         }
                         4 -> {
-                            data.dataField.dataValue = formTimeRowV2(
+                            data.dataItem.dataValue = formTimeRowV2(
                                 viewModel = DataEntryScreenViewModel(),
-                                fieldName = data.dataField.fieldName
+                                fieldName = data.dataItem.dataField.fieldName
                             )
                         }
                         5 -> {
-                            data.dataField.dataValue =
-                                formCountRowV2(data = data.dataField)
+                            data.dataItem.dataValue =
+                                formCountRowV2(data = data.dataItem.dataField)
                         }
                         6 -> {
-                            data.dataField.dataValue = formRadioRowV2(
-                                data = data.dataField
+                            data.dataItem.dataValue = formRadioRowV2(
+                                data = data.dataItem.dataField
                             )
                         }
                     }
@@ -289,15 +289,15 @@ fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
 
     for (dataRow in uiState.dataRows) {
         val newDataField = DataField(
-            id = dataRow.dataField.id,
-            fieldName = dataRow.dataField.fieldName,
-            dataFieldType = dataRow.dataField.dataFieldType,
-            dataValue = dataRow.dataField.dataValue,
-            first = dataRow.dataField.first,
-            second = dataRow.dataField.second,
-            third = dataRow.dataField.third,
-            isEnabled = dataRow.dataField.isEnabled,
-            fieldHint = dataRow.dataField.fieldHint
+            dataFieldId = dataRow.dataItem.dataField.dataFieldId,
+            fieldName = dataRow.dataItem.dataField.fieldName,
+            dataFieldType = dataRow.dataItem.dataField.dataFieldType,
+            first = dataRow.dataItem.dataField.first,
+            second = dataRow.dataItem.dataField.second,
+            third = dataRow.dataItem.dataField.third,
+            isEnabled = dataRow.dataItem.dataField.isEnabled,
+            fieldHint = dataRow.dataItem.dataField.fieldHint,
+            presetId = 0
         )
         list.add(newDataField)
     }

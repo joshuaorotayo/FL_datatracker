@@ -6,7 +6,7 @@ import io.objectbox.annotation.Id
 @Entity
 data class Data(
     @Id
-    var id: Long = 0,
+    var dataId: Long = 0,
     var name: String = "",
     var lastEdited: String = "",
     var dataFields: List<DataField> = listOf(),

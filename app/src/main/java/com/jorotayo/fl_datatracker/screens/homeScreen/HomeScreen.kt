@@ -129,7 +129,7 @@ fun HomeScreen(
                         if (uiState.dataItems.isNotEmpty()) {
                             for (dataItem in uiState.dataItems) {
                                 ComplexDataRow(data = dataItem, editData = {
-                                    navController.navigate(Screen.DataEntry.route + "?dataId=${dataItem.id}")
+                                    navController.navigate(Screen.DataEntry.route + "?dataId=${dataItem.dataId}")
                                 })
                             }
                         }

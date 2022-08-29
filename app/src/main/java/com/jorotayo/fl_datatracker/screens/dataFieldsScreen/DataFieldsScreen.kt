@@ -214,11 +214,11 @@ fun DataFieldsScreen(
                         itemContent = { index, item ->
                             DataFieldRow(
                                 viewModel = DataFieldsViewModel(),
-                                itemIndex = item.id,
+                                itemIndex = item.dataFieldId,
                                 editName = {
                                     viewModel.onEvent(
                                         DataFieldEvent.EditFieldName(
-                                            index = item.id,
+                                            index = item.dataFieldId,
                                             value = it
                                         )
                                     )
@@ -227,20 +227,20 @@ fun DataFieldsScreen(
                                 editType = {
                                     viewModel.onEvent(
                                         (DataFieldEvent.EditRowType(
-                                            index = item.id,
+                                            index = item.dataFieldId,
                                             value = it
                                         ))
                                     )
                                     item.dataFieldType = it
                                 },
                                 checkedChange = {
-                                    viewModel.onEvent(DataFieldEvent.EditIsEnabled(index = item.id))
+                                    viewModel.onEvent(DataFieldEvent.EditIsEnabled(index = item.dataFieldId))
                                     item.isEnabled = !item.isEnabled
                                 },
                                 editHintText = {
                                     viewModel.onEvent(
                                         DataFieldEvent.EditHintText(
-                                            index = item.id,
+                                            index = item.dataFieldId,
                                             value = it
                                         )
                                     )

@@ -1,9 +1,9 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 data class DataRowState(
-    var dataField: DataField,
+    var dataItem: DataItem,
     var hasError: Boolean = false,
     var errorMsg: String = "",
 )

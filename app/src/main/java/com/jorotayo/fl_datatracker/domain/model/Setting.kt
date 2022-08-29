@@ -6,10 +6,11 @@ import io.objectbox.annotation.Id
 import io.objectbox.annotation.Unique
 
 @Entity
-data class SettingsBool(
+data class Setting(
     @Id(assignable = true)
     var Id: Long,
     @Unique(onConflict = REPLACE)
     var settingName: String = "",
-    var settingValue: Boolean = false
+    var settingBoolValue: Boolean? = false,
+    var settingStringValue: String? = "",
 )

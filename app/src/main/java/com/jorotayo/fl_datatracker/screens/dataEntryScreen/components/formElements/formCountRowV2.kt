@@ -25,7 +25,8 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 @Composable
 fun PreviewFormCountRowV2() {
     val data = DataField(
-        id = 0,
+        dataFieldId = 0,
+        presetId = 0,
         fieldName = "Data Field for Count Row"
     )
     formCountRowV2(data = data)
@@ -35,7 +36,7 @@ fun PreviewFormCountRowV2() {
 fun formCountRowV2(
     data: DataField,
 ): String {
-    var count = remember { mutableStateOf(if (data.dataValue != "") data.dataValue.toInt() else 0) }
+    var count = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier

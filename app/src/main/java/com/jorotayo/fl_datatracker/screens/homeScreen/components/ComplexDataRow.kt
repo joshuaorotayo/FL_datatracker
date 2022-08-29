@@ -90,7 +90,7 @@ fun ComplexDataRow(
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 5.dp),
-                    text = if (data.dataFields.size > 1) data.dataFields[1].fieldName + ": ${data.dataFields[1].dataValue}" else "",
+                    text = if (data.dataFields.size > 1) "data 1" else "", // TODO: correct  - data.dataFields[1].fieldName + ": ${data.dataFields[1].dataValue}"
                     color = textColor,
                     style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis,

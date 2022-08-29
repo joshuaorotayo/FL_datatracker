@@ -4,85 +4,85 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:8602257965109576803",
-      "lastPropertyId": "3:2959554542942711679",
+      "id": "1:2085726719788981273",
+      "lastPropertyId": "3:9038207968259718521",
       "name": "Data",
       "properties": [
         {
-          "id": "1:7546645979399660773",
-          "name": "id",
+          "id": "1:3449944876035012976",
+          "name": "dataId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:944481146492816695",
+          "id": "2:9109720839835767593",
           "name": "name",
           "type": 9
         },
         {
-          "id": "3:2959554542942711679",
+          "id": "3:9038207968259718521",
           "name": "lastEdited",
           "type": 9
         }
       ],
       "relations": [
         {
-          "id": "1:5339005794732111855",
+          "id": "1:4965108495340029723",
           "name": "dataFields",
-          "targetId": "2:2646276472619293024"
+          "targetId": "2:7716099805579135660"
         }
       ]
     },
     {
-      "id": "2:2646276472619293024",
-      "lastPropertyId": "9:8008982437730702185",
+      "id": "2:7716099805579135660",
+      "lastPropertyId": "9:7730390120376129636",
       "name": "DataField",
       "properties": [
         {
-          "id": "1:4428719359145889156",
-          "name": "id",
+          "id": "1:7400045342858362878",
+          "name": "dataFieldId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:4619874759324841678",
+          "id": "2:1033263866373795745",
           "name": "fieldName",
-          "indexId": "1:6119685509845877995",
+          "indexId": "1:3836732597025306123",
           "type": 9,
           "flags": 34848
         },
         {
-          "id": "3:1560636399924322875",
+          "id": "3:1120828867261588400",
           "name": "dataFieldType",
           "type": 5
         },
         {
-          "id": "4:7951974663168706624",
-          "name": "dataValue",
-          "type": 9
+          "id": "4:2614738674574521364",
+          "name": "presetId",
+          "type": 6
         },
         {
-          "id": "5:5737174319517151997",
+          "id": "5:4840528239356566549",
           "name": "first",
           "type": 9
         },
         {
-          "id": "6:4084219806409495615",
+          "id": "6:1221491724489758786",
           "name": "second",
           "type": 9
         },
         {
-          "id": "7:6117592346754652303",
+          "id": "7:3650941107563860530",
           "name": "third",
           "type": 9
         },
         {
-          "id": "8:3490607758461440290",
+          "id": "8:3426284546900469850",
           "name": "isEnabled",
           "type": 1
         },
         {
-          "id": "9:8008982437730702185",
+          "id": "9:7730390120376129636",
           "name": "fieldHint",
           "type": 9
         }
@@ -90,61 +90,40 @@
       "relations": []
     },
     {
-      "id": "3:691770428457589759",
-      "lastPropertyId": "3:4226052849467418007",
-      "name": "SettingsBool",
+      "id": "3:5590784810104505933",
+      "lastPropertyId": "4:4765275081083393199",
+      "name": "Setting",
       "properties": [
         {
-          "id": "1:3020334557115666653",
+          "id": "1:7366622268592771533",
           "name": "Id",
           "type": 6,
           "flags": 129
         },
         {
-          "id": "2:4213305341159563253",
+          "id": "2:6478233844441378724",
           "name": "settingName",
-          "indexId": "2:216873227323074358",
+          "indexId": "2:188185217059403498",
           "type": 9,
           "flags": 34848
         },
         {
-          "id": "3:4226052849467418007",
-          "name": "settingValue",
+          "id": "3:3973039549966956347",
+          "name": "settingBoolValue",
           "type": 1
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "4:5707036029562524278",
-      "lastPropertyId": "3:7199166574301484245",
-      "name": "SettingsStr",
-      "properties": [
-        {
-          "id": "1:3361082842320780584",
-          "name": "Id",
-          "type": 6,
-          "flags": 129
         },
         {
-          "id": "2:2354840483267566899",
-          "name": "settingName",
-          "indexId": "3:867794517630845532",
-          "type": 9,
-          "flags": 34848
-        },
-        {
-          "id": "3:7199166574301484245",
-          "name": "settingValue",
+          "id": "4:4765275081083393199",
+          "name": "settingStringValue",
           "type": 9
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "4:5707036029562524278",
-  "lastIndexId": "3:867794517630845532",
-  "lastRelationId": "1:5339005794732111855",
+  "lastEntityId": "3:5590784810104505933",
+  "lastIndexId": "2:188185217059403498",
+  "lastRelationId": "1:4965108495340029723",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

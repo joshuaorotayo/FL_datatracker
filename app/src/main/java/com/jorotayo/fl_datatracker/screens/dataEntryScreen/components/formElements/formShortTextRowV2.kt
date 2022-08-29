@@ -24,9 +24,10 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 @Composable
 fun PreviewFormShortTextRowV2() {
     val datafield = DataField(
-        id = 0,
+        dataFieldId = 0,
         fieldName = "Short Text Row",
-        fieldHint = "Short Text row example..."
+        fieldHint = "Short Text row example...",
+        presetId = 0
     )
     formShortTextRowV2(
         data = datafield,

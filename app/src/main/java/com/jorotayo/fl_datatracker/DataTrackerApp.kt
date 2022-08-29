@@ -1,8 +1,9 @@
 package com.jorotayo.fl_datatracker
 
 import android.app.Application
-import com.jorotayo.fl_datatracker.domain.model.SettingsBool
-import com.jorotayo.fl_datatracker.domain.model.SettingsBool_
+import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.domain.model.Setting
+import com.jorotayo.fl_datatracker.domain.model.Setting_
 import dagger.hilt.android.HiltAndroidApp
 import io.objectbox.Box
 
@@ -17,19 +18,41 @@ class DataTrackerApp : Application() {
     }
 
     private fun defaultValues() {
-        val settingBox: Box<SettingsBool> = ObjectBox.get().boxFor(SettingsBool::class.java)
+        val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
+        val presetBox: Box<Preset> = ObjectBox.get().boxFor(Preset::class.java)
 
-        val query =
-            settingBox.query(SettingsBool_.settingName.equal("isOnBoardingComplete")).build()
+        val isOnBoardingComplete =
+            settingBox.query(Setting_.settingName.equal("isOnBoardingComplete")).build().findFirst()
 
-        val isOnBoardingComplete = query.findFirst()
+        val currentPreset =
+            settingBox.query(Setting_.settingName.equal("currentPreset")).build().findFirst()
 
         if (isOnBoardingComplete == null) {
             settingBox.put(
-                SettingsBool(
+                Setting(
                     Id = 0,
                     settingName = "isOnBoardingComplete",
-                    settingValue = false
+                    settingBoolValue = false,
+                    settingStringValue = ""
+                )
+            )
+        }
+        if (currentPreset == null) {
+            settingBox.put(
+                Setting(
+                    Id = 1,
+                    settingName = "isOnBoardingComplete",
+                    settingBoolValue = false,
+                    settingStringValue = "General"
+                )
+            )
+        }
+        if (currentPreset == null) {
+            settingBox.put(
+                Setting(
+                    Id = 2,
+                    settingName = "currentPreset",
+                    settingStringValue = "Default"
                 )
             )
         }

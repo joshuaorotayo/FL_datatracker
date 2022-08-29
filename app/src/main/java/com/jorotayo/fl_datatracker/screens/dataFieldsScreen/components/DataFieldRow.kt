@@ -90,7 +90,7 @@ fun DataFieldRow(
     val currentRowState = remember {
         mutableStateOf(
             DataFieldRowState(
-                id = currentDataField.id,
+                id = currentDataField.dataFieldId,
                 fieldName = currentDataField.fieldName,
                 fieldHint = currentDataField.fieldHint,
                 fieldType = currentDataField.dataFieldType,

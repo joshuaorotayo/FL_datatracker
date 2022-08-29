@@ -30,7 +30,7 @@ class DataFieldsViewModel @Inject constructor(
     private val _openDeleteDialog = mutableStateOf(false)
     var openDeleteDialog: MutableState<Boolean> = _openDeleteDialog
 
-    private val _deletedDataField = mutableStateOf(DataField(id = 0))
+    private val _deletedDataField = mutableStateOf(DataField(dataFieldId = 0, presetId = 0))
     var deletedDataField: State<DataField> = _deletedDataField
 
     private val _isAddDataFieldVisible = mutableStateOf(false)
