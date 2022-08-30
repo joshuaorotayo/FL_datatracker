@@ -68,7 +68,7 @@ fun DeleteDialog(
 
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Delete row?",
+                        text = "Delete Row",
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .padding(top = 5.dp)

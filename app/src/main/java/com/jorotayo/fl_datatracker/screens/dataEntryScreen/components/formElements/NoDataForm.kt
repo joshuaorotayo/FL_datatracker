@@ -24,13 +24,12 @@ fun PreviewNoDataForm() {
     NoDataForm()
 }
 
-
 @Composable
 fun NoDataForm() {
     Box(
         modifier = Modifier
             .wrapContentSize()
-            .padding(vertical = 20.dp, horizontal = 8.dp)
+            .padding(vertical = 20.dp, horizontal = 16.dp)
             .clip(shape = RoundedCornerShape(20.dp))
             .background(MaterialTheme.colors.onBackground)
     )

@@ -4,7 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.*
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
 import com.jorotayo.fl_datatracker.util.capitaliseWord
+import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import io.objectbox.Box
 
 class Validate {
@@ -28,9 +30,12 @@ class Validate {
     /***
      * Method used to validate and save data fields
      * @param dataField the datafield being validated and then added
-     * @return Pair.first(Boolean) whether or not the method gave an error mess
+     * @return Pair.first(Boolean) whether or not the method gave an error message (true means error occurred). Pair.second(String) String for the error message
      */
-    fun validateDataField(dataField: DataField): Pair<Boolean, String> {
+    fun validateDataField(
+        dataField: DataField,
+        viewModel: DataFieldsViewModel,
+    ): Pair<Boolean, String> {
         var isError = false
         var msg = ""
 
@@ -56,7 +61,7 @@ class Validate {
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
             dataField.presetId = currentPresetId!!
-            dataFieldsBox2.value.put(dataField)
+            viewModel.onEvent(DataFieldEvent.SaveDataField(dataField))
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)

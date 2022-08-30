@@ -11,6 +11,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.navigation.SetupNavGraph
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.viewModels.SplashViewModel
@@ -26,7 +28,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var splashViewModel: SplashViewModel
 
-    private val dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    private lateinit var dataFieldBox: Box<DataField>
+    private lateinit var settingBox: Box<Setting>
+    private lateinit var presetBox: Box<Preset>
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -38,10 +42,15 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        if (dataFieldsBox.count() < 20) {
+        dataFieldBox = ObjectBox.get().boxFor(DataField::class.java)
+        settingBox = ObjectBox.get().boxFor(Setting::class.java)
+        presetBox = ObjectBox.get().boxFor(Preset::class.java)
+
+        if (dataFieldBox.count() < 20) {
             //dataFieldsBox.removeAll()
             //dataFieldsBox.put(initFakeData())
         }
+
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination

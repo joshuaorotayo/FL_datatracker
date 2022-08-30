@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -27,10 +28,10 @@ fun NoDataField(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .wrapContentSize()
             .padding(vertical = 20.dp, horizontal = 8.dp)
             .clip(shape = RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colors.onBackground)
     )
     {
 

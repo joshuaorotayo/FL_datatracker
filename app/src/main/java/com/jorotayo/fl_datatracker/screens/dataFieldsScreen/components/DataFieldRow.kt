@@ -85,7 +85,7 @@ fun DataFieldRow(
 
     val optionsMaxChars = 20
 
-    val currentDataField = viewModel.dataFieldsBox.value.get(itemIndex)
+    val currentDataField = viewModel.getDataField(itemIndex)
 
     val currentRowState = remember {
         mutableStateOf(

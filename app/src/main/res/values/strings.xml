@@ -2,4 +2,10 @@
     <string name="app_name">FL_Datatracker</string>
     <string name="landing_enable_explanation">Click the floating action button to add new Data</string>
     <string name="dataRow_lastEdited"> <b>Last Edited: </b></string>
+    <string name="presetShowing">Showing Preset: </string>
+    <string name="addPresetText">+ Add Preset</string>
+    <string name="enterPresetPlaceholder">\"Enter a new Preset Name\"</string>
+    <string name="cancelText">Cancel</string>
+    <string name="deleteText">Delete</string>
+    <string name="addPresetHeader">Add this preset</string>
 </resources>
