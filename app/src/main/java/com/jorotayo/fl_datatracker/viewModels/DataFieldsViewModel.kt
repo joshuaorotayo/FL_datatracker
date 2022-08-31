@@ -25,14 +25,14 @@ class DataFieldsViewModel @Inject constructor(
     private val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
     val dataFieldsBox = mutableStateOf(_dataFieldsBox.all.toList())
 
-    private var _settingBox = mutableStateOf(ObjectBox.get().boxFor(Setting::class.java))
-    val settingBox: State<Box<Setting>> = _settingBox
+    private var _settingBox = ObjectBox.get().boxFor(Setting::class.java)
+    val settingBox = mutableStateOf(_settingBox.all.toList())
 
-    private var _presetBox = mutableStateOf(ObjectBox.get().boxFor(Preset::class.java))
-    val presetBox: State<Box<Preset>> = _presetBox
+    private var _presetBox = ObjectBox.get().boxFor(Preset::class.java)
+    val presetBox = mutableStateOf(_presetBox.all.toList())
 
     val currentPreset =
-        _settingBox.value.query(Setting_.settingName.equal("currentPreset")).build().findFirst()
+        _settingBox.query(Setting_.settingName.equal("currentPreset")).build().findFirst()
 
     private val maxChar = 30
     private val maxHintChar = 60
@@ -128,12 +128,10 @@ class DataFieldsViewModel @Inject constructor(
                 _dataFieldsBox.put(dataField)
             }
             is DataFieldEvent.ConfirmDelete -> {
-                _deletedDataField.value = event.dataField
-                _dataFieldsBox.remove(deletedDataField.value)
-                dataFieldsBox.value -= deletedDataField.value
+                dataFieldsBox.value = event.value
             }
             is DataFieldEvent.RestoreDeletedField -> {
-                dataFieldsBox.value += deletedDataField.value
+                updateDataFields("put", deletedDataField.value)
             }
             is DataFieldEvent.OpenDeleteDialog -> {
                 dataFieldScreenState.value = dataFieldScreenState.value.copy(
@@ -142,22 +140,49 @@ class DataFieldsViewModel @Inject constructor(
                 )
                 _deletedDataField.value = event.dataField
             }
+            is DataFieldEvent.TogglePresetDialog -> {
+                dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                    isAddPresetDialogVisible = if (!dataFieldScreenState.value.isAddPresetDialogVisible.value) mutableStateOf(
+                        true) else mutableStateOf(false)
+                )
+            }
             is DataFieldEvent.SaveDataField -> {
-                AddDataFields(event.value)
+                dataFieldsBox.value = event.value
+                dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                    isAddDataFieldVisible = !dataFieldScreenState.value.isAddDataFieldVisible
+                )
             }
             is DataFieldEvent.ChangePreset -> {
                 if (currentPreset != null) {
                     currentPreset.settingStringValue = event.value
                 }
             }
+            is DataFieldEvent.AddPreset -> {
+                val preset = Preset(
+                    presetId = 0,
+                    presetName = event.value
+                )
+                _presetBox.put(preset)
+            }
         }
     }
 
-    fun AddDataFields(data: DataField) {
-        val _newBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
-        _newBox.put(data)
-        val newBox: MutableList<DataField> = _newBox.all
-        dataFieldsBox.value = newBox
+    private fun updateDataFields(operation: String, data: DataField) {
+        when (operation) {
+            "put" -> {
+                val _tempBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+                _tempBox.put(data)
+                val newList = dataFieldsBox.value
+                dataFieldsBox.value = newList
+            }
+            "remove" -> {
+                val _tempBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+                val tempBox = mutableStateOf(_tempBox.all.toList())
+                _tempBox.remove(data)
+                val newList = tempBox.value
+                dataFieldsBox.value = newList
+            }
+        }
     }
 
     fun getDataField(itemIndex: Long): DataField {

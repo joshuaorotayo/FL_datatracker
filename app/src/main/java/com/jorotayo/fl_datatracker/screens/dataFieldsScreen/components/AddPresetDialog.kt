@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -24,7 +25,7 @@ fun PreviewAddPresetDialog() {
     AddPresetDialog(
         state = state,
         modifier = Modifier,
-        addPreset = { }
+        addPreset = {}
     )
 }
 
@@ -46,7 +47,8 @@ fun AddPresetDialog(
         ) {
             Column(
                 modifier
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colors.background),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = stringResource(R.string.addPresetHeader),
@@ -81,7 +83,7 @@ fun AddPresetDialog(
                             presetText.value = it
                         },
                         colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
+                            backgroundColor = MaterialTheme.colors.surface,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
@@ -92,7 +94,8 @@ fun AddPresetDialog(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp),
+                        .padding(top = 10.dp)
+                        .background(MaterialTheme.colors.surface),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
 
@@ -103,7 +106,7 @@ fun AddPresetDialog(
                             text = stringResource(R.string.cancelText),
                             fontWeight = FontWeight.Bold,
                             color = Color.DarkGray,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                            modifier = Modifier.padding(vertical = 5.dp)
                         )
                     }
                     TextButton(onClick = {
@@ -112,10 +115,10 @@ fun AddPresetDialog(
                         // confirmDelete(dataField)
                     }) {
                         Text(
-                            text = stringResource(R.string.deleteText),
+                            text = stringResource(R.string.addPresetBtn),
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colors.primary,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                            modifier = Modifier.padding(vertical = 5.dp)
                         )
                     }
                 }

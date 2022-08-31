@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,19 +22,18 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun PreviewDeleteDialog() {
 }
 
 @Composable
-fun DeleteDialog(
+fun DeleteRowDialog(
     modifier: Modifier,
     confirmDelete: (DataField) -> Unit,
     scaffold: ScaffoldState,
     state: MutableState<Boolean>,
-    dataField: DataField
+    dataField: DataField,
 ) {
 
     val scope = rememberCoroutineScope()

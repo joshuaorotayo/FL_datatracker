@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.*
@@ -10,8 +9,9 @@ import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import io.objectbox.Box
 
 class Validate {
-    private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
-    private var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
+
+    private val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    private val dataFieldsBox = mutableStateOf(_dataFieldsBox.all.toList())
 
     val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
     val presetBox: Box<Preset> = ObjectBox.get().boxFor(Preset::class.java)
@@ -25,7 +25,7 @@ class Validate {
             ?.let { presetBox.query(it).build().findFirst()?.presetId ?: 0 }
 
     private val fieldNames =
-        dataFieldsBox2.value.query().build().property(DataField_.fieldName).findStrings().toList()
+        _dataFieldsBox.query().build().property(DataField_.fieldName).findStrings().toList()
 
     /***
      * Method used to validate and save data fields
@@ -61,7 +61,9 @@ class Validate {
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
             dataField.presetId = currentPresetId!!
-            viewModel.onEvent(DataFieldEvent.SaveDataField(dataField))
+            _dataFieldsBox.put(dataField)
+            val newList = dataFieldsBox.value
+            viewModel.onEvent(DataFieldEvent.SaveDataField(newList))
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)

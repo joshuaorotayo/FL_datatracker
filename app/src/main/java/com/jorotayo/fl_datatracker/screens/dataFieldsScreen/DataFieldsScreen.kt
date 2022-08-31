@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,12 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
+import io.objectbox.Box
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -55,7 +60,9 @@ fun DataFieldsScreen(
     viewModel: DataFieldsViewModel = hiltViewModel(),
 ) {
 
-    var expanded by remember { mutableStateOf(false) }
+    val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    val dataFieldsBox = remember { mutableStateOf(_dataFieldsBox.all.toList()) }
+    var presetExpanded by remember { mutableStateOf(false) }
 
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
@@ -70,7 +77,7 @@ fun DataFieldsScreen(
 
     val scope = rememberCoroutineScope()
 
-    val presets = remember { mutableStateOf(viewModel.presetBox.value.all) }
+    val presets = remember { mutableStateOf(viewModel.presetBox.value) }
 
 /*    LaunchedEffect(key1 = Unit) {
         viewModel.channel.collect { channel ->
@@ -108,16 +115,15 @@ fun DataFieldsScreen(
                         style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
-
                     Row(
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(horizontal = 5.dp)
-                            .clickable(onClick = { expanded = true })
+                            .clickable(onClick = { presetExpanded = true })
                             .clip(shape = RoundedCornerShape(10.dp))
                             .background(MaterialTheme.colors.onBackground)
                             .padding(5.dp),
-                        horizontalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         (if (viewModel.currentPreset?.settingStringValue.isNullOrEmpty()) "No Presets" else viewModel.currentPreset?.settingStringValue)?.let {
@@ -130,12 +136,12 @@ fun DataFieldsScreen(
                         }
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "Drop down arrow for Field Type Dropdown",
+                            contentDescription = "Drop down arrow for Preset Dropdown",
                             tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
                         )
                         DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
+                            expanded = presetExpanded,
+                            onDismissRequest = { presetExpanded = false },
                             modifier = Modifier
                                 .wrapContentWidth()
                                 .background(
@@ -145,21 +151,34 @@ fun DataFieldsScreen(
                             presets.value.forEachIndexed { index, s ->
                                 DropdownMenuItem(onClick = {
                                     viewModel.onEvent(DataFieldEvent.ChangePreset(s.presetName))
-                                    expanded = false
-                                })
+                                    presetExpanded = false
+                                },
+                                    modifier = Modifier)
                                 {
                                     Text(
                                         text = s.presetName,
                                         textAlign = TextAlign.Center,
                                         color = MaterialTheme.colors.onSurface
                                     )
+                                    Icon(
+                                        modifier = Modifier.clickable(
+                                            onClick = {
+                                                // TODO: delete clickable
+                                                // DeletePresetDialog
+                                                // viewModel.onEvent(DataFieldEvent.DeletePreset
+                                            }
+                                        ),
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Delete icon for ${s.presetName}",
+                                        tint = MaterialTheme.colors.onSurface
+                                    )
                                 }
                             }
                             DropdownMenuItem(onClick = {
-                                /*TODO*/
-                                expanded = false
+                                viewModel.onEvent(DataFieldEvent.TogglePresetDialog)
                             }) {
                                 Text(
+                                    modifier = Modifier,
                                     text = "+ Add Preset",
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colors.onSurface
@@ -255,14 +274,12 @@ fun DataFieldsScreen(
                                     viewModel = DataFieldsViewModel(),
                                     onClick = {
                                         scope.launch {
-                                            // fields.value.put(it)
-                                            //  viewModel.onEvent(DataFieldEvent.SaveDataField(it))
-
                                             val msg = Validate().validateDataField(dataField = it,
                                                 viewModel = DataFieldsViewModel())
                                             if (!msg.first) {
                                                 fields.value += it
-                                                viewModel.onEvent(DataFieldEvent.ToggleAddNewDataField)
+                                                viewModel.onEvent(DataFieldEvent.SaveDataField(
+                                                    fields.value))
                                             }
                                             scaffoldState.snackbarHostState.showSnackbar(
                                                 message = msg.second,
@@ -272,11 +289,9 @@ fun DataFieldsScreen(
                                         }
                                     }
                                 )
-                                Spacer(modifier = Modifier.weight(1f))
                             }
                         }
                     }
-
                     item {
                         AnimatedVisibility(visible = fields.value.isEmpty() && !isAddDataFieldVisible.value.isAddDataFieldVisible) {
                             Row(
@@ -365,28 +380,44 @@ fun DataFieldsScreen(
                         }
                     )
                 }
-
             }
 
-            DeleteDialog(
-                modifier = Modifier.align(Alignment.Center),
+            AddPresetDialog(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                state = viewModel.dataFieldScreenState.value.isAddPresetDialogVisible,
+                addPreset = {
+                    val preset = Preset(
+                        presetId = 0,
+                        presetName = it)
+                    presets.value += preset
+                    viewModel.onEvent(DataFieldEvent.AddPreset(it))
+                }
+            )
+            DeleteRowDialog(
+                modifier = Modifier
+                    .align(Alignment.Center),
                 state = viewModel.dataFieldScreenState.value.isDeleteDialogVisible,
-                confirmDelete = {
-                    viewModel.onEvent(DataFieldEvent.ConfirmDelete(dataField = it))
-                },
                 dataField = viewModel.deletedDataField.value,
                 scaffold = scaffoldState,
+                confirmDelete = {
+                    fields.value -= it
+                    _dataFieldsBox.remove(it)
+                    val newList = dataFieldsBox.value
+                    viewModel.onEvent(DataFieldEvent.ConfirmDelete(value = newList))
+                }
             )
+
             DefaultSnackbar(
+                modifier = Modifier
+                    .align(Alignment.Center),
                 snackbarHostState = scaffoldState.snackbarHostState,
                 onDismiss = {
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                     if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
                         viewModel.onEvent(DataFieldEvent.RestoreDeletedField)
                     }
-                },
-                modifier = Modifier
-                    .align(Alignment.Center)
+                }
             )
         }
     }

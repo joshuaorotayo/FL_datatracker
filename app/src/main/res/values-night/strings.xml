@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="enterPresetPlaceholder">\"Enter a new Preset Name\"</string>
-    <string name="addPresetHeader">Add this preset</string>
-</resources>

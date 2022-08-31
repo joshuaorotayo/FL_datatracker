@@ -4,8 +4,9 @@
     <string name="dataRow_lastEdited"> <b>Last Edited: </b></string>
     <string name="presetShowing">Showing Preset: </string>
     <string name="addPresetText">+ Add Preset</string>
-    <string name="enterPresetPlaceholder">\"Enter a new Preset Name\"</string>
+    <string name="enterPresetPlaceholder">Enter a new Preset Name</string>
     <string name="cancelText">Cancel</string>
     <string name="deleteText">Delete</string>
     <string name="addPresetHeader">Add this preset</string>
+    <string name="addPresetBtn">Add Preset</string>
 </resources>
