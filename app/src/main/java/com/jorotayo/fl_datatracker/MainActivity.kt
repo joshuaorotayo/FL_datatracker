@@ -46,11 +46,6 @@ class MainActivity : ComponentActivity() {
         settingBox = ObjectBox.get().boxFor(Setting::class.java)
         presetBox = ObjectBox.get().boxFor(Preset::class.java)
 
-        if (dataFieldBox.count() < 20) {
-            //dataFieldsBox.removeAll()
-            //dataFieldsBox.put(initFakeData())
-        }
-
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination

@@ -113,13 +113,15 @@ fun DeleteRowDialog(
                     }
                     TextButton(onClick = {
                         state.value = false
-                        confirmDelete(dataField)
                         scope.launch {
                             scaffold.snackbarHostState.showSnackbar(
                                 message = "Deleted DataField: ${dataField.fieldName}",
                                 actionLabel = "Restore?"
                             )
                         }
+                        // TODO: add delay
+                        confirmDelete(dataField)
+
                     }) {
                         Text(
                             "Delete",

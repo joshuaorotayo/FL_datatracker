@@ -26,16 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
-import io.objectbox.Box
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -47,12 +43,6 @@ fun PreviewDataFieldsScreen() {
     )
 }
 
-sealed class DataFieldsChannel {
-    object DeletedField : DataFieldsChannel()
-    object SavedDataField : DataFieldsChannel()
-}
-
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataFieldsScreen(
@@ -60,54 +50,19 @@ fun DataFieldsScreen(
     viewModel: DataFieldsViewModel = hiltViewModel(),
 ) {
 
-    val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
-    val dataFieldsBox = remember { mutableStateOf(_dataFieldsBox.all.toList()) }
-    var presetExpanded by remember { mutableStateOf(false) }
-
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
         Screen.HomeScreen,
     )
 
-    val isAddDataFieldVisible = viewModel.dataFieldScreenState
-
-    val allDataFields = viewModel.dataFieldsBox
-    //val fields: MutableList<List<DataField>> = mutableStateOf(allDataFields.value.filter { it.presetId.toString() == viewModel.currentPreset.value.settingStringValue })
-
-    var fields by remember { mutableStateOf(allDataFields.value.filter { it.presetId.toString() == viewModel.currentPreset.value?.settingStringValue }) }
-    /*for(field in allDataFields.value){
-       if(viewModel.currentPreset.value?.settingStringValue == field.presetId.toString()){
-           fields += field
-       }
-    }*/
-
-    //var fields = allDataFields.value.filter { it.presetId == (1).toLong() }
-    Log.i(TAG, "DataFieldsScreen: ${viewModel.currentPreset.value?.settingStringValue}")
-
-    // Current Preset is a string
+    var presetExpanded by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
-
     val scope = rememberCoroutineScope()
-
-    val presets = remember { mutableStateOf(viewModel.presetBox.value) }
-
-/*    LaunchedEffect(key1 = Unit) {
-        viewModel.channel.collect { channel ->
-            when (channel) {
-                DataFieldsChannel.DeletedField -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = "Deleted DataField: ${viewModel.deletedDataField.value.fieldName}",
-                        actionLabel = "Restore?"
-                    )
-                }
-                DataFieldsChannel.SavedDataField -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = "DataField: ${fields.value.last().fieldName}"
-                    )
-                }
-            }
-        }
-    }*/
+    val isAddDataFieldVisible = viewModel.dataFieldScreenState
+    val presets = viewModel.boxState.value.presetBox
+    val currentPreset = viewModel.boxState.value.currentPreset
+    val fields =
+        viewModel.boxState.value.dataFieldsBox.filter { it.presetId == currentPreset?.presetId }
 
     Scaffold(
         topBar = {
@@ -138,14 +93,13 @@ fun DataFieldsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        (if (viewModel.currentPreset.value?.settingStringValue.isNullOrEmpty()) "No Presets" else viewModel.currentPreset.value?.settingStringValue)?.let {
                             Text(
                                 modifier = Modifier,
-                                text = it,
+                                text = (if (presets.isEmpty()) "No Presets" else currentPreset?.presetName)!!,
                                 color = MaterialTheme.colors.primary,
                                 textAlign = TextAlign.Center
                             )
-                        }
+
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
                             contentDescription = "Drop down arrow for Preset Dropdown",
@@ -160,9 +114,9 @@ fun DataFieldsScreen(
                                     MaterialTheme.colors.background
                                 )
                         ) {
-                            presets.value.forEachIndexed { index, s ->
+                            presets.forEachIndexed { index, s ->
                                 DropdownMenuItem(onClick = {
-                                    viewModel.onEvent(DataFieldEvent.ChangePreset(s.presetId.toString()))
+                                    viewModel.onEvent(DataFieldEvent.ChangePreset(s.presetName))
                                     presetExpanded = false
                                 },
                                     modifier = Modifier)
@@ -288,11 +242,13 @@ fun DataFieldsScreen(
                                         scope.launch {
                                             val msg = Validate().validateDataField(dataField = it,
                                                 viewModel = DataFieldsViewModel())
-                                            it.presetId = viewModel.currentPreset.value?.Id!!
+                                            if (currentPreset != null) {
+                                                it.presetId = currentPreset.presetId
+                                            } else {
+                                                it.presetId = (1).toLong()
+                                            }
                                             if (!msg.first) {
-                                                fields += it
-                                                viewModel.onEvent(DataFieldEvent.SaveDataField(
-                                                    fields))
+                                                viewModel.onEvent(DataFieldEvent.SaveDataField(it))
                                             }
                                             scaffoldState.snackbarHostState.showSnackbar(
                                                 message = msg.second,
@@ -400,13 +356,10 @@ fun DataFieldsScreen(
                     .align(Alignment.Center),
                 state = viewModel.dataFieldScreenState.value.isAddPresetDialogVisible,
                 addPreset = {
-                    val preset = Preset(
-                        presetId = 0,
-                        presetName = it)
-                    presets.value += preset
                     viewModel.onEvent(DataFieldEvent.AddPreset(it))
                 }
             )
+
             DeleteRowDialog(
                 modifier = Modifier
                     .align(Alignment.Center),
@@ -414,10 +367,7 @@ fun DataFieldsScreen(
                 dataField = viewModel.dataFieldScreenState.value.deletedDataField,
                 scaffold = scaffoldState,
                 confirmDelete = {
-                    // fields -= it
-                    _dataFieldsBox.remove(it)
-                    val newList = dataFieldsBox.value
-                    viewModel.onEvent(DataFieldEvent.ConfirmDelete(value = newList))
+                    viewModel.onEvent(DataFieldEvent.DeleteDataField(value = it))
                 }
             )
 

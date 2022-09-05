@@ -61,9 +61,9 @@ class Validate {
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
             dataField.presetId = currentPresetId!!.plus(1)
-            _dataFieldsBox.put(dataField)
-            val newList = dataFieldsBox.value
-            viewModel.onEvent(DataFieldEvent.SaveDataField(newList))
+            //_dataFieldsBox.put(dataField)
+            //val newList = dataFieldsBox.value
+            viewModel.onEvent(DataFieldEvent.SaveDataField(dataField))
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)

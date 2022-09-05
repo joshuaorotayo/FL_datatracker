@@ -6,7 +6,6 @@ sealed class DataFieldEvent {
     object ToggleAddNewDataField : DataFieldEvent()
     data class OpenDeleteDialog(val dataField: DataField) : DataFieldEvent()
     object TogglePresetDialog : DataFieldEvent()
-    data class ConfirmDelete(val value: List<DataField>) : DataFieldEvent()
 
     data class ChangePreset(val value: String) : DataFieldEvent()
     data class AddPreset(val value: String) : DataFieldEvent()
@@ -18,7 +17,8 @@ sealed class DataFieldEvent {
     data class AddFirstValue(val value: String) : DataFieldEvent()
     data class AddSecondValue(val value: String) : DataFieldEvent()
     data class AddThirdValue(val value: String) : DataFieldEvent()
-    data class SaveDataField(val value: List<DataField>) : DataFieldEvent()
+    data class SaveDataField(val value: DataField) : DataFieldEvent()
+    data class DeleteDataField(val value: DataField) : DataFieldEvent()
 
     // Edit operations for Row
     data class EditFieldName(val index: Long, val value: String) : DataFieldEvent()

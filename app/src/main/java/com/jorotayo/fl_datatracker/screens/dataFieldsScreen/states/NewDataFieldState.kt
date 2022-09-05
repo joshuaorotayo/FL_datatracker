@@ -1,7 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states
 
-import com.jorotayo.fl_datatracker.domain.model.Preset
-
 data class NewDataFieldState(
     var fieldName: String = "",
     var fieldHint: String = "Hint for : $fieldName",
@@ -9,5 +7,5 @@ data class NewDataFieldState(
     var firstValue: String = "",
     var secondValue: String = "",
     var thirdValue: String = "",
-    var currentPreset: Preset,
+    var currentPreset: String = "",
 )
