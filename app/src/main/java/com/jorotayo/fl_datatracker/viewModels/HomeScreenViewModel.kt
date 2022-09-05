@@ -7,6 +7,7 @@ import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -24,6 +25,9 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
         )
     )
     val uiState: State<HomeScreenState> = _uiState
+
+    private val _testRowItemBox = mutableStateOf(TestState())
+    val testRowItemBox: State<TestState> = _testRowItemBox
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
@@ -50,6 +54,12 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
             HomeScreenEvent.EditDataItem -> TODO()
             HomeScreenEvent.ShowSettingsView -> {
                 //show Settings TODO()
+            }
+            is HomeScreenEvent.UpdateData -> {
+                _testRowItemBox.value = testRowItemBox.value.copy(
+                    itemsList = event.value.all
+                )
+                // _testRowBox.value.removeAll()
             }
         }
     }

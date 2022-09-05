@@ -71,8 +71,20 @@ fun DataFieldsScreen(
 
     val isAddDataFieldVisible = viewModel.dataFieldScreenState
 
-    val fields = viewModel.dataFieldsBox
+    val allDataFields = viewModel.dataFieldsBox
+    //val fields: MutableList<List<DataField>> = mutableStateOf(allDataFields.value.filter { it.presetId.toString() == viewModel.currentPreset.value.settingStringValue })
 
+    var fields by remember { mutableStateOf(allDataFields.value.filter { it.presetId.toString() == viewModel.currentPreset.value?.settingStringValue }) }
+    /*for(field in allDataFields.value){
+       if(viewModel.currentPreset.value?.settingStringValue == field.presetId.toString()){
+           fields += field
+       }
+    }*/
+
+    //var fields = allDataFields.value.filter { it.presetId == (1).toLong() }
+    Log.i(TAG, "DataFieldsScreen: ${viewModel.currentPreset.value?.settingStringValue}")
+
+    // Current Preset is a string
     val scaffoldState = rememberScaffoldState()
 
     val scope = rememberCoroutineScope()
@@ -126,7 +138,7 @@ fun DataFieldsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        (if (viewModel.currentPreset?.settingStringValue.isNullOrEmpty()) "No Presets" else viewModel.currentPreset?.settingStringValue)?.let {
+                        (if (viewModel.currentPreset.value?.settingStringValue.isNullOrEmpty()) "No Presets" else viewModel.currentPreset.value?.settingStringValue)?.let {
                             Text(
                                 modifier = Modifier,
                                 text = it,
@@ -150,7 +162,7 @@ fun DataFieldsScreen(
                         ) {
                             presets.value.forEachIndexed { index, s ->
                                 DropdownMenuItem(onClick = {
-                                    viewModel.onEvent(DataFieldEvent.ChangePreset(s.presetName))
+                                    viewModel.onEvent(DataFieldEvent.ChangePreset(s.presetId.toString()))
                                     presetExpanded = false
                                 },
                                     modifier = Modifier)
@@ -217,7 +229,7 @@ fun DataFieldsScreen(
                     }
                 }
 
-                AnimatedVisibility(visible = !isAddDataFieldVisible.value.isAddDataFieldVisible && fields.value.isEmpty()) {
+                AnimatedVisibility(visible = !isAddDataFieldVisible.value.isAddDataFieldVisible && fields.isEmpty()) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -276,10 +288,11 @@ fun DataFieldsScreen(
                                         scope.launch {
                                             val msg = Validate().validateDataField(dataField = it,
                                                 viewModel = DataFieldsViewModel())
+                                            it.presetId = viewModel.currentPreset.value?.Id!!
                                             if (!msg.first) {
-                                                fields.value += it
+                                                fields += it
                                                 viewModel.onEvent(DataFieldEvent.SaveDataField(
-                                                    fields.value))
+                                                    fields))
                                             }
                                             scaffoldState.snackbarHostState.showSnackbar(
                                                 message = msg.second,
@@ -293,7 +306,7 @@ fun DataFieldsScreen(
                         }
                     }
                     item {
-                        AnimatedVisibility(visible = fields.value.isEmpty() && !isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                        AnimatedVisibility(visible = fields.isEmpty() && !isAddDataFieldVisible.value.isAddDataFieldVisible) {
                             Row(
                                 modifier = Modifier
                                     .wrapContentHeight()
@@ -332,7 +345,7 @@ fun DataFieldsScreen(
                             }
                         }
                     }
-                    itemsIndexed(fields.value,
+                    itemsIndexed(fields,
                         itemContent = { index, item ->
                             DataFieldRow(
                                 viewModel = DataFieldsViewModel(),
@@ -398,10 +411,10 @@ fun DataFieldsScreen(
                 modifier = Modifier
                     .align(Alignment.Center),
                 state = viewModel.dataFieldScreenState.value.isDeleteDialogVisible,
-                dataField = viewModel.deletedDataField.value,
+                dataField = viewModel.dataFieldScreenState.value.deletedDataField,
                 scaffold = scaffoldState,
                 confirmDelete = {
-                    fields.value -= it
+                    // fields -= it
                     _dataFieldsBox.remove(it)
                     val newList = dataFieldsBox.value
                     viewModel.onEvent(DataFieldEvent.ConfirmDelete(value = newList))

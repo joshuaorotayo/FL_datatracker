@@ -6,22 +6,19 @@ import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.domain.model.Setting_
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsChannel
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldScreenState
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataFieldState
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.BoxState
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.Box
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class DataFieldsViewModel @Inject constructor(
 ) : ViewModel() {
-
+/*
     private val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
     val dataFieldsBox = mutableStateOf(_dataFieldsBox.all.toList())
 
@@ -29,26 +26,37 @@ class DataFieldsViewModel @Inject constructor(
     val settingBox = mutableStateOf(_settingBox.all.toList())
 
     private var _presetBox = ObjectBox.get().boxFor(Preset::class.java)
-    val presetBox = mutableStateOf(_presetBox.all.toList())
+    val presetBox = mutableStateOf(_presetBox.all.toList())*/
 
-    val currentPreset =
-        _settingBox.query(Setting_.settingName.equal("currentPreset")).build().findFirst()
+    var dataFieldScreenState = mutableStateOf(DataFieldScreenState())
+    var boxState = mutableStateOf(BoxState())
 
-    private val maxChar = 30
-    private val maxHintChar = 60
+    var _dataFieldsBox = boxState.value._dataFieldsBox
+    var dataFieldsBox = boxState.value.dataFieldsBox
+    var _presetBox = boxState.value._presetBox
+    var presetBox = boxState.value.presetBox
+    var _settingBox = boxState.value._settingsBox
+    var settingBox = boxState.value.settingsBox
 
-    private val _newDataField = mutableStateOf(NewDataFieldState())
+    var currentPreset =
+        mutableStateOf(_settingBox.query(Setting_.settingName.equal("currentPreset")).build()
+            .findFirst())
+
+
+//    private val maxChar = 30
+//    private val maxHintChar = 60
+
+    private val _newDataField = mutableStateOf(NewDataFieldState(
+        currentPreset = presetBox.value.first { it.presetId == currentPreset.value?.Id }
+    ))
+
     var newDataField: State<NewDataFieldState> = _newDataField
 
-    private val _deletedDataField = mutableStateOf(DataField(dataFieldId = 0, presetId = 0))
-    var deletedDataField: State<DataField> = _deletedDataField
-
-    val dataFieldScreenState = mutableStateOf(DataFieldScreenState())
 
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
-
+/*
     private val _channel = Channel<DataFieldsChannel>()
-    val channel = _channel.receiveAsFlow()
+    val channel = _channel.receiveAsFlow()*/
 
     fun onEvent(event: DataFieldEvent) {
         when (event) {
@@ -58,7 +66,7 @@ class DataFieldsViewModel @Inject constructor(
                 )
             }
             is DataFieldEvent.AddFieldName -> {
-                if (event.value.length <= maxChar) {
+                if (event.value.length <= dataFieldScreenState.value.maxChar) {
                     _newDataField.value = newDataField.value.copy(
                         fieldName = event.value
                     )
@@ -70,7 +78,7 @@ class DataFieldsViewModel @Inject constructor(
                 )
             }
             is DataFieldEvent.AddHintText -> {
-                if (event.value.length <= maxHintChar) {
+                if (event.value.length <= dataFieldScreenState.value.maxHintChar) {
                     _newDataField.value = newDataField.value.copy(
                         fieldHint = event.value
                     )
@@ -93,14 +101,14 @@ class DataFieldsViewModel @Inject constructor(
             }
             // Edit Operations
             is DataFieldEvent.EditFieldName -> {
-                dataField = _dataFieldsBox.get(event.index)
+                dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.fieldName = event.value
-                _dataFieldsBox.put(dataField)
+                boxState.value._dataFieldsBox.put(dataField)
             }
             is DataFieldEvent.EditHintText -> {
-                dataField = _dataFieldsBox.get(event.index)
+                dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.fieldHint = event.value
-                _dataFieldsBox.put(dataField)
+                boxState.value._dataFieldsBox.put(dataField)
             }
             is DataFieldEvent.EditRowType -> {
                 dataField = _dataFieldsBox.get(event.index)
@@ -128,17 +136,18 @@ class DataFieldsViewModel @Inject constructor(
                 _dataFieldsBox.put(dataField)
             }
             is DataFieldEvent.ConfirmDelete -> {
-                dataFieldsBox.value = event.value
+                // dataFieldsBox.value = event.value
+                updateDataFields("remove", event.value.last())
             }
             is DataFieldEvent.RestoreDeletedField -> {
-                updateDataFields("put", deletedDataField.value)
+                updateDataFields("put", dataFieldScreenState.value.deletedDataField)
             }
             is DataFieldEvent.OpenDeleteDialog -> {
                 dataFieldScreenState.value = dataFieldScreenState.value.copy(
                     isDeleteDialogVisible = if (!dataFieldScreenState.value.isDeleteDialogVisible.value) mutableStateOf(
                         true) else mutableStateOf(false)
                 )
-                _deletedDataField.value = event.dataField
+                dataFieldScreenState.value.deletedDataField = event.dataField
             }
             is DataFieldEvent.TogglePresetDialog -> {
                 dataFieldScreenState.value = dataFieldScreenState.value.copy(
@@ -153,9 +162,7 @@ class DataFieldsViewModel @Inject constructor(
                 )
             }
             is DataFieldEvent.ChangePreset -> {
-                if (currentPreset != null) {
-                    currentPreset.settingStringValue = event.value
-                }
+                currentPreset.value?.settingStringValue = event.value
             }
             is DataFieldEvent.AddPreset -> {
                 val preset = Preset(
@@ -172,13 +179,14 @@ class DataFieldsViewModel @Inject constructor(
             "put" -> {
                 val _tempBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
                 _tempBox.put(data)
-                val newList = dataFieldsBox.value
+                val tempBox = mutableStateOf(_tempBox.all.toList())
+                val newList = tempBox.value
                 dataFieldsBox.value = newList
             }
             "remove" -> {
                 val _tempBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
-                val tempBox = mutableStateOf(_tempBox.all.toList())
                 _tempBox.remove(data)
+                val tempBox = mutableStateOf(_tempBox.all.toList())
                 val newList = tempBox.value
                 dataFieldsBox.value = newList
             }

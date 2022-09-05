@@ -49,7 +49,7 @@ class DataTrackerApp : Application() {
                     Id = 1,
                     settingName = "currentPreset",
                     settingBoolValue = false,
-                    settingStringValue = "Default"
+                    settingStringValue = "1"
                 )
             )
         }

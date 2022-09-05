@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
+package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states
 
 data class DataFieldRowState(
     var id: Long = 0,

@@ -1,4 +1,6 @@
-package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
+package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states
+
+import com.jorotayo.fl_datatracker.domain.model.Preset
 
 data class NewDataFieldState(
     var fieldName: String = "",
@@ -7,4 +9,5 @@ data class NewDataFieldState(
     var firstValue: String = "",
     var secondValue: String = "",
     var thirdValue: String = "",
+    var currentPreset: Preset,
 )
