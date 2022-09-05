@@ -18,7 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.*
@@ -114,9 +113,10 @@ fun HomeScreen(
                             color = Color.Black
                         )
                         TextButton(onClick = {
-                            val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
-                            newBox.put(TestRowItem(0))
-                            viewModel.onEvent(HomeScreenEvent.UpdateData(newBox))
+//                            val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
+//                            newBox.put(TestRowItem(0))
+//                            viewModel.onEvent(HomeScreenEvent.UpdateData(newBox))
+                            viewModel.onEvent(HomeScreenEvent.UpdateData("put", TestRowItem(0)))
                         }) {
                             Text(
                                 text = "add"
@@ -126,9 +126,11 @@ fun HomeScreen(
                 }
                 items(testList.value._itemsBox.all) { item ->
                     TestRow(number = item.testRowId.toInt()) {
-                        val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
+                        /*val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
                         testList.value._itemsBox.remove(item.testRowId)
-                        viewModel.onEvent(HomeScreenEvent.UpdateData(newBox))
+                        viewModel.onEvent(HomeScreenEvent.UpdateData(newBox))*/
+                        //testList.value._itemsBox.remove(item.testRowId)
+                        viewModel.onEvent(HomeScreenEvent.UpdateData("remove", item))
                     }
                 }
             }

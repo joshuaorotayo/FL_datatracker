@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
@@ -55,11 +56,21 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
             HomeScreenEvent.ShowSettingsView -> {
                 //show Settings TODO()
             }
+            /*  is HomeScreenEvent.UpdateData -> {
+                  _testRowItemBox.value = testRowItemBox.value.copy(
+                      itemsList = event.value.all
+                  )
+              }*/
             is HomeScreenEvent.UpdateData -> {
+                val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
+                if (event.operation == "put") {
+                    newBox.put(event.testRowItem)
+                } else {
+                    newBox.remove(event.testRowItem)
+                }
                 _testRowItemBox.value = testRowItemBox.value.copy(
-                    itemsList = event.value.all
+                    itemsList = newBox.all
                 )
-                // _testRowBox.value.removeAll()
             }
         }
     }
