@@ -33,20 +33,19 @@ fun BottomNavigationBar(
         val currentRoute = navController.currentBackStackEntry?.destination?.route
 
         Row(
-            modifier = Modifier.fillMaxWidth(0.7f),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             items.forEach { screen ->
                 BottomNavigationItem(
                     icon = {
-                        (if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon)?.let {
+                        (if (currentRoute!!.contains(screen.route)) screen.selectedIcon else screen.unselectedIcon)?.let {
                             Column(
                                 modifier = Modifier,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Icon(
                                     modifier = Modifier,
-                                    //                                imageVector = it,
                                     imageVector = it,
                                     contentDescription = screen.pageDescription,
                                     tint = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.Gray,

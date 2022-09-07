@@ -25,7 +25,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.util.validateData
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
@@ -48,7 +50,16 @@ fun DataEntryScreen(
     navController: NavController,
     dataId: Long,
 ) {
+
+
+    val bottomNavigationItems = listOf(
+        Screen.DataFieldsScreen,
+        Screen.HomeScreen,
+        Screen.DataEntry
+    )
+
     val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(MaterialTheme.colors.background)
 
     val scaffoldState = rememberScaffoldState()
 
@@ -65,11 +76,12 @@ fun DataEntryScreen(
     var uiState = remember { mutableStateOf(viewModel.uiState) }
     viewModel.currentDataId.value = dataId
 
-    systemUiController.setStatusBarColor(MaterialTheme.colors.background)
 
     Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController, bottomNavigationItems)
+        },
         topBar = {
-
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier,

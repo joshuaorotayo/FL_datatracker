@@ -7,8 +7,8 @@ import io.objectbox.annotation.Id
 @Entity
 data class DataItem(
     @Id
-    var dataItemId: Long,
-    var dataId: Long = 0,
+    var dataItemId: Long = 0,
+    var dataId: Long,
     var presetId: Long,
     var fieldName: String = "",
     var dataFieldType: Int = DataFieldType.SHORTSTRING.ordinal,

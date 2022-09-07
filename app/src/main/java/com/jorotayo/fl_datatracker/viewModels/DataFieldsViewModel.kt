@@ -8,12 +8,12 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.Setting
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.BoxState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
+import com.jorotayo.fl_datatracker.util.BoxState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -189,7 +189,7 @@ class DataFieldsViewModel @Inject constructor(
                     )
                 )
                 _boxState.value = boxState.value.copy(
-                    presetBox = newPresetBox.all
+                    presetsBox = newPresetBox.all
                 )
                 PresetEvent.ChangePreset(event.value)
             }
@@ -208,7 +208,7 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun deletePresetActions(preset: Preset) {
-        val firstPreset = boxState.value.presetBox.first()
+        val firstPreset = boxState.value.presetsBox.first()
 
         val newDataFieldBox = mutableListOf<DataField>()
         for (data in newDataFieldBox) {
@@ -222,7 +222,7 @@ class DataFieldsViewModel @Inject constructor(
 
         _boxState.value = boxState.value.copy(
             dataFieldsBox = newDataFieldBox,
-            presetBox = newPresetBox.all
+            presetsBox = newPresetBox.all
         )
         PresetEvent.ChangePreset(firstPreset.presetName)
 

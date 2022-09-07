@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
+package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events
 
 import com.jorotayo.fl_datatracker.domain.model.DataField
 

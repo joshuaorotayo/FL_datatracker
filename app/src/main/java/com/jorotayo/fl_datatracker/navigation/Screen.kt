@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.TableRows
 import androidx.compose.material.icons.outlined.Close
@@ -21,7 +22,10 @@ sealed class Screen(
 
     object DataEntry : Screen(
         route = "dataEntry_screen",
-        pageName = "Data Entry"
+        pageName = "Data Entry",
+        pageDescription = "Edit forms based on the Data Entry Screen",
+        selectedIcon = Icons.Default.Edit,
+        unselectedIcon = Icons.Filled.Edit
     )
 
     object HomeScreen : Screen(

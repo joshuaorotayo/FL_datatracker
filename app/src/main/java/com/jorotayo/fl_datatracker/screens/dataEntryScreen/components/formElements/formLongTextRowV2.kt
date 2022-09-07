@@ -27,7 +27,8 @@ fun PreviewFormLongTextRowV2() {
         dataItemId = 0,
         presetId = 0,
         fieldName = "Data Field for Long Text Example",
-        fieldHint = "Data capture long text row example..."
+        fieldHint = "Data capture long text row example...",
+        dataId = 1
     )
     formLongTextRowV2(
         data = data
@@ -66,8 +67,8 @@ fun formLongTextRowV2(
             modifier = Modifier
                 .padding(horizontal = 5.dp)
                 .fillMaxWidth()
-                .sizeIn(minHeight = with(LocalDensity.current) {
-                    (lineHeight * 4).toDp()
+                .sizeIn(maxHeight = with(LocalDensity.current) {
+                    (lineHeight * 1).toDp()
                 }),
             value = text,
             onValueChange = { newText ->
@@ -103,6 +104,12 @@ fun formLongTextRowV2(
                 .background(Color.Transparent)
         )
     }
+
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(5.dp)
+    )
 
     return text.text
 }

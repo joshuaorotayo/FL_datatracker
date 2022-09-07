@@ -2,7 +2,7 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.*
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.util.capitaliseWord
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import io.objectbox.Box

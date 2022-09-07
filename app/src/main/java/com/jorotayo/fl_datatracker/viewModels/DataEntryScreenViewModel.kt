@@ -4,38 +4,22 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.jorotayo.fl_datatracker.ObjectBox
-import com.jorotayo.fl_datatracker.domain.model.*
+import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
+import com.jorotayo.fl_datatracker.util.BoxState
 import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
-import io.objectbox.Box
 import java.util.*
 import javax.inject.Inject
 
 class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
-    private val _dataFieldsBox2 = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
-    var dataFieldsBox2: State<Box<DataField>> = _dataFieldsBox2
-
-
-    //Define lists to store/load data
-    private val _dataFieldsBox = mutableStateOf(ObjectBox.get().boxFor(DataField::class.java))
-    var dataFieldsBox: State<Box<DataField>> = _dataFieldsBox
-
-    private var _dataItemBox = mutableStateOf(ObjectBox.get().boxFor(DataItem::class.java))
-    val dataItemBox: State<Box<DataItem>> = _dataItemBox
-
-    private var _dataBox = mutableStateOf(ObjectBox.get().boxFor(Data::class.java))
-    val dataBox: State<Box<Data>> = _dataBox
-
-    private var _settingBox = mutableStateOf(ObjectBox.get().boxFor(Setting::class.java))
-    val settingBox: State<Box<Setting>> = _settingBox
-
-    private var _presetBox = mutableStateOf(ObjectBox.get().boxFor(Preset::class.java))
-    val presetBox: State<Box<Preset>> = _presetBox
+    private val _boxState = mutableStateOf(BoxState())
+    val boxState: State<BoxState> = _boxState
 
     private val _currentDataId = mutableStateOf(0.toLong())
     var currentDataId: MutableState<Long> = _currentDataId
@@ -110,8 +94,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                     name = event.dataEntryScreenState.dataName,
                     lastEdited = dateInString
                 )
-                dataBox.value.put(newData)
-
+                boxState.value._dataBox.put(newData)
 
             }
             is DataEvent.SetName -> {
@@ -134,6 +117,30 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
         } else {
             // If creating a new record of data to save
+            // check for the current preset
+            val datafields = mutableListOf<DataField>()
+            boxState.value.dataFieldsBox.forEach { datafield ->
+                if (datafield.presetId == boxState.value.currentPreset?.presetId) {
+                    datafields += datafield
+                }
+            }
+
+            datafields.forEach { dataField ->
+                list += DataRowState(
+                    DataItem(
+                        dataId = currentDataId.value,
+                        presetId = boxState.value.currentPreset?.presetId!!,
+                        fieldName = dataField.fieldName,
+                        dataFieldType = dataField.dataFieldType,
+                        first = dataField.first,
+                        second = dataField.second,
+                        third = dataField.third,
+                        isEnabled = dataField.isEnabled,
+                        fieldHint = dataField.fieldHint,
+                        dataValue = ""
+                    )
+                )
+            }
         }
 
         return list

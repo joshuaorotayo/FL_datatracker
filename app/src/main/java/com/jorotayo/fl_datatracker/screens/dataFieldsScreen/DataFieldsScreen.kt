@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
@@ -52,17 +53,17 @@ fun DataFieldsScreen(
     navController: NavController,
     viewModel: DataFieldsViewModel = hiltViewModel(),
 ) {
-
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
         Screen.HomeScreen,
+        Screen.DataEntry
     )
 
     var presetExpanded by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val isAddDataFieldVisible = viewModel.dataFieldScreenState
-    val presets = viewModel.boxState.value.presetBox
+    val presets = viewModel.boxState.value.presetsBox
     val currentPreset = viewModel.boxState.value.currentPreset
     val fields = viewModel.filteredFields
 
@@ -135,7 +136,7 @@ fun DataFieldsScreen(
                                         Icon(
                                             modifier = Modifier.clickable(
                                                 onClick = {
-                                                    if (viewModel.boxState.value.presetBox.size >= 2) {
+                                                    if (viewModel.boxState.value.presetsBox.size >= 2) {
                                                         viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
                                                             value = preset))
                                                     } else {

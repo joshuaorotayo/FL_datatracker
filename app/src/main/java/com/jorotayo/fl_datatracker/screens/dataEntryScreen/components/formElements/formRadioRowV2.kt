@@ -27,7 +27,8 @@ fun PreviewFormRadioRowV2() {
             first = "No",
             second = "N/A",
             third = "Yes",
-            presetId = 0
+            presetId = 0,
+            dataId = 1
         )
     )
 }

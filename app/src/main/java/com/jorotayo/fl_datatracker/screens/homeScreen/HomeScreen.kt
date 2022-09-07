@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +34,7 @@ fun HomeScreen(
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
         Screen.HomeScreen,
+        Screen.DataEntry
     )
 
     val scaffoldState = rememberScaffoldState()
@@ -53,24 +52,25 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         snackbarHost = {
             scaffoldState.snackbarHostState
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier,
-                backgroundColor = MaterialTheme.colors.background,
-                onClick = {
-                    navController.navigate(Screen.DataEntry.route)
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add New Data",
-                    tint = Color.Gray
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        isFloatingActionButtonDocked = true,
+        }
+//        ,
+//        floatingActionButton = {
+//            FloatingActionButton(
+//                modifier = Modifier,
+//                backgroundColor = MaterialTheme.colors.background,
+//                onClick = {
+//                    navController.navigate(Screen.DataEntry.route)
+//                }
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Add,
+//                    contentDescription = "Add New Data",
+//                    tint = Color.Gray
+//                )
+//            }
+//        },
+//        floatingActionButtonPosition = FabPosition.End,
+//        isFloatingActionButtonDocked = true,
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -113,9 +113,6 @@ fun HomeScreen(
                             color = Color.Black
                         )
                         TextButton(onClick = {
-//                            val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
-//                            newBox.put(TestRowItem(0))
-//                            viewModel.onEvent(HomeScreenEvent.UpdateData(newBox))
                             viewModel.onEvent(HomeScreenEvent.UpdateData("put", TestRowItem(0)))
                         }) {
                             Text(

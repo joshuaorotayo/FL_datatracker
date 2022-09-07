@@ -27,7 +27,8 @@ fun PreviewFormCountRowV2() {
     val data = DataItem(
         dataItemId = 0,
         presetId = 0,
-        fieldName = "Data Field for Count Row"
+        fieldName = "Data Field for Count Row",
+        dataId = 1
     )
     formCountRowV2(data = data)
 }
@@ -122,11 +123,11 @@ fun formCountRowV2(
                     textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                         .also { MaterialTheme.typography.subtitle1 },
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.onBackground,
+                        backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
-                        textColor = Color.Gray
+                        textColor = Color.Black
                     )
                 )
                 IconButton(
