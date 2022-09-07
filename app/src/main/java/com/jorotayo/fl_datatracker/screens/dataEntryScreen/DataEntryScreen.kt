@@ -29,7 +29,6 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.util.validateData
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
-import formNameHeader
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)

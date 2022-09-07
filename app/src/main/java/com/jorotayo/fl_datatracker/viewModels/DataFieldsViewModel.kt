@@ -5,9 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.BoxState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
@@ -30,11 +33,19 @@ class DataFieldsViewModel @Inject constructor(
         currentPreset = if (currentPresetName.isNullOrEmpty()) "Default" else currentPresetName
     ))
 
+    val queryFiltered =
+        boxState.value.currentPreset?.presetId?.let {
+            boxState.value._dataFieldsBox.query().equal(DataField_.presetId,
+                it).build()
+        }
+
+    val filteredFields: List<DataField> = queryFiltered?.find()?.toList() as List<DataField>
+
     var newDataField: State<NewDataFieldState> = _newDataField
 
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
 
-    fun onEvent(event: DataFieldEvent) {
+    fun onDataEvent(event: DataFieldEvent) {
         when (event) {
             is DataFieldEvent.ToggleAddNewDataField -> {
                 _dataFieldScreenState.value = dataFieldScreenState.value.copy(
@@ -75,42 +86,6 @@ class DataFieldsViewModel @Inject constructor(
                     thirdValue = event.value
                 )
             }
-            // Edit Operations
-            is DataFieldEvent.EditFieldName -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.fieldName = event.value
-                boxState.value._dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditHintText -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.fieldHint = event.value
-                boxState.value._dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditRowType -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.dataFieldType = event.value
-                boxState.value._dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditIsEnabled -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.isEnabled = !dataField.isEnabled
-                boxState.value._dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditFirstValue -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.first = event.value
-                boxState.value._dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditSecondValue -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.second = event.value
-                boxState.value._dataFieldsBox.put(dataField)
-            }
-            is DataFieldEvent.EditThirdValue -> {
-                dataField = boxState.value._dataFieldsBox.get(event.index)
-                dataField.third = event.value
-                boxState.value._dataFieldsBox.put(dataField)
-            }
             is DataFieldEvent.DeleteDataField -> {
                 updateDataFields("remove", event.value)
             }
@@ -124,39 +99,11 @@ class DataFieldsViewModel @Inject constructor(
                 )
                 dataFieldScreenState.value.deletedDataField = event.dataField
             }
-            is DataFieldEvent.TogglePresetDialog -> {
-                _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-                    isAddPresetDialogVisible = if (!dataFieldScreenState.value.isAddPresetDialogVisible.value) mutableStateOf(
-                        true) else mutableStateOf(false)
-                )
-            }
             is DataFieldEvent.SaveDataField -> {
                 updateDataFields("put", event.value)
                 _dataFieldScreenState.value = dataFieldScreenState.value.copy(
                     isAddDataFieldVisible = !dataFieldScreenState.value.isAddDataFieldVisible
                 )
-            }
-            is DataFieldEvent.ChangePreset -> {
-                _boxState.value = boxState.value.copy(
-                    currentPresetSetting = Setting(
-                        Id = 1.toLong(),
-                        settingName = "currentPreset",
-                        settingStringValue = event.value
-                    )
-                )
-            }
-            is DataFieldEvent.AddPreset -> {
-                val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
-                newPresetBox.put(
-                    Preset(
-                        presetId = 0,
-                        presetName = event.value
-                    )
-                )
-                _boxState.value = boxState.value.copy(
-                    presetBox = newPresetBox.all
-                )
-
             }
         }
     }
@@ -173,7 +120,111 @@ class DataFieldsViewModel @Inject constructor(
         )
     }
 
-    fun getDataField(itemIndex: Long): DataField {
-        return _boxState.value._dataFieldsBox.get(itemIndex)
+    fun onRowEvent(event: RowEvent) {
+        when (event) {
+            is RowEvent.EditFieldName -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.fieldName = event.value
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+            is RowEvent.EditHintText -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.fieldHint = event.value
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+            is RowEvent.EditRowType -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.dataFieldType = event.value
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+            is RowEvent.EditIsEnabled -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.isEnabled = !dataField.isEnabled
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+            is RowEvent.EditFirstValue -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.first = event.value
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+            is RowEvent.EditSecondValue -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.second = event.value
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+            is RowEvent.EditThirdValue -> {
+                dataField = boxState.value._dataFieldsBox.get(event.index)
+                dataField.third = event.value
+                boxState.value._dataFieldsBox.put(dataField)
+            }
+        }
+    }
+
+    fun onPresetEvent(event: PresetEvent) {
+        when (event) {
+            is PresetEvent.TogglePresetDialog -> {
+                _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                    isAddPresetDialogVisible = if (!dataFieldScreenState.value.isAddPresetDialogVisible.value) mutableStateOf(
+                        true) else mutableStateOf(false)
+                )
+            }
+            is PresetEvent.TogglePresetDeleteDialog -> {
+                _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                    deletedPreset = event.value,
+                    isPresetDeleteDialogVisible = if (!dataFieldScreenState.value.isPresetDeleteDialogVisible.value) mutableStateOf(
+                        true) else mutableStateOf(false)
+                )
+            }
+            is PresetEvent.ChangePreset -> {
+                val setting = ObjectBox.get().boxFor(Setting::class.java).get(1)
+                setting.settingStringValue = event.value
+                updateSettings(setting)
+            }
+            is PresetEvent.AddPreset -> {
+                val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
+                newPresetBox.put(
+                    Preset(
+                        presetId = 0,
+                        presetName = event.value
+                    )
+                )
+                _boxState.value = boxState.value.copy(
+                    presetBox = newPresetBox.all
+                )
+                PresetEvent.ChangePreset(event.value)
+            }
+            is PresetEvent.DeletePreset -> {
+                deletePresetActions(event.value)
+            }
+        }
+    }
+
+    private fun updateSettings(setting: Setting) {
+        val newSettingBox = ObjectBox.get().boxFor(Setting::class.java)
+        newSettingBox.put(setting)
+        _boxState.value = boxState.value.copy(
+            settingsBox = newSettingBox.all
+        )
+    }
+
+    private fun deletePresetActions(preset: Preset) {
+        val firstPreset = boxState.value.presetBox.first()
+
+        val newDataFieldBox = mutableListOf<DataField>()
+        for (data in newDataFieldBox) {
+            if (data.presetId != preset.presetId) {
+                newDataFieldBox += data
+            }
+        }
+
+        val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
+        newPresetBox.remove(preset)
+
+        _boxState.value = boxState.value.copy(
+            dataFieldsBox = newDataFieldBox,
+            presetBox = newPresetBox.all
+        )
+        PresetEvent.ChangePreset(firstPreset.presetName)
+
     }
 }

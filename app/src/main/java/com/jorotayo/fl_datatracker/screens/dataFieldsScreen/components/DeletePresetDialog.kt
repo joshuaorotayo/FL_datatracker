@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -19,23 +20,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.Preset
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.concurrent.schedule
 
 @Preview
 @Composable
-fun PreviewDeleteDialog() {
+fun PreviewDeletePresetDialog() {
 }
 
 @Composable
-fun DeleteRowDialog(
+fun DeletePresetDialog(
     modifier: Modifier,
-    confirmDelete: (DataField) -> Unit,
+    confirmDelete: (Preset) -> Unit,
     scaffold: ScaffoldState,
     state: MutableState<Boolean>,
-    dataField: DataField,
+    preset: Preset,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -54,7 +55,7 @@ fun DeleteRowDialog(
                 //.......................................................................
                 Image(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete dialog, delete icon", // decorative
+                    contentDescription = "Delete Preset dialog, delete icon", // decorative
                     contentScale = ContentScale.Fit,
                     colorFilter = ColorFilter.tint(
                         color = MaterialTheme.colors.primary
@@ -63,42 +64,52 @@ fun DeleteRowDialog(
                         .padding(top = 35.dp)
                         .height(70.dp)
                         .fillMaxWidth(),
-
-                    )
+                )
 
                 Column(modifier = Modifier.padding(16.dp)) {
+
                     Text(
-                        text = "Delete Row",
+                        modifier = Modifier
+                            .padding(top = 5.dp, start = 25.dp, end = 25.dp)
+                            .align(Alignment.CenterHorizontally),
+                        text = "'${preset.presetName}'",
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h6,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "Delete Preset",
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .padding(top = 5.dp)
                             .fillMaxWidth(),
-                        style = MaterialTheme.typography.h4,
-                        maxLines = 1,
+                        style = MaterialTheme.typography.h6,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "Are you sure you want to delete this Data Field?",
-                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                            .fillMaxWidth(),
+                            .padding(top = 5.dp),
+                        text = "Are you sure you want to delete this Preset?",
+                        textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.h6
                     )
+
                     Text(
-                        text = dataField.fieldName,
-                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.h5,
-                        fontWeight = FontWeight.Bold,
+                            .padding(top = 10.dp)
+                            .align(Alignment.End),
+                        text = "Any associated DataFields will also be deleted*",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.caption,
+                        color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold
                     )
                 }
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp)
                         .background(MaterialTheme.colors.surface),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
@@ -117,14 +128,13 @@ fun DeleteRowDialog(
                         state.value = false
                         scope.launch {
                             scaffold.snackbarHostState.showSnackbar(
-                                message = "Deleted DataField: ${dataField.fieldName}",
+                                message = "Deleted Preset: ${preset.presetName}",
                                 actionLabel = "Restore?"
                             )
                         }
                         Timer().schedule(5000) {
-                            confirmDelete(dataField)
+                            confirmDelete(preset)
                         }
-
                     }) {
                         Text(
                             "Delete",

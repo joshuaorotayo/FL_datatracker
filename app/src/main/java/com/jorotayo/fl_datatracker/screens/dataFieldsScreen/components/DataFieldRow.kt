@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
@@ -16,13 +17,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
@@ -74,11 +78,12 @@ import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 fun DataFieldRow(
     viewModel: DataFieldsViewModel,
     itemIndex: Long,
+    currentDataField: DataField,
     editName: (String) -> Unit,
     editHintText: (String) -> Unit,
     editType: (Int) -> Unit,
     checkedChange: (Boolean) -> Unit,
-    deleteIcon: () -> Unit
+    deleteIcon: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -86,7 +91,7 @@ fun DataFieldRow(
 
     val optionsMaxChars = 20
 
-    val currentDataField = viewModel.getDataField(itemIndex)
+    // val currentDataField = viewModel.getDataField(itemIndex)
 
     val currentRowState = remember {
         mutableStateOf(
@@ -98,7 +103,8 @@ fun DataFieldRow(
                 firstValue = currentDataField.first,
                 secondValue = currentDataField.second,
                 thirdValue = currentDataField.third,
-                isEnabled = currentDataField.isEnabled
+                isEnabled = currentDataField.isEnabled,
+                presetId = currentDataField.presetId
             )
         )
     }
@@ -107,7 +113,7 @@ fun DataFieldRow(
     val isEditOptionsVisible = remember { mutableStateOf(false) }
     val isRowEnabled = remember { mutableStateOf(currentRowState.value.isEnabled) }
 
-    val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
+    val (text, setText) = remember { mutableStateOf(TextFieldValue(currentRowState.value.fieldName)) }
 
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
 
@@ -130,107 +136,109 @@ fun DataFieldRow(
             )
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                modifier = Modifier
-                    .weight(3f),
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = MaterialTheme.colors.primary,
-                    backgroundColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent
-                ),
-                value = text,
-                placeholder = {
-                    Text(
-                        text = currentRowState.value.fieldName.ifBlank { "Add New Data Field Text" },
-                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
-                        textAlign = TextAlign.Center
-                    )
-                },
-                onValueChange =
-                { newText ->
-                    setText(newText.ofMaxLength(60))
-                    editName(newText.text)
-                }
-            )
+        AnimatedVisibility(true) {
             Row(
                 modifier = Modifier
-                    .weight(3f)
-                    .wrapContentHeight()
-                    .clickable(onClick = { expanded = true }),
-                horizontalArrangement = Arrangement.Center
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    modifier = Modifier,
-                    text = items[currentDataField.dataFieldType],
-                    color = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center
-                )
-                Icon(
-                    imageVector = Default.ArrowDropDown,
-                    contentDescription = "Drop down arrow for Field Type Dropdown",
-                    tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
-                )
-            }
-            DropdownMenu(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .background(MaterialTheme.colors.background),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                items.forEachIndexed { index, s ->
-                    DropdownMenuItem(onClick = {
-                        editType(index)
-                        expanded = false
-                        isEditOptionsVisible.value = false
-                        isHintVisible.value = true
-                    })
-                    {
+                TextField(
+                    modifier = Modifier
+                        .weight(3f),
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = MaterialTheme.colors.primary,
+                        backgroundColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
+                    ),
+                    value = text,
+                    placeholder = {
                         Text(
-                            text = s,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colors.primary
+                            text = currentRowState.value.fieldName.ifBlank { "Add New Data Field Text" },
+                            color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                            textAlign = TextAlign.Center
                         )
+                    },
+                    onValueChange =
+                    { newText ->
+                        setText(newText.ofMaxLength(60))
+                        editName(newText.text)
+                    }
+                )
+                Row(
+                    modifier = Modifier
+                        .weight(3f)
+                        .wrapContentHeight()
+                        .clickable(onClick = { expanded = true }),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = items[currentDataField.dataFieldType],
+                        color = MaterialTheme.colors.primary,
+                        textAlign = TextAlign.Center
+                    )
+                    Icon(
+                        imageVector = Default.ArrowDropDown,
+                        contentDescription = "Drop down arrow for Field Type Dropdown",
+                        tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                    )
+                }
+                DropdownMenu(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .background(MaterialTheme.colors.background),
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    items.forEachIndexed { index, s ->
+                        DropdownMenuItem(onClick = {
+                            editType(index)
+                            expanded = false
+                            isEditOptionsVisible.value = false
+                            isHintVisible.value = true
+                        })
+                        {
+                            Text(
+                                text = s,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colors.primary
+                            )
+                        }
                     }
                 }
-            }
 
-            Checkbox(
-                modifier = Modifier
-                    .weight(1.5f),
-                checked = isRowEnabled.value,
-                enabled = true,
-                onCheckedChange = {
-                    checkedChange(it)
-                    isRowEnabled.value = it
-                },
-                colors = CheckboxDefaults.colors(
-                    checkmarkColor = MaterialTheme.colors.onPrimary,
-                    uncheckedColor = MaterialTheme.colors.primary,
-                    checkedColor = MaterialTheme.colors.primary,
-                )
-            )
-
-            IconButton(
-                modifier = Modifier
-                    .weight(0.5f),
-                onClick =
-                deleteIcon
-            ) {
-                Icon(
-                    imageVector = Default.Delete,
-                    contentDescription = "Delete Row",
-                    tint = MaterialTheme.colors.primary
+                Checkbox(
+                    modifier = Modifier
+                        .weight(1.5f),
+                    checked = isRowEnabled.value,
+                    enabled = true,
+                    onCheckedChange = {
+                        checkedChange(it)
+                        isRowEnabled.value = it
+                    },
+                    colors = CheckboxDefaults.colors(
+                        checkmarkColor = MaterialTheme.colors.onPrimary,
+                        uncheckedColor = MaterialTheme.colors.primary,
+                        checkedColor = MaterialTheme.colors.primary,
+                    )
                 )
 
+                IconButton(
+                    modifier = Modifier
+                        .weight(0.5f),
+                    onClick =
+                    deleteIcon
+                ) {
+                    Icon(
+                        imageVector = Default.Delete,
+                        contentDescription = "Delete Row",
+                        tint = MaterialTheme.colors.primary
+                    )
+
+                }
             }
         }
         AnimatedVisibility(currentDataField.dataFieldType <= 1 && isHintVisible.value && !isEditOptionsVisible.value) {
@@ -277,7 +285,7 @@ fun DataFieldRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -381,11 +389,10 @@ fun DataFieldRow(
         }
 
         AnimatedVisibility(currentDataField.dataFieldType == 2 && isEditOptionsVisible.value) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 4.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 //boolean text fields for editable
@@ -396,8 +403,8 @@ fun DataFieldRow(
                     placeholder = firstText.value.ifBlank { currentRowState.value.firstValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            viewModel.onEvent(
-                                DataFieldEvent.EditFirstValue(
+                            viewModel.onRowEvent(
+                                RowEvent.EditFirstValue(
                                     currentRowState.value.id,
                                     it
                                 )
@@ -413,8 +420,8 @@ fun DataFieldRow(
                     placeholder = secondText.value.ifBlank { currentRowState.value.secondValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            viewModel.onEvent(
-                                DataFieldEvent.EditSecondValue(
+                            viewModel.onRowEvent(
+                                RowEvent.EditSecondValue(
                                     currentRowState.value.id,
                                     it
                                 )
@@ -429,7 +436,7 @@ fun DataFieldRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 //boolean text fields for editable
@@ -440,8 +447,8 @@ fun DataFieldRow(
                     placeholder = firstText.value.ifBlank { currentRowState.value.firstValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            viewModel.onEvent(
-                                DataFieldEvent.EditFirstValue(
+                            viewModel.onRowEvent(
+                                RowEvent.EditFirstValue(
                                     currentRowState.value.id,
                                     it
                                 )
@@ -457,8 +464,8 @@ fun DataFieldRow(
                     placeholder = secondText.value.ifBlank { currentRowState.value.secondValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            viewModel.onEvent(
-                                DataFieldEvent.EditSecondValue(
+                            viewModel.onRowEvent(
+                                RowEvent.EditSecondValue(
                                     currentRowState.value.id,
                                     it
                                 )
@@ -474,8 +481,8 @@ fun DataFieldRow(
                     placeholder = thirdText.value.ifBlank { currentRowState.value.thirdValue },
                     onValueChange = {
                         if (it.length <= optionsMaxChars) {
-                            viewModel.onEvent(
-                                DataFieldEvent.EditThirdValue(
+                            viewModel.onRowEvent(
+                                RowEvent.EditThirdValue(
                                     currentRowState.value.id,
                                     it
                                 )
@@ -483,6 +490,31 @@ fun DataFieldRow(
                             thirdText.value = it
                         }
                     }
+                )
+            }
+        }
+
+        AnimatedVisibility(isEditOptionsVisible.value) {
+            Row(
+                modifier = Modifier
+                    .clickable(onClick = {
+                        isHintVisible.value = !isHintVisible.value
+                        isEditOptionsVisible.value = !isEditOptionsVisible.value
+                    })
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier,
+                    text = stringResource(R.string.hideEditRowText),
+                    color = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                )
+                Icon(
+                    modifier = Modifier,
+                    imageVector = Default.ArrowUpward,
+                    tint = MaterialTheme.colors.primary.copy(alpha = 0.7f),
+                    contentDescription = stringResource(R.string.hideEditRowText) + " Icon"
                 )
             }
         }

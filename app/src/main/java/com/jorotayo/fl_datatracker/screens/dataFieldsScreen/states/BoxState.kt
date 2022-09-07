@@ -16,6 +16,7 @@ data class BoxState(
 
     val currentPresetSetting: Setting? = _settingsBox.query(Setting_.settingName.equal("currentPreset"))
         .build().findFirst(),
+
     val currentPreset: Preset? = _presetBox.query(Preset_.presetName.equal(currentPresetSetting?.settingStringValue!!))
         .build().findFirst(),
 )

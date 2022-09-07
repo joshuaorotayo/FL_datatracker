@@ -1,3 +1,5 @@
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,8 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
 
 @Preview
 @Composable

@@ -110,7 +110,7 @@ fun NewDataField(
                     .fillMaxWidth(),
                 value = newDataField.fieldName,
                 onValueChange = {
-                    viewModel.onEvent(DataFieldEvent.AddFieldName(it))
+                    viewModel.onDataEvent(DataFieldEvent.AddFieldName(it))
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,
@@ -208,7 +208,7 @@ fun NewDataField(
                     ) {
                         items.forEachIndexed { index, s ->
                             DropdownMenuItem(onClick = {
-                                viewModel.onEvent(DataFieldEvent.SelectFieldType(index))
+                                viewModel.onDataEvent(DataFieldEvent.SelectFieldType(index))
                                 expanded = false
                             })
                             {
@@ -246,7 +246,7 @@ fun NewDataField(
                     value = hintText,
                     onValueChange = { newText ->
                         setHintText(newText.ofMaxLength(maxLength = maxHintChar))
-                        viewModel.onEvent(DataFieldEvent.AddHintText(newText.text))
+                        viewModel.onDataEvent(DataFieldEvent.AddHintText(newText.text))
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         unfocusedIndicatorColor = Color.Transparent,
@@ -316,7 +316,7 @@ fun NewDataField(
                         label = "1st Value",
                         placeholder = newDataField.firstValue.ifBlank { "1st Value" },
                         onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(
                                 DataFieldEvent.AddFirstValue(it)
                             )
                         }
@@ -327,7 +327,7 @@ fun NewDataField(
                         label = "2nd Value",
                         placeholder = newDataField.secondValue.ifBlank { "2nd Value" },
                         onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(
                                 DataFieldEvent.AddSecondValue(it)
                             )
                         }
@@ -365,7 +365,7 @@ fun NewDataField(
                         label = "1st Value",
                         placeholder = newDataField.firstValue.ifBlank { "1st Value" },
                         onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(
                                 DataFieldEvent.AddFirstValue(it)
                             )
                         }
@@ -376,7 +376,7 @@ fun NewDataField(
                         label = "2nd Value",
                         placeholder = "2nd Value",
                         onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(
                                 DataFieldEvent.AddSecondValue(it)
                             )
                         }
@@ -387,7 +387,7 @@ fun NewDataField(
                         label = "3rd Value",
                         placeholder = "3rd Value",
                         onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onEvent(
+                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(
                                 DataFieldEvent.AddThirdValue(it)
                             )
                         }

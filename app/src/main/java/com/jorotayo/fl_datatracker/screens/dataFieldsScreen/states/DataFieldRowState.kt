@@ -9,4 +9,5 @@ data class DataFieldRowState(
     var secondValue: String = "",
     var thirdValue: String = "",
     var isEnabled: Boolean,
+    var presetId: Long = 0,
 )

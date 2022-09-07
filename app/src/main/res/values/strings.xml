@@ -9,4 +9,5 @@
     <string name="deleteText">Delete</string>
     <string name="addPresetHeader">Add this preset</string>
     <string name="addPresetBtn">Add Preset</string>
+    <string name="hideEditRowText">Hide Edit Options</string>
 </resources>

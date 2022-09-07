@@ -11,7 +11,6 @@ sealed class Screen(
     val route: String,
     val pageName: String,
     val pageDescription: String? = "",
-    val dataID: Long = 0,
     val selectedIcon: ImageVector? = Icons.Filled.Close,
     val unselectedIcon: ImageVector? = Icons.Outlined.Close,
 ) {
@@ -27,17 +26,17 @@ sealed class Screen(
 
     object HomeScreen : Screen(
         route = "home_screen",
+        pageName = "Home",
         pageDescription = "Home Screen with page of data results",
         selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Filled.Home,
-        pageName = "Home"
+        unselectedIcon = Icons.Filled.Home
     )
 
     object DataFieldsScreen : Screen(
         route = "data_fields_screen",
+        pageName = "Data Fields",
         pageDescription = "Add/Edit or remove Data Fields Screen",
         selectedIcon = Icons.Filled.TableRows,
-        unselectedIcon = Icons.Filled.TableRows,
-        pageName = "Data Fields"
+        unselectedIcon = Icons.Filled.TableRows
     )
 }

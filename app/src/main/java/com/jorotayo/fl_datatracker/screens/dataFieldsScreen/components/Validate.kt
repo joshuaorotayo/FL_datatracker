@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.*
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldEvent
@@ -11,7 +10,6 @@ import io.objectbox.Box
 class Validate {
 
     private val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
-    private val dataFieldsBox = mutableStateOf(_dataFieldsBox.all.toList())
 
     val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
     val presetBox: Box<Preset> = ObjectBox.get().boxFor(Preset::class.java)
@@ -61,11 +59,14 @@ class Validate {
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
             dataField.presetId = currentPresetId!!.plus(1)
-            //_dataFieldsBox.put(dataField)
-            //val newList = dataFieldsBox.value
-            viewModel.onEvent(DataFieldEvent.SaveDataField(dataField))
+            viewModel.onDataEvent(DataFieldEvent.SaveDataField(dataField))
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)
+    }
+
+    fun validatePreset(presetName: String): Boolean {
+        val results = presetBox.query(Preset_.presetName.equal(presetName)).build().find()
+        return results.size <= 0
     }
 }
