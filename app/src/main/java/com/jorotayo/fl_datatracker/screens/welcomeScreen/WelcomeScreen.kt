@@ -17,12 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
+import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 fun WelcomeScreen(
     navController: NavHostController,
     viewModel: WelcomeViewModel,
-    pages: List<WelcomeScreenData>
+    pages: List<WelcomeScreenData>,
 ) {
 
     val pagerState = rememberPagerState()
@@ -142,7 +143,7 @@ fun WelcomeScreen(
                                         backgroundColor = if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
                                     )
                                 ) {
-                                    Text(text = "Next")
+                                    Text(stringResource(R.string.next_btn))
                                 }
                             }
                         }
@@ -169,7 +170,7 @@ fun OnBoardingComplete(
     pagerState: PagerState,
     viewModel: WelcomeViewModel,
     modifier: Modifier,
-    lastIndex: Int
+    lastIndex: Int,
 ) {
     AnimatedVisibility(
         modifier = Modifier.fillMaxWidth(),
@@ -183,7 +184,7 @@ fun OnBoardingComplete(
         ) {
             val checkedState = remember { mutableStateOf(false) }
             Text(
-                text = "Don't show on next run",
+                text = stringResource(R.string.hide_welcome_screen),
                 color = MaterialTheme.colors.onSurface
             )
             Checkbox(
@@ -209,7 +210,7 @@ fun FinishButton(
     modifier: Modifier,
     pagerState: PagerState,
     lastIndex: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -229,25 +230,30 @@ fun FinishButton(
                     backgroundColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
                 )
             ) {
-                Text(text = "Finish")
+                Text(text = stringResource(R.string.finish_btn))
             }
         }
     }
 }
 
-//Previews
+/*
+@OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @Composable
 @Preview(showBackground = true)
 fun PreviewOnBoardingScreen() {
-    /* OnBoardingScreen(
-         navController = rememberNavController(),
-         viewModel = hiltViewModel(),
-         pages =
-             List(
-                 image = Icons.Default.DataExploration,
-                 title = "Add Data",
-                 description = "Click the floating action button to add new Data"
-             )
-     )*/
+    val testList = WelcomeScreenData(
+        image = Icons.Default.DataExploration,
+        title = "Add Data",
+        description = "Click the floating action button to add new Data"
+    )
+    val viewModel = hiltViewModel<WelcomeViewModel>()
 
-}
+    WelcomeScreen(
+        navController = rememberNavController(),
+        viewModel = viewModel,
+        pages =
+        listOf(
+            testList
+        )
+    )
+}*/

@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,17 +24,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.domain.model.DataItem_
+import com.jorotayo.fl_datatracker.util.BoxState
 
 @Composable
 @Preview
 
 fun PreviewComplexDataRow() {
+
     ComplexDataRow(
-        data = hiltViewModel(),
-        editData = { }
+        data = Data(
+            dataId = 0,
+            name = "Test Service",
+            lastEditedTime = "Yesterday",
+            createdTime = "Today"
+        ),
+        last = false,
+        editData = ({})
     )
 }
 
@@ -41,8 +51,15 @@ fun PreviewComplexDataRow() {
 fun ComplexDataRow(
     data: Data,
     editData: () -> Unit,
+    last: Boolean,
 ) {
     val textColor = if (isSystemInDarkTheme()) Color.Gray else Color.DarkGray
+
+    val dataItemsList: List<DataItem> =
+        BoxState()._dataItemBox.query(DataItem_.dataId.equal(data.dataId)).build().find()
+
+    val largestCountField = BoxState()._dataItemBox.query(DataItem_.dataId.equal(data.dataId)).and()
+        .equal(DataItem_.dataFieldType, 5).build().findFirst()
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -60,6 +77,14 @@ fun ComplexDataRow(
                 imageVector = Icons.Default.Group,
                 contentDescription = "Row icon for data ${data.name}",
                 tint = MaterialTheme.colors.primary
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = largestCountField?.dataValue!!.ifBlank { "Unknown" },
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.caption,
+                textAlign = TextAlign.Center
             )
         }
         Column(modifier = Modifier
@@ -79,9 +104,10 @@ fun ComplexDataRow(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = 5.dp),
-//                        text = if(data.dataFields.isEmpty()) "" else data.dataFields[0].fieldName + ": ${data.dataFields[0].dataValue}",
-                    text = "field one",
+                        .padding(horizontal = 5.dp)
+                        .weight(1f),
+                    text = if (dataItemsList.isEmpty()) "" else dataItemsList[0].fieldName + ": ${dataItemsList[0].dataValue}",
+                    //text = "field one",
                     color = textColor,
                     style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis,
@@ -89,8 +115,10 @@ fun ComplexDataRow(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = 5.dp),
-                    text = if (data.dataFields.size > 1) "data 1" else "", // TODO: correct  - data.dataFields[1].fieldName + ": ${data.dataFields[1].dataValue}"
+                        .padding(horizontal = 5.dp)
+                        .weight(1f),
+                    text = if (dataItemsList.size > 1) dataItemsList[1].dataValue else "Field 2", // TODO: correct  - data.dataFields[1].fieldName + ": ${data.dataFields[1].dataValue}"
+                    //text = "field two",
                     color = textColor,
                     style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis,
@@ -100,7 +128,7 @@ fun ComplexDataRow(
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = stringResource(id = R.string.dataRow_lastEdited) + data.lastEdited,
+                text = stringResource(id = R.string.dataRow_lastEdited) + data.lastEditedTime,
                 color = textColor,
                 style = MaterialTheme.typography.overline,
                 overflow = TextOverflow.Ellipsis,
@@ -124,10 +152,13 @@ fun ComplexDataRow(
         )
     }
 
-    Divider(modifier = Modifier
-        .padding(horizontal = 20.dp)
-        .fillMaxWidth()
-        .height(1.dp)
-        .background(Color.Gray.copy(0.1f))
-    )
+    AnimatedVisibility(visible = !last) {
+        Divider(modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Color.Gray.copy(0.1f))
+        )
+    }
+
 }

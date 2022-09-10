@@ -4,10 +4,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
@@ -24,7 +24,6 @@ import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 @ExperimentalPagerApi
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController,
     startDestination: String
 ) {
     val pages = ArrayList<WelcomeScreenData>()
@@ -56,7 +55,7 @@ fun SetupNavGraph(
         WelcomeScreenData(
             image = Icons.Default.QueryStats,
             title = "View Data",
-            description = "Have an overview of Data entered from the homescreen"
+            description = "Have an overview of Data entered from the home-screen"
         )
     )
 
@@ -68,6 +67,7 @@ fun SetupNavGraph(
         )
     )
 
+    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -95,11 +95,11 @@ fun SetupNavGraph(
                     defaultValue = -1
                 })
         ) {
-            val dataId = it.arguments?.getLong("dataId") ?: -1
+            val dataId = it.arguments?.getLong("dataId", -1)
             DataEntryScreen(
                 viewModel = DataEntryScreenViewModel(),
                 navController = navController,
-                dataId = dataId
+                dataId = dataId!!
             )
         }
         composable(route = Screen.DataFieldsScreen.route) {

@@ -12,7 +12,7 @@ data class DataField(
     var dataFieldId: Long,
     @Unique(onConflict = ConflictStrategy.REPLACE)
     var fieldName: String = "",
-    var dataFieldType: Int = DataFieldType.SHORTSTRING.ordinal,
+    var dataFieldType: Int = DataFieldType.SHORT_TEXT.ordinal,
     var presetId: Long,
     var first: String = "",
     var second: String = "",

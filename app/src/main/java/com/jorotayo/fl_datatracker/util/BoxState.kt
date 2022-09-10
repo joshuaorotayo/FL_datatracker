@@ -7,12 +7,11 @@ import io.objectbox.query.Query
 
 data class BoxState(
 
-
     val _dataBox: Box<Data> = ObjectBox.get().boxFor(Data::class.java),
     val dataBox: List<Data> = _dataBox.all.toList(),
 
-    val _dataItem: Box<DataItem> = ObjectBox.get().boxFor(DataItem::class.java),
-    val dataItem: List<DataItem> = _dataItem.all.toList(),
+    val _dataItemBox: Box<DataItem> = ObjectBox.get().boxFor(DataItem::class.java),
+    val dataItemBox: List<DataItem> = _dataItemBox.all.toList(),
 
     val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java),
     val dataFieldsBox: List<DataField> = _dataFieldsBox.all.toList(),

@@ -121,7 +121,7 @@ fun DeleteRowDialog(
                                 actionLabel = "Restore?"
                             )
                         }
-                        Timer().schedule(5000) {
+                        Timer().schedule(3000) {
                             confirmDelete(dataField)
                         }
 

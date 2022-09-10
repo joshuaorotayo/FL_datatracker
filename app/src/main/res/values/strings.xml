@@ -19,4 +19,7 @@
     <string name="time_row_error">Please select a Time</string>
     <string name="count_row_error">Please put in a number</string>
     <string name="row_error_description">Row Error Icon</string>
+    <string name="finish_btn">Finish</string>
+    <string name="hide_welcome_screen">Don\'t show on next run</string>
+    <string name="next_btn">Next</string>
 </resources>

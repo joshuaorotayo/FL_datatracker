@@ -8,6 +8,6 @@ data class Data(
     @Id
     var dataId: Long = 0,
     var name: String = "",
-    var lastEdited: String = "",
-    var dataFields: List<DataField> = listOf(),
+    var lastEditedTime: String = "",
+    var createdTime: String = "",
 )

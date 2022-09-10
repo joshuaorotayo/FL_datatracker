@@ -69,7 +69,7 @@ fun DataRow(
         )
         Text(
             modifier = Modifier.weight(2f),
-            text = data.lastEdited,
+            text = data.lastEditedTime,
             color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.subtitle1,
             overflow = TextOverflow.Ellipsis

@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
@@ -40,7 +39,7 @@ fun PreviewDataEntryScreen() {
     DataEntryScreen(
         viewModel = hiltViewModel(),
         navController = rememberNavController(),
-        dataId = -1
+        dataId = -1L
     )
 }
 
@@ -64,10 +63,9 @@ fun DataEntryScreen(
 
     val scope = rememberCoroutineScope()
 
-    var uiState = remember { mutableStateOf(viewModel.uiState) }
+    val uiState = remember { mutableStateOf(viewModel.uiState) }
 
-    viewModel.currentDataId.value = dataId
-
+    //viewModel.currentDataId.value = dataId
 
     Scaffold(
         bottomBar = {
@@ -174,84 +172,78 @@ fun DataEntryScreen(
                         )
                     }
                 }
-                itemsIndexed(items = uiState.value.value.dataRows) { index, data ->
 
+                itemsIndexed(items = uiState.value.value.dataRows) { index, data ->
                     when (data.dataItem.dataFieldType) {
                         0 -> {
-                            FormShortTextRowV2(
+                            data.dataItem.dataValue = FormShortTextRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                    //uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
 
                         }
                         1 -> {
-                            FormLongTextRowV2(
+                            data.dataItem.dataValue = FormLongTextRowV2(
                                 data = data.dataItem,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
                         }
                         2 -> {
-                            FormRadioRowV2(
+                            data.dataItem.dataValue = FormRadioRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
                         }
                         3 -> {
-                            FormDateRowV2(
+                            data.dataItem.dataValue = FormDateRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
                         }
                         4 -> {
-                            FormTimeRowV2(
+                            data.dataItem.dataValue = FormTimeRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
                         }
                         5 -> {
-                            FormCountRowV2(
+                            data.dataItem.dataValue = FormCountRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
                         }
                         6 -> {
-                            FormRadioRowV2(
+                            data.dataItem.dataValue = FormRadioRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
                         }
@@ -277,8 +269,7 @@ fun DataEntryScreen(
                                         validateData(uiState.value.value)
 
                                     if (returnedValue.first) { //means there were no errors
-                                        viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value,
-                                            dataFieldList = returnDataFieldList(uiState.value.value)))
+                                        viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value))
 
                                         navController.popBackStack()
 
@@ -321,25 +312,5 @@ fun DataEntryScreen(
             )
         }
     }
-}
-
-fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
-    val list = ArrayList<DataField>()
-
-    for (dataRow in uiState.dataRows) {
-        val newDataField = DataField(
-            dataFieldId = 0,
-            presetId = 0,
-            fieldName = dataRow.dataItem.fieldName,
-            dataFieldType = dataRow.dataItem.dataFieldType,
-            first = dataRow.dataItem.first,
-            second = dataRow.dataItem.second,
-            third = dataRow.dataItem.third,
-            isEnabled = dataRow.dataItem.isEnabled,
-            fieldHint = dataRow.dataItem.fieldHint
-        )
-        list.add(newDataField)
-    }
-    return list
 }
 

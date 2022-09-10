@@ -32,7 +32,7 @@ fun PreviewFormCountRowV2() {
         data = DataRowState(
             DataItem(
                 dataItemId = 0,
-                fieldName = "Data FIeld for Date Row Example",
+                fieldName = "Data Field for Date Row Example",
                 first = "No",
                 second = "N/A",
                 third = "Yes",
@@ -48,7 +48,7 @@ fun PreviewFormCountRowV2() {
 fun FormCountRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
-) {
+): String {
     var count = remember { mutableStateOf(0) }
     var unChanged = remember { mutableStateOf(true) }
 
@@ -114,6 +114,7 @@ fun FormCountRowV2(
                         if ((count.value - 1) >= 0) {
                             count.value = count.value - 1
                             unChanged.value = false
+                            setDataValue(count.value.toString())
                         }
                     })
                 {
@@ -140,12 +141,11 @@ fun FormCountRowV2(
                         if (it.toIntOrNull() == null) {
                         } else if (it.isBlank()) {
                             count.value = 0
-                            setDataValue(count.value.toString())
                         } else {
                             count.value = it.toInt()
-                            setDataValue(count.value.toString())
                         }
                         unChanged.value = false
+                        setDataValue(count.value.toString())
                     },
                     textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                         .also { MaterialTheme.typography.subtitle1 },
@@ -166,6 +166,7 @@ fun FormCountRowV2(
                     onClick = {
                         count.value = count.value + 1
                         unChanged.value = false
+                        setDataValue(count.value.toString())
                     }
                 ) {
                     Icon(
@@ -184,4 +185,6 @@ fun FormCountRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+
+    return count.value.toString()
 }

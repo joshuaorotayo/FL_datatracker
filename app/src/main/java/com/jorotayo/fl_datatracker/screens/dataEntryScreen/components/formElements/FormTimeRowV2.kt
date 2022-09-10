@@ -45,14 +45,13 @@ fun PreviewFormTimeRowV2() {
             )
         ),
         setDataValue = {})
-
 }
 
 @Composable
 fun FormTimeRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
-) {
+): String {
     // Fetching local context
     val mContext = LocalContext.current
 
@@ -155,6 +154,8 @@ fun FormTimeRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+
+    return mTime.value
 }
 
 private fun formattedTimeString(hour: Int, minute: Int): String {

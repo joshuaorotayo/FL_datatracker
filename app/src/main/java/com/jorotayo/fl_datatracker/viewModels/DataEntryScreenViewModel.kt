@@ -1,5 +1,7 @@
 package com.jorotayo.fl_datatracker.viewModels
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -15,13 +17,16 @@ import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
 import javax.inject.Inject
 
-class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
+class DataEntryScreenViewModel @Inject constructor(
+) : ViewModel() {
+
 
     private val _boxState = mutableStateOf(BoxState())
     val boxState: State<BoxState> = _boxState
 
-    private val _currentDataId = mutableStateOf(0.toLong())
-    var currentDataId: MutableState<Long> = _currentDataId
+    private val _currentDataId = mutableStateOf(-1L)
+    var currentDataId: State<Long> = _currentDataId
+
 
     private val _currentDataFields = mutableStateOf(listOf<DataField>())
     var currentDataFields: MutableState<List<DataField>> = _currentDataFields
@@ -29,31 +34,42 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private val _dataName = mutableStateOf("")
     var dataName: MutableState<String> = _dataName
 
+    /*
+        init{
+            savedStateHandle.get<Long>("dataId")?.let {
+                _currentDataId.value = it
+            }
+        }*/
     private val _uiState = mutableStateOf(DataEntryScreenState(
         dataName = dataName.value,
         dataRows = makeDataRows(),
         nameError = false
     ))
+
     var uiState: State<DataEntryScreenState> = _uiState
+
 
     fun onEvent(event: DataEvent) {
         when (event) {
             is DataEvent.SaveData -> {
 
                 val date = getCurrentDateTime()
-                val dateInString = date.toString("dd/MM/yyyy HH:mm:ss")
+                val dateInString = date.toString("HH:mm - dd/MM/yyyy ")
 
                 val newData = Data(
                     dataId = 0,
-                    // dataFields = returnDataFieldList(event.dataEntryScreenState),
                     name = event.dataEntryScreenState.dataName,
-                    lastEdited = dateInString
+                    createdTime = dateInString,
+                    lastEditedTime = dateInString
                 )
-                boxState.value._dataBox.put(newData)
+                saveDataItems(
+                    dataId = boxState.value._dataBox.put(newData),
+                    formData = event.dataEntryScreenState)
+
             }
             is DataEvent.SetName -> {
                 _uiState.value = uiState.value.copy(
-                    // dataName = event.value
+                    dataName = event.value
                 )
             }
             is DataEvent.SetDataValue -> {
@@ -67,17 +83,21 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                     dataRows = event.value.dataRows
                 )
             }
+            is DataEvent.UpdateDataId -> {
+                _currentDataId.value = event.value
+            }
         }
     }
 
     private fun makeDataRows(): MutableList<DataRowState> {
         val list: MutableList<DataRowState> = ArrayList()
-        if (currentDataId.value != (0).toLong()) {
+        if (currentDataId.value != -1L) {
             //if loading previously saved data
-
+            Log.i(TAG, "makeDataRows: LOAD  " + currentDataId.value)
         } else {
             // If creating a new record of data to save
             // check for the current preset
+            Log.i(TAG, "makeDataRows: NEW " + currentDataId.value)
             val datafields = mutableListOf<DataField>()
             boxState.value.dataFieldsBox.forEach { datafield ->
                 if (datafield.presetId == boxState.value.currentPreset?.presetId) {
@@ -106,41 +126,22 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
         return list
     }
 }
-/*
-fun returnDataFieldList(uiState: DataEntryScreenState): List<DataField> {
-    val list = ArrayList<DataField>()
 
-    for (dataRow in uiState.dataRows) {
-        val newDataField = DataField(
-            dataFieldId = dataRow.dataField.dataFieldId,
-            fieldName = dataRow.dataField.fieldName,
-            dataFieldType = dataRow.dataField.dataFieldType,
-            dataValue = dataRow.dataField.dataValue,
-            first = dataRow.dataField.first,
-            second = dataRow.dataField.second,
-            third = dataRow.dataField.third,
-            isEnabled = dataRow.dataField.isEnabled,
-            fieldHint = dataRow.dataField.fieldHint
+private fun saveDataItems(dataId: Long, formData: DataEntryScreenState) {
+    for (item in formData.dataRows) {
+        val newDataItem = DataItem(
+            dataId = dataId,
+            dataItemId = 0,
+            presetId = item.dataItem.presetId,
+            fieldName = item.dataItem.fieldName,
+            dataFieldType = item.dataItem.dataFieldType,
+            first = item.dataItem.first,
+            second = item.dataItem.second,
+            third = item.dataItem.third,
+            isEnabled = item.dataItem.isEnabled,
+            fieldHint = item.dataItem.fieldHint,
+            dataValue = item.dataItem.dataValue,
         )
-        list.add(newDataField)
+        BoxState()._dataItemBox.put(newDataItem)
     }
-    return list
 }
-
-fun returnDataItemList(uiState: DataEntryScreenState): List<DataItem> {
-    val list = ArrayList<DataItem>()
-    for (dataRow in uiState.dataRows) {
-        val newDataField = DataField(
-            dataFieldId = dataRow.dataField.dataFieldId,
-            fieldName = dataRow.dataField.fieldName,
-            dataFieldType = dataRow.dataField.dataFieldType,
-            dataValue = dataRow.dataField.dataValue,
-            first = dataRow.dataField.first,
-            second = dataRow.dataField.second,
-            third = dataRow.dataField.third,
-            isEnabled = dataRow.dataField.isEnabled,
-            fieldHint = dataRow.dataField.fieldHint
-        )
-    }
-    return list
-}*/

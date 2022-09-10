@@ -40,7 +40,7 @@ fun PreviewFormLongTextRowV2() {
 fun FormLongTextRowV2(
     data: DataItem,
     setDataValue: (String) -> Unit,
-) {
+): String {
     //define any local variables
     val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataValue)) }
@@ -112,4 +112,6 @@ fun FormLongTextRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+
+    return text.text
 }

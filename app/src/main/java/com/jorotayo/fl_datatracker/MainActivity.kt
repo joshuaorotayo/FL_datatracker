@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.Preset
@@ -49,8 +48,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination
-                val navController = rememberNavController()
-                SetupNavGraph(navController = navController, startDestination = screen)
+                //val navController = rememberNavController()
+                SetupNavGraph(startDestination = screen)
             }
         }
     }

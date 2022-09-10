@@ -9,6 +9,7 @@ import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
+import com.jorotayo.fl_datatracker.util.BoxState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -21,14 +22,24 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
             text = "",
             hint = "Search for data",
             isHintVisible = true,
-            dataItems = ObjectBox.get().boxFor(Data::class.java).all
-
+            dataList = ObjectBox.get().boxFor(Data::class.java).all,
+            deletedItem = Data(
+                dataId = 0,
+                name = "test",
+                lastEditedTime = "yesterday",
+                createdTime = "today"
+            ),
+            isDeleteDialogVisible = mutableStateOf(false)
         )
     )
     val uiState: State<HomeScreenState> = _uiState
 
     private val _testRowItemBox = mutableStateOf(TestState())
+
     val testRowItemBox: State<TestState> = _testRowItemBox
+
+    private val _boxState = mutableStateOf(BoxState())
+    val boxState: State<BoxState> = _boxState
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
@@ -56,6 +67,25 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
             HomeScreenEvent.ShowSettingsView -> {
                 //show Settings TODO()
             }
+
+            is HomeScreenEvent.ToggleDeleteDataDialog -> {
+
+                _uiState.value = uiState.value.copy(
+                    deletedItem = event.dataItem,
+                    isDeleteDialogVisible = if (!uiState.value.isDeleteDialogVisible.value) mutableStateOf(
+                        true) else mutableStateOf(false)
+                )
+            }
+            is HomeScreenEvent.DeleteDataItem -> {
+                val newBox = ObjectBox.get().boxFor(Data::class.java)
+                newBox.remove(uiState.value.deletedItem)
+
+                _uiState.value = uiState.value.copy(
+                    dataList = newBox.all
+                )
+            }
+
+
             /*  is HomeScreenEvent.UpdateData -> {
                   _testRowItemBox.value = testRowItemBox.value.copy(
                       itemsList = event.value.all

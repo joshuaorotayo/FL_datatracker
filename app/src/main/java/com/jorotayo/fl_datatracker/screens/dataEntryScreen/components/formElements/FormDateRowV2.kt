@@ -38,7 +38,7 @@ fun PreviewFormDateRowV2() {
         data = DataRowState(
             DataItem(
                 dataItemId = 0,
-                fieldName = "Data FIeld for Date Row Example",
+                fieldName = "Data Field for Date Row Example",
                 first = "No",
                 second = "N/A",
                 third = "Yes",
@@ -54,7 +54,7 @@ fun PreviewFormDateRowV2() {
 fun FormDateRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
-) {
+): String {
     //var hasError by remember{ mutableStateOf(data.hasError)}
 
     // Fetching the Local Context
@@ -170,6 +170,8 @@ fun FormDateRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+
+    return mDate.value
 }
 
 

@@ -30,7 +30,7 @@ fun PreviewFormNameHeader() {
         dataEntryScreenState = DataEntryScreenState(
             dataName = "Test",
             dataRows = listOf<DataRowState>() as MutableList<DataRowState>,
-            nameError = true,
+            nameError = true
         )
     )
 }
@@ -59,7 +59,7 @@ fun FormNameHeader(
                 if (dataEntryScreenState.nameError) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = "Errored ${dataEntryScreenState.dataName}field",
+                        contentDescription = "Field ${dataEntryScreenState.dataName} error",
                     )
                 }
             },

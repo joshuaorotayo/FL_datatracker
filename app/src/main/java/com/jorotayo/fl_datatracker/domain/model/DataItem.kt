@@ -11,7 +11,7 @@ data class DataItem(
     var dataId: Long,
     var presetId: Long,
     var fieldName: String = "",
-    var dataFieldType: Int = DataFieldType.SHORTSTRING.ordinal,
+    var dataFieldType: Int = DataFieldType.SHORT_TEXT.ordinal,
     var first: String = "",
     var second: String = "",
     var third: String = "",

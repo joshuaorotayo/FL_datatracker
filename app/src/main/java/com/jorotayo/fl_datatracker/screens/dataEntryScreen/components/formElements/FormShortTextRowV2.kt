@@ -37,13 +37,14 @@ fun PreviewFormShortTextRowV2() {
         hasError = false,
         errorMsg = ""
     )
+    FormShortTextRowV2(data = dataItem, setDataValue = {})
 }
 
 @Composable
 fun FormShortTextRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
-) {
+): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
     val focusManager = LocalFocusManager.current
@@ -89,13 +90,14 @@ fun FormShortTextRowV2(
                 if (data.hasError) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = "Errored ${data.dataItem.fieldName} field",
+                        contentDescription = "Error in ${data.dataItem.fieldName} field",
                     )
                 }
             },
             placeholder = {
                 Text(
-                    text = if (data.hasError) "Please Enter a value for text field: ${data.dataItem.fieldName}" else "Short Text Row Hint...",
+                    text = (if (data.hasError) "Please enter a value for text field: ${data.dataItem.fieldName}"
+                    else if (data.dataItem.fieldHint?.isBlank() == true) "Short Text Row Hint..." else data.dataItem.fieldHint)!!,
                     color = if (data.hasError) Color.Red else MaterialTheme.colors.primary,
                     textAlign = TextAlign.Center
                 )
@@ -128,4 +130,6 @@ fun FormShortTextRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+
+    return text.text
 }

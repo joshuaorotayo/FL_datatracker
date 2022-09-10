@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
@@ -26,7 +27,13 @@ fun PreviewSearchBar() {
             hint = "Search...",
             text = "",
             isSearchVisible = false,
-            dataItems = listOf()
+            dataList = listOf(),
+            deletedItem = Data(
+                dataId = 0,
+                createdTime = "Yesterday",
+                lastEditedTime = "Today",
+                name = "Simple Service Test"
+            )
         )
     )
 }

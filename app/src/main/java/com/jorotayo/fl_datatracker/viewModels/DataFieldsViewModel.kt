@@ -202,14 +202,14 @@ class DataFieldsViewModel @Inject constructor(
         val firstPreset = boxState.value.presetsBox.first()
 
         val newDataFieldBox = mutableListOf<DataField>()
-        for (data in newDataFieldBox) {
+
+        val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
+        newPresetBox.remove(preset)
+        for (data in _boxState.value.dataFieldsBox) {
             if (data.presetId != preset.presetId) {
                 newDataFieldBox += data
             }
         }
-
-        val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
-        newPresetBox.remove(preset)
 
         _boxState.value = boxState.value.copy(
             dataFieldsBox = newDataFieldBox,

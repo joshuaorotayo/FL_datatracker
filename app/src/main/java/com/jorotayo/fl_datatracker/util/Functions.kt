@@ -1,5 +1,7 @@
 package com.jorotayo.fl_datatracker.util
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +24,7 @@ fun validateData(data: DataEntryScreenState): Pair<Boolean, DataEntryScreenState
         if (dr.dataItem.dataValue.isBlank()) {
             dr.hasError = true
             noErrors = false
+            Log.i(TAG, "validateData: ${dr.dataItem.fieldName}")
 
             when (dr.dataItem.dataFieldType) {
                 0 -> {

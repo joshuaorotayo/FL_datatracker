@@ -50,7 +50,7 @@ fun PreviewFormRadioRowV2() {
 fun FormRadioRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
-) {
+): String {
     val options = listOf(data.dataItem.first, data.dataItem.second, data.dataItem.third)
 
     // val defaultSelected = floor(options.size.toDouble() / 2)
@@ -173,4 +173,6 @@ fun FormRadioRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+
+    return selectedOption
 }
