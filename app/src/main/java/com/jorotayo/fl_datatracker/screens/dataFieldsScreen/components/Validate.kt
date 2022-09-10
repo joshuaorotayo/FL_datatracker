@@ -1,29 +1,18 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import com.jorotayo.fl_datatracker.ObjectBox
-import com.jorotayo.fl_datatracker.domain.model.*
+import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.Preset_
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
+import com.jorotayo.fl_datatracker.util.BoxState
 import com.jorotayo.fl_datatracker.util.capitaliseWord
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
-import io.objectbox.Box
 
 class Validate {
 
-    private val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
+    private val boxState = BoxState()
 
-    val settingBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java)
-    val presetBox: Box<Preset> = ObjectBox.get().boxFor(Preset::class.java)
-
-    val currentPresetSetting =
-        settingBox.query(Setting_.settingName.equal("currentPreset")).build()
-            .findFirst()?.settingName
-
-    val currentPresetId =
-        currentPresetSetting?.let { Preset_.presetName.equal(it) }
-            ?.let { presetBox.query(it).build().findFirst()?.presetId ?: 0 }
-
-    private val fieldNames =
-        _dataFieldsBox.query().build().property(DataField_.fieldName).findStrings().toList()
+    // Filtered list of field names
+    private val fieldNames: List<String> = boxState.filteredFields.map { it.fieldName }
 
     /***
      * Method used to validate and save data fields
@@ -37,7 +26,7 @@ class Validate {
         var isError = false
         var msg = ""
 
-        if (dataField.fieldName.isEmpty()) {
+        if (dataField.fieldName.isBlank()) {
             isError = true
             msg = "Please Enter Field Name for Data Field"
         } else if (fieldNames.contains(dataField.fieldName)) {
@@ -58,7 +47,7 @@ class Validate {
         }
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
-            dataField.presetId = currentPresetId!!.plus(1)
+            dataField.presetId = boxState.currentPreset?.presetId!!.plus(1)
             viewModel.onDataEvent(DataFieldEvent.SaveDataField(dataField))
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
@@ -66,7 +55,8 @@ class Validate {
     }
 
     fun validatePreset(presetName: String): Boolean {
-        val results = presetBox.query(Preset_.presetName.equal(presetName)).build().find()
+        val results =
+            boxState._presetsBox.query(Preset_.presetName.equal(presetName)).build().find()
         return results.size <= 0
     }
 }

@@ -65,7 +65,7 @@ fun DataFieldsScreen(
     val isAddDataFieldVisible = viewModel.dataFieldScreenState
     val presets = viewModel.boxState.value.presetsBox
     val currentPreset = viewModel.boxState.value.currentPreset
-    val fields = viewModel.filteredFields
+    val fields = viewModel.boxState.value.filteredFields
 
     Scaffold(
         topBar = {

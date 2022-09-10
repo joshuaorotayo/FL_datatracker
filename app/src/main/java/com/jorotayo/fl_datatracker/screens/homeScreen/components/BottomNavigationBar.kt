@@ -30,7 +30,7 @@ fun BottomNavigationBar(
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = MaterialTheme.colors.background
     ) {
-        val currentRoute = navController.currentBackStackEntry?.destination?.route
+        val currentRoute = sanitiseRoute(navController)
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -39,7 +39,7 @@ fun BottomNavigationBar(
             items.forEach { screen ->
                 BottomNavigationItem(
                     icon = {
-                        (if (currentRoute!!.contains(screen.route)) screen.selectedIcon else screen.unselectedIcon)?.let {
+                        (if (screen.route.contains(currentRoute)) screen.selectedIcon else screen.unselectedIcon)?.let {
                             Column(
                                 modifier = Modifier,
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -48,7 +48,7 @@ fun BottomNavigationBar(
                                     modifier = Modifier,
                                     imageVector = it,
                                     contentDescription = screen.pageDescription,
-                                    tint = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.Gray,
+                                    tint = if (screen.route.contains(currentRoute)) MaterialTheme.colors.primary else Color.Gray,
                                 )
                                 Text(
                                     text = screen.pageName,
@@ -70,4 +70,15 @@ fun BottomNavigationBar(
             }
         }
     }
+}
+
+private fun sanitiseRoute(navController: NavController): String {
+    var currentDestination: String =
+        if (navController.currentBackStackEntry?.destination?.route?.contains("?") == true) {
+            val splitString = navController.currentBackStackEntry?.destination?.route?.split("?")
+            splitString!![0]
+        } else {
+            navController.currentBackStackEntry?.destination?.route.toString()
+        }
+    return currentDestination
 }

@@ -3,17 +3,20 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,26 +25,28 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewFormLongTextRowV2() {
-    val data = DataItem(
-        dataItemId = 0,
-        presetId = 0,
-        fieldName = "Data Field for Long Text Example",
-        fieldHint = "Data capture long text row example...",
-        dataId = 1
-    )
-    formLongTextRowV2(
-        data = data
+fun PreviewFormShortTextRowV2() {
+    val dataItem = DataRowState(
+        DataItem(
+            presetId = 0,
+            dataItemId = 0,
+            fieldName = "Short Text Row",
+            fieldHint = "Short Text row example...",
+            dataId = 1
+        ),
+        hasError = false,
+        errorMsg = ""
     )
 }
 
 @Composable
-fun formLongTextRowV2(
-    data: DataItem,
-): String {
-    //define any local variables
-    val maxChar = 200
-    val (text, setText) = remember { mutableStateOf(TextFieldValue("")) }
+fun FormShortTextRowV2(
+    data: DataRowState,
+    setDataValue: (String) -> Unit,
+) {
+    val maxChar = 50
+    val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
@@ -50,47 +55,60 @@ fun formLongTextRowV2(
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
-            .padding(10.dp)
     ) {
         Text(
             modifier = Modifier
-                .padding(vertical = 5.dp, horizontal = 10.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 5.dp)
                 .fillMaxWidth(),
-            text = data.fieldName,
+            text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
             color = Color.Gray,
         )
-        // Data Field Name Data Capture
 
-        val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
+        //TextField Data capture
+
         TextField(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .fillMaxWidth()
-                .sizeIn(maxHeight = with(LocalDensity.current) {
-                    (lineHeight * 1).toDp()
-                }),
+                .fillMaxWidth(),
             value = text,
+            singleLine = true,
             onValueChange = { newText ->
                 setText(newText.ofMaxLength(maxLength = maxChar))
+                setDataValue(text.text)
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 textColor = MaterialTheme.colors.onSurface
             ),
-            maxLines = 4,
-            placeholder = {
-                (if (data.fieldHint?.isEmpty() == true) data.fieldHint else "Please enter content for field: ${data.fieldName}")?.let {
-                    Text(
-                        text = it,
-                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                        textAlign = TextAlign.Start
+            isError = data.hasError,
+            trailingIcon = {
+                if (data.hasError) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "Errored ${data.dataItem.fieldName} field",
                     )
                 }
-            }
+            },
+            placeholder = {
+                Text(
+                    text = if (data.hasError) "Please Enter a value for text field: ${data.dataItem.fieldName}" else "Short Text Row Hint...",
+                    color = if (data.hasError) Color.Red else MaterialTheme.colors.primary,
+                    textAlign = TextAlign.Center
+                )
+            },
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
         )
         //Max Chars count
         Text(
@@ -110,6 +128,4 @@ fun formLongTextRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
-
-    return text.text
 }

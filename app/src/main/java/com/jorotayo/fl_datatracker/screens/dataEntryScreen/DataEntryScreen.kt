@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,8 +51,6 @@ fun DataEntryScreen(
     navController: NavController,
     dataId: Long,
 ) {
-
-
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
         Screen.HomeScreen,
@@ -65,15 +64,8 @@ fun DataEntryScreen(
 
     val scope = rememberCoroutineScope()
 
-    // Field/Service/Meeting Name
-    val name = remember { mutableStateOf("") }
-
-    //Gets All data fields
-/*    val allDataFields = ObjectBox.get().boxFor(DataField::class.java)
-    val dataFields =
-        allDataFields.query().equal(DataField_.isEnabled, true).build().use { it.find() }*/
-
     var uiState = remember { mutableStateOf(viewModel.uiState) }
+
     viewModel.currentDataId.value = dataId
 
 
@@ -115,6 +107,7 @@ fun DataEntryScreen(
 
                     Spacer(modifier = Modifier.weight(1f))
                 } else {
+
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -124,20 +117,24 @@ fun DataEntryScreen(
                         style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
-
                     Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                top = 5.dp,
-                                bottom = 5.dp,
-                                start = 16.dp,
-                                end = 16.dp
-                            ),
-                        text = "The form below has been created from the ${uiState.value.value.dataRows.size} DataField(s) in the preset",
+                        modifier = Modifier.padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
+                        text = "The form below has been created from the ${uiState.value.value.dataRows.size} DataField(s) in the preset: ",
                         color = MaterialTheme.colors.primary,
                         style = MaterialTheme.typography.body1.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 5.dp, bottom = 5.dp)
+                            .clip(shape = RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colors.surface)
+                            .padding(10.dp),
+                        text = viewModel.boxState.value.currentPreset?.presetName!!,
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.body1.also { FontStyle.Italic }
+                            .also { FontWeight.Bold },
+                        textAlign = TextAlign.End
                     )
                 }
             }
@@ -159,7 +156,6 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(bottom = 16.dp, top = 5.dp)
                     .clip(shape = RoundedCornerShape(10.dp))
             ) {
                 item {
@@ -169,7 +165,7 @@ fun DataEntryScreen(
                             .fillMaxWidth()
                     ) {
 
-                        name.value = formNameHeader(
+                        FormNameHeader(
                             setName = {
                                 viewModel.onEvent(DataEvent.SetName(value = it))
                                 uiState.value.value.dataName = it
@@ -178,52 +174,85 @@ fun DataEntryScreen(
                         )
                     }
                 }
+                itemsIndexed(items = uiState.value.value.dataRows) { index, data ->
 
-                items(uiState.value.value.dataRows) { data ->
-                    /* var found = viewModel.currentDataFields.first {
-                         it.id == data.dataField.id
-                     }*/
                     when (data.dataItem.dataFieldType) {
-                        /*    items(viewModel.currentDataFields.value) { data ->
-                              *//*  var found = viewModel.currentDataFields.first {
-                        it.id == data.dataField.id
-                    }*//*
-                    when (data.dataFieldType) {*/
                         0 -> {
-                            data.dataItem.dataValue = formShortTextRowV2(
-                                data = data.dataItem,
-                                hasError = data.hasError
+                            FormShortTextRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
                             )
+
                         }
                         1 -> {
-                            data.dataItem.dataValue = formLongTextRowV2(
+                            FormLongTextRowV2(
                                 data = data.dataItem,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
                             )
                         }
                         2 -> {
-                            data.dataItem.dataValue = formRadioRowV2(
-                                data = data.dataItem,
+                            FormRadioRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
                             )
                         }
                         3 -> {
-                            data.dataItem.dataValue = formDateRowV2(
-                                viewModel = DataEntryScreenViewModel(),
-                                fieldName = data.dataItem.fieldName
+                            FormDateRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
                             )
                         }
                         4 -> {
-                            data.dataItem.dataValue = formTimeRowV2(
-                                viewModel = DataEntryScreenViewModel(),
-                                fieldName = data.dataItem.fieldName
+                            FormTimeRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
                             )
                         }
                         5 -> {
-                            data.dataItem.dataValue =
-                                formCountRowV2(data = data.dataItem)
+                            FormCountRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
+                            )
                         }
                         6 -> {
-                            data.dataItem.dataValue = formRadioRowV2(
-                                data = data.dataItem
+                            FormRadioRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                    uiState.value.value.dataRows[index].dataItem.dataValue = it
+                                }
                             )
                         }
                     }
@@ -246,7 +275,6 @@ fun DataEntryScreen(
 
                                     val returnedValue: Pair<Boolean, DataEntryScreenState> =
                                         validateData(uiState.value.value)
-
 
                                     if (returnedValue.first) { //means there were no errors
                                         viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value,

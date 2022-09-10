@@ -13,7 +13,6 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.util.BoxState
 import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
-import java.util.*
 import javax.inject.Inject
 
 class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
@@ -30,56 +29,12 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private val _dataName = mutableStateOf("")
     var dataName: MutableState<String> = _dataName
 
-    private var _uiState = mutableStateOf(DataEntryScreenState(
+    private val _uiState = mutableStateOf(DataEntryScreenState(
         dataName = dataName.value,
         dataRows = makeDataRows(),
         nameError = false
     ))
-    val uiState: State<DataEntryScreenState> = _uiState
-
-
-    private val days = arrayOf("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat")
-
-    private val suffix = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
-
-    private val months = arrayOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    )
-
-    fun formattedDateString(day: Int, month: Int, year: Int): String {
-
-        val mCalendar = Calendar.getInstance()
-
-        val day2 = day % 100
-        val suffixStr = day.toString() + suffix[if (day2 in 4..20) 0 else day2 % 10]
-        val monthStr = months[month]
-
-        mCalendar.set(year, month, day)
-        val dayOfWeek = days[mCalendar.get(Calendar.DAY_OF_WEEK) - 1]
-        return "$dayOfWeek, $suffixStr $monthStr, $year"
-    }
-
-    // Time Functions
-    fun formattedTimeString(hour: Int, minute: Int): String {
-        val mTime = Calendar.getInstance()
-        var amPm = ""
-
-        mTime.set(Calendar.HOUR_OF_DAY, hour)
-        mTime.set(Calendar.MINUTE, minute)
-
-        amPm = if (mTime.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
-
-        val formattedHrs =
-            if (mTime.get(Calendar.HOUR) == 0) "12" else mTime.get(Calendar.HOUR).toString()
-
-        val formattedMinute =
-            if (mTime.get(Calendar.MINUTE) < 10) "0" + mTime.get(Calendar.MINUTE) else "" + mTime.get(
-                Calendar.MINUTE)
-
-        return "$formattedHrs:$formattedMinute $amPm"
-
-    }
+    var uiState: State<DataEntryScreenState> = _uiState
 
     fun onEvent(event: DataEvent) {
         when (event) {
@@ -95,12 +50,17 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                     lastEdited = dateInString
                 )
                 boxState.value._dataBox.put(newData)
-
             }
             is DataEvent.SetName -> {
                 _uiState.value = uiState.value.copy(
-                    dataName = event.value
+                    // dataName = event.value
                 )
+            }
+            is DataEvent.SetDataValue -> {
+                _uiState.value.dataRows[event.rowIndex].dataItem =
+                    uiState.value.dataRows[event.rowIndex].dataItem.copy(
+                        dataValue = event.value
+                    )
             }
             is DataEvent.UpdateUiState -> {
                 _uiState.value = uiState.value.copy(

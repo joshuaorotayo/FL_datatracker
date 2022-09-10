@@ -55,6 +55,7 @@ fun NewDataField(
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
 
     val focusManager = LocalFocusManager.current
+
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val newDataField = viewModel.newDataField.value

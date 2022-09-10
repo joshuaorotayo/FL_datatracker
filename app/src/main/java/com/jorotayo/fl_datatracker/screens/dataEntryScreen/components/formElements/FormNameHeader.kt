@@ -1,9 +1,10 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -12,18 +13,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Preview
 @Composable
 fun PreviewFormNameHeader() {
-    formNameHeader(
-        setName = hiltViewModel(),
+    FormNameHeader(
+        setName = { },
         dataEntryScreenState = DataEntryScreenState(
             dataName = "Test",
             dataRows = listOf<DataRowState>() as MutableList<DataRowState>,
@@ -33,10 +36,12 @@ fun PreviewFormNameHeader() {
 }
 
 @Composable
-fun formNameHeader(
+fun FormNameHeader(
     setName: (String) -> Unit,
     dataEntryScreenState: DataEntryScreenState,
-): String {
+) {
+
+    val focusManager = LocalFocusManager.current
     val (text, setText) = remember { mutableStateOf(TextFieldValue(dataEntryScreenState.dataName)) }
 
     Row(
@@ -50,34 +55,20 @@ fun formNameHeader(
             modifier = Modifier.fillMaxWidth(),
             value = text,
             isError = dataEntryScreenState.nameError,
-            placeholder = {
-
+            trailingIcon = {
                 if (dataEntryScreenState.nameError) {
-                    AnimatedVisibility(visible = true) {
-                        Row(modifier = Modifier,
-                            horizontalArrangement = Arrangement.Center) {
-                            Text(
-                                text = "Name Missing",
-                                color = Color.Red,
-                                textAlign = TextAlign.Center
-                            )
-                            Icon(
-                                imageVector = Icons.Default.Warning,
-                                contentDescription = "Errored ${dataEntryScreenState.dataName}field",
-                                tint = MaterialTheme.colors.primary
-                            )
-                        }
-                    }
-                } else {
-
-                    AnimatedVisibility(visible = true) {
-                        Text(
-                            text = "Please enter a meeting or Service Name...",
-                            color = MaterialTheme.colors.primary
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "Errored ${dataEntryScreenState.dataName}field",
+                    )
                 }
-
+            },
+            placeholder = {
+                Text(
+                    text = if (dataEntryScreenState.nameError) "Name Missing" else "Please enter a meeting or Service Name...",
+                    color = if (dataEntryScreenState.nameError) Color.Red else MaterialTheme.colors.primary,
+                    textAlign = TextAlign.Center
+                )
             },
             singleLine = true,
             onValueChange = { newText ->
@@ -88,9 +79,18 @@ fun formNameHeader(
                 backgroundColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 textColor = MaterialTheme.colors.onSurface
-            )
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
         )
     }
 
@@ -99,6 +99,4 @@ fun formNameHeader(
             .fillMaxWidth()
             .height(5.dp)
     )
-
-    return text.text
 }

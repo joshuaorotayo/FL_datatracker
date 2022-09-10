@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
@@ -32,14 +31,6 @@ class DataFieldsViewModel @Inject constructor(
     private val _newDataField = mutableStateOf(NewDataFieldState(
         currentPreset = if (currentPresetName.isNullOrEmpty()) "Default" else currentPresetName
     ))
-
-    val queryFiltered =
-        boxState.value.currentPreset?.presetId?.let {
-            boxState.value._dataFieldsBox.query().equal(DataField_.presetId,
-                it).build()
-        }
-
-    val filteredFields: List<DataField> = queryFiltered?.find()?.toList() as List<DataField>
 
     var newDataField: State<NewDataFieldState> = _newDataField
 

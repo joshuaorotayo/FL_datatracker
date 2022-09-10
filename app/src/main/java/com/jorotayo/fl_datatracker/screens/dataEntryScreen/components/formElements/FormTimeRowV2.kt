@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.app.TimePickerDialog
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,24 +21,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 import java.util.*
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormTimeRowV2() {
-    formTimeRowV2(viewModel = hiltViewModel(), fieldName = "Data Field for Time Example")
+    FormTimeRowV2(
+        data = DataRowState(
+            DataItem(
+                dataItemId = 0,
+                fieldName = "Data Field for Time Example",
+                first = "No",
+                second = "N/A",
+                third = "Yes",
+                presetId = 0,
+                dataId = 1
+            )
+        ),
+        setDataValue = {})
+
 }
 
 @Composable
-fun formTimeRowV2(
-    viewModel: DataEntryScreenViewModel,
-    fieldName: String
-): String {
+fun FormTimeRowV2(
+    data: DataRowState,
+    setDataValue: (String) -> Unit,
+) {
     // Fetching local context
     val mContext = LocalContext.current
 
@@ -51,8 +67,9 @@ fun formTimeRowV2(
     // Creating a TimePicker dialog
     val mTimePickerDialog = TimePickerDialog(
         mContext,
-        { _, mHour: Int, mMinute: Int ->
-            mTime.value = viewModel.formattedTimeString(mHour, mMinute)
+        { _, hour: Int, minute: Int ->
+            mTime.value = formattedTimeString(hour, minute)
+            setDataValue(mTime.value)
         }, mHour, mMinute, true
     )
 
@@ -63,26 +80,44 @@ fun formTimeRowV2(
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
-            .padding(10.dp)
     ) {
-        Row(
+        Text(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
+                .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = Color.Gray,
+        )
+
+        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = fieldName,
-                textAlign = TextAlign.Start,
-                color = Color.Gray,
-            )
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                    text = stringResource(id = R.string.time_row_error),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Red,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = MaterialTheme.colors.primary
+                )
+            }
         }
+
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -120,6 +155,23 @@ fun formTimeRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+}
 
-    return mTime.value
+private fun formattedTimeString(hour: Int, minute: Int): String {
+    val mTime = Calendar.getInstance()
+
+    mTime.set(Calendar.HOUR_OF_DAY, hour)
+    mTime.set(Calendar.MINUTE, minute)
+
+    val amPm: String = if (mTime.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
+
+    val formattedHrs =
+        if (mTime.get(Calendar.HOUR) == 0) "12" else mTime.get(Calendar.HOUR).toString()
+
+    val formattedMinute =
+        if (mTime.get(Calendar.MINUTE) < 10) "0" + mTime.get(Calendar.MINUTE) else "" + mTime.get(
+            Calendar.MINUTE)
+
+    return "$formattedHrs:$formattedMinute $amPm"
+
 }

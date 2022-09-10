@@ -10,4 +10,13 @@
     <string name="addPresetHeader">Add this preset</string>
     <string name="addPresetBtn">Add Preset</string>
     <string name="hideEditRowText">Hide Edit Options</string>
+
+    <string name="decrement_description">Decrement count</string>
+    <string name="increment_description">Increment count</string>
+
+    <string name="radio_row_error">Please select an Option</string>
+    <string name="date_row_error">Please select a Date</string>
+    <string name="time_row_error">Please select a Time</string>
+    <string name="count_row_error">Please put in a number</string>
+    <string name="row_error_description">Row Error Icon</string>
 </resources>

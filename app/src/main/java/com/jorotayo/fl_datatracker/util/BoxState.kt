@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.util
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.*
 import io.objectbox.Box
+import io.objectbox.query.Query
 
 data class BoxState(
 
@@ -27,4 +28,12 @@ data class BoxState(
 
     val currentPreset: Preset? = _presetsBox.query(Preset_.presetName.equal(currentPresetSetting?.settingStringValue!!))
         .build().findFirst(),
+
+    val queryFiltered: Query<DataField>? =
+        currentPreset?.presetId?.let {
+            _dataFieldsBox.query().equal(DataField_.presetId,
+                it).build()
+        },
+
+    val filteredFields: List<DataField> = queryFiltered?.find()?.toList() as List<DataField>,
 )

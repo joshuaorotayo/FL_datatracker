@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,29 +17,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormCountRowV2() {
-    val data = DataItem(
-        dataItemId = 0,
-        presetId = 0,
-        fieldName = "Data Field for Count Row",
-        dataId = 1
+    FormCountRowV2(
+        data = DataRowState(
+            DataItem(
+                dataItemId = 0,
+                fieldName = "Data FIeld for Date Row Example",
+                first = "No",
+                second = "N/A",
+                third = "Yes",
+                presetId = 0,
+                dataId = 1
+            )
+        ),
+        setDataValue = {}
     )
-    formCountRowV2(data = data)
 }
 
 @Composable
-fun formCountRowV2(
-    data: DataItem,
-): String {
+fun FormCountRowV2(
+    data: DataRowState,
+    setDataValue: (String) -> Unit,
+) {
     var count = remember { mutableStateOf(0) }
+    var unChanged = remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -46,22 +59,42 @@ fun formCountRowV2(
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
-            .padding(10.dp)
     ) {
-        Row(
+
+        Text(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
+                .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = Color.Gray,
+        )
+
+        AnimatedVisibility(visible = data.hasError && unChanged.value) {
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 8.dp)
                     .fillMaxWidth(),
-                text = data.fieldName,
-                textAlign = TextAlign.Start,
-                color = Color.Gray,
-            )
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                    text = stringResource(id = R.string.count_row_error),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Red,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = MaterialTheme.colors.primary
+                )
+            }
         }
+
         Column(modifier = Modifier
             .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -80,24 +113,16 @@ fun formCountRowV2(
                     onClick = {
                         if ((count.value - 1) >= 0) {
                             count.value = count.value - 1
+                            unChanged.value = false
                         }
                     })
                 {
                     Icon(
                         imageVector = Icons.Default.Remove,
-                        contentDescription = "Decrement Count",
+                        contentDescription = stringResource(id = R.string.decrement_description),
                         tint = MaterialTheme.colors.onPrimary
                     )
                 }
-                /* Text(
-                     text = "" + count.value,
-                     color = if (count.value <= 0) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                     modifier = Modifier
-                         .weight(1f, fill = false),
-                     textAlign = TextAlign.Center,
-                     style = MaterialTheme.typography.h6
-
-                 )*/
                 TextField(
                     modifier = Modifier
                         .weight(3f),
@@ -113,12 +138,14 @@ fun formCountRowV2(
                     },
                     onValueChange = {
                         if (it.toIntOrNull() == null) {
-                            count.value = count.value
-                        } else if (it.isEmpty()) {
+                        } else if (it.isBlank()) {
                             count.value = 0
+                            setDataValue(count.value.toString())
                         } else {
                             count.value = it.toInt()
+                            setDataValue(count.value.toString())
                         }
+                        unChanged.value = false
                     },
                     textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                         .also { MaterialTheme.typography.subtitle1 },
@@ -127,7 +154,7 @@ fun formCountRowV2(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
-                        textColor = Color.Black
+                        textColor = MaterialTheme.colors.onSurface
                     )
                 )
                 IconButton(
@@ -138,11 +165,12 @@ fun formCountRowV2(
                         .padding(vertical = 5.dp),
                     onClick = {
                         count.value = count.value + 1
+                        unChanged.value = false
                     }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Increment Count",
+                        contentDescription = stringResource(id = R.string.increment_description),
                         tint = MaterialTheme.colors.onPrimary
                     )
                 }
@@ -156,6 +184,4 @@ fun formCountRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
-
-    return count.value.toString()
 }

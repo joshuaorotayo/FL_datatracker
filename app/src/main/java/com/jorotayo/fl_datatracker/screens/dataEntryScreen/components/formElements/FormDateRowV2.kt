@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,28 +22,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.DataItem
 import java.util.*
 
 
 @Preview
 @Composable
 fun PreviewFormDateRowV2() {
-    formDateRowV2(
-        viewModel = hiltViewModel(),
-        fieldName = "Data FIeld for Date Row Example"
+    FormDateRowV2(
+        data = DataRowState(
+            DataItem(
+                dataItemId = 0,
+                fieldName = "Data FIeld for Date Row Example",
+                first = "No",
+                second = "N/A",
+                third = "Yes",
+                presetId = 0,
+                dataId = 1
+            )
+        ),
+        setDataValue = {}
     )
 }
 
 @Composable
-fun formDateRowV2(
-    viewModel: DataEntryScreenViewModel,
-    fieldName: String
-): String {
+fun FormDateRowV2(
+    data: DataRowState,
+    setDataValue: (String) -> Unit,
+) {
+    //var hasError by remember{ mutableStateOf(data.hasError)}
 
     // Fetching the Local Context
     val mContext = LocalContext.current
@@ -68,8 +82,9 @@ fun formDateRowV2(
     // initial values as current values (present year, month and day)
     val mDatePickerDialog = DatePickerDialog(
         mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = viewModel.formattedDateString(mDayOfMonth, mMonth, mYear)
+        { _: DatePicker, year: Int, month: Int, mDayOfMonth: Int ->
+            mDate.value = formattedDateString(mDayOfMonth, month, year)
+            setDataValue(mDate.value)
         }, mYear, mMonth, mDay
     )
 
@@ -81,31 +96,50 @@ fun formDateRowV2(
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
-            .padding(10.dp)
     ) {
-        Row(
+
+        Text(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
+                .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = Color.Gray,
+        )
+
+        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 10.dp)
                     .fillMaxWidth(),
-                text = fieldName,
-                textAlign = TextAlign.Start,
-                color = Color.Gray,
-            )
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                    text = stringResource(id = R.string.date_row_error),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Red,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = MaterialTheme.colors.primary
+                )
+            }
         }
+
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = mDate.value.ifBlank { "DDnd Month, Year" },
+                text = if (mDate.value.isBlank()) "DDnd Month, Year" else data.dataItem.dataValue,
                 color = if (mDate.value.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                 modifier = Modifier
                     .clickable(
@@ -136,6 +170,27 @@ fun formDateRowV2(
             .fillMaxWidth()
             .height(5.dp)
     )
+}
 
-    return mDate.value
+
+private val days = arrayOf("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat")
+
+private val suffix = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
+
+private val months = arrayOf(
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+)
+
+private fun formattedDateString(day: Int, month: Int, year: Int): String {
+
+    val mCalendar = Calendar.getInstance()
+
+    val day2 = day % 100
+    val suffixStr = day.toString() + suffix[if (day2 in 4..20) 0 else day2 % 10]
+    val monthStr = months[month]
+
+    mCalendar.set(year, month, day)
+    val dayOfWeek = days[mCalendar.get(Calendar.DAY_OF_WEEK) - 1]
+    return "$dayOfWeek, $suffixStr $monthStr, $year"
 }
