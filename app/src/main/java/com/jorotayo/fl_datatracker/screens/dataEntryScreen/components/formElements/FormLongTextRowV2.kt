@@ -55,7 +55,7 @@ fun FormLongTextRowV2(
     ) {
         Text(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
                 .fillMaxWidth(),
             text = data.fieldName,
             textAlign = TextAlign.Start,

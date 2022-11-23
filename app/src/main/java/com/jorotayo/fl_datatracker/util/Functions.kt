@@ -30,6 +30,9 @@ fun validateData(data: DataEntryScreenState): Pair<Boolean, DataEntryScreenState
                 0 -> {
                     dr.errorMsg = "Please enter a value for ${dr.dataItem.fieldName}"
                 }
+                1 -> {
+                    dr.errorMsg = "Please enter a value for ${dr.dataItem.fieldName}"
+                }
                 3 -> {
                     dr.errorMsg = "Please pick a Date for ${dr.dataItem.fieldName}"
                 }

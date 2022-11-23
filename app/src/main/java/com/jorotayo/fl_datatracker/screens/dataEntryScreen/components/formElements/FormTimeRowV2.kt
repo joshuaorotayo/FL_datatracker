@@ -98,7 +98,7 @@ fun FormTimeRowV2(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp),
                     text = stringResource(id = R.string.time_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,

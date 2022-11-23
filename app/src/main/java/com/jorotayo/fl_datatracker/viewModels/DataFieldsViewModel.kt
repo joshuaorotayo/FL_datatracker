@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.viewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -24,14 +25,13 @@ class DataFieldsViewModel @Inject constructor(
     val dataFieldScreenState: State<DataFieldScreenState> = _dataFieldScreenState
 
     private val _boxState = mutableStateOf(BoxState())
-    val boxState: State<BoxState> = _boxState
+    var boxState: MutableState<BoxState> = _boxState
 
     private val currentPresetName = boxState.value.currentPresetSetting?.settingStringValue
 
     private val _newDataField = mutableStateOf(NewDataFieldState(
         currentPreset = if (currentPresetName.isNullOrEmpty()) "Default" else currentPresetName
     ))
-
     var newDataField: State<NewDataFieldState> = _newDataField
 
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
@@ -107,8 +107,9 @@ class DataFieldsViewModel @Inject constructor(
             newDataFieldBox.remove(dataField)
         }
         _boxState.value = boxState.value.copy(
-            dataFieldsBox = newDataFieldBox.all
+            dataFieldsList = newDataFieldBox.all
         )
+
     }
 
     fun onRowEvent(event: RowEvent) {
@@ -116,39 +117,33 @@ class DataFieldsViewModel @Inject constructor(
             is RowEvent.EditFieldName -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.fieldName = event.value
-                boxState.value._dataFieldsBox.put(dataField)
             }
             is RowEvent.EditHintText -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.fieldHint = event.value
-                boxState.value._dataFieldsBox.put(dataField)
             }
             is RowEvent.EditRowType -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.dataFieldType = event.value
-                boxState.value._dataFieldsBox.put(dataField)
             }
             is RowEvent.EditIsEnabled -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.isEnabled = !dataField.isEnabled
-                boxState.value._dataFieldsBox.put(dataField)
             }
             is RowEvent.EditFirstValue -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.first = event.value
-                boxState.value._dataFieldsBox.put(dataField)
             }
             is RowEvent.EditSecondValue -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.second = event.value
-                boxState.value._dataFieldsBox.put(dataField)
             }
             is RowEvent.EditThirdValue -> {
                 dataField = boxState.value._dataFieldsBox.get(event.index)
                 dataField.third = event.value
-                boxState.value._dataFieldsBox.put(dataField)
             }
         }
+        boxState.value._dataFieldsBox.put(dataField)
     }
 
     fun onPresetEvent(event: PresetEvent) {
@@ -205,14 +200,16 @@ class DataFieldsViewModel @Inject constructor(
 
         val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
         newPresetBox.remove(preset)
-        for (data in _boxState.value.dataFieldsBox) {
+        for (data in boxState.value.dataFieldsList) {
             if (data.presetId != preset.presetId) {
                 newDataFieldBox += data
             }
         }
 
+        _boxState.value.dataFieldsList = newDataFieldBox
+
         _boxState.value = boxState.value.copy(
-            dataFieldsBox = newDataFieldBox,
+            dataFieldsList = newDataFieldBox,
             presetsBox = newPresetBox.all
         )
         PresetEvent.ChangePreset(firstPreset.presetName)

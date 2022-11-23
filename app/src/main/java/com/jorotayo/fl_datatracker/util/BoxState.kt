@@ -1,5 +1,7 @@
 package com.jorotayo.fl_datatracker.util
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.*
 import io.objectbox.Box
@@ -14,7 +16,9 @@ data class BoxState(
     val dataItemBox: List<DataItem> = _dataItemBox.all.toList(),
 
     val _dataFieldsBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java),
-    val dataFieldsBox: List<DataField> = _dataFieldsBox.all.toList(),
+    var dataFieldsBox: MutableState<Box<DataField>> = mutableStateOf(ObjectBox.get()
+        .boxFor(DataField::class.java)),
+    var dataFieldsList: List<DataField> = _dataFieldsBox.all.toList(),
 
     val _settingsBox: Box<Setting> = ObjectBox.get().boxFor(Setting::class.java),
     val settingsBox: List<Setting> = _settingsBox.all.toList(),

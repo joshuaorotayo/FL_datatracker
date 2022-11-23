@@ -63,9 +63,9 @@ fun DataEntryScreen(
 
     val scope = rememberCoroutineScope()
 
-    val uiState = remember { mutableStateOf(viewModel.uiState) }
+    var uiState = remember { mutableStateOf(viewModel.uiState) }
 
-    //viewModel.currentDataId.value = dataId
+    viewModel.currentDataId.value = dataId
 
     Scaffold(
         bottomBar = {
@@ -238,6 +238,36 @@ fun DataEntryScreen(
                             )
                         }
                         6 -> {
+                            data.dataItem.dataValue = FormRadioRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                }
+                            )
+                        }
+                        6 -> {
+                            data.dataItem.dataValue = FormRadioRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                }
+                            )
+                        }
+                        7 -> {
+                            data.dataItem.dataValue = FormRadioRowV2(
+                                data = data,
+                                setDataValue = {
+                                    viewModel.onEvent(DataEvent.SetDataValue(
+                                        value = it,
+                                        rowIndex = index))
+                                }
+                            )
+                        }
+                        8 -> {
                             data.dataItem.dataValue = FormRadioRowV2(
                                 data = data,
                                 setDataValue = {

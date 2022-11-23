@@ -17,16 +17,14 @@ import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
 import javax.inject.Inject
 
-class DataEntryScreenViewModel @Inject constructor(
-) : ViewModel() {
+class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
 
 
     private val _boxState = mutableStateOf(BoxState())
     val boxState: State<BoxState> = _boxState
 
-    private val _currentDataId = mutableStateOf(-1L)
-    var currentDataId: State<Long> = _currentDataId
-
+    private val _currentDataId = mutableStateOf(0.toLong())
+    var currentDataId: MutableState<Long> = _currentDataId
 
     private val _currentDataFields = mutableStateOf(listOf<DataField>())
     var currentDataFields: MutableState<List<DataField>> = _currentDataFields
@@ -40,13 +38,13 @@ class DataEntryScreenViewModel @Inject constructor(
                 _currentDataId.value = it
             }
         }*/
-    private val _uiState = mutableStateOf(DataEntryScreenState(
+    private var _uiState = mutableStateOf(DataEntryScreenState(
         dataName = dataName.value,
         dataRows = makeDataRows(),
         nameError = false
     ))
 
-    var uiState: State<DataEntryScreenState> = _uiState
+    val uiState: State<DataEntryScreenState> = _uiState
 
 
     fun onEvent(event: DataEvent) {
@@ -91,15 +89,29 @@ class DataEntryScreenViewModel @Inject constructor(
 
     private fun makeDataRows(): MutableList<DataRowState> {
         val list: MutableList<DataRowState> = ArrayList()
-        if (currentDataId.value != -1L) {
-            //if loading previously saved data
+
+        if (currentDataId.value != (0).toLong()) {
+            //Returns all enabled data fields in the data item
+            // val dataFields = dataBox.value.get(currentDataId.value).dataFields.filter { it.isEnabled }
+
             Log.i(TAG, "makeDataRows: LOAD  " + currentDataId.value)
+            // All stored fields should be enabled
+            /* currentDataFields.value = dataBox.value.get(currentDataId.value).dataFields.toList()
+
+             //uses the Data fields values to populate the Data Rows
+             for (df in currentDataFields.value) {
+                 list.add(DataRowState(
+                     dataField = df,
+                     hasError = false,
+                     errorMsg = ""
+                 ))
+             }*/
         } else {
             // If creating a new record of data to save
             // check for the current preset
             Log.i(TAG, "makeDataRows: NEW " + currentDataId.value)
             val datafields = mutableListOf<DataField>()
-            boxState.value.dataFieldsBox.forEach { datafield ->
+            boxState.value.dataFieldsList.forEach { datafield ->
                 if (datafield.presetId == boxState.value.currentPreset?.presetId) {
                     datafields += datafield
                 }
