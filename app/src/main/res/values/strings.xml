@@ -19,7 +19,18 @@
     <string name="time_row_error">Please select a Time</string>
     <string name="count_row_error">Please put in a number</string>
     <string name="row_error_description">Row Error Icon</string>
+    <string name="dropdown_icon_description">%s dropdown icon</string>
     <string name="finish_btn">Finish</string>
     <string name="hide_welcome_screen">Don\'t show on next run</string>
     <string name="next_btn">Next</string>
+    <string name="dataField_type_dropdown">Drop down arrow for Field Type Dropdown</string>
+    <string name="add_new_data_field">Add New Data Field Text</string>
+    <string name="delete_row">Delete Row</string>
+    <string name="amend_row_hint">Amend row Hint</string>
+    <string name="edit_hint_text">Edit the Hint Text</string>
+    <string name="hint_prompt">"Please enter Hint for field: %s"</string>
+    <string name="bool_placeholder">\"Boolean: \"</string>
+    <string name="amend_bool_value">Amend Boolean values</string>
+    <string name="tristate_placeholder">\"Tristate: \"</string>
+    <string name="amend_tristate_value">Amend Tri-state</string>
 </resources>

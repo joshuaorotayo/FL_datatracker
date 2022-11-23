@@ -1,7 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -320,7 +318,6 @@ fun DataFieldsScreen(
                         itemContent = { index, item ->
                             DataFieldRow(
                                 viewModel = DataFieldsViewModel(),
-                                itemIndex = item.dataFieldId,
                                 currentDataField = item,
                                 editName = {
                                     viewModel.onRowEvent(
@@ -330,20 +327,18 @@ fun DataFieldsScreen(
                                         ))
                                     item.fieldName = it
                                 },
-                                editType = {
-                                    viewModel.onRowEvent((RowEvent.EditRowType(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    )
-                                            )
-                                    )
+                                editRowType = {
+                                    viewModel.onRowEvent(
+                                        RowEvent.EditRowType(
+                                            index = item.dataFieldId,
+                                            value = it
+                                        ))
                                     item.dataFieldType = it
                                 },
                                 checkedChange = {
                                     viewModel.onRowEvent(RowEvent.EditIsEnabled(
                                         index = item.dataFieldId
-                                    )
-                                    )
+                                    ))
                                     item.isEnabled = !item.isEnabled
                                 },
                                 editHintText = {
@@ -351,17 +346,14 @@ fun DataFieldsScreen(
                                         RowEvent.EditHintText(
                                             index = item.dataFieldId,
                                             value = it
-                                        )
-                                    )
+                                        ))
                                     item.fieldHint = it
                                 },
                                 deleteIcon = {
                                     viewModel.onDataEvent(
                                         DataFieldEvent.OpenDeleteDialog(
                                             dataField = item
-                                        )
-                                    )
-                                    Log.i(TAG, "DataFieldsScreen: delete icon")
+                                        ))
                                 }
                             )
                         }

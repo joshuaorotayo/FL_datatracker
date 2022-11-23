@@ -43,7 +43,7 @@ fun formComponentTemplateV2(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 16.dp)
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
                     .fillMaxWidth(),
                 text = fieldName,
                 textAlign = TextAlign.Start,

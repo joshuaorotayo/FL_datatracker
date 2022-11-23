@@ -31,67 +31,27 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowS
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 
-//@Preview
-//@Composable
-//fun PreviewEnabledDataFieldRow() {
-//    val data = DataField(
-//        id = 0,
-//        fieldName = "Field Name",
-//        dataFieldType = 2,
-//        dataValue = "",
-//        dataList = listOf("Yes,No,NA"),
-//        isEnabled = true
-//    )
-//    DataFieldRow(
-//        dataField = data,
-//        editName = { data.fieldName = it },
-//        editType = { data.dataFieldType = it },
-//        checkedChange = { data.isEnabled = !data.isEnabled },
-//        editStateValues = { Pair(it.first, it.second) },
-//    )
-//}
-//
-//@Preview
-//@Composable
-//fun PreviewDisabledDataFieldRow() {
-//    val data = DataField(
-//        id = 0,
-//        fieldName = "Field Name",
-//        dataFieldType = 2,
-//        dataValue = "",
-//        dataList = listOf("Yes,No,NA"),
-//        isEnabled = false
-//    )
-//    DataFieldRow(
-//        dataField = data,
-//        editName = { data.fieldName = it },
-//        editType = { data.dataFieldType = it },
-//        checkedChange = { data.isEnabled = !data.isEnabled },
-//        editStateValues = { Pair(it.first, it.second) },
-//        editOptions = false,
-//        editHint = false,
-//        amendHint = {}
-//    )
-//}
 
 @Composable
 fun DataFieldRow(
     viewModel: DataFieldsViewModel,
-    itemIndex: Long,
     currentDataField: DataField,
     editName: (String) -> Unit,
     editHintText: (String) -> Unit,
-    editType: (Int) -> Unit,
+    editRowType: (Int) -> Unit,
     checkedChange: (Boolean) -> Unit,
     deleteIcon: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
+    val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
 
     val optionsMaxChars = 20
 
-    // val currentDataField = viewModel.getDataField(itemIndex)
+    // val currentDataField = viewModel.boxState.value.dataFieldsBox.get(itemIndex)
+    // var currentDataField = viewModel.boxState.value._dataFieldsBox.get(itemIndex)
+    // var currentDataField = viewModel.boxState.value.dataFieldsBox.value.get(itemIndex)
 
     val currentRowState = remember {
         mutableStateOf(
@@ -156,7 +116,7 @@ fun DataFieldRow(
                     value = text,
                     placeholder = {
                         Text(
-                            text = currentRowState.value.fieldName.ifBlank { "Add New Data Field Text" },
+                            text = currentRowState.value.fieldName.ifBlank { stringResource(R.string.add_new_data_field) },
                             color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
                             textAlign = TextAlign.Center
                         )
@@ -176,13 +136,14 @@ fun DataFieldRow(
                 ) {
                     Text(
                         modifier = Modifier,
+//                        text = items[currentRowState.value.fieldType],
                         text = items[currentDataField.dataFieldType],
                         color = MaterialTheme.colors.primary,
                         textAlign = TextAlign.Center
                     )
                     Icon(
                         imageVector = Default.ArrowDropDown,
-                        contentDescription = "Drop down arrow for Field Type Dropdown",
+                        contentDescription = stringResource(R.string.dataField_type_dropdown),
                         tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
                     )
                 }
@@ -195,16 +156,29 @@ fun DataFieldRow(
                 ) {
                     items.forEachIndexed { index, s ->
                         DropdownMenuItem(onClick = {
-                            editType(index)
+                            editRowType(index)
                             expanded = false
+                            isEditOptionsVisible.value = true
                             isEditOptionsVisible.value = false
+                            isHintVisible.value = false
                             isHintVisible.value = true
+                            currentRowState.value.fieldType = index
                         })
                         {
                             Text(
                                 text = s,
+                                modifier = Modifier.weight(3f),
                                 textAlign = TextAlign.Center,
                                 color = MaterialTheme.colors.primary
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .padding(end = 10.dp)
+                                    .weight(1f),
+                                imageVector = icons[index],
+                                contentDescription = String.format(stringResource(id = R.string.dropdown_icon_description,
+                                    items[index])),
+                                tint = MaterialTheme.colors.primary
                             )
                         }
                     }
@@ -234,15 +208,14 @@ fun DataFieldRow(
                 ) {
                     Icon(
                         imageVector = Default.Delete,
-                        contentDescription = "Delete Row",
+                        contentDescription = stringResource(R.string.delete_row),
                         tint = MaterialTheme.colors.primary
                     )
 
                 }
             }
         }
-        AnimatedVisibility(currentDataField.dataFieldType <= 1 && isHintVisible.value && !isEditOptionsVisible.value) {
-
+        AnimatedVisibility((currentRowState.value.fieldType <= 1 || currentRowState.value.fieldType >= 7) && isHintVisible.value && !isEditOptionsVisible.value) {
 
             Row(
                 modifier = Modifier
@@ -275,13 +248,13 @@ fun DataFieldRow(
                 ) {
                     Icon(
                         imageVector = Default.Edit,
-                        contentDescription = "Amend row Hint",
+                        contentDescription = stringResource(R.string.amend_row_hint),
                         tint = MaterialTheme.colors.primary,
                     )
                 }
             }
         }
-        AnimatedVisibility(visible = currentDataField.dataFieldType <= 1 && !isHintVisible.value && isEditOptionsVisible.value) {
+        AnimatedVisibility(visible = (currentRowState.value.fieldType <= 1 || currentRowState.value.fieldType >= 7) && !isHintVisible.value && isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -290,7 +263,7 @@ fun DataFieldRow(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                (if (currentDataField.fieldHint?.isBlank() == true) "Edit the Hint Text" else currentDataField.fieldHint)?.let {
+                (if (currentDataField.fieldHint?.isBlank() == true) stringResource(R.string.edit_hint_text) else currentDataField.fieldHint)?.let {
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -303,7 +276,9 @@ fun DataFieldRow(
                         value = hintText,
                         placeholder = {
                             Text(
-                                text = (if (currentRowState.value.fieldHint?.isBlank() == true) "Please enter Hint for field: ${currentRowState.value.fieldName}" else currentRowState.value.fieldHint)!!,
+                                text = (if (currentRowState.value.fieldHint?.isBlank() == true) String.format(
+                                    stringResource(R.string.hint_prompt,
+                                        currentRowState.value.fieldName)) else currentRowState.value.fieldHint!!),
                                 color = if (hintText.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold
@@ -319,7 +294,7 @@ fun DataFieldRow(
             }
         }
 
-        AnimatedVisibility(currentDataField.dataFieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
+        AnimatedVisibility(currentRowState.value.fieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -328,7 +303,7 @@ fun DataFieldRow(
             ) {
                 Row(modifier = Modifier.wrapContentWidth()) {
                     Text(
-                        text = "Boolean: ",
+                        text = stringResource(R.string.bool_placeholder),
                         color = MaterialTheme.colors.primary
                     )
                     Text(
@@ -348,13 +323,13 @@ fun DataFieldRow(
                 ) {
                     Icon(
                         imageVector = Default.Edit,
-                        contentDescription = "Amend Boolean values",
+                        contentDescription = stringResource(R.string.amend_bool_value),
                         tint = MaterialTheme.colors.primary,
                     )
                 }
             }
         }
-        AnimatedVisibility(currentDataField.dataFieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value) {
+        AnimatedVisibility(currentRowState.value.fieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -362,7 +337,7 @@ fun DataFieldRow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Tristate: ",
+                    text = stringResource(R.string.tristate_placeholder),
                     color = MaterialTheme.colors.primary
                 )
                 Text(
@@ -381,14 +356,14 @@ fun DataFieldRow(
                 ) {
                     Icon(
                         imageVector = Default.Edit,
-                        contentDescription = "Amend Tri-state",
+                        contentDescription = stringResource(R.string.amend_tristate_value),
                         tint = MaterialTheme.colors.primary,
                     )
                 }
             }
         }
 
-        AnimatedVisibility(currentDataField.dataFieldType == 2 && isEditOptionsVisible.value) {
+        AnimatedVisibility(currentRowState.value.fieldType == 2 && isEditOptionsVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -432,7 +407,7 @@ fun DataFieldRow(
                 )
             }
         }
-        AnimatedVisibility(currentDataField.dataFieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value) {
+        AnimatedVisibility(currentRowState.value.fieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
