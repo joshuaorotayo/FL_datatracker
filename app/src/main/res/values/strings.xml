@@ -29,8 +29,11 @@
     <string name="amend_row_hint">Amend row Hint</string>
     <string name="edit_hint_text">Edit the Hint Text</string>
     <string name="hint_prompt">"Please enter Hint for field: %s"</string>
-    <string name="bool_placeholder">\"Boolean: \"</string>
+    <string name="bool_placeholder">Boolean: </string>
     <string name="amend_bool_value">Amend Boolean values</string>
-    <string name="tristate_placeholder">\"Tristate: \"</string>
+    <string name="tristate_placeholder">Tristate: </string>
     <string name="amend_tristate_value">Amend Tri-state</string>
+    <string name="list_item_add_item">Add new list item</string>
+    <string name="delete_list_item">Delete list item</string>
+    <string name="add_list_item_placeholder">Item %d</string>
 </resources>

@@ -182,10 +182,8 @@ fun DataEntryScreen(
                                     viewModel.onEvent(DataEvent.SetDataValue(
                                         value = it,
                                         rowIndex = index))
-                                    //uiState.value.value.dataRows[index].dataItem.dataValue = it
                                 }
                             )
-
                         }
                         1 -> {
                             data.dataItem.dataValue = FormLongTextRowV2(
@@ -247,16 +245,6 @@ fun DataEntryScreen(
                                 }
                             )
                         }
-                        6 -> {
-                            data.dataItem.dataValue = FormRadioRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
                         7 -> {
                             data.dataItem.dataValue = FormRadioRowV2(
                                 data = data,
@@ -268,7 +256,7 @@ fun DataEntryScreen(
                             )
                         }
                         8 -> {
-                            data.dataItem.dataValue = FormRadioRowV2(
+                            data.dataItem.dataValue = FormListRowV2(
                                 data = data,
                                 setDataValue = {
                                     viewModel.onEvent(DataEvent.SetDataValue(
