@@ -15,6 +15,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
+import com.jorotayo.fl_datatracker.ui.PageTemplate
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
@@ -79,6 +80,9 @@ fun SetupNavGraph(
                 pages = pages
             )
         }
+        composable(route = Screen.Settings.route) {
+            PageTemplate(navController = navController)
+        }
         composable(route = Screen.HomeScreen.route) {
             HomeScreen(
                 viewModel = HomeScreenViewModel(),
@@ -109,5 +113,4 @@ fun SetupNavGraph(
             )
         }
     }
-
 }

@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -37,10 +36,10 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import kotlinx.coroutines.launch
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewPageTemplate() {
-    DataFieldsScreen(
+fun PreviewDataFieldsScreen() {
+    DataFieldsScreenOld(
         navController = rememberNavController(),
         viewModel = hiltViewModel()
     )
@@ -48,11 +47,10 @@ fun PreviewPageTemplate() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DataFieldsScreen(
+fun DataFieldsScreenOld(
     navController: NavController,
     viewModel: DataFieldsViewModel = hiltViewModel(),
 ) {
-
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
         Screen.HomeScreen,
@@ -71,21 +69,18 @@ fun DataFieldsScreen(
         topBar = {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.1f)
-                    .background(MaterialTheme.colors.primary))
-            {
+                    .fillMaxWidth()) {
                 Row( //Heading row
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+                        .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(id = R.string.presetShowing),
-                        color = MaterialTheme.colors.surface,
+                        color = MaterialTheme.colors.onSurface,
                         style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
@@ -173,6 +168,35 @@ fun DataFieldsScreen(
                         }
                     }
                 }
+                Row( //Heading row
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(horizontal = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = "Add/Edit Data Fields:",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h6.also { FontStyle.Italic },
+                        textAlign = TextAlign.Start
+                    )
+                    IconButton(
+                        modifier = Modifier,
+                        onClick = {
+                            viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
+                        }) {
+                        Icon(
+                            modifier = Modifier
+                                .size(48.dp),
+                            imageVector = Icons.Default.AddBox,
+                            contentDescription = "Add New Data Field",
+                            tint = MaterialTheme.colors.primary
+                        )
+                    }
+                }
             }
         },
         scaffoldState = scaffoldState,
@@ -181,207 +205,164 @@ fun DataFieldsScreen(
         },
         bottomBar = {
             BottomNavigationBar(navController, bottomNavigationItems)
-        }
+        },
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(MaterialTheme.colors.primary)
-
         ) {
-            DefaultSnackbar(
+            Column(
                 modifier = Modifier
-                    .align(Alignment.Center),
-                snackbarHostState = scaffoldState.snackbarHostState,
-                onDismiss = {
-                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
-//                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
-                        // TODO: default snackbar to show on top
-                    }
-                }
-            )
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                    .background(MaterialTheme.colors.background)
+                    .wrapContentSize()
+                    .align(Alignment.TopStart),
             ) {
-                item {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 16.dp, horizontal = 10.dp)
+                        .clip(shape = RoundedCornerShape(10.dp))
+                ) {
+                    item {
+                        AnimatedVisibility(visible = fields.isNotEmpty() && !isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                            Row(
+                                modifier = Modifier
+                                    .wrapContentHeight()
+                                    .padding(bottom = 8.dp, start = 10.dp, end = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .weight(3f),
+                                    text = "Field Name",
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .weight(3f),
+                                    text = "Field Type",
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .weight(1.5f),
+                                    text = "Enabled?",
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .weight(0.5f),
+                                    text = "",
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                            }
+                        }
+                    }
+                    item {
 
-                    Row( //Add/Edit row
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            modifier = Modifier,
-                            text = stringResource(id = R.string.add_edit_fields_label),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.h6.also { FontStyle.Italic },
-                            textAlign = TextAlign.Start
-                        )
-                        IconButton(
-                            modifier = Modifier,
-                            onClick = {
-                                viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
-                            }) {
-                            Icon(
+                        AnimatedVisibility(visible = !isAddDataFieldVisible.value.isAddDataFieldVisible && fields.isEmpty()) {
+                            Column(
                                 modifier = Modifier
-                                    .size(48.dp),
-                                imageVector = Icons.Default.AddBox,
-                                contentDescription = stringResource(id = R.string.add_field_description),
-                                tint = MaterialTheme.colors.primary
-                            )
+                                    .fillMaxSize()
+                                    .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
+                                    .clip(shape = RoundedCornerShape(10.dp)),
+                                verticalArrangement = Arrangement.SpaceAround,
+                            ) {
+                                //Show No Data Field Message
+                                NoDataField()
+                            }
                         }
                     }
-                }
-                item {
-                    AnimatedVisibility(visible = fields.isNotEmpty() && !isAddDataFieldVisible.value.isAddDataFieldVisible) {
-                        Row(
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .padding(bottom = 8.dp, start = 10.dp, end = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
+                    item {
+                        AnimatedVisibility(visible = isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                            Column(
                                 modifier = Modifier
-                                    .weight(3f),
-                                text = "Field Name",
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .weight(3f),
-                                text = "Field Type",
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .weight(1.5f),
-                                text = "Enabled?",
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .weight(0.5f),
-                                text = "",
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
-                            )
-                        }
-                    }
-                }
-                item {
-
-                    AnimatedVisibility(visible = !isAddDataFieldVisible.value.isAddDataFieldVisible && fields.isEmpty()) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                                .clip(shape = RoundedCornerShape(10.dp)),
-                            verticalArrangement = Arrangement.SpaceAround,
-                        ) {
-                            //Show No Data Field Message
-                            NoDataField()
-                        }
-                    }
-                }
-                item {
-                    AnimatedVisibility(
-                        modifier = Modifier
-                            .wrapContentHeight(),
-                        visible = isAddDataFieldVisible.value.isAddDataFieldVisible) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                                .shadow(5.dp, RoundedCornerShape(10.dp))
-                                .clip(shape = RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colors.onBackground)
-                                .wrapContentHeight(),
-                        ) {
-                            // Show New Data Field Message
-                            NewDataField(
-                                viewModel = DataFieldsViewModel(),
-                                onClick = {
-                                    scope.launch {
-                                        val msg = Validate().validateDataField(dataField = it,
-                                            viewModel = DataFieldsViewModel())
-                                        if (currentPreset != null) {
-                                            it.presetId = currentPreset.presetId
-                                        } else {
-                                            it.presetId = (1).toLong()
+                                    .fillMaxSize()
+                                    .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
+                                    .clip(shape = RoundedCornerShape(10.dp))
+                                    .background(MaterialTheme.colors.onBackground),
+                                verticalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                // Show New Data Field Message
+                                NewDataField(
+                                    viewModel = DataFieldsViewModel(),
+                                    onClick = {
+                                        scope.launch {
+                                            val msg = Validate().validateDataField(dataField = it,
+                                                viewModel = DataFieldsViewModel())
+                                            if (currentPreset != null) {
+                                                it.presetId = currentPreset.presetId
+                                            } else {
+                                                it.presetId = (1).toLong()
+                                            }
+                                            if (!msg.first) {
+                                                viewModel.onDataEvent(DataFieldEvent.SaveDataField(
+                                                    it))
+                                            }
+                                            scaffoldState.snackbarHostState.showSnackbar(
+                                                message = msg.second,
+                                                actionLabel = "",
+                                                duration = SnackbarDuration.Short
+                                            )
                                         }
-                                        if (!msg.first) {
-                                            viewModel.onDataEvent(DataFieldEvent.SaveDataField(
-                                                it))
-                                        }
-                                        scaffoldState.snackbarHostState.showSnackbar(
-                                            message = msg.second,
-                                            actionLabel = "",
-                                            duration = SnackbarDuration.Short
-                                        )
                                     }
+                                )
+                            }
+                        }
+                    }
+                    itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
+                        itemContent = { index, item ->
+                            DataFieldRow(
+                                viewModel = DataFieldsViewModel(),
+                                currentDataField = item,
+                                editName = {
+                                    viewModel.onRowEvent(
+                                        RowEvent.EditFieldName(
+                                            index = item.dataFieldId,
+                                            value = it
+                                        ))
+                                    item.fieldName = it
+                                },
+                                editRowType = {
+                                    viewModel.onRowEvent(
+                                        RowEvent.EditRowType(
+                                            index = item.dataFieldId,
+                                            value = it
+                                        ))
+                                    item.dataFieldType = it
+                                },
+                                checkedChange = {
+                                    viewModel.onRowEvent(RowEvent.EditIsEnabled(
+                                        index = item.dataFieldId
+                                    ))
+                                    item.isEnabled = !item.isEnabled
+                                },
+                                editHintText = {
+                                    viewModel.onRowEvent(
+                                        RowEvent.EditHintText(
+                                            index = item.dataFieldId,
+                                            value = it
+                                        ))
+                                    item.fieldHint = it
+                                },
+                                deleteIcon = {
+                                    viewModel.onDataEvent(
+                                        DataFieldEvent.OpenDeleteDialog(
+                                            dataField = item
+                                        ))
                                 }
                             )
                         }
-                    }
+                    )
                 }
-                itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
-                    itemContent = { index, item ->
-                        DataFieldRow(
-                            viewModel = DataFieldsViewModel(),
-                            currentDataField = item,
-                            editName = {
-                                viewModel.onRowEvent(
-                                    RowEvent.EditFieldName(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    ))
-                                item.fieldName = it
-                            },
-                            editRowType = {
-                                viewModel.onRowEvent(
-                                    RowEvent.EditRowType(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    ))
-                                item.dataFieldType = it
-                            },
-                            checkedChange = {
-                                viewModel.onRowEvent(RowEvent.EditIsEnabled(
-                                    index = item.dataFieldId
-                                ))
-                                item.isEnabled = !item.isEnabled
-                            },
-                            editHintText = {
-                                viewModel.onRowEvent(
-                                    RowEvent.EditHintText(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    ))
-                                item.fieldHint = it
-                            },
-                            deleteIcon = {
-                                viewModel.onDataEvent(
-                                    DataFieldEvent.OpenDeleteDialog(
-                                        dataField = item
-                                    ))
-                            }
-                        )
-                    }
-                )
             }
+
+
             AddPresetDialog(
                 modifier = Modifier
                     .align(Alignment.Center),
@@ -422,6 +403,18 @@ fun DataFieldsScreen(
                 scaffold = scaffoldState,
                 confirmDelete = {
                     viewModel.onDataEvent(DataFieldEvent.DeleteDataField(value = it))
+                }
+            )
+
+            DefaultSnackbar(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                snackbarHostState = scaffoldState.snackbarHostState,
+                onDismiss = {
+                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
+                        viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
+                    }
                 }
             )
         }

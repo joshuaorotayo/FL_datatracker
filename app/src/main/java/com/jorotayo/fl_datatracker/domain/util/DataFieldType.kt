@@ -10,8 +10,8 @@ enum class DataFieldType(val type: String, val image: ImageVector) {
     BOOLEAN(type = "2 Options", image = Icons.Default.ToggleOn),
     DATE(type = "Date", image = Icons.Default.EditCalendar),
     TIME(type = "Time", image = Icons.Default.Schedule),
-    COUNT(type = "Count", image = Icons.Default.Monitor),
-    TRISTATE(type = "3 Options", image = Icons.Default.Pin),
+    COUNT(type = "Count", image = Icons.Default.Pin),
+    TRISTATE(type = "3 Options", image = Icons.Default.MoreHoriz),
     IMAGE(type = "Image", image = Icons.Default.Image),
     LIST(type = "List", image = Icons.Default.List);
 

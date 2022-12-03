@@ -67,7 +67,7 @@ fun FormCountRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = Color.Gray,
+            color = MaterialTheme.colors.onSurface,
         )
 
         AnimatedVisibility(visible = data.hasError && unChanged.value) {
@@ -183,7 +183,7 @@ fun FormCountRowV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(5.dp)
+            .height(10.dp)
     )
 
     return count.value.toString()

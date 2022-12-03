@@ -112,8 +112,10 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
             Log.i(TAG, "makeDataRows: NEW " + currentDataId.value)
             val datafields = mutableListOf<DataField>()
             boxState.value.dataFieldsList.forEach { datafield ->
-                if (datafield.presetId == boxState.value.currentPreset?.presetId) {
-                    datafields += datafield
+                if ((datafield.presetId == boxState.value.currentPreset?.presetId)) {
+                    if (datafield.isEnabled) {
+                        datafields += datafield
+                    }
                 }
             }
 

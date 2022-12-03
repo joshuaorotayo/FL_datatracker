@@ -86,7 +86,7 @@ fun FormTimeRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = Color.Gray,
+            color = MaterialTheme.colors.onSurface
         )
 
         AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
@@ -152,7 +152,7 @@ fun FormTimeRowV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(5.dp)
+            .height(10.dp)
     )
 
     return mTime.value

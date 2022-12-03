@@ -13,9 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.R
 
 @Preview
 @Composable
@@ -52,16 +54,14 @@ fun NoDataField(
                 Icon(
                     modifier = Modifier
                         .size(128.dp),
-                    //  .clickable(onClick = onClick), consideration for clickable button
                     imageVector = Icons.Default.AddBox,
                     tint = MaterialTheme.colors.primary,
-                    contentDescription = "No Data Fields Message",
-
-                    )
+                    contentDescription = stringResource(id = R.string.no_data_fields_msg_icon),
+                )
                 Text(
                     modifier = Modifier
                         .padding(top = 5.dp),
-                    text = "No Data Fields",
+                    text = stringResource(id = R.string.no_data_fields_header),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.onSurface
@@ -69,7 +69,7 @@ fun NoDataField(
                 Text(
                     modifier = Modifier
                         .padding(top = 5.dp),
-                    text = "There are currently no Data Fields. Add Data Fields to begin adding Data ",
+                    text = stringResource(id = R.string.no_data_fields_msg),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h5,
                     color = Color.DarkGray

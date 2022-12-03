@@ -235,25 +235,3 @@ fun FinishButton(
         }
     }
 }
-
-/*
-@OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
-@Composable
-@Preview(showBackground = true)
-fun PreviewOnBoardingScreen() {
-    val testList = WelcomeScreenData(
-        image = Icons.Default.DataExploration,
-        title = "Add Data",
-        description = "Click the floating action button to add new Data"
-    )
-    val viewModel = hiltViewModel<WelcomeViewModel>()
-
-    WelcomeScreen(
-        navController = rememberNavController(),
-        viewModel = viewModel,
-        pages =
-        listOf(
-            testList
-        )
-    )
-}*/

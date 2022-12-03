@@ -194,7 +194,10 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun deletePresetActions(preset: Preset) {
-        val firstPreset = boxState.value.presetsBox.first()
+        _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+            isPresetDeleteDialogVisible = if (!dataFieldScreenState.value.isPresetDeleteDialogVisible.value) mutableStateOf(
+                true) else mutableStateOf(false)
+        )
 
         val newDataFieldBox = mutableListOf<DataField>()
 
@@ -206,13 +209,14 @@ class DataFieldsViewModel @Inject constructor(
             }
         }
 
-        _boxState.value.dataFieldsList = newDataFieldBox
+//        _boxState.value.dataFieldsList = newDataFieldBox
 
         _boxState.value = boxState.value.copy(
             dataFieldsList = newDataFieldBox,
             presetsBox = newPresetBox.all
         )
-        PresetEvent.ChangePreset(firstPreset.presetName)
+
+        PresetEvent.ChangePreset("Default")
 
     }
 }

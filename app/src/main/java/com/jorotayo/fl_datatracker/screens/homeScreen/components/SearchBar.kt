@@ -46,21 +46,20 @@ fun SearchBar(
     Row(
         modifier = Modifier
             .height(intrinsicSize = IntrinsicSize.Min)
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
+            .padding(16.dp)
+            .fillMaxWidth(),
     ) {
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colors.onBackground),
+                .background(MaterialTheme.colors.background),
             textStyle = MaterialTheme.typography.h6,
             value = searchState.text,
             maxLines = 1,
             placeholder = {
                 Text(
-                    modifier = Modifier
-                        .fillMaxHeight(),
+                    modifier = Modifier,
                     text = searchState.hint,
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.primary
@@ -70,11 +69,11 @@ fun SearchBar(
                 viewModel.onEvent(HomeScreenEvent.SearchItemEntered(it))
             },
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colors.onBackground,
+                backgroundColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                textColor = Color.Gray
+                textColor = Color.Black
             ),
             leadingIcon = {
                 IconButton(
@@ -93,22 +92,6 @@ fun SearchBar(
                     )
                 }
             }
-            /*     ,
-                 trailingIcon = {
-                     IconButton(onClick = {
-                         //Clear to reset search View
-                         viewModel.onEvent(HomeScreenEvent.ResetSearchBar)
-                     }) {
-                         Icon(
-                             modifier = Modifier
-                                 .size(36.dp)
-                                 .weight(1f),
-                             imageVector = Icons.Default.Clear,
-                             contentDescription = "Clear Search View",
-                             tint = MaterialTheme.colors.primary
-                         )
-                     }
-                 }*/
         )
     }
 }

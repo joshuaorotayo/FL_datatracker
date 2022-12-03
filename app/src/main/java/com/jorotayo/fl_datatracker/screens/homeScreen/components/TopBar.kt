@@ -1,6 +1,10 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -17,47 +21,53 @@ import androidx.compose.ui.unit.dp
 @Preview(showBackground = true)
 @Composable
 fun PreviewTopBar() {
-
+    TopBar(
+        toggleSearchBar = {},
+        showSettingsView = {},
+        settingsNavigate = {},
+    )
 }
 
 @Composable
 fun TopBar(
     toggleSearchBar: () -> Unit,
     showSettingsView: () -> Unit,
+    settingsNavigate: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp),
+            .padding(16.dp),
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {
+        SimpleIconButton(
+            modifier = Modifier
+                .weight(1f)
+                .clickable {
+                    settingsNavigate()
+                },
+            icon = Icons.Default.Settings,
+            tint = MaterialTheme.colors.surface,
+            contentDescription = "Settings Icon to edit in App Settings",
+            onClick = showSettingsView
+        )
         Text(
             text = "FL DataTracker",
             modifier = Modifier
                 .weight(10f),
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h4.also { FontWeight.Bold },
-            textAlign = TextAlign.Start
+            color = MaterialTheme.colors.surface,
+            style = MaterialTheme.typography.h5.also { FontWeight.Bold },
+            textAlign = TextAlign.Center
         )
-        Row(
+        SimpleIconButton(
             modifier = Modifier
-                .wrapContentSize()
-        ) {
-            SimpleIconButton(
-                modifier = Modifier,
-                icon = Icons.Default.Settings,
-                tint = MaterialTheme.colors.primary,
-                contentDescription = "Settings Icon to edit in App Settings",
-                onClick = showSettingsView
-            )
-            SimpleIconButton(
-                modifier = Modifier,
-                icon = Icons.Default.Search,
-                tint = MaterialTheme.colors.primary,
-                contentDescription = "Search Icon to toggle Search Bar and search for Data",
-                onClick = toggleSearchBar
-            )
-        }
+                .weight(1f),
+            icon = Icons.Default.Search,
+            tint = MaterialTheme.colors.surface,
+            contentDescription = "Search Icon to toggle Search Bar and search for Data",
+            onClick = toggleSearchBar
+        )
     }
+
 }

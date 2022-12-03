@@ -77,62 +77,73 @@ fun NewDataField(
         .padding(5.dp)
         .fillMaxWidth()
         .wrapContentHeight()
-        .clip(shape = RoundedCornerShape(10.dp))) {
-
-        Text(
-            modifier = Modifier
-                .padding(vertical = 5.dp, horizontal = 10.dp)
-                .fillMaxWidth(),
-            text = "New Data Field",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onSurface,
-        )
-        Text(modifier = Modifier
-            .padding(horizontal = 10.dp)
-            .fillMaxWidth(),
-            text = "Data Field Name",
-            textAlign = TextAlign.Start,
-            color = Color.Gray)
-        Text(modifier = Modifier
-            .padding(horizontal = 10.dp)
-            .fillMaxWidth(),
-            text = "This name will be formatted and capitalised on save",
-            textAlign = TextAlign.Start,
-            color = Color.Gray,
-            style = MaterialTheme.typography.caption)
-        Column {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = newDataField.fieldName,
-                onValueChange = {
-                    viewModel.onDataEvent(DataFieldEvent.AddFieldName(it))
-                },
-                colors = TextFieldDefaults.textFieldColors(unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = MaterialTheme.colors.surface,
-                    backgroundColor = Color.Transparent,
-                    textColor = MaterialTheme.colors.onSurface),
-                placeholder = {
-                    Text(text = "Add New Data Field Text",
-                        color = if (newDataField.fieldName.isBlank()) MaterialTheme.colors.primary else Color.Black,
-                        textAlign = TextAlign.Center)
-                },
-                singleLine = true,
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = {
-                    focusManager.moveFocus(FocusDirection.Down)
-                }),
-            )
-            //Max Chars count
-            Text(text = "${newDataField.fieldName.length} / $maxChar",
-                textAlign = TextAlign.End,
-                style = MaterialTheme.typography.caption,
-                color = Color.Gray,
+        .clip(shape = RoundedCornerShape(10.dp)))
+    {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp, end = 10.dp)
-                    .background(Color.Transparent))
+                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .fillMaxWidth(),
+                text = "New Data Field",
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSurface,
+            )
         }
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .fillMaxWidth(),
+                text = "Data Field Name",
+                textAlign = TextAlign.Start,
+                color = Color.Gray)
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .fillMaxWidth(),
+                text = "This name will be formatted and capitalised on save",
+                textAlign = TextAlign.Start,
+                color = Color.Gray,
+                style = MaterialTheme.typography.caption)
+        }
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = newDataField.fieldName,
+            onValueChange = {
+                viewModel.onDataEvent(DataFieldEvent.AddFieldName(it))
+            },
+            colors = TextFieldDefaults.textFieldColors(unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colors.surface,
+                backgroundColor = Color.Transparent,
+                textColor = MaterialTheme.colors.onSurface),
+            placeholder = {
+                Text(text = "Add New Data Field Text",
+                    color = if (newDataField.fieldName.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                    textAlign = TextAlign.Center)
+            },
+            singleLine = true,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = {
+                focusManager.moveFocus(FocusDirection.Down)
+            }),
+        )
+        //Max Chars count
+        Text(text = "${newDataField.fieldName.length} / $maxChar",
+            textAlign = TextAlign.End,
+            style = MaterialTheme.typography.caption,
+            color = Color.Gray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp, end = 10.dp)
+                .background(Color.Transparent))
+
         Row(modifier = Modifier
             .padding(bottom = 10.dp)
             .fillMaxWidth()) {
@@ -280,7 +291,8 @@ fun NewDataField(
                         onValueChange = {
                             if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddSecondValue(
                                 it))
-                        })
+                        }
+                    )
                 }
             }
         }
@@ -322,14 +334,15 @@ fun NewDataField(
                         onValueChange = {
                             if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddThirdValue(
                                 it))
-                        })
+                        }
+                    )
                 }
             }
         }
         Row(modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End) {
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 0.dp),
+            horizontalArrangement = Arrangement.Center) {
             Button(
                 modifier = Modifier,
                 onClick = {
@@ -343,9 +356,8 @@ fun NewDataField(
                 )
             }
         }
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(10.dp))
     }
-
-    Spacer(modifier = Modifier
-        .fillMaxWidth()
-        .height(10.dp))
 }

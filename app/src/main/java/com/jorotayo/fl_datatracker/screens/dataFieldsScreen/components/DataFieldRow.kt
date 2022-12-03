@@ -49,10 +49,6 @@ fun DataFieldRow(
 
     val optionsMaxChars = 20
 
-    // val currentDataField = viewModel.boxState.value.dataFieldsBox.get(itemIndex)
-    // var currentDataField = viewModel.boxState.value._dataFieldsBox.get(itemIndex)
-    // var currentDataField = viewModel.boxState.value.dataFieldsBox.value.get(itemIndex)
-
     val currentRowState = remember {
         mutableStateOf(
             DataFieldRowState(
@@ -91,8 +87,8 @@ fun DataFieldRow(
                 if (isSystemInDarkTheme()) {
                     if (isRowEnabled.value) MaterialTheme.colors.surface
                     else MaterialTheme.colors.primary.copy(0.1f)
-                } else if (isRowEnabled.value) MaterialTheme.colors.primary.copy(0.1f)
-                else MaterialTheme.colors.surface
+                } else if (isRowEnabled.value) MaterialTheme.colors.surface
+                else MaterialTheme.colors.primary.copy(0.1f)
             )
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {

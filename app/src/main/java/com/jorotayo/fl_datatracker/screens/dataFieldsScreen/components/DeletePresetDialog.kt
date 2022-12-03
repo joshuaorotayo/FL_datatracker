@@ -7,19 +7,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import kotlinx.coroutines.launch
 import java.util.*
@@ -28,6 +26,14 @@ import kotlin.concurrent.schedule
 @Preview
 @Composable
 fun PreviewDeletePresetDialog() {
+    val mutableValue = remember { mutableStateOf(true) }
+    DeletePresetDialog(
+        modifier = Modifier,
+        confirmDelete = {},
+        scaffold = rememberScaffoldState(),
+        state = mutableValue,
+        preset = Preset(0, "Church")
+    )
 }
 
 @Composable
@@ -44,73 +50,72 @@ fun DeletePresetDialog(
     if (state.value) {
         Card(
             shape = RoundedCornerShape(10.dp),
-            modifier = modifier.padding(10.dp, 5.dp, 10.dp, 10.dp),
+            modifier = modifier.padding(10.dp),
             elevation = 8.dp
         ) {
             Column(
                 modifier
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colors.background),
             ) {
 
-                //.......................................................................
-                Image(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Preset dialog, delete icon", // decorative
-                    contentScale = ContentScale.Fit,
-                    colorFilter = ColorFilter.tint(
-                        color = MaterialTheme.colors.primary
-                    ),
-                    modifier = Modifier
-                        .padding(top = 35.dp)
-                        .height(70.dp)
-                        .fillMaxWidth(),
-                )
-
-                Column(modifier = Modifier.padding(16.dp)) {
-
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.primary)
+                ) {
                     Text(
-                        modifier = Modifier
-                            .padding(top = 5.dp, start = 25.dp, end = 25.dp)
-                            .align(Alignment.CenterHorizontally),
-                        text = "'${preset.presetName}'",
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Text(
-                        text = "Delete Preset",
+                        text = "Delete Preset: " + preset.presetName,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(top = 5.dp)
+                            .padding(vertical = 10.dp)
                             .fillMaxWidth(),
-                        style = MaterialTheme.typography.h6,
-                        overflow = TextOverflow.Ellipsis
+                        style = MaterialTheme.typography.h5.also { FontWeight.Bold },
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colors.surface
+                    )
+                }
+                //.......................................................................
+
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp),
+                ) {
+
+                    Image(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(id = R.string.preset_dialog_icon), // decorative
+                        contentScale = ContentScale.Fit,
+                        colorFilter = ColorFilter.tint(
+                            color = MaterialTheme.colors.primary
+                        ),
+                        modifier = Modifier
+                            .height(70.dp)
+                            .fillMaxWidth(),
                     )
                     Text(
                         modifier = Modifier
                             .padding(top = 5.dp),
-                        text = "Are you sure you want to delete this Preset?",
+                        text = stringResource(id = R.string.confirm_delete_preset),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.h6
                     )
-
-                    Text(
+                    Row(
                         modifier = Modifier
-                            .padding(top = 10.dp)
-                            .align(Alignment.End),
-                        text = "Any associated DataFields will also be deleted*",
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.caption,
-                        color = MaterialTheme.colors.primary,
-                        fontWeight = FontWeight.Bold
-                    )
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 10.dp),
+                            text = stringResource(id = R.string.delete_preset_warning),
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                        )
+                    }
                 }
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface),
+                        .background(MaterialTheme.colors.primary),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
 
@@ -118,9 +123,9 @@ fun DeletePresetDialog(
                         state.value = false
                     }) {
                         Text(
-                            text = "Cancel",
+                            text = stringResource(id = R.string.cancelText),
                             fontWeight = FontWeight.Bold,
-                            color = Color.DarkGray,
+                            color = MaterialTheme.colors.surface,
                             modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
                         )
                     }
@@ -137,9 +142,9 @@ fun DeletePresetDialog(
                         }
                     }) {
                         Text(
-                            "Delete",
+                            text = stringResource(id = R.string.deleteText),
                             fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colors.surface,
                             modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
                         )
                     }

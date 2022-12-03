@@ -3,10 +3,9 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
@@ -59,12 +60,20 @@ fun FormLongTextRowV2(
                 .fillMaxWidth(),
             text = data.fieldName,
             textAlign = TextAlign.Start,
-            color = Color.Gray,
+            color = MaterialTheme.colors.onSurface,
         )
         // Data Field Name Data Capture
 
         val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
         TextField(
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = String.format(stringResource(id = R.string.edit_long_text),
+                        data.fieldName),
+                    tint = MaterialTheme.colors.primary
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .sizeIn(maxHeight = with(LocalDensity.current) {
@@ -77,6 +86,7 @@ fun FormLongTextRowV2(
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
+
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
@@ -110,7 +120,7 @@ fun FormLongTextRowV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(5.dp)
+            .height(10.dp)
     )
 
     return text.text

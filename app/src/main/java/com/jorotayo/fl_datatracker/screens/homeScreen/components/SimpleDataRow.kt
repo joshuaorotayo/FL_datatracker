@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -49,8 +50,9 @@ fun SimpleDataRow(
 
     Row(modifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 8.dp)
+        .padding(vertical = 8.dp)
         .clip(shape = RoundedCornerShape(10.dp))
+        .background(MaterialTheme.colors.surface)
         .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

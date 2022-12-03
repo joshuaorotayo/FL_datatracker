@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination
-                //val navController = rememberNavController()
                 SetupNavGraph(startDestination = screen)
             }
         }

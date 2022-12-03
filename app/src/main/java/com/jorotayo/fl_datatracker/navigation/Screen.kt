@@ -20,6 +20,11 @@ sealed class Screen(
         pageName = "Welcome"
     )
 
+    object Settings : Screen(
+        route = "settings_screen",
+        pageName = "Settings"
+    )
+
     object DataEntry : Screen(
         route = "dataEntry_screen",
         pageName = "Data Entry",

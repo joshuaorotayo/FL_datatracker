@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 
@@ -32,7 +33,7 @@ fun FormListRowV2() {
         hasError = false,
         errorMsg = ""
     )
-    FormShortTextRowV2(data = dataItem, setDataValue = {})
+    FormListRowV2(data = dataItem, setDataValue = {})
 }
 
 @Composable
@@ -41,50 +42,69 @@ fun FormListRowV2(
     setDataValue: (String) -> Unit,
 ): String {
     val number = remember { mutableStateOf(1) }
-    val listTextField = remember { mutableStateListOf<String>() }
-//    var
+    val textFields = remember { mutableStateMapOf<Int, String>() }
+    val columnHeight = remember { mutableStateOf(150F) }
 
-    Column(
-        modifier = Modifier
-            .padding(5.dp)
-            .fillMaxWidth()
-//            .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
+    LazyColumn(modifier = Modifier
+        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+        .fillMaxWidth()
+        .height(Dp(columnHeight.value))
+        .clip(shape = RoundedCornerShape(10.dp))
+        .background(MaterialTheme.colors.surface)) {
+        item {
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-                    .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = Color.Gray,
-            )
-        }
-        //Button Data capture
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-
-        ) {
-            items(number.value) { index ->
-                ListItem(
-                    changeValue = {
-                        listTextField[index] = it
-                        setDataValue(listTextField.toString())
-                    },
-                    addItem = { number.value++ },
-                    deleteItem = { number.value-- },
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                        .fillMaxWidth(),
+                    text = data.dataItem.fieldName,
+                    textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.onSurface,
                 )
             }
         }
+        item {
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 0.dp)
+                        .fillMaxWidth(),
+                    text = "Empty values will be removed on save",
+                    textAlign = TextAlign.Start,
+                    color = Color.DarkGray,
+                    style = MaterialTheme.typography.caption
+                )
+            }
+        }
+
+        items(number.value) { index ->
+            ListItem(
+                changeValue = { it ->
+                    textFields[index] = it
+                    val list = textFields.values.filter { string -> string.isNotBlank() }
+                },
+                addItem = {
+                    number.value++
+                    columnHeight.value += 70
+                },
+                deleteItem = {
+                    number.value--
+                    columnHeight.value -= 70
+                },
+                lastItem = index == number.value - 1,
+                index = index
+            )
+        }
     }
+
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

@@ -3,9 +3,7 @@ package com.jorotayo.fl_datatracker.screens.homeScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,9 +43,32 @@ fun HomeScreen(
 
     val testList = viewModel.testRowItemBox
 
-    systemUiController.setStatusBarColor(MaterialTheme.colors.background)
+    systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
 
     Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.1f)
+                    .background(MaterialTheme.colors.primary)
+            ) {
+                // Top Bar/Search Bar Area
+                AnimatedVisibility(visible = uiState.isSearchVisible) {
+                    SearchBar(
+                        viewModel = viewModel,
+                        searchState = uiState
+                    )
+                }
+                AnimatedVisibility(visible = !uiState.isSearchVisible) {
+                    TopBar(
+                        toggleSearchBar = { viewModel.onEvent(HomeScreenEvent.ToggleSearchBar) },
+                        showSettingsView = { viewModel.onEvent(HomeScreenEvent.ShowSettingsView) },
+                        settingsNavigate = { navController.navigate(Screen.Settings.route) }
+                    )
+                }
+            }
+        },
         bottomBar = {
             BottomNavigationBar(navController, bottomNavigationItems)
         },
@@ -59,8 +80,9 @@ fun HomeScreen(
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
+                .fillMaxSize()
+                .background(color = MaterialTheme.colors.primary)
         ) {
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,
@@ -68,29 +90,19 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
             )
-
             //...main content
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.Top
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .clip(shape = RoundedCornerShape(topEnd = 40.dp, topStart = 40.dp))
+                    .background(color = MaterialTheme.colors.background)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.background)
-                        .height(20.dp)
-                )
-                {
-                    //No Content in Row
-                }
                 // Item Count Header
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 90.dp, start = 20.dp)
+                        .padding(top = 16.dp, start = 20.dp)
                 )
                 {
                     Text(
@@ -105,7 +117,6 @@ fun HomeScreen(
                         .padding(16.dp)
                         .fillMaxSize()
                         .clip(shape = RoundedCornerShape(20.dp))
-                        .background(MaterialTheme.colors.onBackground)
                 ) {
                     Column(
                         modifier = Modifier
@@ -129,35 +140,12 @@ fun HomeScreen(
                         }
                     }
                 }
-
                 DeleteDataDialog(modifier = Modifier,
                     confirmDelete = { viewModel.onEvent(HomeScreenEvent.DeleteDataItem) },
                     scaffold = scaffoldState,
                     state = uiState.isDeleteDialogVisible,
                     data = uiState.deletedItem
                 )
-            }
-
-            // Top Bar/Search Bar Area
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colors.background)
-                    .padding(top = 40.dp)
-            )
-            {
-                AnimatedVisibility(visible = uiState.isSearchVisible) {
-                    SearchBar(
-                        viewModel = viewModel,
-                        searchState = uiState
-                    )
-                }
-                AnimatedVisibility(visible = !uiState.isSearchVisible) {
-                    TopBar(
-                        toggleSearchBar = { viewModel.onEvent(HomeScreenEvent.ToggleSearchBar) },
-                        showSettingsView = { viewModel.onEvent(HomeScreenEvent.ShowSettingsView) }
-                    )
-                }
             }
         }
     }

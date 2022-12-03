@@ -63,7 +63,7 @@ fun FormShortTextRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = Color.Gray,
+            color = MaterialTheme.colors.onSurface,
         )
 
         //TextField Data capture
@@ -128,7 +128,7 @@ fun FormShortTextRowV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(5.dp)
+            .height(10.dp)
     )
 
     return text.text

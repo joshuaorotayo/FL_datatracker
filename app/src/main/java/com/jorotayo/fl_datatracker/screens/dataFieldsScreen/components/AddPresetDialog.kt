@@ -10,13 +10,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 
 @Preview
 @Composable
@@ -37,7 +40,8 @@ fun AddPresetDialog(
     addPreset: (String) -> Unit,
 ) {
 
-    val presetText = remember { mutableStateOf("") }
+    val (presetText, setText) = remember { mutableStateOf(TextFieldValue("")) }
+    val maxChar = 30
 
     if (state.value) {
         Card(
@@ -47,17 +51,25 @@ fun AddPresetDialog(
         ) {
             Column(
                 modifier
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colors.surface),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = stringResource(R.string.addPresetHeader),
-                    textAlign = TextAlign.Center,
+                Row(
                     modifier = Modifier
-                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.h6
-                )
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.primary)
+                ) {
+
+                    Text(
+                        text = stringResource(R.string.addPresetHeader),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(vertical = 10.dp)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.surface
+                    )
+                }
                 Row(
                     Modifier
                         .fillMaxWidth(0.9f)
@@ -65,9 +77,10 @@ fun AddPresetDialog(
                 ) {
                     TextField(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .clip(shape = RoundedCornerShape(12.dp)),
                         textStyle = MaterialTheme.typography.h6,
-                        value = presetText.value,
+                        value = presetText,
                         maxLines = 1,
                         placeholder = {
                             Text(
@@ -80,22 +93,32 @@ fun AddPresetDialog(
                             )
                         },
                         onValueChange = {
-                            presetText.value = it
+
+                            setText(it.ofMaxLength(maxLength = maxChar))
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = MaterialTheme.colors.surface,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
-                            textColor = Color.Gray
+                            textColor = MaterialTheme.colors.onSurface
                         )
                     )
                 }
+                //Max Chars count
+                Text(text = "${presetText.text.length} / $maxChar",
+                    textAlign = TextAlign.End,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp, end = 10.dp)
+                        .background(Color.Transparent)
+                )
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp)
-                        .background(MaterialTheme.colors.surface),
+                        .background(MaterialTheme.colors.primary),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
 
@@ -105,19 +128,18 @@ fun AddPresetDialog(
                         Text(
                             text = stringResource(R.string.cancelText),
                             fontWeight = FontWeight.Bold,
-                            color = Color.DarkGray,
+                            color = MaterialTheme.colors.surface,
                             modifier = Modifier.padding(vertical = 5.dp)
                         )
                     }
                     TextButton(onClick = {
                         state.value = false
-                        addPreset(presetText.value)
-                        // confirmDelete(dataField)
+                        addPreset(presetText.text)
                     }) {
                         Text(
                             text = stringResource(R.string.addPresetBtn),
                             fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colors.surface,
                             modifier = Modifier.padding(vertical = 5.dp)
                         )
                     }

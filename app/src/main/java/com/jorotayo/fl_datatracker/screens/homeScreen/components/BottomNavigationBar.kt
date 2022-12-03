@@ -1,15 +1,16 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -27,13 +28,17 @@ fun BottomNavigationBar(
     items: List<Screen>
 ) {
     BottomNavigation(
-        modifier = Modifier.fillMaxWidth(),
-        backgroundColor = MaterialTheme.colors.background
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clip(shape = RoundedCornerShape(16.dp)),
     ) {
         val currentRoute = sanitiseRoute(navController)
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.surface),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             items.forEach { screen ->
@@ -48,11 +53,11 @@ fun BottomNavigationBar(
                                     modifier = Modifier,
                                     imageVector = it,
                                     contentDescription = screen.pageDescription,
-                                    tint = if (screen.route.contains(currentRoute)) MaterialTheme.colors.primary else Color.Gray,
+                                    tint = if (screen.route.contains(currentRoute)) MaterialTheme.colors.primary else Color.LightGray,
                                 )
                                 Text(
                                     text = screen.pageName,
-                                    color = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.Gray
+                                    color = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.LightGray
                                 )
                             }
                         }

@@ -97,6 +97,6 @@ fun FormNameHeader(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(5.dp)
+            .height(10.dp)
     )
 }
