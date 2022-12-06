@@ -40,5 +40,5 @@ data class BoxState(
 
     val filteredFields: List<DataField> = if (queryFiltered?.find()
             ?.toList() != null
-    ) queryFiltered?.find()?.toList() as List<DataField> else listOf(),
+    ) queryFiltered.find().toList() else listOf(),
 )

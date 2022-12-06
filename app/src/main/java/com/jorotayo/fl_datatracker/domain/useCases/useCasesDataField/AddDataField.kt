@@ -1,19 +1,22 @@
-package com.jorotayo.fl_datatracker.domain.useCases
+package com.jorotayo.fl_datatracker.domain.useCases.useCasesDataField
 
-import com.jorotayo.fl_datatracker.domain.data.Repository
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
+import com.jorotayo.fl_datatracker.domain.repository.DataFieldRepository
 
 class AddDataField(
-    private val repository: Repository,
+    private val repository: DataFieldRepository,
 ) {
-    suspend operator fun invoke(dataField: DataField) {
+
+    @Throws(InvalidDataFieldException::class)
+    operator fun invoke(dataField: DataField) {
         var isError = false
         var msg = ""
 
         if (dataField.fieldName.isBlank()) {
             isError = true
             msg = "Please Enter Field Name for Data Field"
-        } else if (repository.getDataFieldNames()?.contains(dataField.fieldName) == true) {
+        } else if (repository.getDataFieldNames().contains(dataField.fieldName)) {
             isError = true
             msg = "Data Field Name '${dataField.fieldName}' already in use, please enter a new name"
         }
@@ -29,8 +32,10 @@ class AddDataField(
                 msg = "Please Enter a value for all 3 Fields"
             }
         }
-        if (!isError) {
-
+        if (isError) {
+            throw InvalidDataFieldException("Invalid Data Field $msg")
+        } else {
+            repository.insertDataField(dataField)
         }
     }
 }

@@ -6,6 +6,8 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.Preset
 
 data class DataFieldScreenState(
+    val dataFields: List<DataField> = emptyList(),
+    val presetList: List<Preset> = emptyList(),
     val isAddDataFieldVisible: Boolean = false,
     val isDeleteDialogVisible: MutableState<Boolean> = mutableStateOf(false),
     val isAddPresetDialogVisible: MutableState<Boolean> = mutableStateOf(false),

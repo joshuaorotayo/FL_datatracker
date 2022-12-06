@@ -40,7 +40,7 @@ fun PreviewFormImageRowV2() {
             presetId = 0,
             dataItemId = 0,
             fieldName = "Short Text Row",
-            fieldHint = "Short Text row example...",
+            fieldDescription = "Short Text row example...",
             dataId = 1
         ),
         hasError = false,

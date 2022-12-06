@@ -90,7 +90,7 @@
     },
     {
       "id": "3:556225883690765549",
-      "lastPropertyId": "11:2007585576302692313",
+      "lastPropertyId": "12:7945949612690841836",
       "name": "DataItem",
       "properties": [
         {
@@ -140,13 +140,13 @@
           "type": 1
         },
         {
-          "id": "10:7304381431021081684",
-          "name": "fieldHint",
+          "id": "11:2007585576302692313",
+          "name": "dataValue",
           "type": 9
         },
         {
-          "id": "11:2007585576302692313",
-          "name": "dataValue",
+          "id": "12:7945949612690841836",
+          "name": "fieldDescription",
           "type": 9
         }
       ],
@@ -227,7 +227,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    7304381431021081684
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

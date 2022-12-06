@@ -130,7 +130,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                         second = dataField.second,
                         third = dataField.third,
                         isEnabled = dataField.isEnabled,
-                        fieldHint = dataField.fieldHint,
+                        fieldDescription = dataField.fieldHint,
                         dataValue = ""
                     )
                 )
@@ -153,7 +153,7 @@ private fun saveDataItems(dataId: Long, formData: DataEntryScreenState) {
             second = item.dataItem.second,
             third = item.dataItem.third,
             isEnabled = item.dataItem.isEnabled,
-            fieldHint = item.dataItem.fieldHint,
+            fieldDescription = item.dataItem.fieldDescription,
             dataValue = item.dataItem.dataValue,
         )
         BoxState()._dataItemBox.put(newDataItem)

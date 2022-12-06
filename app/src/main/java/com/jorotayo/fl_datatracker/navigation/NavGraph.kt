@@ -4,6 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,7 +19,6 @@ import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.ui.PageTemplate
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
-import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 
@@ -109,7 +110,8 @@ fun SetupNavGraph(
         composable(route = Screen.DataFieldsScreen.route) {
             DataFieldsScreen(
                 navController = navController,
-                viewModel = DataFieldsViewModel()
+                viewModel = hiltViewModel(),
+                context = LocalContext.current
             )
         }
     }

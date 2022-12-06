@@ -16,6 +16,6 @@ data class DataItem(
     var second: String = "",
     var third: String = "",
     var isEnabled: Boolean = true,
-    var fieldHint: String? = "Enter value for $fieldName",
+    var fieldDescription: String? = "Enter value for $fieldName",
     var dataValue: String = "",
 )

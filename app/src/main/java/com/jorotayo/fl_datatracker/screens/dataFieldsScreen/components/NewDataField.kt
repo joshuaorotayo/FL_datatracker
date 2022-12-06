@@ -51,6 +51,8 @@ fun NewDataField(
     // Dropdown Menu
     var expanded by remember { mutableStateOf(false) }
 
+    rememberCoroutineScope()
+
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
     val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
 
@@ -63,15 +65,17 @@ fun NewDataField(
 
     val newDataField = viewModel.newDataField.value
 
-    val newData = DataField(dataFieldId = 0,
-        presetId = 0,
-        fieldName = newDataField.fieldName,
-        dataFieldType = newDataField.fieldType,
-        fieldHint = newDataField.fieldHint,
-        first = newDataField.firstValue,
-        second = newDataField.secondValue,
-        third = newDataField.thirdValue,
-        isEnabled = true)
+    val newData = newDataField.let {
+        DataField(dataFieldId = 0,
+            presetId = 0,
+            fieldName = it.fieldName,
+            dataFieldType = newDataField.fieldType,
+            fieldHint = newDataField.fieldHint,
+            first = newDataField.firstValue,
+            second = newDataField.secondValue,
+            third = newDataField.thirdValue,
+            isEnabled = true)
+    }
 
     Column(modifier = Modifier
         .padding(5.dp)

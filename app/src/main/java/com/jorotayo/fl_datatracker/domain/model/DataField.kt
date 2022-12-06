@@ -21,3 +21,4 @@ data class DataField(
     var fieldHint: String? = "Enter value for $fieldName",
 )
 
+class InvalidDataFieldException(message: String) : Exception(message)

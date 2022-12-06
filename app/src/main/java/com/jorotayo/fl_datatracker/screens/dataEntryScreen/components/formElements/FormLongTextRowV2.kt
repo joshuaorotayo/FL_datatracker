@@ -28,7 +28,7 @@ fun PreviewFormLongTextRowV2() {
         dataItemId = 0,
         presetId = 0,
         fieldName = "Data Field for Long Text Example",
-        fieldHint = "Data capture long text row example...",
+        fieldDescription = "Data capture long text row example...",
         dataId = 1
     )
     FormLongTextRowV2(
@@ -95,7 +95,7 @@ fun FormLongTextRowV2(
             ),
             maxLines = 4,
             placeholder = {
-                (if (data.fieldHint?.isBlank() == true) data.fieldHint else "Please enter content for field: ${data.fieldName}")?.let {
+                (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else "Please enter content for field: ${data.fieldName}")?.let {
                     Text(
                         text = it,
                         color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,

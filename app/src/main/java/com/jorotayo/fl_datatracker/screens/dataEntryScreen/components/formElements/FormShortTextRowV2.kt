@@ -31,7 +31,7 @@ fun PreviewFormShortTextRowV2() {
             presetId = 0,
             dataItemId = 0,
             fieldName = "Short Text Row",
-            fieldHint = "Short Text row example...",
+            fieldDescription = "Short Text row example...",
             dataId = 1
         ),
         hasError = false,
@@ -97,7 +97,7 @@ fun FormShortTextRowV2(
             placeholder = {
                 Text(
                     text = (if (data.hasError) "Please enter a value for text field: ${data.dataItem.fieldName}"
-                    else if (data.dataItem.fieldHint?.isBlank() == true) "Short Text Row Hint..." else data.dataItem.fieldHint)!!,
+                    else if (data.dataItem.fieldDescription?.isBlank() == true) "Short Text Row Hint..." else data.dataItem.fieldDescription)!!,
                     color = if (data.hasError) Color.Red else MaterialTheme.colors.primary,
                     textAlign = TextAlign.Center
                 )

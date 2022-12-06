@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +37,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Preview
@@ -42,7 +45,8 @@ import kotlinx.coroutines.launch
 fun PreviewPageTemplate() {
     DataFieldsScreen(
         navController = rememberNavController(),
-        viewModel = hiltViewModel()
+        viewModel = hiltViewModel(),
+        context = LocalContext.current
     )
 }
 
@@ -51,7 +55,9 @@ fun PreviewPageTemplate() {
 fun DataFieldsScreen(
     navController: NavController,
     viewModel: DataFieldsViewModel = hiltViewModel(),
-) {
+    context: Context,
+
+    ) {
 
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
@@ -63,9 +69,28 @@ fun DataFieldsScreen(
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val isAddDataFieldVisible = viewModel.dataFieldScreenState
-    val presets = viewModel.boxState.value.presetsBox
-    val currentPreset = viewModel.boxState.value.currentPreset
-    val fields = viewModel.boxState.value.filteredFields
+    val fields = viewModel.dataFieldScreenState.value.dataFields
+    val presets = viewModel.dataFieldScreenState.value.presetList
+    val currentPreset = viewModel.currentPreset
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is DataFieldsViewModel.UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+                DataFieldsViewModel.UiEvent.SaveDataField -> {
+                    viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Data Field Saved!"
+                    )
+                }
+            }
+        }
+    }
+
 
     Scaffold(
         topBar = {
@@ -100,12 +125,14 @@ fun DataFieldsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            modifier = Modifier,
-                            text = (if (presets.isEmpty()) "No Presets" else currentPreset?.presetName)!!,
-                            color = MaterialTheme.colors.primary,
-                            textAlign = TextAlign.Center
-                        )
+                        if (currentPreset != null) {
+                            Text(
+                                modifier = Modifier,
+                                text = (if (presets.isEmpty()) "No Presets" else currentPreset.presetName),
+                                color = MaterialTheme.colors.primary,
+                                textAlign = TextAlign.Center
+                            )
+                        }
 
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
@@ -140,7 +167,7 @@ fun DataFieldsScreen(
                                         Icon(
                                             modifier = Modifier.clickable(
                                                 onClick = {
-                                                    if (viewModel.boxState.value.presetsBox.size >= 2) {
+                                                    if (presets.size >= 2) {
                                                         viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
                                                             value = preset))
                                                     } else {
@@ -190,18 +217,6 @@ fun DataFieldsScreen(
                 .background(MaterialTheme.colors.primary)
 
         ) {
-            DefaultSnackbar(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                snackbarHostState = scaffoldState.snackbarHostState,
-                onDismiss = {
-                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
-//                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
-                        // TODO: default snackbar to show on top
-                    }
-                }
-            )
 
             LazyColumn(
                 modifier = Modifier
@@ -229,7 +244,9 @@ fun DataFieldsScreen(
                         IconButton(
                             modifier = Modifier,
                             onClick = {
-                                viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
+                                scope.launch {
+                                    viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
+                                }
                             }) {
                             Icon(
                                 modifier = Modifier
@@ -312,25 +329,13 @@ fun DataFieldsScreen(
                         ) {
                             // Show New Data Field Message
                             NewDataField(
-                                viewModel = DataFieldsViewModel(),
+                                viewModel = hiltViewModel(),
                                 onClick = {
+                                    if (currentPreset != null) {
+                                        it.presetId = currentPreset.presetId
+                                    }
                                     scope.launch {
-                                        val msg = Validate().validateDataField(dataField = it,
-                                            viewModel = DataFieldsViewModel())
-                                        if (currentPreset != null) {
-                                            it.presetId = currentPreset.presetId
-                                        } else {
-                                            it.presetId = (1).toLong()
-                                        }
-                                        if (!msg.first) {
-                                            viewModel.onDataEvent(DataFieldEvent.SaveDataField(
-                                                it))
-                                        }
-                                        scaffoldState.snackbarHostState.showSnackbar(
-                                            message = msg.second,
-                                            actionLabel = "",
-                                            duration = SnackbarDuration.Short
-                                        )
+                                        viewModel.onDataEvent(DataFieldEvent.SaveDataField(it))
                                     }
                                 }
                             )
@@ -340,7 +345,7 @@ fun DataFieldsScreen(
                 itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
                     itemContent = { index, item ->
                         DataFieldRow(
-                            viewModel = DataFieldsViewModel(),
+                            viewModel = hiltViewModel(),
                             currentDataField = item,
                             editName = {
                                 viewModel.onRowEvent(
@@ -382,6 +387,7 @@ fun DataFieldsScreen(
                     }
                 )
             }
+
             AddPresetDialog(
                 modifier = Modifier
                     .align(Alignment.Center),
@@ -421,7 +427,22 @@ fun DataFieldsScreen(
                 dataField = viewModel.dataFieldScreenState.value.deletedDataField,
                 scaffold = scaffoldState,
                 confirmDelete = {
-                    viewModel.onDataEvent(DataFieldEvent.DeleteDataField(value = it))
+                    scope.launch {
+                        viewModel.onDataEvent(DataFieldEvent.DeleteDataField(value = it))
+                    }
+                }
+            )
+
+            DefaultSnackbar(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                snackbarHostState = scaffoldState.snackbarHostState,
+                onDismiss = {
+                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
+//                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
+                        // TODO: default snackbar to show on top
+                    }
                 }
             )
         }

@@ -27,7 +27,7 @@ fun FormListRowV2() {
             presetId = 0,
             dataItemId = 0,
             fieldName = "List Row",
-            fieldHint = "List Type row example...",
+            fieldDescription = "List Type row example...",
             dataId = 1
         ),
         hasError = false,
