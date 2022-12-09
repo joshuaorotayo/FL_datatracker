@@ -38,12 +38,12 @@ class DataFieldRepositoryImpl : DataFieldRepository {
         return dataFieldBox.get(dataFieldId)
     }
 
-    override fun getDataFieldsByPresetId(presetId: Long): Flow<DataField> {
-        return dataFieldBox.query(DataField_.presetId.equal(presetId)).build().find().asFlow()
+    override fun getDataFieldsByPresetId(presetId: Long): List<DataField> {
+        return dataFieldBox.query(DataField_.presetId.equal(presetId)).build().find()
     }
 
-    override fun getDataFieldsByEnabled(): Flow<DataField> {
-        return dataFieldBox.query(DataField_.isEnabled.equal(true)).build().find().asFlow()
+    override fun getDataFieldsByEnabled(): List<DataField> {
+        return dataFieldBox.query(DataField_.isEnabled.equal(true)).build().find()
     }
 
     override fun getDataFieldNames(): List<String> {

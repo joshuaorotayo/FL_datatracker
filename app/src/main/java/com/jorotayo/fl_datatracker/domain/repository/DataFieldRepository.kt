@@ -13,9 +13,9 @@ interface DataFieldRepository {
 
     fun getDataFieldById(dataFieldId: Long): DataField
 
-    fun getDataFieldsByPresetId(presetId: Long): Flow<DataField>
+    fun getDataFieldsByPresetId(presetId: Long): List<DataField>
 
-    fun getDataFieldsByEnabled(): Flow<DataField>
+    fun getDataFieldsByEnabled(): List<DataField>
 
     fun getDataFieldNames(): List<String>
 

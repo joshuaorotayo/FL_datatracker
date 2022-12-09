@@ -8,7 +8,7 @@ interface SettingsRepository {
 
     fun getSettingById(settingId: Long): Setting
 
-    fun getSettingByName(settingName: String): Setting?
+    fun getSettingByName(settingName: String): Setting
 
     fun getSettingsByBool(settingBool: Boolean): List<Setting>
 

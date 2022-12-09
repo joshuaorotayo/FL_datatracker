@@ -2,19 +2,23 @@ package com.jorotayo.fl_datatracker.screens.homeScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.*
@@ -22,7 +26,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
@@ -41,16 +45,16 @@ fun HomeScreen(
 
     val systemUiController = rememberSystemUiController()
 
-    val testList = viewModel.testRowItemBox
-
     systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
+    val headerColours =
+        if (isSystemInDarkTheme()) MaterialTheme.colors.onPrimary else MaterialTheme.colors.primary
 
     Scaffold(
         topBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.1f)
+                    .fillMaxHeight(0.2f)
                     .background(MaterialTheme.colors.primary)
             ) {
                 // Top Bar/Search Bar Area
@@ -95,20 +99,22 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .clip(shape = RoundedCornerShape(topEnd = 40.dp, topStart = 40.dp))
+                    .clip(shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp))
                     .background(color = MaterialTheme.colors.background)
             ) {
                 // Item Count Header
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp, start = 20.dp)
+                        .padding(top = 24.dp, bottom = 16.dp, end = 16.dp, start = 16.dp)
                 )
                 {
                     Text(
-                        "${uiState.dataList.size} items showing",
+                        text = pluralStringResource(id = R.plurals.items_showing_header,
+                            count = uiState.dataList.size,
+                            uiState.dataList.size),
                         style = MaterialTheme.typography.h5,
-                        color = MaterialTheme.colors.primary
+                        color = headerColours
                     )
                 }
                 // Items example

@@ -6,7 +6,7 @@ import com.jorotayo.fl_datatracker.domain.repository.PresetRepository
 class GetPresetByPresetName(
     private val repository: PresetRepository,
 ) {
-    operator fun invoke(presetName: String): Preset? {
+    operator fun invoke(presetName: String): Preset {
         return repository.getPresetByPresetName(presetName)
     }
 }

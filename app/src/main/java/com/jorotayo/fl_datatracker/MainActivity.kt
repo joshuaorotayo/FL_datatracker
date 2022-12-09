@@ -9,15 +9,16 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.Setting
+import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
 import com.jorotayo.fl_datatracker.navigation.SetupNavGraph
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.viewModels.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.objectbox.Box
 import javax.inject.Inject
+
 
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -27,9 +28,11 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var splashViewModel: SplashViewModel
 
-    private lateinit var dataFieldBox: Box<DataField>
-    private lateinit var settingBox: Box<Setting>
-    private lateinit var presetBox: Box<Preset>
+    @Inject
+    lateinit var settingsUseCases: SettingsUseCases
+
+    @Inject
+    lateinit var presetUseCases: PresetUseCases
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -41,9 +44,38 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        dataFieldBox = ObjectBox.get().boxFor(DataField::class.java)
-        settingBox = ObjectBox.get().boxFor(Setting::class.java)
-        presetBox = ObjectBox.get().boxFor(Preset::class.java)
+
+        val onBoardingCompleteSetting = Setting(
+            settingId = 0,
+            settingName = "isOnBoardingComplete",
+            settingBoolValue = false,
+            settingStringValue = ""
+        )
+
+        val settingsList = settingsUseCases.getSettingsList()
+        if (!settingsList.contains(onBoardingCompleteSetting))
+            settingsUseCases.addSetting(
+                onBoardingCompleteSetting
+            )
+
+        val presetList = presetUseCases.getPresetList()
+        if (presetList.isEmpty()) {
+            presetUseCases.addPreset(
+                Preset(
+                    presetId = 1,
+                    presetName = "Default"
+                )
+            )
+
+            settingsUseCases.addSetting(
+                Setting(
+                    settingId = 1,
+                    settingName = "currentPreset",
+                    settingBoolValue = false,
+                    settingStringValue = "Default"
+                )
+            )
+        }
 
         setContent {
             FL_DatatrackerTheme {

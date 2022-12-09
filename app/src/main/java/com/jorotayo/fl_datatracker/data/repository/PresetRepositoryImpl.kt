@@ -18,8 +18,10 @@ class PresetRepositoryImpl : PresetRepository {
         return presetBox.get(presetId)
     }
 
-    override fun getPresetByPresetName(presetName: String): Preset? {
-        return presetBox.query(Preset_.presetName.equal(presetName)).build().findFirst()
+    override fun getPresetByPresetName(presetName: String): Preset {
+        return presetBox.query(Preset_.presetName.equal(presetName)).build().findFirst() ?: Preset(
+            presetId = 0,
+            presetName = "Default")
     }
 
     override fun addPreset(preset: Preset) {

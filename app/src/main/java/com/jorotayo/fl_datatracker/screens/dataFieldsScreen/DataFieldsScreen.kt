@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -56,7 +57,6 @@ fun DataFieldsScreen(
     navController: NavController,
     viewModel: DataFieldsViewModel = hiltViewModel(),
     context: Context,
-
     ) {
 
     val bottomNavigationItems = listOf(
@@ -65,13 +65,16 @@ fun DataFieldsScreen(
         Screen.DataEntry
     )
 
+    val headerColours =
+        if (isSystemInDarkTheme()) MaterialTheme.colors.onPrimary else MaterialTheme.colors.primary
+
     var presetExpanded by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val isAddDataFieldVisible = viewModel.dataFieldScreenState
     val fields = viewModel.dataFieldScreenState.value.dataFields
     val presets = viewModel.dataFieldScreenState.value.presetList
-    val currentPreset = viewModel.currentPreset
+    val currentPreset = viewModel.dataFieldScreenState.value.currentPreset
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -97,20 +100,20 @@ fun DataFieldsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.1f)
+                    .fillMaxHeight(0.2f)
                     .background(MaterialTheme.colors.primary))
             {
                 Row( //Heading row
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+                        .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(id = R.string.presetShowing),
-                        color = MaterialTheme.colors.surface,
+                        color = MaterialTheme.colors.onPrimary,
                         style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
@@ -122,22 +125,19 @@ fun DataFieldsScreen(
                             .clip(shape = RoundedCornerShape(10.dp))
                             .background(MaterialTheme.colors.onBackground)
                             .padding(5.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (currentPreset != null) {
-                            Text(
-                                modifier = Modifier,
-                                text = (if (presets.isEmpty()) "No Presets" else currentPreset.presetName),
-                                color = MaterialTheme.colors.primary,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-
+                        Text(
+                            modifier = Modifier.padding(end = 5.dp),
+                            text = currentPreset!!.presetName,
+                            color = headerColours,
+                            textAlign = TextAlign.Center
+                        )
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
                             contentDescription = "Drop down arrow for Preset Dropdown",
-                            tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
                         )
                         DropdownMenu(
                             expanded = presetExpanded,
@@ -157,33 +157,39 @@ fun DataFieldsScreen(
                                 {
                                     Row(modifier = Modifier
                                         .fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween) {
+                                        horizontalArrangement = Arrangement.SpaceBetween)
+                                    {
                                         Text(
                                             text = preset.presetName,
                                             textAlign = TextAlign.Center,
                                             color = MaterialTheme.colors.onSurface,
                                             overflow = TextOverflow.Ellipsis
                                         )
-                                        Icon(
-                                            modifier = Modifier.clickable(
-                                                onClick = {
-                                                    if (presets.size >= 2) {
+                                        // Default shouldn't show the 'x'
+                                        if (index > 0) {
+                                            Icon(
+                                                modifier = Modifier.clickable(
+                                                    onClick = {
                                                         viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
                                                             value = preset))
-                                                    } else {
-                                                        scope.launch {
-                                                            scaffoldState.snackbarHostState.showSnackbar(
-                                                                message = "At least one preset is needed"
-                                                            )
-                                                        }
-
+                                                        /*
+                                                        if (presets.size >= 2) {
+                                                            viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
+                                                                value = preset))
+                                                        } else {
+                                                            scope.launch {
+                                                                scaffoldState.snackbarHostState.showSnackbar(
+                                                                    message = "At least one preset is needed"
+                                                                )
+                                                            }
+                                                        }*/
                                                     }
-                                                }
-                                            ),
-                                            imageVector = Icons.Default.Close,
-                                            contentDescription = "Delete icon for ${preset.presetName}",
-                                            tint = MaterialTheme.colors.onSurface
-                                        )
+                                                ),
+                                                imageVector = Icons.Default.Close,
+                                                contentDescription = "Delete icon for ${preset.presetName}",
+                                                tint = MaterialTheme.colors.onSurface
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -192,7 +198,7 @@ fun DataFieldsScreen(
                             }) {
                                 Text(
                                     modifier = Modifier,
-                                    text = "+ Add Preset",
+                                    text = stringResource(R.string.add_preset_text_btn),
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colors.onSurface
                                 )
@@ -221,7 +227,7 @@ fun DataFieldsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                    .clip(shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp))
                     .background(MaterialTheme.colors.background)
             ) {
                 item {
@@ -229,15 +235,16 @@ fun DataFieldsScreen(
                     Row( //Add/Edit row
                         modifier = Modifier
                             .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(16.dp),
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(top = 24.dp, bottom = 16.dp, end = 16.dp, start = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             modifier = Modifier,
                             text = stringResource(id = R.string.add_edit_fields_label),
-                            color = MaterialTheme.colors.primary,
+                            color = headerColours,
                             style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                             textAlign = TextAlign.Start
                         )
@@ -334,9 +341,7 @@ fun DataFieldsScreen(
                                     if (currentPreset != null) {
                                         it.presetId = currentPreset.presetId
                                     }
-                                    scope.launch {
                                         viewModel.onDataEvent(DataFieldEvent.SaveDataField(it))
-                                    }
                                 }
                             )
                         }

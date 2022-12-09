@@ -45,16 +45,17 @@ fun SearchBar(
 ) {
     Row(
         modifier = Modifier
-            .height(intrinsicSize = IntrinsicSize.Min)
+            .wrapContentHeight()
             .padding(16.dp)
             .fillMaxWidth(),
     ) {
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(56.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
                 .background(MaterialTheme.colors.background),
-            textStyle = MaterialTheme.typography.h6,
+            textStyle = MaterialTheme.typography.body1,
             value = searchState.text,
             maxLines = 1,
             placeholder = {
@@ -62,7 +63,7 @@ fun SearchBar(
                     modifier = Modifier,
                     text = searchState.hint,
                     style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colors.onPrimary
                 )
             },
             onValueChange = {
@@ -88,7 +89,7 @@ fun SearchBar(
                             .weight(1f),
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Close Search View",
-                        tint = MaterialTheme.colors.primary
+                        tint = MaterialTheme.colors.onPrimary
                     )
                 }
             }

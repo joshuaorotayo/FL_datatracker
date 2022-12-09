@@ -175,15 +175,9 @@
     },
     {
       "id": "5:5981523681045226680",
-      "lastPropertyId": "4:5564403237471406542",
+      "lastPropertyId": "5:372565834927187853",
       "name": "Setting",
       "properties": [
-        {
-          "id": "1:6874247167630582643",
-          "name": "Id",
-          "type": 6,
-          "flags": 129
-        },
         {
           "id": "2:1404735841109393189",
           "name": "settingName",
@@ -200,6 +194,12 @@
           "id": "4:5564403237471406542",
           "name": "settingStringValue",
           "type": 9
+        },
+        {
+          "id": "5:372565834927187853",
+          "name": "settingId",
+          "type": 6,
+          "flags": 129
         }
       ],
       "relations": []
@@ -228,7 +228,8 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    7304381431021081684
+    7304381431021081684,
+    6874247167630582643
   ],
   "retiredRelationUids": [],
   "version": 1

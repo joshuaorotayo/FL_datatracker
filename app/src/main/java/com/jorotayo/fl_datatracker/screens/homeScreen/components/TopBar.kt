@@ -48,7 +48,7 @@ fun TopBar(
                     settingsNavigate()
                 },
             icon = Icons.Default.Settings,
-            tint = MaterialTheme.colors.surface,
+            tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Settings Icon to edit in App Settings",
             onClick = showSettingsView
         )
@@ -56,7 +56,7 @@ fun TopBar(
             text = "FL DataTracker",
             modifier = Modifier
                 .weight(10f),
-            color = MaterialTheme.colors.surface,
+            color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.h5.also { FontWeight.Bold },
             textAlign = TextAlign.Center
         )
@@ -64,7 +64,7 @@ fun TopBar(
             modifier = Modifier
                 .weight(1f),
             icon = Icons.Default.Search,
-            tint = MaterialTheme.colors.surface,
+            tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Search Icon to toggle Search Bar and search for Data",
             onClick = toggleSearchBar
         )

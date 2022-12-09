@@ -8,9 +8,9 @@ import io.objectbox.annotation.Unique
 @Entity
 data class Setting(
     @Id(assignable = true)
-    var Id: Long,
+    var settingId: Long,
     @Unique(onConflict = REPLACE)
     var settingName: String = "",
     var settingBoolValue: Boolean? = false,
-    var settingStringValue: String? = "",
+    var settingStringValue: String = "",
 )

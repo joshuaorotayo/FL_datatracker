@@ -6,7 +6,7 @@ import com.jorotayo.fl_datatracker.domain.repository.SettingsRepository
 class AddSetting(
     private val repository: SettingsRepository,
 ) {
-    suspend operator fun invoke(setting: Setting) {
+    operator fun invoke(setting: Setting) {
         return repository.addSetting(setting)
     }
 }

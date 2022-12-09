@@ -52,7 +52,7 @@ fun WelcomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary),
+                    .background(MaterialTheme.colors.primary),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -74,7 +74,7 @@ fun WelcomeScreen(
                         .fillMaxHeight(0.5f)
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter),
-                    backgroundColor = if (darkTheme) MaterialTheme.colors.background else MaterialTheme.colors.onBackground,
+                    backgroundColor = if (darkTheme) MaterialTheme.colors.background else MaterialTheme.colors.surface,
                     elevation = (8.dp),
                 ) {
                     Column(
@@ -108,7 +108,7 @@ fun WelcomeScreen(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .weight(1f),
-                            activeColor = if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary,
+                            activeColor = MaterialTheme.colors.primary,
                             inactiveColor = MaterialTheme.colors.onSurface,
                             pagerState = pagerState
                         )
@@ -140,7 +140,7 @@ fun WelcomeScreen(
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         contentColor = Color.White,
-                                        backgroundColor = if (darkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+                                        backgroundColor = MaterialTheme.colors.primary
                                     )
                                 ) {
                                     Text(stringResource(R.string.next_btn))
@@ -227,7 +227,7 @@ fun FinishButton(
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(
                     contentColor = MaterialTheme.colors.onPrimary,
-                    backgroundColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+                    backgroundColor = MaterialTheme.colors.primary
                 )
             ) {
                 Text(text = stringResource(R.string.finish_btn))

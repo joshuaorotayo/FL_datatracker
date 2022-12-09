@@ -25,8 +25,9 @@ class SettingsRepositoryImpl : SettingsRepository {
         return settingBox.query(Setting_.settingStringValue.equal(settingValue)).build().find()
     }
 
-    override fun getSettingByName(settingName: String): Setting? {
-        return settingBox.query(Setting_.settingStringValue.equal(settingName)).build().findFirst()
+    override fun getSettingByName(settingName: String): Setting {
+        return settingBox.query(Setting_.settingName.equal(settingName)).build().findFirst()
+            ?: getSettingsList()[0]
     }
 
     override fun addSetting(setting: Setting) {

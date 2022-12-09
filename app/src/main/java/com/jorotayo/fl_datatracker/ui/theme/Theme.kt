@@ -8,25 +8,11 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-
-@SuppressLint("ConflictingOnColor")
-private val DarkColorPaletteOld = darkColors(
-    primary = primaryLightRed,
-    onPrimary = Color.White,
-    primaryVariant = primaryDarkRed,
-    background = Color(42, 42, 44, 255),
-    onBackground = Color(32, 32, 34, 255),
-    surface = Color(32, 32, 34, 255),
-    onSurface = Color.White,
-/*
- Other default colors to override*/
-)
-
 @SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = primaryLightRed,
+    primary = primaryDarkRed,
     onPrimary = Color.White,
-    primaryVariant = primaryDarkRed,
+    primaryVariant = primaryLightRed,
     background = Color(18, 20, 24, 255),
     surface = Color(27, 31, 36, 255),
     onBackground = Color(0, 0, 0, 255),
@@ -47,20 +33,6 @@ private val LightColorPalette = lightColors(
 /*
  Other default colors to override
     */
-)
-
-private val LightColorPaletteOld = lightColors(
-    primary = primaryLightRed,
-    onPrimary = Color.White,
-    primaryVariant = primaryDarkRed,
-    background = Color(245, 236, 235, 250), //light red for background
-    onBackground = Color.White,
-    surface = Color(237, 200, 182, 125), //darker light red for panels/sections
-    onSurface = Color.Black, //text colour for headings, Gray will be subheadings
-/*
- Other default colors to override
-    */
-
 )
 
 @Composable

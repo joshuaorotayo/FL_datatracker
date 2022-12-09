@@ -52,11 +52,16 @@
     <string name="delete_preset_warning">*Any associated Data Fields will also be deleted*</string>
     <string name="restoreText">Restore?</string>
     <string name="data_entry_form_header">Fill in the information below:</string>
-    <string name="form_fields_description">The form below has been created from the %s DataField(s) in the preset:</string>
+    <string name="form_fields_description">The form below has been created from the %s DataField(s) in the preset</string>
     <string name="save_data_btn">Save Data</string>
     <string name="no_data_fields_msg_icon">No Data Fields Message</string>
     <string name="no_data_fields_msg">There are currently no Data Fields. Add Data Fields to begin adding Data</string>
     <string name="no_data_fields_header">No Data Fields</string>
     <string name="no_data_form_msg">Data Form not created</string>
     <string name="no_data_fields_msg_data_form">There are currently no Data Fields. Add/Enable some Data Fields to begin adding Data</string>
+    <string name="add_preset_text_btn">+ Add Preset</string>
+    <plurals name="items_showing_header">
+        <item quantity="one">%d item showing</item>
+        <item quantity="other">%d items showing</item>
+    </plurals>
 </resources>

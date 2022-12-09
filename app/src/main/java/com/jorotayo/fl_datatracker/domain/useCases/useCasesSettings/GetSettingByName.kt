@@ -6,7 +6,7 @@ import com.jorotayo.fl_datatracker.domain.repository.SettingsRepository
 class GetSettingByName(
     private val repository: SettingsRepository,
 ) {
-    operator fun invoke(settingName: String): Setting? {
+    operator fun invoke(settingName: String): Setting {
         return repository.getSettingByName(settingName)
     }
 }

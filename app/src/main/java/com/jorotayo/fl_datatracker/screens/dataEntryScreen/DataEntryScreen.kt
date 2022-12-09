@@ -76,6 +76,7 @@ fun DataEntryScreen(
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colors.primary)
+                    .fillMaxHeight(0.2f)
             ) {
                 Row(
                     modifier = Modifier,
@@ -84,7 +85,7 @@ fun DataEntryScreen(
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = MaterialTheme.colors.background,
+                        tint = MaterialTheme.colors.onPrimary,
                         modifier = Modifier
                             .padding(16.dp)
                             .clickable {
@@ -94,7 +95,7 @@ fun DataEntryScreen(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Enter Data: " + viewModel.boxState.value.currentPreset?.presetName!!,
-                        color = MaterialTheme.colors.background,
+                        color = MaterialTheme.colors.onPrimary,
                         style = MaterialTheme.typography.h5.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
@@ -118,7 +119,7 @@ fun DataEntryScreen(
                                 end = 16.dp,
                             ),
                         text = stringResource(id = R.string.data_entry_form_header),
-                        color = MaterialTheme.colors.onBackground,
+                        color = MaterialTheme.colors.onPrimary,
                         style = MaterialTheme.typography.h6.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
@@ -128,7 +129,7 @@ fun DataEntryScreen(
                             bottom = 10.dp),
                         text = String.format(stringResource(id = R.string.form_fields_description),
                             uiState.value.value.dataRows.size),
-                        color = MaterialTheme.colors.onBackground,
+                        color = MaterialTheme.colors.onPrimary,
                         style = MaterialTheme.typography.body1.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
@@ -311,7 +312,7 @@ fun DataEntryScreen(
                     ) {
                         Text(
                             text = stringResource(id = R.string.save_data_btn),
-                            color = MaterialTheme.colors.onSurface
+                            color = MaterialTheme.colors.onPrimary
                         )
                     }
                 }

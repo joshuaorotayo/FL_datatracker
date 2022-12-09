@@ -22,4 +22,5 @@ data class DataFieldScreenState(
         presetId = 1,
         presetName = ""
     ),
+    val currentPreset: Preset? = presetList[0],
 )

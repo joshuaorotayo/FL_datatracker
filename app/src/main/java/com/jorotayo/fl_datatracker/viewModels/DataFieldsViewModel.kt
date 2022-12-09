@@ -1,7 +1,5 @@
 package com.jorotayo.fl_datatracker.viewModels
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -22,11 +20,8 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScre
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.objectbox.kotlin.boxFor
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,32 +32,27 @@ class DataFieldsViewModel @Inject constructor(
     private val settingsUseCases: SettingsUseCases,
 ) : ViewModel() {
 
-    private var getDataFieldsJob: Job? = null
+    private val settingPreset = settingsUseCases.getSettingByName(settingName = "currentPreset")
+    private val presetSetting =
+        presetUseCases.getPresetByPresetName(settingPreset.settingStringValue)
+    private val newPresetList = presetUseCases.getPresetList()
 
-    init {
-        getDataFields()
-    }
+    private val _currentPreset: MutableState<Preset> = mutableStateOf(presetSetting)
+    val currentPreset: State<Preset> = _currentPreset
 
     private val _dataFieldScreenState = mutableStateOf(DataFieldScreenState(
-        dataFields = dataFieldUseCases.getDataFields(),
-        presetList = presetUseCases.getPresetList()
+        dataFields = dataFieldUseCases.getDataFieldsByPresetId(presetSetting!!.presetId),
+        presetList = newPresetList,
+        currentPreset = currentPreset.value
     ))
     val dataFieldScreenState: State<DataFieldScreenState> = _dataFieldScreenState
 
-    val currentPreset = settingsUseCases.getSettingByName("currentPreset")
-        ?.let { presetUseCases.getPresetByPresetName(it.settingName) }
 
-
-    private val _newDataField = if (currentPreset == null) {
-        mutableStateOf(NewDataFieldState())
-    } else {
-        mutableStateOf(NewDataFieldState(currentPreset = currentPreset.presetName))
-    }
-
+    private val _newDataField =
+        mutableStateOf(NewDataFieldState(currentPreset = currentPreset.value.presetName))
     var newDataField: MutableState<NewDataFieldState> = _newDataField
 
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
-
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -126,7 +116,7 @@ class DataFieldsViewModel @Inject constructor(
                     try {
                         dataFieldUseCases.addDataField(event.value)
                         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-                            dataFields = ObjectBox.get().boxFor<DataField>().all
+                            dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.value.presetId)
                         )
                         _eventFlow.emit(UiEvent.SaveDataField)
                     } catch (e: InvalidDataFieldException) {
@@ -196,7 +186,7 @@ class DataFieldsViewModel @Inject constructor(
 
         dataFieldUseCases.updateDataField(dataField)
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-            dataFields = ObjectBox.get().boxFor<DataField>().all
+            dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.value.presetId)
         )
     }
 
@@ -216,9 +206,23 @@ class DataFieldsViewModel @Inject constructor(
                 )
             }
             is PresetEvent.ChangePreset -> {
-                val setting = ObjectBox.get().boxFor(Setting::class.java).get(1)
-                setting.settingStringValue = event.value
-                updateSettings(setting)
+                settingsUseCases.addSetting(
+                    Setting(
+                        settingId = 1,
+                        settingName = "currentPreset",
+                        settingBoolValue = false,
+                        settingStringValue = event.value
+                    )
+                )
+
+                val newCurrentPreset = presetUseCases.getPresetByPresetName(event.value)
+
+                _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                    currentPreset = presetUseCases.getPresetByPresetName(event.value),
+                    dataFields = dataFieldUseCases.getDataFieldsByPresetId(newCurrentPreset.presetId),
+                    isAddDataFieldVisible = false
+                )
+                updatePresets()
             }
             is PresetEvent.AddPreset -> {
                 PresetEvent.ChangePreset(event.value)
@@ -240,11 +244,9 @@ class DataFieldsViewModel @Inject constructor(
         }
     }
 
-    private fun updateSettings(setting: Setting) {
-        val newSettingBox = ObjectBox.get().boxFor(Setting::class.java)
-        newSettingBox.put(setting)
+    private fun updatePresets() {
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-            presetList = ObjectBox.get().boxFor<Preset>().all
+            presetList = presetUseCases.getPresetList()
         )
     }
 
@@ -253,8 +255,6 @@ class DataFieldsViewModel @Inject constructor(
             isPresetDeleteDialogVisible = if (!dataFieldScreenState.value.isPresetDeleteDialogVisible.value) mutableStateOf(
                 true) else mutableStateOf(false)
         )
-
-        val newDataFieldBox = mutableListOf<DataField>()
         val newPresetBox = ObjectBox.get().boxFor(Preset::class.java)
         newPresetBox.remove(preset)
 
@@ -278,22 +278,20 @@ class DataFieldsViewModel @Inject constructor(
         object SaveDataField : UiEvent()
     }
 
-    private fun getDataFields() {
+    /*private fun getDataFields() {
         getDataFieldsJob?.cancel()
         Log.i(TAG, "getDataFields: refresh")
 
-        val preset = currentPreset?.let {
-            it.presetName.let { it1 ->
-                presetUseCases.getPresetByPresetName(it1)
-            }
-        }
 
-        if (preset != null) {
-            getDataFieldsJob =
-                currentPreset.let {
-                    dataFieldUseCases.getDataFieldsByPresetId(preset.presetId).conflate()
-                        .launchIn(viewModelScope)
-                }
+        val viewPreset =
+            currentPreset.let { presetUseCases.getPresetByPresetName(it.value.presetName) }
+
+        getDataFieldsJob = if (viewPreset != null) {
+            dataFieldUseCases.getDataFieldsByPresetId(viewPreset.presetId).conflate()
+                .launchIn(viewModelScope)
+        } else {
+            dataFieldUseCases.getDataFieldsByPresetId(presetId = 1).conflate()
+                .launchIn(viewModelScope)
         }
-    }
+    }*/
 }

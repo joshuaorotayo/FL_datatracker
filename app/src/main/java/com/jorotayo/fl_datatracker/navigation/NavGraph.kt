@@ -20,7 +20,6 @@ import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScree
 import com.jorotayo.fl_datatracker.ui.PageTemplate
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
-import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
 
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -77,7 +76,7 @@ fun SetupNavGraph(
         composable(route = Screen.Welcome.route) {
             WelcomeScreen(
                 navController = navController,
-                viewModel = WelcomeViewModel(),
+                viewModel = hiltViewModel(),
                 pages = pages
             )
         }
