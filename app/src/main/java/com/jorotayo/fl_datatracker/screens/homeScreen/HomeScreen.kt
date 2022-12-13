@@ -146,13 +146,16 @@ fun HomeScreen(
                             }
                         }
                     }
+                    BasicDeleteDataDialog(
+                        modifier = Modifier,
+                        confirmDelete = { viewModel.onEvent(HomeScreenEvent.DeleteDataItem) },
+                        scaffold = scaffoldState,
+                        state = uiState.isDeleteDialogVisible,
+                        data = uiState.deletedItem
+                    )
+
                 }
-                BasicDeleteDataDialog(modifier = Modifier,
-                    confirmDelete = { viewModel.onEvent(HomeScreenEvent.DeleteDataItem) },
-                    scaffold = scaffoldState,
-                    state = uiState.isDeleteDialogVisible,
-                    data = uiState.deletedItem
-                )
+
             }
         }
     }

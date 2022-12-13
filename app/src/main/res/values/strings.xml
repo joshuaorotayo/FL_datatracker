@@ -66,6 +66,7 @@
     <string name="delete_data_dialog">Delete data dialog icon</string>
     <string name="delete_data_header">Delete Data</string>
     <string name="delete_data_body">Are you sure you want to delete this Data Item?</string>
+    <string name="enter_data_header">Enter Data: %s</string>
     <plurals name="items_showing_header">
         <item quantity="one">%d item showing</item>
         <item quantity="other">%d items showing</item>

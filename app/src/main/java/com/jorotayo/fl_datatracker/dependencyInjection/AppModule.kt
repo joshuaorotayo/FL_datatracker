@@ -31,6 +31,7 @@ object AppModule {
         return DataFieldUseCases(
             addDataField = AddDataField(dataFieldRepository),
             deleteDataField = DeleteDataField(dataFieldRepository),
+            deleteDataFields = DeleteDataFields(dataFieldRepository),
             updateDataField = UpdateDataField(dataFieldRepository),
             getDataFields = GetDataFields(dataFieldRepository),
             getDataFieldsByPresetId = GetDataFieldsByPresetId(dataFieldRepository),

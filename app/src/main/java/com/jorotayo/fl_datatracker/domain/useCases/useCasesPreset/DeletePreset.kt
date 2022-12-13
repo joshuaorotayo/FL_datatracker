@@ -6,7 +6,7 @@ import com.jorotayo.fl_datatracker.domain.repository.PresetRepository
 class DeletePreset(
     private val repository: PresetRepository,
 ) {
-    suspend operator fun invoke(preset: Preset) {
+    operator fun invoke(preset: Preset) {
         return repository.deletePreset(preset)
     }
 }

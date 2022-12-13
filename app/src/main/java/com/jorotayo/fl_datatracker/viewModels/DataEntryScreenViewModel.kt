@@ -31,11 +31,8 @@ class DataEntryScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val settingPreset = settingsUseCases.getSettingByName(settingName = "currentPreset")
-    private val presetSetting =
+    val presetSetting =
         presetUseCases.getPresetByPresetName(settingPreset.settingStringValue)
-
-    private val _boxState = mutableStateOf(BoxState())
-    val boxState: State<BoxState> = _boxState
 
     private val _currentDataId = mutableStateOf(0.toLong())
     var currentDataId: MutableState<Long> = _currentDataId
@@ -126,7 +123,8 @@ class DataEntryScreenViewModel @Inject constructor(
                 list += DataRowState(
                     DataItem(
                         dataId = currentDataId.value,
-                        presetId = boxState.value.currentPreset?.presetId!!,
+//                        presetId = boxState.value.currentPreset?.presetId!!,
+                        presetId = presetSetting.presetId,
                         fieldName = dataField.fieldName,
                         dataFieldType = dataField.dataFieldType,
                         first = dataField.first,

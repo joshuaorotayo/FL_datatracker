@@ -132,7 +132,6 @@ fun DataFieldRow(
                 ) {
                     Text(
                         modifier = Modifier,
-//                        text = items[currentRowState.value.fieldType],
                         text = items[currentDataField.dataFieldType],
                         color = MaterialTheme.colors.primary,
                         textAlign = TextAlign.Center

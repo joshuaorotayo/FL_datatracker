@@ -14,4 +14,5 @@ data class DataFieldUseCases(
     val getDataFieldsByEnabled: GetDataFieldsByEnabled,
     val getDataFieldByNames: GetDataFieldNames,
     val getSubscribedDataFields: GetSubscribedDataFields,
+    val deleteDataFields: DeleteDataFields,
 )

@@ -85,12 +85,12 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
                 )
             }
 
-
             /*  is HomeScreenEvent.UpdateData -> {
                   _testRowItemBox.value = testRowItemBox.value.copy(
                       itemsList = event.value.all
                   )
               }*/
+
             is HomeScreenEvent.UpdateData -> {
                 val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
                 if (event.operation == "put") {

@@ -64,8 +64,7 @@ fun DataEntryScreen(
 
     val scope = rememberCoroutineScope()
 
-    var uiState = remember { mutableStateOf(viewModel.uiState) }
-
+    val uiState = remember { mutableStateOf(viewModel.uiState) }
     viewModel.currentDataId.value = dataId
 
     Scaffold(
@@ -95,7 +94,8 @@ fun DataEntryScreen(
                         )
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "Enter Data: " + viewModel.boxState.value.currentPreset?.presetName!!,
+                            text = String.format(stringResource(id = R.string.enter_data_header),
+                                viewModel.presetSetting.presetName),
                             color = MaterialTheme.colors.onPrimary,
                             style = MaterialTheme.typography.h5.also { FontStyle.Italic },
                             textAlign = TextAlign.Start

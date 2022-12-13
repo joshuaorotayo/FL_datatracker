@@ -25,5 +25,7 @@ interface DataFieldRepository {
 
     fun deleteDataField(dataField: DataField)
 
+    fun deleteDataFields(dataFields: List<DataField>)
+
     fun updateDataField(dataField: DataField)
 }
