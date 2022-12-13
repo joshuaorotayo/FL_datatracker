@@ -78,38 +78,29 @@ fun DataEntryScreen(
                     .background(MaterialTheme.colors.primary)
                     .fillMaxHeight(0.2f)
             ) {
-                Row(
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .clickable {
-                                navController.navigateUp()
-                            }
-                    )
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "Enter Data: " + viewModel.boxState.value.currentPreset?.presetName!!,
-                        color = MaterialTheme.colors.onPrimary,
-                        style = MaterialTheme.typography.h5.also { FontStyle.Italic },
-                        textAlign = TextAlign.Start
-                    )
-                }
-
-                val testRun = false
-                if (uiState.value.value.dataRows.isEmpty() && !testRun) {
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    //No Data Form Message
-                    NoDataForm()
-
-                    Spacer(modifier = Modifier.weight(1f))
-                } else {
+                if (uiState.value.value.dataRows.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .clickable {
+                                    navController.navigateUp()
+                                }
+                        )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "Enter Data: " + viewModel.boxState.value.currentPreset?.presetName!!,
+                            color = MaterialTheme.colors.onPrimary,
+                            style = MaterialTheme.typography.h5.also { FontStyle.Italic },
+                            textAlign = TextAlign.Start
+                        )
+                    }
 
                     Text(
                         modifier = Modifier
@@ -133,6 +124,14 @@ fun DataEntryScreen(
                         style = MaterialTheme.typography.body1.also { FontStyle.Italic },
                         textAlign = TextAlign.Start
                     )
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colors.primary)
+                    ) {
+
+                    }
                 }
             }
         },
@@ -147,7 +146,6 @@ fun DataEntryScreen(
                 .fillMaxSize()
                 .background(color = MaterialTheme.colors.primary)
         ) {
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -155,167 +153,175 @@ fun DataEntryScreen(
                     .clip(shape = RoundedCornerShape(topEnd = 40.dp, topStart = 40.dp))
                     .background(color = MaterialTheme.colors.background)
             ) {
-                item {
-                    // Contents of data entry form
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Spacer(modifier = Modifier
-                            .fillMaxWidth()
-                            .size(16.dp))
-                        FormNameHeader(
-                            setName = {
-                                viewModel.onEvent(DataEvent.SetName(value = it))
-                                uiState.value.value.dataName = it
-                            },
-                            dataEntryScreenState = uiState.value.value
-                        )
+                if (uiState.value.value.dataRows.isEmpty()) {
+                    item {
+                        NoDataForm()
                     }
-                }
-
-                itemsIndexed(items = uiState.value.value.dataRows) { index, data ->
-                    when (data.dataItem.dataFieldType) {
-                        0 -> {
-                            data.dataItem.dataValue = FormShortTextRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        1 -> {
-                            data.dataItem.dataValue = FormLongTextRowV2(
-                                data = data.dataItem,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        2 -> {
-                            data.dataItem.dataValue = FormRadioRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        3 -> {
-                            data.dataItem.dataValue = FormDateRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        4 -> {
-                            data.dataItem.dataValue = FormTimeRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        5 -> {
-                            data.dataItem.dataValue = FormCountRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        6 -> {
-                            data.dataItem.dataValue = FormRadioRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        7 -> {
-                            data.dataItem.dataValue = FormImageRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
-                            )
-                        }
-                        8 -> {
-                            data.dataItem.dataValue = FormListRowV2(
-                                data = data,
-                                setDataValue = {
-                                    viewModel.onEvent(DataEvent.SetDataValue(
-                                        value = it,
-                                        rowIndex = index))
-                                }
+                } else {
+                    item {
+                        // Contents of data entry form
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Spacer(modifier = Modifier
+                                .fillMaxWidth()
+                                .size(16.dp))
+                            formNameHeader(
+                                setName = {
+                                    viewModel.onEvent(DataEvent.SetName(value = it))
+                                    uiState.value.value.dataName = it
+                                },
+                                dataEntryScreenState = uiState.value.value
                             )
                         }
                     }
-                }
 
-                item {
-                    // Save Button Footer
-                    TextButton(modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(12f)),
-                        colors = ButtonDefaults.textButtonColors(
-                            backgroundColor = MaterialTheme.colors.primary,
-                            contentColor = MaterialTheme.colors.surface
-                        ),
-                        onClick = {
-                            scope.launch {
-
-                                val returnedValue: Pair<Boolean, DataEntryScreenState> =
-                                    validateData(uiState.value.value)
-
-                                if (returnedValue.first) { //means there were no errors
-                                    viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value))
-
-                                    navController.popBackStack()
-
-                                    scope.launch {
-                                        scaffoldState.snackbarHostState.showSnackbar(
-                                            message = "${uiState.value.value.dataName} Added!",
-                                            actionLabel = "Hide"
-                                        )
+                    itemsIndexed(items = uiState.value.value.dataRows) { index, data ->
+                        when (data.dataItem.dataFieldType) {
+                            0 -> {
+                                data.dataItem.dataValue = formShortTextRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
                                     }
-                                } else {
-                                    scope.launch {
-                                        scaffoldState.snackbarHostState.showSnackbar(
-                                            message = "Data not Saved! Please Check errors"
-                                        )
-                                        viewModel.onEvent(DataEvent.UpdateUiState(
-                                            returnedValue.second))
-                                        uiState.value.value.dataRows =
-                                            returnedValue.second.dataRows
+                                )
+                            }
+                            1 -> {
+                                data.dataItem.dataValue = formLongTextRowV2(
+                                    data = data.dataItem,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            2 -> {
+                                data.dataItem.dataValue = formRadioRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            3 -> {
+                                data.dataItem.dataValue = formDateRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            4 -> {
+                                data.dataItem.dataValue = formTimeRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            5 -> {
+                                data.dataItem.dataValue = formCountRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            6 -> {
+                                data.dataItem.dataValue = formRadioRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            7 -> {
+                                data.dataItem.dataValue = formImageRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                            8 -> {
+                                data.dataItem.dataValue = formListRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    item {
+                        // Save Button Footer
+                        TextButton(modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                            .clip(shape = RoundedCornerShape(12f)),
+                            colors = ButtonDefaults.textButtonColors(
+                                backgroundColor = MaterialTheme.colors.primary,
+                                contentColor = MaterialTheme.colors.surface
+                            ),
+                            onClick = {
+                                scope.launch {
+
+                                    val returnedValue: Pair<Boolean, DataEntryScreenState> =
+                                        validateData(uiState.value.value)
+
+                                    if (returnedValue.first) { //means there were no errors
+                                        viewModel.onEvent(DataEvent.SaveData(dataEntryScreenState = uiState.value.value))
+
+                                        navController.popBackStack()
+
+                                        scope.launch {
+                                            scaffoldState.snackbarHostState.showSnackbar(
+                                                message = "${uiState.value.value.dataName} Added!",
+                                                actionLabel = "Hide"
+                                            )
+                                        }
+                                    } else {
+                                        scope.launch {
+                                            scaffoldState.snackbarHostState.showSnackbar(
+                                                message = "Data not Saved! Please Check errors"
+                                            )
+                                            viewModel.onEvent(DataEvent.UpdateUiState(
+                                                returnedValue.second))
+                                            uiState.value.value.dataRows =
+                                                returnedValue.second.dataRows
+                                        }
                                     }
                                 }
                             }
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.save_data_btn),
+                                color = MaterialTheme.colors.onPrimary
+                            )
                         }
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.save_data_btn),
-                            color = MaterialTheme.colors.onPrimary
-                        )
                     }
+
                 }
+                //close Box
             }
 
             DefaultSnackbar(

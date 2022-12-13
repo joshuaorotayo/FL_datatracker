@@ -6,7 +6,7 @@ import com.jorotayo.fl_datatracker.domain.repository.DataRepository
 class AddData(
     private val repository: DataRepository,
 ) {
-    suspend operator fun invoke(data: Data) {
+    operator fun invoke(data: Data): Long {
         return repository.insertData(data)
     }
 }

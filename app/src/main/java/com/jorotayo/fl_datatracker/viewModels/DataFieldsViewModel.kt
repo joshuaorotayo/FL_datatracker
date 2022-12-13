@@ -19,7 +19,6 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.objectbox.kotlin.boxFor
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -41,7 +40,7 @@ class DataFieldsViewModel @Inject constructor(
     val currentPreset: State<Preset> = _currentPreset
 
     private val _dataFieldScreenState = mutableStateOf(DataFieldScreenState(
-        dataFields = dataFieldUseCases.getDataFieldsByPresetId(presetSetting!!.presetId),
+        dataFields = dataFieldUseCases.getDataFieldsByPresetId(presetSetting.presetId),
         presetList = newPresetList,
         currentPreset = currentPreset.value
     ))
@@ -139,7 +138,7 @@ class DataFieldsViewModel @Inject constructor(
         }
 
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-            dataFields = ObjectBox.get().boxFor<DataField>().all
+            dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.value.presetId)
         )
 
     }

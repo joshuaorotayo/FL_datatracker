@@ -28,7 +28,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormCountRowV2() {
-    FormCountRowV2(
+    formCountRowV2(
         data = DataRowState(
             DataItem(
                 dataItemId = 0,
@@ -45,7 +45,7 @@ fun PreviewFormCountRowV2() {
 }
 
 @Composable
-fun FormCountRowV2(
+fun formCountRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {

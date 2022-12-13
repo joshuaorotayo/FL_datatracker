@@ -21,7 +21,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 @Preview(showBackground = true)
 @Composable
-fun FormListRowV2() {
+fun formListRowV2() {
     val dataItem = DataRowState(
         DataItem(
             presetId = 0,
@@ -33,11 +33,11 @@ fun FormListRowV2() {
         hasError = false,
         errorMsg = ""
     )
-    FormListRowV2(data = dataItem, setDataValue = {})
+    formListRowV2(data = dataItem, setDataValue = {})
 }
 
 @Composable
-fun FormListRowV2(
+fun formListRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
@@ -86,7 +86,7 @@ fun FormListRowV2(
         }
 
         items(number.value) { index ->
-            ListItem(
+            listItem(
                 changeValue = { it ->
                     textFields[index] = it
                     val list = textFields.values.filter { string -> string.isNotBlank() }

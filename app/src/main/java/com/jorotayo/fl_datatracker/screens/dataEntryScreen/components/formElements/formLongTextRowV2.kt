@@ -31,14 +31,14 @@ fun PreviewFormLongTextRowV2() {
         fieldDescription = "Data capture long text row example...",
         dataId = 1
     )
-    FormLongTextRowV2(
+    formLongTextRowV2(
         data = data,
         setDataValue = {}
     )
 }
 
 @Composable
-fun FormLongTextRowV2(
+fun formLongTextRowV2(
     data: DataItem,
     setDataValue: (String) -> Unit,
 ): String {

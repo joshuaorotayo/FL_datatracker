@@ -24,7 +24,7 @@ import com.jorotayo.fl_datatracker.R
 @Preview
 @Composable
 fun PreviewListItem() {
-    ListItem(
+    listItem(
         changeValue = {},
         addItem = {},
         deleteItem = {},
@@ -34,7 +34,7 @@ fun PreviewListItem() {
 }
 
 @Composable
-fun ListItem(
+fun listItem(
     changeValue: (String) -> Unit,
     addItem: () -> Unit,
     deleteItem: () -> Unit,

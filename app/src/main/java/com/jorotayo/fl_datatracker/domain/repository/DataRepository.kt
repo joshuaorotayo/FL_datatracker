@@ -11,7 +11,7 @@ interface DataRepository {
 
     fun getDataByDataName(dataName: String): Data?
 
-    fun insertData(data: Data)
+    fun insertData(data: Data): Long
 
     fun deleteData(data: Data)
 

@@ -204,10 +204,9 @@ fun DataFieldRow(
                 ) {
                     Icon(
                         imageVector = Default.Delete,
-                        contentDescription = stringResource(R.string.delete_row),
+                        contentDescription = stringResource(R.string.delete_row_header),
                         tint = MaterialTheme.colors.primary
                     )
-
                 }
             }
         }

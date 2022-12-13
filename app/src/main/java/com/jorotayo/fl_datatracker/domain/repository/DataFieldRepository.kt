@@ -15,11 +15,13 @@ interface DataFieldRepository {
 
     fun getDataFieldsByPresetId(presetId: Long): List<DataField>
 
+    fun getDataFieldsByPresetIdEnabled(presetId: Long): List<DataField>
+
     fun getDataFieldsByEnabled(): List<DataField>
 
     fun getDataFieldNames(): List<String>
 
-    fun insertDataField(dataField: DataField)
+    fun insertDataField(dataField: DataField): Long
 
     fun deleteDataField(dataField: DataField)
 

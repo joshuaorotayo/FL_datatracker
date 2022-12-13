@@ -29,7 +29,7 @@ class DataItemRepositoryImpl : DataItemRepository {
     }
 
     override fun addDataItem(dataItem: DataItem) {
-        dataItemBox.put(dataItem)
+       dataItemBox.put(dataItem)
     }
 
     override fun removeDataItem(dataItem: DataItem) {

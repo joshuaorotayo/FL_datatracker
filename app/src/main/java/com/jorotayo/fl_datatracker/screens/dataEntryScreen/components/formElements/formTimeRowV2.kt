@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.app.DatePickerDialog
-import android.widget.DatePicker
+import android.app.TimePickerDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +11,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,15 +29,14 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import java.util.*
 
-
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewFormDateRowV2() {
-    FormDateRowV2(
+fun PreviewFormTimeRowV2() {
+    formTimeRowV2(
         data = DataRowState(
             DataItem(
                 dataItemId = 0,
-                fieldName = "Data Field for Date Row Example",
+                fieldName = "Data Field for Time Example",
                 first = "No",
                 second = "N/A",
                 third = "Yes",
@@ -46,48 +44,33 @@ fun PreviewFormDateRowV2() {
                 dataId = 1
             )
         ),
-        setDataValue = {}
-    )
+        setDataValue = {})
 }
 
 @Composable
-fun FormDateRowV2(
+fun formTimeRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
-    //var hasError by remember{ mutableStateOf(data.hasError)}
-
-    // Fetching the Local Context
+    // Fetching local context
     val mContext = LocalContext.current
 
-    // Declaring integer values for year, month and day
-    val mYear: Int
-    val mMonth: Int
-    val mDay: Int
-
-    // Initializing a Calendar
+    // Declaring and initializing a calendar
     val mCalendar = Calendar.getInstance()
+    val mHour: Int = mCalendar.get(Calendar.HOUR)
+    val mMinute = mCalendar[Calendar.MINUTE]
 
-    // Fetching current year, month, day and day of the week
-    mYear = mCalendar.get(Calendar.YEAR)
-    mMonth = mCalendar.get(Calendar.MONTH)
-    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    // Value for storing time as a string
+    val mTime = remember { mutableStateOf("") }
 
-    mCalendar.time = Date()
-
-    // Declaring a string value to store date in string format
-    val mDate = remember { mutableStateOf("") }
-
-    // Declaring DatePickerDialog and setting
-    // initial values as current values (present year, month and day)
-    val mDatePickerDialog = DatePickerDialog(
+    // Creating a TimePicker dialog
+    val mTimePickerDialog = TimePickerDialog(
         mContext,
-        { _: DatePicker, year: Int, month: Int, mDayOfMonth: Int ->
-            mDate.value = formattedDateString(mDayOfMonth, month, year)
-            setDataValue(mDate.value)
-        }, mYear, mMonth, mDay
+        { _, hour: Int, minute: Int ->
+            mTime.value = formattedTimeString(hour, minute)
+            setDataValue(mTime.value)
+        }, mHour, mMinute, true
     )
-
 
     Column(
         modifier = Modifier
@@ -97,14 +80,13 @@ fun FormDateRowV2(
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
     ) {
-
         Text(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 5.dp)
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.onSurface
         )
 
         AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
@@ -117,7 +99,7 @@ fun FormDateRowV2(
                 Text(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, top = 8.dp),
-                    text = stringResource(id = R.string.date_row_error),
+                    text = stringResource(id = R.string.time_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,
                     color = Color.Red,
@@ -138,27 +120,29 @@ fun FormDateRowV2(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            //Button Data capture
             Text(
-                text = if (mDate.value.isBlank()) "DDnd Month, Year" else data.dataItem.dataValue,
-                color = if (mDate.value.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                text = mTime.value.ifBlank { "HH:MM" },
+                color = if (mTime.value.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                 modifier = Modifier
+                    .padding(start = 5.dp)
+                    .weight(1f, fill = false)
                     .clickable(
                         onClick = {
-                            mDatePickerDialog.show()
+                            mTimePickerDialog.show()
                         }
-                    )
-                    .padding(end = 10.dp),
+                    ),
                 textAlign = TextAlign.Center,
-                style = if (mDate.value.isBlank()) MaterialTheme.typography.body1 else MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1
             )
             IconButton(
                 onClick = {
-                    mDatePickerDialog.show()
+                    mTimePickerDialog.show()
                 }) {
                 Icon(
                     modifier = Modifier,
-                    imageVector = Icons.Default.EditCalendar,
-                    contentDescription = "Select Date from Calendar",
+                    imageVector = Icons.Default.Timer,
+                    contentDescription = "Select Time from Clock",
                     tint = MaterialTheme.colors.primary
                 )
             }
@@ -171,28 +155,24 @@ fun FormDateRowV2(
             .height(10.dp)
     )
 
-    return mDate.value
+    return mTime.value
 }
 
+private fun formattedTimeString(hour: Int, minute: Int): String {
+    val mTime = Calendar.getInstance()
 
-private val days = arrayOf("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat")
+    mTime.set(Calendar.HOUR_OF_DAY, hour)
+    mTime.set(Calendar.MINUTE, minute)
 
-private val suffix = arrayOf("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
+    val amPm: String = if (mTime.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
 
-private val months = arrayOf(
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-)
+    val formattedHrs =
+        if (mTime.get(Calendar.HOUR) == 0) "12" else mTime.get(Calendar.HOUR).toString()
 
-private fun formattedDateString(day: Int, month: Int, year: Int): String {
+    val formattedMinute =
+        if (mTime.get(Calendar.MINUTE) < 10) "0" + mTime.get(Calendar.MINUTE) else "" + mTime.get(
+            Calendar.MINUTE)
 
-    val mCalendar = Calendar.getInstance()
+    return "$formattedHrs:$formattedMinute $amPm"
 
-    val day2 = day % 100
-    val suffixStr = day.toString() + suffix[if (day2 in 4..20) 0 else day2 % 10]
-    val monthStr = months[month]
-
-    mCalendar.set(year, month, day)
-    val dayOfWeek = days[mCalendar.get(Calendar.DAY_OF_WEEK) - 1]
-    return "$dayOfWeek, $suffixStr $monthStr, $year"
 }

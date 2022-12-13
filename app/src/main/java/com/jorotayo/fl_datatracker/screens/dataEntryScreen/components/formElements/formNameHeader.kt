@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 @Preview
 @Composable
 fun PreviewFormNameHeader() {
-    FormNameHeader(
+    formNameHeader(
         setName = { },
         dataEntryScreenState = DataEntryScreenState(
             dataName = "Test",
@@ -36,7 +36,7 @@ fun PreviewFormNameHeader() {
 }
 
 @Composable
-fun FormNameHeader(
+fun formNameHeader(
     setName: (String) -> Unit,
     dataEntryScreenState: DataEntryScreenState,
 ) {

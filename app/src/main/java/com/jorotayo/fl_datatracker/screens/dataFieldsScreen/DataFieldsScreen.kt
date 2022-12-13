@@ -393,7 +393,7 @@ fun DataFieldsScreen(
                 )
             }
 
-            AddPresetDialog(
+            BasicAddPresetDialog(
                 modifier = Modifier
                     .align(Alignment.Center),
                 state = viewModel.dataFieldScreenState.value.isAddPresetDialogVisible,
@@ -413,7 +413,7 @@ fun DataFieldsScreen(
             )
 
             if (currentPreset != null) {
-                DeletePresetDialog(
+                BasicDeletePresetDialog(
                     modifier = Modifier
                         .align(Alignment.Center),
                     state = viewModel.dataFieldScreenState.value.isPresetDeleteDialogVisible,
@@ -425,7 +425,7 @@ fun DataFieldsScreen(
                 )
             }
 
-            DeleteRowDialog(
+            BasicDeleteRowDialog(
                 modifier = Modifier
                     .align(Alignment.Center),
                 state = viewModel.dataFieldScreenState.value.isDeleteDialogVisible,

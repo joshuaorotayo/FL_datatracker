@@ -8,6 +8,7 @@
     <string name="cancelText">Cancel</string>
     <string name="deleteText">Delete</string>
     <string name="addPresetHeader">Add New Preset</string>
+    <string name="deletePresetHeader">Delete Preset: %s</string>
     <string name="addPresetBtn">Add Preset</string>
     <string name="hideEditRowText">Hide Edit Options</string>
 
@@ -25,7 +26,7 @@
     <string name="next_btn">Next</string>
     <string name="dataField_type_dropdown">Drop down arrow for Field Type Dropdown</string>
     <string name="add_new_data_field">Add New Data Field Text</string>
-    <string name="delete_row">Delete Row</string>
+    <string name="delete_row_header">Delete Row</string>
     <string name="amend_row_hint">Amend row Hint</string>
     <string name="edit_hint_text">Edit the Hint Text</string>
     <string name="hint_prompt">"Please enter Hint for field: %s"</string>
@@ -49,7 +50,7 @@
     <string name="add_field_description">Add New Data Field</string>
     <string name="preset_dialog_icon">Delete Preset dialog, delete icon</string>
     <string name="confirm_delete_preset">Are you sure you want to delete this Preset?</string>
-    <string name="delete_preset_warning">*Any associated Data Fields will also be deleted*</string>
+    <string name="delete_preset_warning">*Any Data Fields associated to this Preset will also be deleted*</string>
     <string name="restoreText">Restore?</string>
     <string name="data_entry_form_header">Fill in the information below:</string>
     <string name="form_fields_description">The form below has been created from the %s DataField(s) in the preset</string>
@@ -60,6 +61,11 @@
     <string name="no_data_form_msg">Data Form not created</string>
     <string name="no_data_fields_msg_data_form">There are currently no Data Fields. Add/Enable some Data Fields to begin adding Data</string>
     <string name="add_preset_text_btn">+ Add Preset</string>
+    <string name="row_delete_dialog_icon">Delete row dialog icon</string>
+    <string name="delete_row_body">" Are you sure you want to delete this Data Field?"</string>
+    <string name="delete_data_dialog">Delete data dialog icon</string>
+    <string name="delete_data_header">Delete Data</string>
+    <string name="delete_data_body">Are you sure you want to delete this Data Item?</string>
     <plurals name="items_showing_header">
         <item quantity="one">%d item showing</item>
         <item quantity="other">%d items showing</item>

@@ -46,11 +46,11 @@ fun PreviewFormImageRowV2() {
         hasError = false,
         errorMsg = ""
     )
-    FormImageRowV2(data = dataItem, setDataValue = {})
+    formImageRowV2(data = dataItem, setDataValue = {})
 }
 
 @Composable
-fun FormImageRowV2(
+fun formImageRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {

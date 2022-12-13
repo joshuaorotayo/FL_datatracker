@@ -9,6 +9,7 @@ data class DataFieldUseCases(
     val updateDataField: UpdateDataField,
     val getDataFieldsFlow: GetDataFieldsFlow,
     val getDataFieldsByPresetId: GetDataFieldsByPresetId,
+    val getDataFieldsByPresetIdEnabled: GetDataFieldsByPresetIdEnabled,
     val getDataFieldById: GetDataFieldById,
     val getDataFieldsByEnabled: GetDataFieldsByEnabled,
     val getDataFieldByNames: GetDataFieldNames,

@@ -37,11 +37,11 @@ fun PreviewFormShortTextRowV2() {
         hasError = false,
         errorMsg = ""
     )
-    FormShortTextRowV2(data = dataItem, setDataValue = {})
+    formShortTextRowV2(data = dataItem, setDataValue = {})
 }
 
 @Composable
-fun FormShortTextRowV2(
+fun formShortTextRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {

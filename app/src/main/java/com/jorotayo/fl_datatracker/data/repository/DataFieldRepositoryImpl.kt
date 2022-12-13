@@ -46,12 +46,17 @@ class DataFieldRepositoryImpl : DataFieldRepository {
         return dataFieldBox.query(DataField_.isEnabled.equal(true)).build().find()
     }
 
+    override fun getDataFieldsByPresetIdEnabled(presetId: Long): List<DataField> {
+        return dataFieldBox.query(DataField_.isEnabled.equal(true)
+            .and(DataField_.presetId.equal(presetId))).build().find()
+    }
+
     override fun getDataFieldNames(): List<String> {
         return dataFieldBox.query().build().property(DataField_.fieldName).findStrings().asList()
     }
 
-    override fun insertDataField(dataField: DataField) {
-        dataFieldBox.put(dataField)
+    override fun insertDataField(dataField: DataField): Long {
+        return dataFieldBox.put(dataField)
     }
 
     override fun deleteDataField(dataField: DataField) {

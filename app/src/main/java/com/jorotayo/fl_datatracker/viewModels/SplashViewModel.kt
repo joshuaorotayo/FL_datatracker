@@ -5,6 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
 import com.jorotayo.fl_datatracker.navigation.Screen
@@ -21,10 +23,13 @@ class SplashViewModel @Inject constructor(
     private val _startDestination: MutableState<String> = mutableStateOf(Screen.Welcome.route)
     val startDestination: State<String> = _startDestination
 
-    private val isOnBoardingComplete = settingsUseCases.getSettingByName("isOnBoardingComplete")
-
     init {
         viewModelScope.launch {
+
+            initialiseTables()
+
+            val isOnBoardingComplete = settingsUseCases.getSettingByName("isOnBoardingComplete")
+
             if (isOnBoardingComplete.settingBoolValue == true) {
                 _startDestination.value = Screen.HomeScreen.route
             } else {
@@ -32,5 +37,40 @@ class SplashViewModel @Inject constructor(
             }
         }
         _isLoading.value = false
+    }
+
+    private fun initialiseTables() {
+
+        val onBoardingCompleteSetting = Setting(
+            settingId = 0,
+            settingName = "isOnBoardingComplete",
+            settingBoolValue = false,
+            settingStringValue = ""
+        )
+
+        val settingsList = settingsUseCases.getSettingsList()
+        if (settingsList.isEmpty())
+            settingsUseCases.addSetting(
+                onBoardingCompleteSetting
+            )
+
+        val presetList = presetUseCases.getPresetList()
+        if (presetList.isEmpty()) {
+            presetUseCases.addPreset(
+                Preset(
+                    presetId = 0,
+                    presetName = "Default"
+                )
+            )
+
+            settingsUseCases.addSetting(
+                Setting(
+                    settingId = 0,
+                    settingName = "currentPreset",
+                    settingBoolValue = false,
+                    settingStringValue = "Default"
+                )
+            )
+        }
     }
 }

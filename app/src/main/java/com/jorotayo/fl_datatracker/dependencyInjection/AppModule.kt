@@ -34,6 +34,7 @@ object AppModule {
             updateDataField = UpdateDataField(dataFieldRepository),
             getDataFields = GetDataFields(dataFieldRepository),
             getDataFieldsByPresetId = GetDataFieldsByPresetId(dataFieldRepository),
+            getDataFieldsByPresetIdEnabled = GetDataFieldsByPresetIdEnabled(dataFieldRepository),
             getDataFieldByNames = GetDataFieldNames(dataFieldRepository),
             getDataFieldById = GetDataFieldById(dataFieldRepository),
             getDataFieldsByEnabled = GetDataFieldsByEnabled(dataFieldRepository),

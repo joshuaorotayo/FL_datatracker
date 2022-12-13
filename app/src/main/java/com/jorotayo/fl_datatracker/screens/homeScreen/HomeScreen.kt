@@ -30,6 +30,7 @@ import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
+    viewModel2: DataEntryScreenViewModel = hiltViewModel(),
     navController: NavController,
 ) {
 
@@ -134,7 +135,7 @@ fun HomeScreen(
                                     data = data,
                                     editData = { dataId ->
                                         navController.navigate(Screen.DataEntry.route + "?dataId=${dataId}")
-                                        DataEntryScreenViewModel().onEvent(DataEvent.UpdateDataId(
+                                        viewModel2.onEvent(DataEvent.UpdateDataId(
                                             dataId))
                                     },
                                     deleteData = {
@@ -146,7 +147,7 @@ fun HomeScreen(
                         }
                     }
                 }
-                DeleteDataDialog(modifier = Modifier,
+                BasicDeleteDataDialog(modifier = Modifier,
                     confirmDelete = { viewModel.onEvent(HomeScreenEvent.DeleteDataItem) },
                     scaffold = scaffoldState,
                     state = uiState.isDeleteDialogVisible,

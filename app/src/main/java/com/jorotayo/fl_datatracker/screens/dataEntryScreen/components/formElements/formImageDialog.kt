@@ -19,7 +19,7 @@ import com.jorotayo.fl_datatracker.R
 @Preview
 @Composable
 fun PreviewFormImageDialog() {
-    FormImageDialog(
+    formImageDialog(
         onDismiss = {},
         modifier = Modifier
     )
@@ -27,7 +27,7 @@ fun PreviewFormImageDialog() {
 }
 
 @Composable
-fun FormImageDialog(
+fun formImageDialog(
     onDismiss: () -> Unit,
     modifier: Modifier,
 ) {

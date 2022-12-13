@@ -23,8 +23,8 @@ class DataRepositoryImpl : DataRepository {
         return dataBox.query(Data_.name.equal(dataName)).build().findFirst()
     }
 
-    override fun insertData(data: Data) {
-        dataBox.put(data)
+    override fun insertData(data: Data): Long {
+        return dataBox.put(data)
     }
 
     override suspend fun updateData(data: Data) {

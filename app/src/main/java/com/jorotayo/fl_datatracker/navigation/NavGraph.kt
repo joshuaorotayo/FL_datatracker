@@ -18,7 +18,6 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.ui.PageTemplate
-import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
 @ExperimentalAnimationApi
@@ -86,6 +85,7 @@ fun SetupNavGraph(
         composable(route = Screen.HomeScreen.route) {
             HomeScreen(
                 viewModel = HomeScreenViewModel(),
+                viewModel2 = hiltViewModel(),
                 navController = navController
             )
         }
@@ -101,7 +101,7 @@ fun SetupNavGraph(
         ) {
             val dataId = it.arguments?.getLong("dataId", -1)
             DataEntryScreen(
-                viewModel = DataEntryScreenViewModel(),
+                viewModel = hiltViewModel(),
                 navController = navController,
                 dataId = dataId!!
             )

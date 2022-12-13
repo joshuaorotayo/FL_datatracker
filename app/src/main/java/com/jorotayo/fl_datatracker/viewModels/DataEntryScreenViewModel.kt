@@ -9,16 +9,30 @@ import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.domain.useCases.DataFieldUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.DataUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
 import com.jorotayo.fl_datatracker.util.BoxState
 import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel
+class DataEntryScreenViewModel @Inject constructor(
+    private val dataFieldUseCases: DataFieldUseCases,
+    private val dataUseCases: DataUseCases,
+    presetUseCases: PresetUseCases,
+    settingsUseCases: SettingsUseCases,
+) : ViewModel() {
 
+    private val settingPreset = settingsUseCases.getSettingByName(settingName = "currentPreset")
+    private val presetSetting =
+        presetUseCases.getPresetByPresetName(settingPreset.settingStringValue)
 
     private val _boxState = mutableStateOf(BoxState())
     val boxState: State<BoxState> = _boxState
@@ -32,12 +46,6 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private val _dataName = mutableStateOf("")
     var dataName: MutableState<String> = _dataName
 
-    /*
-        init{
-            savedStateHandle.get<Long>("dataId")?.let {
-                _currentDataId.value = it
-            }
-        }*/
     private var _uiState = mutableStateOf(DataEntryScreenState(
         dataName = dataName.value,
         dataRows = makeDataRows(),
@@ -61,7 +69,7 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                     lastEditedTime = dateInString
                 )
                 saveDataItems(
-                    dataId = boxState.value._dataBox.put(newData),
+                    dataId = dataUseCases.addData(newData),
                     formData = event.dataEntryScreenState)
 
             }
@@ -90,11 +98,11 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
     private fun makeDataRows(): MutableList<DataRowState> {
         val list: MutableList<DataRowState> = ArrayList()
 
+        Log.i(TAG, "current Data Rows value: LOAD  " + currentDataFields)
         if (currentDataId.value != (0).toLong()) {
             //Returns all enabled data fields in the data item
             // val dataFields = dataBox.value.get(currentDataId.value).dataFields.filter { it.isEnabled }
 
-            Log.i(TAG, "makeDataRows: LOAD  " + currentDataId.value)
             // All stored fields should be enabled
             /* currentDataFields.value = dataBox.value.get(currentDataId.value).dataFields.toList()
 
@@ -110,14 +118,9 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
             // If creating a new record of data to save
             // check for the current preset
             Log.i(TAG, "makeDataRows: NEW " + currentDataId.value)
-            val datafields = mutableListOf<DataField>()
-            boxState.value.dataFieldsList.forEach { datafield ->
-                if ((datafield.presetId == boxState.value.currentPreset?.presetId)) {
-                    if (datafield.isEnabled) {
-                        datafields += datafield
-                    }
-                }
-            }
+
+            val datafields =
+                dataFieldUseCases.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)
 
             datafields.forEach { dataField ->
                 list += DataRowState(
@@ -136,7 +139,6 @@ class DataEntryScreenViewModel @Inject constructor() : ViewModel() {
                 )
             }
         }
-
         return list
     }
 }

@@ -30,7 +30,7 @@ import kotlin.math.floor
 @Preview(showBackground = true)
 @Composable
 fun PreviewFormRadioRowV2() {
-    FormRadioRowV2(
+    formRadioRowV2(
         data = DataRowState(
             DataItem(
                 dataItemId = 0,
@@ -47,7 +47,7 @@ fun PreviewFormRadioRowV2() {
 }
 
 @Composable
-fun FormRadioRowV2(
+fun formRadioRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
