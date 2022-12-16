@@ -85,7 +85,6 @@ fun DataFieldsScreen(
                     )
                 }
                 DataFieldsViewModel.UiEvent.SaveDataField -> {
-                    viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Field Saved!"
                     )
@@ -123,13 +122,13 @@ fun DataFieldsScreen(
                             .padding(horizontal = 5.dp)
                             .clickable(onClick = { presetExpanded = true })
                             .clip(shape = RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colors.onBackground)
+                            .background(if (isSystemInDarkTheme()) MaterialTheme.colors.background else MaterialTheme.colors.onBackground)
                             .padding(5.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            modifier = Modifier.padding(end = 5.dp),
+                            modifier = Modifier.padding(horizontal = 5.dp),
                             text = currentPreset!!.presetName,
                             color = headerColours,
                             textAlign = TextAlign.Center
@@ -168,23 +167,15 @@ fun DataFieldsScreen(
                                         // Default shouldn't show the 'x'
                                         if (index > 0) {
                                             Icon(
-                                                modifier = Modifier.clickable(
-                                                    onClick = {
-                                                        viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
-                                                            value = preset))
-                                                        /*
-                                                        if (presets.size >= 2) {
+                                                modifier = Modifier
+                                                    .padding(start = 5.dp)
+                                                    .clickable(
+                                                        onClick = {
+                                                            presetExpanded = false
                                                             viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
                                                                 value = preset))
-                                                        } else {
-                                                            scope.launch {
-                                                                scaffoldState.snackbarHostState.showSnackbar(
-                                                                    message = "At least one preset is needed"
-                                                                )
-                                                            }
-                                                        }*/
-                                                    }
-                                                ),
+                                                        }
+                                                    ),
                                                 imageVector = Icons.Default.Close,
                                                 contentDescription = "Delete icon for ${preset.presetName}",
                                                 tint = MaterialTheme.colors.onSurface

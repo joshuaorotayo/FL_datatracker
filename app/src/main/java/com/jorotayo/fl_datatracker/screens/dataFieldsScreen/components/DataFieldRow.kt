@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,15 +22,48 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
+
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
+@Composable
+fun PreviewDataFieldRow() {
+    val currentDataField = DataField(
+        dataFieldId = 0,
+        fieldName = "",
+        dataFieldType = 0,
+        presetId = 0,
+        first = "1st Value",
+        second = "2nd Value",
+        third = "3rd Value",
+        isEnabled = true,
+        fieldHint = "Example Hint"
+    )
+    FL_DatatrackerTheme {
+        DataFieldRow(
+            viewModel = hiltViewModel(),
+            currentDataField = currentDataField,
+            editName = {},
+            editHintText = {},
+            editRowType = {},
+            checkedChange = { (!currentDataField.isEnabled) },
+            deleteIcon = {}
+        )
+    }
+}
 
 
 @Composable
@@ -42,6 +76,8 @@ fun DataFieldRow(
     checkedChange: (Boolean) -> Unit,
     deleteIcon: () -> Unit,
 ) {
+
+    val textColour = if (isSystemInDarkTheme()) Color.Gray else MaterialTheme.colors.primary
     var expanded by remember { mutableStateOf(false) }
 
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
@@ -86,9 +122,9 @@ fun DataFieldRow(
             .background(
                 if (isSystemInDarkTheme()) {
                     if (isRowEnabled.value) MaterialTheme.colors.surface
-                    else MaterialTheme.colors.primary.copy(0.1f)
+                    else MaterialTheme.colors.primary.copy(0.3f)
                 } else if (isRowEnabled.value) MaterialTheme.colors.surface
-                else MaterialTheme.colors.primary.copy(0.1f)
+                else MaterialTheme.colors.primary.copy(0.3f)
             )
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
@@ -104,7 +140,7 @@ fun DataFieldRow(
                     modifier = Modifier
                         .weight(3f),
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = MaterialTheme.colors.primary,
+                        textColor = textColour,
                         backgroundColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent
@@ -113,7 +149,7 @@ fun DataFieldRow(
                     placeholder = {
                         Text(
                             text = currentRowState.value.fieldName.ifBlank { stringResource(R.string.add_new_data_field) },
-                            color = if (text.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                            color = if (text.text.isBlank()) textColour else Color.Black,
                             textAlign = TextAlign.Center
                         )
                     },
@@ -133,13 +169,13 @@ fun DataFieldRow(
                     Text(
                         modifier = Modifier,
                         text = items[currentDataField.dataFieldType],
-                        color = MaterialTheme.colors.primary,
+                        color = textColour,
                         textAlign = TextAlign.Center
                     )
                     Icon(
                         imageVector = Default.ArrowDropDown,
                         contentDescription = stringResource(R.string.dataField_type_dropdown),
-                        tint = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                        tint = textColour.copy(alpha = 0.5f)
                     )
                 }
                 DropdownMenu(
@@ -164,7 +200,7 @@ fun DataFieldRow(
                                 text = s,
                                 modifier = Modifier.weight(3f),
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.primary
+                                color = textColour
                             )
                             Icon(
                                 modifier = Modifier
@@ -173,7 +209,7 @@ fun DataFieldRow(
                                 imageVector = icons[index],
                                 contentDescription = String.format(stringResource(id = R.string.dropdown_icon_description,
                                     items[index])),
-                                tint = MaterialTheme.colors.primary
+                                tint = textColour
                             )
                         }
                     }
@@ -189,9 +225,9 @@ fun DataFieldRow(
                         isRowEnabled.value = it
                     },
                     colors = CheckboxDefaults.colors(
-                        checkmarkColor = MaterialTheme.colors.onPrimary,
-                        uncheckedColor = MaterialTheme.colors.primary,
-                        checkedColor = MaterialTheme.colors.primary,
+                        checkmarkColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary,
+                        uncheckedColor = textColour,
+                        checkedColor = textColour,
                     )
                 )
 
@@ -204,7 +240,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Delete,
                         contentDescription = stringResource(R.string.delete_row_header),
-                        tint = MaterialTheme.colors.primary
+                        tint = textColour
                     )
                 }
             }
@@ -213,23 +249,23 @@ fun DataFieldRow(
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier
+                        .padding(start = 16.dp)
                         .weight(8f)
                 ) {
                     Text(
                         text = "Hint: ",
-                        color = MaterialTheme.colors.primary
+                        color = textColour
                     )
                     Text(
                         text = "${currentDataField.fieldHint}",
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary
+                        color = textColour
                     )
                 }
                 IconButton(
@@ -243,7 +279,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Edit,
                         contentDescription = stringResource(R.string.amend_row_hint),
-                        tint = MaterialTheme.colors.primary,
+                        tint = textColour,
                     )
                 }
             }
@@ -262,7 +298,7 @@ fun DataFieldRow(
                         modifier = Modifier
                             .fillMaxWidth(),
                         colors = TextFieldDefaults.textFieldColors(
-                            textColor = MaterialTheme.colors.primary,
+                            textColor = textColour,
                             backgroundColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent
@@ -273,7 +309,7 @@ fun DataFieldRow(
                                 text = (if (currentRowState.value.fieldHint?.isBlank() == true) String.format(
                                     stringResource(R.string.hint_prompt,
                                         currentRowState.value.fieldName)) else currentRowState.value.fieldHint!!),
-                                color = if (hintText.text.isBlank()) MaterialTheme.colors.primary else Color.Black,
+                                color = if (hintText.text.isBlank()) textColour else Color.Black,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold
                             )
@@ -298,14 +334,14 @@ fun DataFieldRow(
                 Row(modifier = Modifier.wrapContentWidth()) {
                     Text(
                         text = stringResource(R.string.bool_placeholder),
-                        color = MaterialTheme.colors.primary
+                        color = textColour
                     )
                     Text(
                         text = "${currentDataField.first.uppercase()}/${
                             currentDataField.second.uppercase()
                         }",
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary
+                        color = textColour
                     )
                 }
                 IconButton(
@@ -318,7 +354,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Edit,
                         contentDescription = stringResource(R.string.amend_bool_value),
-                        tint = MaterialTheme.colors.primary,
+                        tint = textColour,
                     )
                 }
             }
@@ -332,12 +368,12 @@ fun DataFieldRow(
             ) {
                 Text(
                     text = stringResource(R.string.tristate_placeholder),
-                    color = MaterialTheme.colors.primary
+                    color = textColour
                 )
                 Text(
                     text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
+                    color = textColour
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
@@ -351,7 +387,7 @@ fun DataFieldRow(
                     Icon(
                         imageVector = Default.Edit,
                         contentDescription = stringResource(R.string.amend_tristate_value),
-                        tint = MaterialTheme.colors.primary,
+                        tint = textColour,
                     )
                 }
             }
@@ -471,18 +507,19 @@ fun DataFieldRow(
                         isEditOptionsVisible.value = !isEditOptionsVisible.value
                     })
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .padding(end = 8.dp),
                     text = stringResource(R.string.hideEditRowText),
-                    color = MaterialTheme.colors.primary.copy(alpha = 0.5f)
+                    color = textColour.copy(alpha = 0.5f)
                 )
                 Icon(
                     modifier = Modifier,
                     imageVector = Default.ArrowUpward,
-                    tint = MaterialTheme.colors.primary.copy(alpha = 0.7f),
+                    tint = textColour.copy(alpha = 0.7f),
                     contentDescription = stringResource(R.string.hideEditRowText) + " Icon"
                 )
             }

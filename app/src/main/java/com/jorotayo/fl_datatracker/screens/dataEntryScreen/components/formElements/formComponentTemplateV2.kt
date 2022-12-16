@@ -1,6 +1,8 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -15,18 +17,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
-@Preview(showBackground = true)
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormComponentTemplateV2() {
-    formComponentTemplateV2(fieldName = "Form Component Template Example")
+    FL_DatatrackerTheme {
+        formComponentTemplateV2(fieldName = "Form Component Template Example")
+    }
 }
 
 @Composable
 fun formComponentTemplateV2(
     fieldName: String
 ): String {
-    var count = remember { mutableStateOf(0) }
+    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
+
+    val count = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier

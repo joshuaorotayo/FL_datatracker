@@ -1,10 +1,12 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.app.DatePickerDialog
+import android.content.res.Configuration
 import android.widget.DatePicker
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -31,7 +33,10 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 import java.util.*
 
 
-@Preview
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormDateRowV2() {
     formDateRowV2(
@@ -55,7 +60,7 @@ fun formDateRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
-    //var hasError by remember{ mutableStateOf(data.hasError)}
+    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
 
     // Fetching the Local Context
     val mContext = LocalContext.current
@@ -88,7 +93,6 @@ fun formDateRowV2(
         }, mYear, mMonth, mDay
     )
 
-
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -97,70 +101,75 @@ fun formDateRowV2(
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
     ) {
-
-        Text(
+        Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 5.dp)
-                .fillMaxWidth(),
-            text = data.dataItem.fieldName,
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
-        )
+                .padding(16.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = data.dataItem.fieldName,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.onSurface,
+            )
 
-        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+            AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = stringResource(id = R.string.date_row_error),
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Red,
+                    )
+                    Icon(
+                        modifier = Modifier,
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = stringResource(id = R.string.row_error_description),
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                IconButton(
+                    onClick = {
+                        mDatePickerDialog.show()
+                    })
+                {
+                    Icon(
+                        modifier = Modifier,
+                        imageVector = Icons.Default.EditCalendar,
+                        contentDescription = "Select Date from Calendar",
+                        tint = textColour
+                    )
+                }
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 8.dp),
-                    text = stringResource(id = R.string.date_row_error),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Red,
+                        .clickable(
+                            onClick = {
+                                mDatePickerDialog.show()
+                            }
+                        )
+                        .fillMaxWidth(),
+                    text = mDate.value.ifBlank { "DDnd Month, Year" },
+                    color = if (mDate.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body1
                 )
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 10.dp),
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = stringResource(id = R.string.row_error_description),
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-        }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = if (mDate.value.isBlank()) "DDnd Month, Year" else data.dataItem.dataValue,
-                color = if (mDate.value.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                modifier = Modifier
-                    .clickable(
-                        onClick = {
-                            mDatePickerDialog.show()
-                        }
-                    )
-                    .padding(end = 10.dp),
-                textAlign = TextAlign.Center,
-                style = if (mDate.value.isBlank()) MaterialTheme.typography.body1 else MaterialTheme.typography.body1
-            )
-            IconButton(
-                onClick = {
-                    mDatePickerDialog.show()
-                }) {
-                Icon(
-                    modifier = Modifier,
-                    imageVector = Icons.Default.EditCalendar,
-                    contentDescription = "Select Date from Calendar",
-                    tint = MaterialTheme.colors.primary
-                )
             }
         }
     }

@@ -6,25 +6,27 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.domain.useCases.DataFieldUseCases
-import com.jorotayo.fl_datatracker.domain.useCases.DataUseCases
-import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
-import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
+import com.jorotayo.fl_datatracker.domain.model.InvalidDataException
+import com.jorotayo.fl_datatracker.domain.useCases.*
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
-import com.jorotayo.fl_datatracker.util.BoxState
 import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DataEntryScreenViewModel @Inject constructor(
     private val dataFieldUseCases: DataFieldUseCases,
+    private val dataItemUseCases: DataItemUseCases,
     private val dataUseCases: DataUseCases,
     presetUseCases: PresetUseCases,
     settingsUseCases: SettingsUseCases,
@@ -48,27 +50,41 @@ class DataEntryScreenViewModel @Inject constructor(
         dataRows = makeDataRows(),
         nameError = false
     ))
-
     val uiState: State<DataEntryScreenState> = _uiState
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: DataEvent) {
         when (event) {
-            is DataEvent.SaveData -> {
+            is DataEvent.ValidateDataForm -> {
+                viewModelScope.launch {
+                    try {
+                        val fieldNames = dataFieldUseCases.getDataFields().map { it.fieldName }
+                        val dataFormResults =
+                            dataUseCases.validateInsertDataForm(fieldNames = fieldNames,
+                                dataForm = event.dataEntryScreenState)
+                        if (!dataFormResults.first) {
 
-                val date = getCurrentDateTime()
-                val dateInString = date.toString("HH:mm - dd/MM/yyyy ")
-
-                val newData = Data(
-                    dataId = 0,
-                    name = event.dataEntryScreenState.dataName,
-                    createdTime = dateInString,
-                    lastEditedTime = dateInString
-                )
-                saveDataItems(
-                    dataId = dataUseCases.addData(newData),
-                    formData = event.dataEntryScreenState)
-
+                            val newUiState = mutableStateOf(DataEntryScreenState(
+                                dataName = dataFormResults.second.dataName,
+                                dataRows = dataFormResults.second.dataRows,
+                                nameError = false
+                            ))
+                            _uiState.value = newUiState.value
+                            throw InvalidDataException("Data Form could not be saved. Please check fields")
+                        } else {
+                            saveDataForm(dataFormResults.second)
+                            _eventFlow.emit(UiEvent.SaveDataForm)
+                        }
+                    } catch (e: InvalidDataException) {
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                message = e.message.toString().ifBlank { "" }
+                            )
+                        )
+                    }
+                }
             }
             is DataEvent.SetName -> {
                 _uiState.value = uiState.value.copy(
@@ -89,6 +105,44 @@ class DataEntryScreenViewModel @Inject constructor(
             is DataEvent.UpdateDataId -> {
                 _currentDataId.value = event.value
             }
+        }
+    }
+
+    private fun saveDataForm(dataForm: DataEntryScreenState) {
+        val date = getCurrentDateTime()
+        val dateInString = date.toString("HH:mm - dd/MM/yyyy ")
+
+        val newData = Data(
+            dataId = 0,
+            name = dataForm.dataName,
+            createdTime = dateInString,
+            lastEditedTime = dateInString
+        )
+        saveDataItems(
+            dataId = dataUseCases.addData(newData),
+            formData = dataForm
+        )
+    }
+
+    private fun saveDataItems(
+        dataId: Long,
+        formData: DataEntryScreenState,
+    ) {
+        for (item in formData.dataRows) {
+            val newDataItem = DataItem(
+                dataId = dataId,
+                dataItemId = 0,
+                presetId = item.dataItem.presetId,
+                fieldName = item.dataItem.fieldName,
+                dataFieldType = item.dataItem.dataFieldType,
+                first = item.dataItem.first,
+                second = item.dataItem.second,
+                third = item.dataItem.third,
+                isEnabled = item.dataItem.isEnabled,
+                fieldDescription = item.dataItem.fieldDescription,
+                dataValue = item.dataItem.dataValue,
+            )
+            dataItemUseCases.addDataItem(newDataItem)
         }
     }
 
@@ -139,23 +193,13 @@ class DataEntryScreenViewModel @Inject constructor(
         }
         return list
     }
+
+
+    sealed class UiEvent {
+        data class ShowSnackbar(val message: String) : UiEvent()
+        object SaveDataForm : UiEvent()
+    }
+
 }
 
-private fun saveDataItems(dataId: Long, formData: DataEntryScreenState) {
-    for (item in formData.dataRows) {
-        val newDataItem = DataItem(
-            dataId = dataId,
-            dataItemId = 0,
-            presetId = item.dataItem.presetId,
-            fieldName = item.dataItem.fieldName,
-            dataFieldType = item.dataItem.dataFieldType,
-            first = item.dataItem.first,
-            second = item.dataItem.second,
-            third = item.dataItem.third,
-            isEnabled = item.dataItem.isEnabled,
-            fieldDescription = item.dataItem.fieldDescription,
-            dataValue = item.dataItem.dataValue,
-        )
-        BoxState()._dataItemBox.put(newDataItem)
-    }
-}
+

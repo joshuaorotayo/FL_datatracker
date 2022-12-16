@@ -109,6 +109,9 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.9.0'
 
+    //LiveData
+    implementation 'androidx.compose.runtime:runtime-livedata:1.4.0-alpha03'
+
     // Android Image Picker
 //    implementation 'com.github.Drjacky:ImagePicker:2.3.20'
 

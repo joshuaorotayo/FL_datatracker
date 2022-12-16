@@ -19,3 +19,5 @@ data class DataItem(
     var fieldDescription: String? = "Enter value for $fieldName",
     var dataValue: String = "",
 )
+
+class InvalidDataItemException(message: String) : Exception(message)

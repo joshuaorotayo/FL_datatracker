@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">FL_Datatracker</string>
+    <string name="cancelText">Cancel</string>
+    <string name="deleteText">Delete</string>
+    <string name="finish_btn">Finish</string>
+
     <string name="landing_enable_explanation">Click the floating action button to add new Data</string>
+
     <string name="dataRow_lastEdited"> <b>Last Edited: </b></string>
     <string name="presetShowing">Showing Preset: </string>
     <string name="addPresetText">+ Add Preset</string>
     <string name="enterPresetPlaceholder">Enter a new Preset Name</string>
-    <string name="cancelText">Cancel</string>
-    <string name="deleteText">Delete</string>
     <string name="addPresetHeader">Add New Preset</string>
     <string name="deletePresetHeader">Delete Preset: %s</string>
     <string name="addPresetBtn">Add Preset</string>
@@ -16,12 +19,13 @@
     <string name="increment_description">Increment count</string>
 
     <string name="radio_row_error">Please select an Option</string>
+    <string name="short_row_error">Please enter a value</string>
     <string name="date_row_error">Please select a Date</string>
     <string name="time_row_error">Please select a Time</string>
     <string name="count_row_error">Please put in a number</string>
     <string name="row_error_description">Row Error Icon</string>
+
     <string name="dropdown_icon_description">%s dropdown icon</string>
-    <string name="finish_btn">Finish</string>
     <string name="hide_welcome_screen">Don\'t show on next run</string>
     <string name="next_btn">Next</string>
     <string name="dataField_type_dropdown">Drop down arrow for Field Type Dropdown</string>
@@ -31,12 +35,12 @@
     <string name="edit_hint_text">Edit the Hint Text</string>
     <string name="hint_prompt">"Please enter Hint for field: %s"</string>
     <string name="bool_placeholder">Boolean: </string>
-    <string name="amend_bool_value">Amend Boolean values</string>
     <string name="tristate_placeholder">Tristate: </string>
+    <string name="add_list_item_placeholder">Enter Item %d</string>
+    <string name="amend_bool_value">Amend Boolean values</string>
     <string name="amend_tristate_value">Amend Tri-state</string>
     <string name="list_item_add_item">Add new list item</string>
     <string name="delete_list_item">Delete list item</string>
-    <string name="add_list_item_placeholder">Enter Item %d</string>
     <string name="clear_list_item">Clear list item</string>
     <string name="list_warning_caption">Empty values will be removed on save</string>
     <string name="image_gallery_select">Select image from gallery</string>
@@ -46,6 +50,7 @@
     <string name="description_image_selection_icon">Image selection dialog</string>
     <string name="list_item_leading_icon">List Item %d leading icon</string>
     <string name="edit_long_text">Edit long text field %s</string>
+    <string name="edit_short_text">Edit short text field %s</string>
     <string name="add_edit_fields_label">Add/Edit Data Fields:</string>
     <string name="add_field_description">Add New Data Field</string>
     <string name="preset_dialog_icon">Delete Preset dialog, delete icon</string>
@@ -67,6 +72,7 @@
     <string name="delete_data_header">Delete Data</string>
     <string name="delete_data_body">Are you sure you want to delete this Data Item?</string>
     <string name="enter_data_header">Enter Data: %s</string>
+    <string name="short_text_error_msg">Please enter a value for text field: %s</string>
     <plurals name="items_showing_header">
         <item quantity="one">%d item showing</item>
         <item quantity="other">%d items showing</item>

@@ -8,4 +8,5 @@ data class PresetUseCases(
     val deletePreset: DeletePreset,
     val getPresetList: GetPresetList,
     val getPresetById: GetPresetById,
+    val getCurrentPresetFromSettings: GetCurrentPresetFromSettings,
 )

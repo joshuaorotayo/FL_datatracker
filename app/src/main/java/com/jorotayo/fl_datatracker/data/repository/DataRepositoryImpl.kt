@@ -27,7 +27,7 @@ class DataRepositoryImpl : DataRepository {
         return dataBox.put(data)
     }
 
-    override suspend fun updateData(data: Data) {
+    override fun updateData(data: Data) {
         dataBox.put(data)
     }
 

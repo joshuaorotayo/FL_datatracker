@@ -9,4 +9,5 @@ data class DataUseCases(
     val getDataByDataName: GetDataByDataName,
     val updateData: UpdateData,
     val addData: AddData,
+    val validateInsertDataForm: ValidateInsertDataForm,
 )

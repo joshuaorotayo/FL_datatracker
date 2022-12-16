@@ -24,10 +24,9 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
 @Preview(showBackground = true,
-    showSystemUi = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "Dark Mode")
-@Preview(showBackground = true, showSystemUi = true, name = "Light Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewBasicAddPresetDialog() {
     FL_DatatrackerTheme {

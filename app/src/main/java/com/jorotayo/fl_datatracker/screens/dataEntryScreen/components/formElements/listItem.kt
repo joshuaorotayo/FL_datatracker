@@ -1,7 +1,9 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,21 +18,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
-@Preview
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewListItem() {
-    listItem(
-        changeValue = {},
-        addItem = {},
-        deleteItem = {},
-        lastItem = false,
-        index = 1
-    )
+    FL_DatatrackerTheme {
+        listItem(
+            changeValue = {},
+            addItem = {},
+            deleteItem = {},
+            lastItem = false,
+            index = 1
+        )
+    }
 }
 
 @Composable
@@ -41,6 +50,9 @@ fun listItem(
     lastItem: Boolean,
     index: Int,
 ): String {
+
+
+    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 20
     val (text, setText) = remember { mutableStateOf("") }
 
@@ -67,9 +79,9 @@ fun listItem(
                 )
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = MaterialTheme.colors.onBackground,
+                unfocusedBorderColor = textColour,
                 focusedBorderColor = MaterialTheme.colors.primary,
-                backgroundColor = MaterialTheme.colors.surface,
+                backgroundColor = Color.Transparent,
                 textColor = MaterialTheme.colors.onSurface
             ),
             leadingIcon = {
@@ -77,7 +89,7 @@ fun listItem(
                     imageVector = Icons.Default.Edit,
                     contentDescription = String.format(stringResource(id = R.string.list_item_leading_icon),
                         index + 1),
-                    tint = MaterialTheme.colors.primary
+                    tint = textColour
                 )
             },
             trailingIcon = {

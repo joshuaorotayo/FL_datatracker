@@ -11,3 +11,5 @@ data class Data(
     var lastEditedTime: String = "",
     var createdTime: String = "",
 )
+
+class InvalidDataException(message: String) : Exception(message)

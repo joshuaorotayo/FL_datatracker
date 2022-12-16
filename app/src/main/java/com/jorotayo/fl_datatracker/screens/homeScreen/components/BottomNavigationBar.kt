@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -27,6 +28,11 @@ fun BottomNavigationBar(
     navController: NavController,
     items: List<Screen>
 ) {
+
+    val highlightColour =
+        if (isSystemInDarkTheme()) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+    val unselectedColour = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
+
     BottomNavigation(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,11 +59,11 @@ fun BottomNavigationBar(
                                     modifier = Modifier,
                                     imageVector = it,
                                     contentDescription = screen.pageDescription,
-                                    tint = if (screen.route.contains(currentRoute)) MaterialTheme.colors.primary else Color.LightGray,
+                                    tint = if (screen.route.contains(currentRoute)) highlightColour else unselectedColour,
                                 )
                                 Text(
                                     text = screen.pageName,
-                                    color = if (currentRoute == screen.route) MaterialTheme.colors.primary else Color.LightGray
+                                    color = if (currentRoute == screen.route) highlightColour else unselectedColour
                                 )
                             }
                         }

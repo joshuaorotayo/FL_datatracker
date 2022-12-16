@@ -1,6 +1,8 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,21 +22,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
-@Preview(showBackground = true)
+
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormLongTextRowV2() {
-    val data = DataItem(
-        dataItemId = 0,
-        presetId = 0,
-        fieldName = "Data Field for Long Text Example",
-        fieldDescription = "Data capture long text row example...",
-        dataId = 1
-    )
-    formLongTextRowV2(
-        data = data,
-        setDataValue = {}
-    )
+    FL_DatatrackerTheme {
+        val data = DataItem(
+            dataItemId = 0,
+            presetId = 0,
+            fieldName = "Data Field for Long Text Example",
+            fieldDescription = "Data capture long text row example...",
+            dataId = 1
+        )
+        formLongTextRowV2(
+            data = data,
+            setDataValue = {}
+        )
+    }
 }
 
 @Composable
@@ -43,6 +52,7 @@ fun formLongTextRowV2(
     setDataValue: (String) -> Unit,
 ): String {
     //define any local variables
+    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataValue)) }
 
@@ -54,24 +64,29 @@ fun formLongTextRowV2(
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
     ) {
-        Text(
+        Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                .fillMaxWidth(),
-            text = data.fieldName,
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
-        )
-        // Data Field Name Data Capture
+                .padding(16.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = data.fieldName,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.onSurface,
+            )
+            // Data Field Name Data Capture
 
-        val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
+            val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
         TextField(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = String.format(stringResource(id = R.string.edit_long_text),
                         data.fieldName),
-                    tint = MaterialTheme.colors.primary
+                    tint = textColour
                 )
             },
             modifier = Modifier
@@ -86,7 +101,6 @@ fun formLongTextRowV2(
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
-
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
@@ -98,7 +112,7 @@ fun formLongTextRowV2(
                 (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else "Please enter content for field: ${data.fieldName}")?.let {
                     Text(
                         text = it,
-                        color = if (text.text.isBlank()) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                        color = if (text.text.isBlank()) textColour else MaterialTheme.colors.onSurface,
                         textAlign = TextAlign.Start
                     )
                 }
@@ -112,16 +126,13 @@ fun formLongTextRowV2(
             color = Color.Gray,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 10.dp, bottom = 8.dp)
-                .background(Color.Transparent)
         )
     }
-
+    }
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
             .height(10.dp)
     )
-
     return text.text
 }

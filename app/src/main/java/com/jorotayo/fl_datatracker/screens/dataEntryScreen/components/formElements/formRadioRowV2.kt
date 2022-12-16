@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,25 +26,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import kotlin.math.floor
 
-@Preview(showBackground = true)
+
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormRadioRowV2() {
-    formRadioRowV2(
-        data = DataRowState(
-            DataItem(
-                dataItemId = 0,
-                fieldName = "Data Field for Radio Row",
-                first = "No",
-                second = "N/A",
-                third = "Yes",
-                presetId = 0,
-                dataId = 1
-            )
-        ),
-        setDataValue = {}
-    )
+    FL_DatatrackerTheme {
+        formRadioRowV2(
+            data = DataRowState(
+                DataItem(
+                    dataItemId = 0,
+                    fieldName = "Data Field for Radio Row",
+                    first = "No",
+                    second = "N/A",
+                    third = "Yes",
+                    presetId = 0,
+                    dataId = 1
+                )
+            ),
+            setDataValue = {}
+        )
+    }
 }
 
 @Composable
@@ -89,85 +97,92 @@ fun formRadioRowV2(
             .clip(shape = RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.surface)
     ) {
-        Text(
+        Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                .fillMaxWidth(),
-            text = data.dataItem.fieldName,
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
-        )
+                .padding(16.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
 
-        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                    .fillMaxWidth(),
+                text = data.dataItem.fieldName,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.onSurface,
+            )
+
+            AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                        text = stringResource(id = R.string.radio_row_error),
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Red,
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .padding(end = 10.dp),
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = stringResource(id = R.string.row_error_description),
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
+            }
+
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                //Button Data capture
+                Row(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
-                    text = stringResource(id = R.string.radio_row_error),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Red,
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 10.dp),
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = stringResource(id = R.string.row_error_description),
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            //Button Data capture
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .clip(shape = RoundedCornerShape(15.dp))
-                    .wrapContentSize()
-            ) {
-                options.forEach { text ->
-                    if (text.isNotBlank()) {
-                        Text(
-                            text = text,
-                            style = MaterialTheme.typography.body1,
-                            color = if (data.dataItem.dataValue.isNotEmpty()) Color.White else Color.Black,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    onSelectionChange(text)
-                                    setDataValue(selectedOption)
-                                }
-                                .background(
-                                    if (text == selectedOption) {
-                                        MaterialTheme.colors.primaryVariant
-                                    } else {
-                                        MaterialTheme.colors.primary
+                        .fillMaxWidth(0.6f)
+                        .clip(shape = RoundedCornerShape(15.dp))
+                        .wrapContentSize()
+                ) {
+                    options.forEach { text ->
+                        if (text.isNotBlank()) {
+                            Text(
+                                text = text,
+                                style = MaterialTheme.typography.body1,
+                                color = if (data.dataItem.dataValue.isNotEmpty()) Color.White else Color.Black,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        onSelectionChange(text)
+                                        setDataValue(selectedOption)
                                     }
-                                )
-                                .padding(
-                                    vertical = 12.dp,
-                                    horizontal = 5.dp,
-                                ),
-                        )
+                                    .background(
+                                        if (text == selectedOption) {
+                                            MaterialTheme.colors.primaryVariant
+                                        } else {
+                                            MaterialTheme.colors.primary
+                                        }
+                                    )
+                                    .padding(
+                                        vertical = 12.dp,
+                                        horizontal = 5.dp,
+                                    ),
+                            )
+                        }
                     }
                 }
             }
         }
     }
-
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

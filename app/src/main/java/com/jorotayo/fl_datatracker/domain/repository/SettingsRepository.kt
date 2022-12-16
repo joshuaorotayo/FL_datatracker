@@ -17,5 +17,4 @@ interface SettingsRepository {
     fun addSetting(setting: Setting)
 
     fun deleteSetting(setting: Setting)
-
 }

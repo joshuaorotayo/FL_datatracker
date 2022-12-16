@@ -9,10 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,9 +27,8 @@ import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.util.validateData
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 
 @Preview(showBackground = true)
 @Composable
@@ -65,7 +61,25 @@ fun DataEntryScreen(
     val scope = rememberCoroutineScope()
 
     val uiState = remember { mutableStateOf(viewModel.uiState) }
+
     viewModel.currentDataId.value = dataId
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is DataEntryScreenViewModel.UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+                DataEntryScreenViewModel.UiEvent.SaveDataForm -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Data Form Saved!"
+                    )
+                }
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -172,7 +186,8 @@ fun DataEntryScreen(
                                     viewModel.onEvent(DataEvent.SetName(value = it))
                                     uiState.value.value.dataName = it
                                 },
-                                dataEntryScreenState = uiState.value.value
+                                nameErrored = uiState.value.value.nameError,
+                                dataName = uiState.value.value.dataName
                             )
                         }
                     }
@@ -283,7 +298,8 @@ fun DataEntryScreen(
                                 contentColor = MaterialTheme.colors.surface
                             ),
                             onClick = {
-                                scope.launch {
+                                viewModel.onEvent(DataEvent.ValidateDataForm(uiState.value.value))
+                                /*scope.launch {
 
                                     val returnedValue: Pair<Boolean, DataEntryScreenState> =
                                         validateData(uiState.value.value)
@@ -310,7 +326,8 @@ fun DataEntryScreen(
                                                 returnedValue.second.dataRows
                                         }
                                     }
-                                }
+
+                                }*/
                             }
                         ) {
                             Text(

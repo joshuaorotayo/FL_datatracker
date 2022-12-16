@@ -270,15 +270,17 @@ fun NewDataField(
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 5.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 5.dp)) {
                     Text(text = "Enter in the values for the boolean e.g. Yes and No",
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.caption,
                         color = Color.Gray)
                 }
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     TransparentTextField(modifier = Modifier.weight(1f),
                         text = newDataField.firstValue,

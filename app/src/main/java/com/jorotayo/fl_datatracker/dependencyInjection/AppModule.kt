@@ -59,7 +59,8 @@ object AppModule {
             getPresetById = GetPresetById(presetRepository),
             getPresetList = GetPresetList(presetRepository),
             addPreset = AddPreset(presetRepository),
-            deletePreset = DeletePreset(presetRepository)
+            deletePreset = DeletePreset(presetRepository),
+            getCurrentPresetFromSettings = GetCurrentPresetFromSettings(presetRepository)
         )
     }
 
@@ -79,7 +80,8 @@ object AppModule {
             deleteDataById = DeleteDataById(dataRepository),
             getDataByDataId = GetDataByDataId(dataRepository),
             getDataByDataName = GetDataByDataName(dataRepository),
-            updateData = UpdateData(dataRepository)
+            updateData = UpdateData(dataRepository),
+            validateInsertDataForm = ValidateInsertDataForm()
         )
     }
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--    <style name="DatePickerTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">-->
     <style name="DatePickerTheme" parent="@style/Theme.Material3.Light.Dialog.Alert">
         <item name="android:colorAccent">#c0392b</item>
         <item name="android:windowBackground">#FFFFFF</item>
@@ -10,7 +9,7 @@
         <item name="android:colorControlActivated">#c0392b</item>
     </style>
 
-    <style name="TimePickerTheme" parent="@style/Theme.Material3.Dark.Dialog.Alert">
+    <style name="TimePickerTheme" parent="@style/Theme.Material3.Light.Dialog.Alert">
         <item name="android:colorAccent">#c0392b</item>
         <item name="colorAccent">#c0392b</item>
     </style>

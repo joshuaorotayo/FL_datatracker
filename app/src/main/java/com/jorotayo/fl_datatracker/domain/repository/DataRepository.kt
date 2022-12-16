@@ -17,5 +17,5 @@ interface DataRepository {
 
     fun deleteDataById(dataId: Long)
 
-    suspend fun updateData(data: Data)
+    fun updateData(data: Data)
 }

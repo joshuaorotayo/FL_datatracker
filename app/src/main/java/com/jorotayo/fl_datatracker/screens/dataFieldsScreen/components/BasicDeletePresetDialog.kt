@@ -20,8 +20,6 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.concurrent.schedule
 
 @Preview(showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -136,9 +134,7 @@ fun BasicDeletePresetDialog(
                                 actionLabel = "Restore?"
                             )
                         }
-                        Timer().schedule(3000) {
-                            confirmDelete(preset)
-                        }
+                        confirmDelete(preset)
                     }) {
                         Text(
                             modifier = Modifier,

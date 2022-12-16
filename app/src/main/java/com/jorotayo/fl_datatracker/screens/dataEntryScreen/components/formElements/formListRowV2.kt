@@ -1,15 +1,15 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,22 +18,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import kotlinx.coroutines.launch
 
-@Preview(showBackground = true)
+
+@Preview(showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
-fun formListRowV2() {
-    val dataItem = DataRowState(
-        DataItem(
-            presetId = 0,
-            dataItemId = 0,
-            fieldName = "List Row",
-            fieldDescription = "List Type row example...",
-            dataId = 1
-        ),
-        hasError = false,
-        errorMsg = ""
-    )
-    formListRowV2(data = dataItem, setDataValue = {})
+fun PreviewFormListRowV2() {
+    FL_DatatrackerTheme {
+        val dataItem = DataRowState(
+            DataItem(
+                presetId = 0,
+                dataItemId = 0,
+                fieldName = "List Row",
+                fieldDescription = "List Type row example...",
+                dataId = 1
+            ),
+            hasError = false,
+            errorMsg = ""
+        )
+        formListRowV2(data = dataItem, setDataValue = {})
+    }
 }
 
 @Composable
@@ -44,6 +52,9 @@ fun formListRowV2(
     val number = remember { mutableStateOf(1) }
     val textFields = remember { mutableStateMapOf<Int, String>() }
     val columnHeight = remember { mutableStateOf(150F) }
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+    val itemHeight = 70f
 
     LazyColumn(modifier = Modifier
         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -87,17 +98,23 @@ fun formListRowV2(
 
         items(number.value) { index ->
             listItem(
-                changeValue = { it ->
+                changeValue = {
                     textFields[index] = it
-                    val list = textFields.values.filter { string -> string.isNotBlank() }
+                    textFields.values.filter { string -> string.isNotBlank() }
                 },
                 addItem = {
                     number.value++
-                    columnHeight.value += 70
+                    columnHeight.value += itemHeight
+                    scope.launch {
+                        scrollState.animateScrollBy(itemHeight)
+                    }
                 },
                 deleteItem = {
                     number.value--
-                    columnHeight.value -= 70
+                    columnHeight.value -= itemHeight
+                    scope.launch {
+                        scrollState.animateScrollBy(-itemHeight)
+                    }
                 },
                 lastItem = index == number.value - 1,
                 index = index

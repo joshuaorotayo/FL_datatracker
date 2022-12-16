@@ -13,4 +13,6 @@ interface PresetRepository {
     fun addPreset(preset: Preset)
 
     fun deletePreset(preset: Preset)
+
+    fun getCurrentPresetFromSettings(presetName: String): Preset
 }
