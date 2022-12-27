@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import java.util.*
 
 
@@ -39,20 +40,23 @@ import java.util.*
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormDateRowV2() {
-    formDateRowV2(
-        data = DataRowState(
-            DataItem(
-                dataItemId = 0,
-                fieldName = "Data Field for Date Row Example",
-                first = "No",
-                second = "N/A",
-                third = "Yes",
-                presetId = 0,
-                dataId = 1
-            )
-        ),
-        setDataValue = {}
-    )
+    FL_DatatrackerTheme {
+        formDateRowV2(
+            data = DataRowState(
+                DataItem(
+                    dataItemId = 0,
+                    fieldName = "Data Field for Date Row Example",
+                    first = "No",
+                    second = "N/A",
+                    third = "Yes",
+                    presetId = 0,
+                    dataId = 1
+                )
+            ),
+            setDataValue = {}
+        )
+    }
+
 }
 
 @Composable
@@ -81,7 +85,7 @@ fun formDateRowV2(
     mCalendar.time = Date()
 
     // Declaring a string value to store date in string format
-    val mDate = remember { mutableStateOf("") }
+    val mDate = remember { mutableStateOf(data.dataItem.dataValue) }
 
     // Declaring DatePickerDialog and setting
     // initial values as current values (present year, month and day)

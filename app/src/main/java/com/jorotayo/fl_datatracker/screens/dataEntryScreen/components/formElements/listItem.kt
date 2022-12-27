@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
@@ -37,13 +39,15 @@ fun PreviewListItem() {
             addItem = {},
             deleteItem = {},
             lastItem = false,
-            index = 1
+            index = 1,
+            itemValue = "test"
         )
     }
 }
 
 @Composable
 fun listItem(
+    itemValue: String,
     changeValue: (String) -> Unit,
     addItem: () -> Unit,
     deleteItem: () -> Unit,
@@ -51,10 +55,11 @@ fun listItem(
     index: Int,
 ): String {
 
+    Log.d("ListRow", "listItem: itemValue: $itemValue")
 
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 20
-    val (text, setText) = remember { mutableStateOf("") }
+    val (text, setText) = remember { mutableStateOf(itemValue) }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -75,11 +80,14 @@ fun listItem(
             label = {
                 Text(
                     text = String.format(stringResource(R.string.add_list_item_placeholder),
-                        index + 1)
+                        index + 1),
+                    style = TextStyle(
+                        color = textColour
+                    )
                 )
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = textColour,
+                unfocusedBorderColor = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray,
                 focusedBorderColor = MaterialTheme.colors.primary,
                 backgroundColor = Color.Transparent,
                 textColor = MaterialTheme.colors.onSurface

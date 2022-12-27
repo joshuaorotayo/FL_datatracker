@@ -31,14 +31,6 @@ class DataFieldsViewModel @Inject constructor(
     private val settingsUseCases: SettingsUseCases,
 ) : ViewModel() {
 
-    /* private var settingPreset = settingsUseCases.getSettingByName(settingName = "currentPreset")
-     private var presetSetting =
-         presetUseCases.getPresetByPresetName(settingPreset.settingStringValue)
-     private val newPresetList = presetUseCases.getPresetList()
-
-     private val _currentPreset: MutableState<Preset> = mutableStateOf(presetSetting)
-     private val currentPreset: State<Preset> = _currentPreset*/
-
     private var _selectedPresetName = "Default"
     private var selectedPresetName: MutableState<String> = mutableStateOf(_selectedPresetName)
 

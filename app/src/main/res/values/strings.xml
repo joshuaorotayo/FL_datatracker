@@ -77,4 +77,6 @@
         <item quantity="one">%d item showing</item>
         <item quantity="other">%d items showing</item>
     </plurals>
+
+    <string name="empty_json">"{"0":\"\"}"</string>
 </resources>

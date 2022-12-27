@@ -69,7 +69,7 @@ fun formTimeRowV2(
     val mMinute = mCalendar[Calendar.MINUTE]
 
     // Value for storing time as a string
-    val mTime = remember { mutableStateOf("") }
+    val mTime = remember { mutableStateOf(data.dataItem.dataValue) }
 
     // Creating a TimePicker dialog
     val mTimePickerDialog = TimePickerDialog(
