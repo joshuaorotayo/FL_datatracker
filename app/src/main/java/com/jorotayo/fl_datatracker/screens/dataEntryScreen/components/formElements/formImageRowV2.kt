@@ -67,9 +67,15 @@ fun formImageRowV2(
     val bitmap = remember {
         mutableStateOf<Bitmap?>(null)
     }
-
+/*
     val launcher = rememberLauncherForActivityResult(contract =
     ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+    }*/
+
+
+    val launcher = rememberLauncherForActivityResult(contract =
+    ActivityResultContracts.TakePicture()) { uri: Uri? ->
         imageUri = uri
     }
 
@@ -116,7 +122,7 @@ fun formImageRowV2(
             onClick = {
                 launcher.launch("camera/*")
             }) {
-            Text(text = "Pick image")
+            Text(text = "Add image")
         }
 
         Spacer(modifier = Modifier.height(12.dp))

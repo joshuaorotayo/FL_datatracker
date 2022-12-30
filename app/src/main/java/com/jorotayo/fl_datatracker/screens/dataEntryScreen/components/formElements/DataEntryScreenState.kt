@@ -4,4 +4,5 @@ data class DataEntryScreenState(
     var dataName: String,
     var dataRows: MutableList<DataRowState>,
     var nameError: Boolean,
+    var nameErrorMsg: String,
 )

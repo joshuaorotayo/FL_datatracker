@@ -78,5 +78,7 @@
         <item quantity="other">%d items showing</item>
     </plurals>
 
-    <string name="empty_json">"{"0":\"\"}"</string>
+    <string name="empty_json">"{\"\"}"</string>
+    <string name="name_missing_error">Value missing for Meeting/Service name</string>
+    <string name="name_duplicate_error">Name already exists</string>
 </resources>

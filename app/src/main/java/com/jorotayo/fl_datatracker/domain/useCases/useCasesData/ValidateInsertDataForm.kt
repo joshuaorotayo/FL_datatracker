@@ -9,14 +9,18 @@ class ValidateInsertDataForm {
     ): Pair<Boolean, DataEntryScreenState> {
 
         var noErrors = true
+        dataForm.nameError = false
+        dataForm.nameErrorMsg = ""
 
         if (dataForm.dataName.isBlank()) {
             dataForm.nameError = true
             noErrors = false
-        }
-        if (fieldNames.contains(dataForm.dataName)) {
+            dataForm.nameErrorMsg = "Value missing for Meeting/Service name"
+
+        } else if (fieldNames.contains(dataForm.dataName)) {
             dataForm.nameError = true
             noErrors = false
+            dataForm.nameErrorMsg = "Name already Exists"
         }
         for (dr in dataForm.dataRows) {
             if (dr.dataItem.dataValue.isBlank()) {

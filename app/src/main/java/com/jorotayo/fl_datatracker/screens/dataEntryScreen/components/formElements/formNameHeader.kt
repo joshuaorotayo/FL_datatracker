@@ -38,8 +38,12 @@ fun PreviewFormNameHeader() {
     FL_DatatrackerTheme {
         formNameHeader(
             setName = { },
-            nameErrored = true,
-            dataName = "test"
+            data = DataEntryScreenState(
+                dataName = "Test name",
+                dataRows = mutableListOf(),
+                nameError = false,
+                nameErrorMsg = ""
+            )
         )
     }
 }
@@ -47,12 +51,11 @@ fun PreviewFormNameHeader() {
 @Composable
 fun formNameHeader(
     setName: (String) -> Unit,
-    nameErrored: Boolean,
-    dataName: String,
+    data: DataEntryScreenState,
 ) {
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val focusManager = LocalFocusManager.current
-    val (text, setText) = remember { mutableStateOf(TextFieldValue(dataName)) }
+    val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
 
 
     Column(
@@ -64,23 +67,22 @@ fun formNameHeader(
             .background(MaterialTheme.colors.surface)
     ) {
 
-        AnimatedVisibility(visible = nameErrored or dataName.isBlank()) {
+        AnimatedVisibility(visible = data.nameError) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
                     .clip(shape = RoundedCornerShape(10.dp)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier,
-                    text = if (dataName.isBlank()) "Value missing for Meeting/Service name" else "Name already exists",
+                    text = data.nameErrorMsg,
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,
                     color = Color.Red,
                 )
-
                 Icon(
                     modifier = Modifier,
                     imageVector = Icons.Default.Warning,
@@ -89,13 +91,14 @@ fun formNameHeader(
                 )
             }
         }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = text,
+                value = nameText.value,
                 placeholder = {
                     Text(
                         text = "Please enter a meeting or Service Name...",
@@ -104,9 +107,9 @@ fun formNameHeader(
                     )
                 },
                 singleLine = true,
-                onValueChange = { newText ->
-                    setText(newText)
-                    setName(newText.text)
+                onValueChange = {
+                    nameText.value = it
+                    setName(nameText.value.text)
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
@@ -127,6 +130,7 @@ fun formNameHeader(
             )
         }
     }
+
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

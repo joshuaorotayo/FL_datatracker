@@ -48,7 +48,8 @@ class DataEntryScreenViewModel @Inject constructor(
     private var _uiState = mutableStateOf(DataEntryScreenState(
         dataName = dataName.value,
         dataRows = makeDataRows(),
-        nameError = false
+        nameError = false,
+        nameErrorMsg = ""
     ))
     val uiState: State<DataEntryScreenState> = _uiState
 
@@ -69,7 +70,8 @@ class DataEntryScreenViewModel @Inject constructor(
                             val newUiState = mutableStateOf(DataEntryScreenState(
                                 dataName = dataFormResults.second.dataName,
                                 dataRows = dataFormResults.second.dataRows,
-                                nameError = false
+                                nameError = dataFormResults.second.nameError,
+                                nameErrorMsg = dataFormResults.second.nameErrorMsg
                             ))
                             _uiState.value = newUiState.value
                             throw InvalidDataException("Data Form could not be saved. Please check fields")
@@ -175,6 +177,7 @@ class DataEntryScreenViewModel @Inject constructor(
 
             datafields.forEach { dataField ->
                 list += DataRowState(
+
                     DataItem(
                         dataId = currentDataId.value,
 //                        presetId = boxState.value.currentPreset?.presetId!!,
@@ -189,6 +192,7 @@ class DataEntryScreenViewModel @Inject constructor(
                         dataValue = ""
                     )
                 )
+                Log.d("datafield type", "makeDataRows: " + dataField.dataFieldType.toString())
             }
         }
         return list

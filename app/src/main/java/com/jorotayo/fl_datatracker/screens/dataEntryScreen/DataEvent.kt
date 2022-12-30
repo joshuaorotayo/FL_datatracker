@@ -7,6 +7,5 @@ sealed class DataEvent {
     data class SetName(val value: String) : DataEvent()
     data class SetDataValue(val value: String, val rowIndex: Int) : DataEvent()
     data class UpdateUiState(val value: DataEntryScreenState) : DataEvent()
-
     data class UpdateDataId(val value: Long) : DataEvent()
 }

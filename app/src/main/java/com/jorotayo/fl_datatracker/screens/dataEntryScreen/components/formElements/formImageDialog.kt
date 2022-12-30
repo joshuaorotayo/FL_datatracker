@@ -55,24 +55,27 @@ fun formImageDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.image_selection_dialog_header)
-                    )
                     Icon(
+                        modifier = Modifier
+                            .padding(end = 10.dp),
                         imageVector = Icons.Default.Image,
                         contentDescription = stringResource(id = R.string.description_image_selection_icon)
                     )
+                    Text(
+                        text = stringResource(id = R.string.image_selection_dialog_header)
+                    )
                 }
                 Text(
+                    modifier = Modifier,
                     text = stringResource(id = R.string.image_selection_dialog_msg)
                 )
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween) {
-
                     Button(
                         modifier = Modifier
                             .wrapContentWidth(),

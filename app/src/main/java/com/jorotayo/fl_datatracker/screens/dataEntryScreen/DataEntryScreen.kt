@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -186,8 +187,7 @@ fun DataEntryScreen(
                                     viewModel.onEvent(DataEvent.SetName(value = it))
                                     uiState.value.value.dataName = it
                                 },
-                                nameErrored = uiState.value.value.nameError,
-                                dataName = uiState.value.value.dataName
+                                data = uiState.value.value
                             )
                         }
                     }
@@ -281,12 +281,12 @@ fun DataEntryScreen(
                                         viewModel.onEvent(DataEvent.SetDataValue(
                                             value = it,
                                             rowIndex = index))
+                                        Log.d("formListRowV2", "Form List Value: $it")
                                     }
                                 )
                             }
                         }
                     }
-
                     item {
                         // Save Button Footer
                         TextButton(modifier = Modifier
@@ -336,7 +336,6 @@ fun DataEntryScreen(
                             )
                         }
                     }
-
                 }
                 //close Box
             }

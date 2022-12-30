@@ -14,17 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.gson.Gson
-import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import kotlinx.coroutines.launch
@@ -47,7 +44,10 @@ fun PreviewFormListRowV2() {
             hasError = false,
             errorMsg = ""
         )
-        formListRowV2(data = dataItem, setDataValue = {})
+        formListRowV2(
+            data = dataItem,
+            setDataValue = {}
+        )
     }
 }
 
@@ -57,16 +57,9 @@ fun formListRowV2(
     setDataValue: (String) -> Unit,
 ): String {
 
-    val gson = Gson()
-    val mapType = SnapshotStateMap<Int, String>().javaClass
-    val textFieldsData =
-        data.dataItem.dataValue.ifBlank { stringResource(id = R.string.empty_json) }
-    val textFields: SnapshotStateMap<Int, String> =
-        remember { gson.fromJson(textFieldsData, mapType) }
-//    val number = remember { mutableStateOf(textFields.size) }
+    val textFields = remember { getDataStringToMap(data.dataItem.dataValue) }
 
-//    val textFields = remember { mutableStateMapOf<Int,String>() }
-    val number = remember { mutableStateOf(1) }
+    val number = remember { mutableStateOf(textFields.size) }
     val columnHeight = remember { mutableStateOf(70F + (65F * number.value)) }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -114,22 +107,18 @@ fun formListRowV2(
 
         items(number.value) { index ->
             listItem(
-                itemValue = textFields.values.elementAt(index),
+                itemValue = textFields[index].orEmpty(),
                 changeValue = {
                     textFields[index] = it
-                    textFields.values.filter { string -> string.isNotBlank() }
-                    setDataValue(it)
+                    setDataValue(getDataMapToString(textFields))
                 },
                 addItem = {
-                    number.value = number.value + 1
                     columnHeight.value += itemHeight
-                    textFields[index] = ""
                     scope.launch {
                         scrollState.animateScrollBy(itemHeight)
                     }
                 },
                 deleteItem = {
-                    number.value = number.value - 1
                     columnHeight.value -= itemHeight
                     scope.launch {
                         scrollState.animateScrollBy(-itemHeight)
@@ -148,12 +137,27 @@ fun formListRowV2(
     )
 
     // TODO: return gson string of values from textfield
-    Log.d("FL_Datatracker", "formListRowV2: " + getList(textFields))
-    return getList(textFields)
+    Log.d("formListRowV2", "formListRowV2: " + getDataMapToString(textFields))
+    return getDataMapToString(textFields)
 }
 
-private fun getList(textFieldsMap: Map<Int, String>): String {
+private fun getDataMapToString(textFieldsMap: HashMap<Int, String>): String {
     val gson = Gson()
-    val newMap = textFieldsMap.filter { it.value.isNotBlank() }
+    val newMap = hashMapOf<Int, String>()
+    for (value in textFieldsMap) {
+        if (value.value.isNotBlank()) {
+            newMap[value.key] = value.value
+        }
+    }
     return gson.toJson(newMap)
+}
+
+private fun getDataStringToMap(textsFieldsString: String): HashMap<Int, String> {
+    val gson = Gson()
+    return if (textsFieldsString.isBlank()) {
+        hashMapOf<Int, String>(0 to "")
+    } else {
+        val mapType = HashMap<Int, String>().javaClass
+        gson.fromJson(textsFieldsString, mapType)
+    }
 }
