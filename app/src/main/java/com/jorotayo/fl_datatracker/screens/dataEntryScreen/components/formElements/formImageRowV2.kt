@@ -75,7 +75,7 @@ fun formImageRowV2(
 
 
     val launcher = rememberLauncherForActivityResult(contract =
-    ActivityResultContracts.TakePicture()) { uri: Uri? ->
+    ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
     }
 

@@ -29,7 +29,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
     name = "Dark Mode")
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
-fun PreviewFormListRowV2() {
+fun PreviewFormListRowV4() {
     FL_DatatrackerTheme {
         val dataItem = DataRowState(
             DataItem(
@@ -50,7 +50,7 @@ fun PreviewFormListRowV2() {
 }
 
 @Composable
-fun formListRowV2(
+fun formListRowV4(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {

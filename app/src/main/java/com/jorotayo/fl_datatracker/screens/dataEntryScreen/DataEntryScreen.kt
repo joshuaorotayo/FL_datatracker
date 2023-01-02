@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -274,6 +273,16 @@ fun DataEntryScreen(
                                     }
                                 )
                             }
+                            /*8 -> {
+                                data.dataItem.dataValue = formListRowV2(
+                                    data = data,
+                                    setDataValue = {
+                                        viewModel.onEvent(DataEvent.SetDataValue(
+                                            value = it,
+                                            rowIndex = index))
+                                    }
+                                )
+                            }*/
                             8 -> {
                                 data.dataItem.dataValue = formListRowV2(
                                     data = data,
@@ -281,7 +290,6 @@ fun DataEntryScreen(
                                         viewModel.onEvent(DataEvent.SetDataValue(
                                             value = it,
                                             rowIndex = index))
-                                        Log.d("formListRowV2", "Form List Value: $it")
                                     }
                                 )
                             }
