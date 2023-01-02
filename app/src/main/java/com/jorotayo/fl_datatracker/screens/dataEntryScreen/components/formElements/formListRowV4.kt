@@ -54,7 +54,7 @@ fun formListRowV4(
 ): String {
 
     val textFields =
-        rememberSaveable { mutableStateOf(getDataStringToMap(data.dataItem.dataValue)) }
+        rememberSaveable { mutableStateOf(getDataStringToList(data.dataItem.dataValue)) }
     val number = rememberSaveable { mutableStateOf(textFields.value.size) }
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(70F + (itemHeight * number.value)) }
@@ -117,6 +117,7 @@ fun formListRowV4(
                     textFields.value.remove(index)
                     columnHeight.value -= itemHeight
                     number.value--
+                    textFields.value = deleteValueAtIndex(textFields.value, index)
                     Log.d("formListRowV2", getDataMapToString(textFields.value))
 
                 },
@@ -133,29 +134,42 @@ fun formListRowV4(
             .height(10.dp)
     )
 
-    // TODO: return gson string of values from textfield
     return getDataMapToString(textFields.value)
 }
 
-private fun getDataStringToMap(textsFieldsString: String): LinkedHashMap<Int, String> {
-    val gson = Gson()
-    return if (textsFieldsString.isBlank()) {
-        linkedMapOf<Int, String>(0 to "")
-    } else {
-        val mapType = LinkedHashMap<Int, String>().javaClass
-        gson.fromJson(textsFieldsString, mapType)
+fun deleteValueAtIndex(textfield: HashMap<Int, String>, listPos: Int): HashMap<Int, String> {
+    var newTextField = hashMapOf<Int, String>()
+    for (field in textfield) {
+        if (field.key < listPos) {
+            //added to the new list
+            newTextField[field.key] = field.value
+        } else {
+            newTextField[field.key - 1] = field.value
+        }
     }
+    return newTextField
+
 }
 
-private fun getDataMapToString(textFieldsMap: LinkedHashMap<Int, String>): String {
+private fun getDataMapToString(textFieldsMap: HashMap<Int, String>): String {
     val gson = Gson()
-    val newMap = linkedMapOf<Int, String>()
+    val newMap = hashMapOf<Int, String>()
     for (value in textFieldsMap) {
         if (value.value.isNotBlank()) {
-            newMap[value.key] = value.value.trim()
+            newMap[value.key] = value.value
         }
     }
     return gson.toJson(newMap)
+}
+
+private fun getDataStringToList(textsFieldsString: String): HashMap<Int, String> {
+    val gson = Gson()
+    return if (textsFieldsString.isBlank()) {
+        hashMapOf<Int, String>(0 to "")
+    } else {
+        val mapType = HashMap<Int, String>().javaClass
+        gson.fromJson(textsFieldsString, mapType)
+    }
 }
 
 

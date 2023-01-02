@@ -67,7 +67,7 @@ fun formListRowV3(
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 20
     val textFields =
-        rememberSaveable { mutableStateOf(getDataStringToMap(data.dataItem.dataValue)) }
+        rememberSaveable { mutableStateOf(getDataStringToList(data.dataItem.dataValue)) }
     val number = rememberSaveable { mutableStateOf(textFields.value.size) }
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(70F + (itemHeight * number.value)) }
@@ -223,7 +223,7 @@ fun formListRowV3(
 }
 
 
-private fun getDataStringToMap(textsFieldsString: String): LinkedHashMap<Int, String> {
+private fun getDataStringToList(textsFieldsString: String): LinkedHashMap<Int, String> {
     val gson = Gson()
     return if (textsFieldsString.isBlank()) {
         linkedMapOf<Int, String>(0 to "")

@@ -56,7 +56,7 @@ fun formListRowV2(
 ): String {
 
     val textFields =
-        rememberSaveable { mutableStateOf(getDataStringToMap(data.dataItem.dataValue)) }
+        rememberSaveable { mutableStateOf(getDataStringToList(data.dataItem.dataValue)) }
     val number = rememberSaveable { mutableStateOf(textFields.value.size) }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -174,7 +174,7 @@ private fun getDataMapToString(textFieldsMap: HashMap<Int, String>): String {
     return gson.toJson(newMap)
 }
 
-private fun getDataStringToMap(textsFieldsString: String): HashMap<Int, String> {
+private fun getDataStringToList(textsFieldsString: String): HashMap<Int, String> {
     val gson = Gson()
     return if (textsFieldsString.isBlank()) {
         hashMapOf<Int, String>(0 to "")
