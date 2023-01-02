@@ -36,6 +36,7 @@ fun PreviewListItem() {
             changeValue = {},
             addItem = {},
             deleteItem = {},
+            clearField = {},
             lastItem = false,
             index = 1,
             itemValue = "test"
@@ -49,6 +50,7 @@ fun listItem(
     changeValue: (String) -> Unit,
     addItem: () -> Unit,
     deleteItem: () -> Unit,
+    clearField: () -> Unit,
     lastItem: Boolean,
     index: Int,
 ): String {
@@ -101,6 +103,7 @@ fun listItem(
                     Icon(
                         modifier = Modifier
                             .clickable {
+                                clearField()
                                 setText("")
                                 changeValue("")
                             },

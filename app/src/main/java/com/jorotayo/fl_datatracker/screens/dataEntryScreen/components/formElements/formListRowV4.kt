@@ -121,6 +121,18 @@ fun formListRowV4(
                     Log.d("formListRowV2", getDataMapToString(textFields.value))
 
                 },
+                clearField = {
+                    textFields.value[index] = ""
+                    if (index != textFields.value.size - 1) {
+                        if (textFields.value[textFields.value.size - 1].isNullOrBlank()) {
+                            columnHeight.value -= itemHeight
+                            number.value--
+                            textFields.value =
+                                deleteValueAtIndex(textFields.value, textFields.value.size)
+                        }
+                    }
+                    setDataValue(getDataMapToString(textFields.value))
+                },
                 lastItem = index == number.value - 1,
                 index = index
             )
@@ -141,14 +153,12 @@ fun deleteValueAtIndex(textfield: HashMap<Int, String>, listPos: Int): HashMap<I
     var newTextField = hashMapOf<Int, String>()
     for (field in textfield) {
         if (field.key < listPos) {
-            //added to the new list
             newTextField[field.key] = field.value
         } else {
             newTextField[field.key - 1] = field.value
         }
     }
     return newTextField
-
 }
 
 private fun getDataMapToString(textFieldsMap: HashMap<Int, String>): String {
