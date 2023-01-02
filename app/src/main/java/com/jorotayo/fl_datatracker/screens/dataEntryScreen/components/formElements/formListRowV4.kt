@@ -5,13 +5,11 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +40,7 @@ fun PreviewFormListRowV4() {
             hasError = false,
             errorMsg = ""
         )
-        formListRowV2(
+        formListRowV4(
             data = dataItem,
             setDataValue = {}
         )
@@ -58,8 +56,6 @@ fun formListRowV4(
     val textFields =
         rememberSaveable { mutableStateOf(getDataStringToMap(data.dataItem.dataValue)) }
     val number = rememberSaveable { mutableStateOf(textFields.value.size) }
-    val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(70F + (itemHeight * number.value)) }
 
@@ -103,35 +99,13 @@ fun formListRowV4(
             }
         }
 
-/*        item {
-            Column {
-                for (i in 0..textFields.value.size) {
-                    listItem(itemValue = textFields.value[i].orEmpty(),
-                        changeValue = {
-                            textFields.value[i] = it
-                            setDataValue(getDataMapToString(textFields.value))
-                        },
-                        addItem = {
-                            columnHeight.value += itemHeight
-                            number.value++
-                        },
-                        deleteItem = {
-                            columnHeight.value -= itemHeight
-                            number.value--
-                            textFields.value.remove(i)
-                        },
-                        lastItem = i == number.value - 1,
-                        index = i)
-                }
-            }
-        }*/
-
         items(number.value) { index ->
             listItem(
                 itemValue = textFields.value[index].orEmpty(),
-                changeValue = {
-                    textFields.value[index] = it
+                changeValue = { newText ->
+                    textFields.value[index] = newText
                     setDataValue(getDataMapToString(textFields.value))
+                    Log.d("formListRowV2", getDataMapToString(textFields.value))
                 },
                 addItem = {
                     textFields.value[index + 1] = ""
@@ -140,8 +114,8 @@ fun formListRowV4(
                     Log.d("formListRowV2", getDataMapToString(textFields.value))
                 },
                 deleteItem = {
-                    columnHeight.value -= itemHeight
                     textFields.value.remove(index)
+                    columnHeight.value -= itemHeight
                     number.value--
                     Log.d("formListRowV2", getDataMapToString(textFields.value))
 
@@ -163,23 +137,25 @@ fun formListRowV4(
     return getDataMapToString(textFields.value)
 }
 
-private fun getDataMapToString(textFieldsMap: HashMap<Int, String>): String {
+private fun getDataStringToMap(textsFieldsString: String): LinkedHashMap<Int, String> {
     val gson = Gson()
-    val newMap = hashMapOf<Int, String>()
+    return if (textsFieldsString.isBlank()) {
+        linkedMapOf<Int, String>(0 to "")
+    } else {
+        val mapType = LinkedHashMap<Int, String>().javaClass
+        gson.fromJson(textsFieldsString, mapType)
+    }
+}
+
+private fun getDataMapToString(textFieldsMap: LinkedHashMap<Int, String>): String {
+    val gson = Gson()
+    val newMap = linkedMapOf<Int, String>()
     for (value in textFieldsMap) {
         if (value.value.isNotBlank()) {
-            newMap[value.key] = value.value
+            newMap[value.key] = value.value.trim()
         }
     }
     return gson.toJson(newMap)
 }
 
-private fun getDataStringToMap(textsFieldsString: String): HashMap<Int, String> {
-    val gson = Gson()
-    return if (textsFieldsString.isBlank()) {
-        hashMapOf<Int, String>(0 to "")
-    } else {
-        val mapType = HashMap<Int, String>().javaClass
-        gson.fromJson(textsFieldsString, mapType)
-    }
-}
+

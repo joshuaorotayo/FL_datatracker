@@ -284,7 +284,7 @@ fun DataEntryScreen(
                                 )
                             }*/
                             8 -> {
-                                data.dataItem.dataValue = formListRowV2(
+                                data.dataItem.dataValue = formListRowV4(
                                     data = data,
                                     setDataValue = {
                                         viewModel.onEvent(DataEvent.SetDataValue(

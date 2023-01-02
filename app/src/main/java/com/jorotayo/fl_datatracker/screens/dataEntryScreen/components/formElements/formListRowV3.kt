@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,12 +64,13 @@ fun formListRowV3(
     setDataValue: (String) -> Unit,
 ): String {
 
-    var textFieldsList = mutableStateListOf("hi", "what", "is", "your", "name?")
-    var textFieldCount by remember { mutableStateOf(textFieldsList.size) }
-    val maxChar = 20
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
-    val itemHeight = 65F
-    var columnHeight = rememberSaveable { mutableStateOf(70F + (itemHeight * textFieldCount)) }
+    val maxChar = 20
+    val textFields =
+        rememberSaveable { mutableStateOf(getDataStringToMap(data.dataItem.dataValue)) }
+    val number = rememberSaveable { mutableStateOf(textFields.value.size) }
+    val itemHeight = 65f
+    val columnHeight = rememberSaveable { mutableStateOf(70F + (itemHeight * number.value)) }
 
     LazyColumn(modifier = Modifier
         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -112,7 +112,7 @@ fun formListRowV3(
             }
         }
 
-        items(textFieldCount) { index ->
+        items(number.value) { index ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -122,13 +122,11 @@ fun formListRowV3(
                     modifier = Modifier
                         .weight(12f)
                         .padding(horizontal = 10.dp),
-                    value = textFieldsList[index],
-                    onValueChange = {
-                        val newTextFieldsList = textFieldsList
-                        newTextFieldsList[index] = it
-                        textFieldsList = newTextFieldsList
-                        // setDataValue(getListToString(textFieldsList.toList()))
-                        Log.d("formListRowV3", getListToString(textFieldsList.toList()))
+                    value = textFields.value[index].orEmpty(),
+                    onValueChange = { newText ->
+                        textFields.value[index] = newText
+                        setDataValue(getDataMapToString(textFields.value))
+                        Log.d("formListRowV2", getDataMapToString(textFields.value))
                     },
                     label = {
                         Text(
@@ -154,11 +152,11 @@ fun formListRowV3(
                         )
                     },
                     trailingIcon = {
-                        AnimatedVisibility(visible = textFieldsList[index].isNotBlank()) {
+                        AnimatedVisibility(visible = !textFields.value[index].isNullOrBlank()) {
                             Icon(
                                 modifier = Modifier
                                     .clickable {
-                                        textFieldsList.remove(textFieldsList[index])
+                                        textFields.value[index] = ""
                                     },
                                 imageVector = Icons.Default.Close,
                                 contentDescription = stringResource(R.string.clear_list_item),
@@ -167,16 +165,17 @@ fun formListRowV3(
                         }
                     }
                 )
-                AnimatedVisibility(visible = index == textFieldsList.size - 1) {
+                AnimatedVisibility(visible = index == textFields.value.size - 1) {
                     Button(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
-                        enabled = textFieldsList[index].isNotBlank(),
+                        enabled = textFields.value[index].isNullOrEmpty(),
                         onClick = {
-                            textFieldCount++
+                            textFields.value[index + 1] = ""
                             columnHeight.value += itemHeight
-                            textFieldsList += mutableStateListOf("")
+                            number.value++
+                            Log.d("formListRowV2", getDataMapToString(textFields.value))
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                     ) {
@@ -187,15 +186,18 @@ fun formListRowV3(
                         )
                     }
                 }
-                AnimatedVisibility(visible = textFieldsList[index].isNotEmpty() && index != textFieldsList.size - 1) {
+                AnimatedVisibility(visible = !textFields.value[index].isNullOrEmpty() && index != textFields.value.size - 1) {
                     Button(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
                         onClick = {
-                            textFieldCount--
                             columnHeight.value -= itemHeight
-                            textFieldsList.remove(textFieldsList[index])
+                            var newTextField = textFields.value
+                            newTextField.remove(index)
+                            textFields.value = newTextField
+                            //number.value--
+                            Log.d("formListRowV2", getDataMapToString(textFields.value))
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                     ) {
@@ -217,22 +219,27 @@ fun formListRowV3(
             .height(10.dp)
     )
 
-    return getListToString(textFieldsList.toList())
+    return getDataMapToString(textFields.value)
 }
 
 
-private fun getListToString(textList: List<String>): String {
+private fun getDataStringToMap(textsFieldsString: String): LinkedHashMap<Int, String> {
     val gson = Gson()
-    val newList = textList.toList()
-    return gson.toJson(newList)
-}
-
-private fun getStringToList(textString: String): List<String> {
-    val gson = Gson()
-    return if (textString.isBlank()) {
-        mutableStateListOf("")
+    return if (textsFieldsString.isBlank()) {
+        linkedMapOf<Int, String>(0 to "")
     } else {
-        val snapShotType = SnapshotStateList<String>().javaClass
-        gson.fromJson(textString, snapShotType)
+        val mapType = LinkedHashMap<Int, String>().javaClass
+        gson.fromJson(textsFieldsString, mapType)
     }
+}
+
+private fun getDataMapToString(textFieldsMap: LinkedHashMap<Int, String>): String {
+    val gson = Gson()
+    val newMap = linkedMapOf<Int, String>()
+    for (value in textFieldsMap) {
+        if (value.value.isNotBlank()) {
+            newMap[value.key] = value.value.trim()
+        }
+    }
+    return gson.toJson(newMap)
 }
