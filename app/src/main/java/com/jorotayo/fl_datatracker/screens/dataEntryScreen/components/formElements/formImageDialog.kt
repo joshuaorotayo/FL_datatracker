@@ -72,10 +72,13 @@ fun formImageDialog(
                     modifier = Modifier,
                     text = stringResource(id = R.string.image_selection_dialog_msg)
                 )
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                )
+                {
                     Button(
                         modifier = Modifier
                             .wrapContentWidth(),

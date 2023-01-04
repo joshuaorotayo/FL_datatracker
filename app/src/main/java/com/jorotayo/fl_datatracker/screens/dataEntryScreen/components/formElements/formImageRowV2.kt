@@ -67,12 +67,6 @@ fun formImageRowV2(
     val bitmap = remember {
         mutableStateOf<Bitmap?>(null)
     }
-/*
-    val launcher = rememberLauncherForActivityResult(contract =
-    ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
-    }*/
-
 
     val launcher = rememberLauncherForActivityResult(contract =
     ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -145,7 +139,7 @@ fun formImageRowV2(
             }
         }
 
-        /*val launcher: ActivityResultLauncher<Intent> =
+    /*    val launcher: ActivityResultLauncher<Intent> =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.getResultCode() === RESULT_OK) {
                     val uri: Uri = result.getData()?.getData()!!

@@ -3,8 +3,8 @@ package com.jorotayo.fl_datatracker.viewModels
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.model.Data
@@ -45,35 +45,49 @@ class DataEntryScreenViewModel @Inject constructor(
     private val _dataName = mutableStateOf("")
     var dataName: MutableState<String> = _dataName
 
-    private var _uiState = mutableStateOf(DataEntryScreenState(
-        dataName = dataName.value,
-        dataRows = makeDataRows(),
-        nameError = false,
-        nameErrorMsg = ""
-    ))
-    val uiState: State<DataEntryScreenState> = _uiState
+    private val _currentImageIndex = mutableStateOf(0)
+    var currentImageIndex: MutableState<Int> = _currentImageIndex
+
+    private val _uiState = mutableStateOf(
+        DataEntryScreenState(
+            dataName = dataName.value,
+            dataRows = makeDataRows(),
+            nameError = false,
+            nameErrorMsg = ""
+        ), neverEqualPolicy()
+    )
+    val uiState: MutableState<DataEntryScreenState> = _uiState
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: DataEvent) {
         when (event) {
-            is DataEvent.ValidateDataForm -> {
+            is DataEvent.ValidateInsertDataForm -> {
                 viewModelScope.launch {
                     try {
                         val fieldNames = dataFieldUseCases.getDataFields().map { it.fieldName }
                         val dataFormResults =
-                            dataUseCases.validateInsertDataForm(fieldNames = fieldNames,
-                                dataForm = event.dataEntryScreenState)
-                        if (!dataFormResults.first) {
+                            dataUseCases.validateInsertDataForm(
+                                fieldNames = fieldNames,
+                                dataForm = event.dataEntryScreenState
+                            )
 
-                            val newUiState = mutableStateOf(DataEntryScreenState(
-                                dataName = dataFormResults.second.dataName,
-                                dataRows = dataFormResults.second.dataRows,
-                                nameError = dataFormResults.second.nameError,
-                                nameErrorMsg = dataFormResults.second.nameErrorMsg
-                            ))
+                        val dataFormValid = dataFormResults.first
+                        val dataFormData = dataFormResults.second
+                        if (!dataFormValid) {
+
+                            val newUiState = mutableStateOf(
+                                DataEntryScreenState(
+                                    dataName = dataFormData.dataName,
+                                    dataRows = dataFormData.dataRows,
+                                    nameError = dataFormData.nameError,
+                                    nameErrorMsg = dataFormData.nameErrorMsg
+                                )
+                            )
+
                             _uiState.value = newUiState.value
+
                             throw InvalidDataException("Data Form could not be saved. Please check fields")
                         } else {
                             saveDataForm(dataFormResults.second)
@@ -100,9 +114,8 @@ class DataEntryScreenViewModel @Inject constructor(
                     )
             }
             is DataEvent.UpdateUiState -> {
-                _uiState.value = uiState.value.copy(
-                    dataRows = event.value.dataRows
-                )
+                val newUiState = event.value
+                _uiState.value = newUiState
             }
             is DataEvent.UpdateDataId -> {
                 _currentDataId.value = event.value
@@ -180,7 +193,6 @@ class DataEntryScreenViewModel @Inject constructor(
 
                     DataItem(
                         dataId = currentDataId.value,
-//                        presetId = boxState.value.currentPreset?.presetId!!,
                         presetId = presetSetting.presetId,
                         fieldName = dataField.fieldName,
                         dataFieldType = dataField.dataFieldType,

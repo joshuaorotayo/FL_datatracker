@@ -81,4 +81,6 @@
     <string name="empty_json">"{\"\"}"</string>
     <string name="name_missing_error">Value missing for Meeting/Service name</string>
     <string name="name_duplicate_error">Name already exists</string>
+    <string name="select_data_field_type">Select Data Field Type</string>
+    <string name="select_data_field_type_caption">Select the field type that will be used for this data field</string>
 </resources>

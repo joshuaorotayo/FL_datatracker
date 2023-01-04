@@ -13,13 +13,13 @@ class ValidateInsertDataForm {
         dataForm.nameErrorMsg = ""
 
         if (dataForm.dataName.isBlank()) {
-            dataForm.nameError = true
             noErrors = false
+            dataForm.nameError = true
             dataForm.nameErrorMsg = "Value missing for Meeting/Service name"
 
         } else if (fieldNames.contains(dataForm.dataName)) {
-            dataForm.nameError = true
             noErrors = false
+            dataForm.nameError = true
             dataForm.nameErrorMsg = "Name already Exists"
         }
         for (dr in dataForm.dataRows) {
@@ -29,6 +29,7 @@ class ValidateInsertDataForm {
                 when (dr.dataItem.dataFieldType) {
                     0 -> {
                         dr.errorMsg = "Please enter a value for ${dr.dataItem.fieldName}. "
+
                     }
                     1 -> {
                         dr.errorMsg = "Please enter a value for ${dr.dataItem.fieldName}. "
@@ -44,6 +45,7 @@ class ValidateInsertDataForm {
                 dr.hasError = false
             }
         }
+
         return Pair(noErrors, dataForm)
     }
 }

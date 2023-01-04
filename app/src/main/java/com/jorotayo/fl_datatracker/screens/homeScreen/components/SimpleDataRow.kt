@@ -1,7 +1,9 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,25 +19,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
-@Preview
 fun PreviewSimpleDataRow() {
-    SimpleDataRow(
-        modifier = Modifier,
-        data = Data(
-            dataId = 0,
-            createdTime = "Yesterday",
-            lastEditedTime = "Today",
-            name = "Simple Service Test"
-        ),
-        editData = ({}),
-        deleteData = ({})
-    )
+    FL_DatatrackerTheme {
+        SimpleDataRow(
+            modifier = Modifier,
+            data = Data(
+                dataId = 0,
+                createdTime = "Yesterday",
+                lastEditedTime = "Today",
+                name = "Simple Service Test"
+            ),
+            editData = ({}),
+            deleteData = ({})
+        )
+    }
 }
 
 @Composable
@@ -46,14 +57,16 @@ fun SimpleDataRow(
     deleteData: (Data) -> Unit,
 ) {
 
-    val textColor = MaterialTheme.colors.primary
+    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
 
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .padding(vertical = 8.dp)
-        .clip(shape = RoundedCornerShape(10.dp))
-        .background(MaterialTheme.colors.surface)
-        .padding(4.dp),
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clip(shape = RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colors.surface)
+            .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -61,7 +74,7 @@ fun SimpleDataRow(
             modifier = Modifier
                 .weight(1f),
             text = data.name,
-            color = textColor,
+            color = textColour,
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
@@ -69,7 +82,7 @@ fun SimpleDataRow(
             modifier = Modifier
                 .weight(1f),
             text = data.createdTime,
-            color = textColor,
+            color = textColour,
             style = MaterialTheme.typography.caption,
             textAlign = TextAlign.Center
         )
@@ -79,7 +92,7 @@ fun SimpleDataRow(
                 .clickable(onClick = { editData(data.dataId) }),
             imageVector = Icons.Default.Edit,
             contentDescription = "Edit icon for data ${data.name}",
-            tint = textColor
+            tint = textColour
         )
         Icon(
             modifier = Modifier
@@ -87,7 +100,7 @@ fun SimpleDataRow(
                 .clickable(onClick = { deleteData(data) }),
             imageVector = Icons.Default.Close,
             contentDescription = "Delete icon for data ${data.name}",
-            tint = textColor
+            tint = textColour
         )
     }
 }

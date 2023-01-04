@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,7 +44,8 @@ fun PreviewFormNameHeader() {
                 dataRows = mutableListOf(),
                 nameError = false,
                 nameErrorMsg = ""
-            )
+            ),
+            formSubmitted = false
         )
     }
 }
@@ -52,10 +54,12 @@ fun PreviewFormNameHeader() {
 fun formNameHeader(
     setName: (String) -> Unit,
     data: DataEntryScreenState,
+    formSubmitted: Boolean,
 ) {
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val focusManager = LocalFocusManager.current
     val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
+    val formSubmitted by remember { mutableStateOf(formSubmitted) }
 
 
     Column(
@@ -67,7 +71,7 @@ fun formNameHeader(
             .background(MaterialTheme.colors.surface)
     ) {
 
-        AnimatedVisibility(visible = data.nameError) {
+        AnimatedVisibility(visible = data.nameError && (data.dataName.isBlank() && formSubmitted)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

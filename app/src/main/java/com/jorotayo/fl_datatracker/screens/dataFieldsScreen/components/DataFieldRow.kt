@@ -104,11 +104,8 @@ fun DataFieldRow(
     val isHintVisible = remember { mutableStateOf(true) }
     val isEditOptionsVisible = remember { mutableStateOf(false) }
     val isRowEnabled = remember { mutableStateOf(currentRowState.value.isEnabled) }
-
     val (text, setText) = remember { mutableStateOf(TextFieldValue(currentRowState.value.fieldName)) }
-
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
-
     val firstText = remember { mutableStateOf("") }
     val secondText = remember { mutableStateOf("") }
     val thirdText = remember { mutableStateOf("") }

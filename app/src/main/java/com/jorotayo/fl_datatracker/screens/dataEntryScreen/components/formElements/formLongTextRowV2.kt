@@ -24,7 +24,6 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
-
 @Preview(showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "Dark Mode")

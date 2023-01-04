@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -31,6 +32,15 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var presetUseCases: PresetUseCases
+
+    val selectPictureLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) {
+        }
+
+    val cameraLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

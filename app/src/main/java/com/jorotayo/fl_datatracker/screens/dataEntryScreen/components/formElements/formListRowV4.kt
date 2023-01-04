@@ -55,6 +55,7 @@ fun formListRowV4(
 
     val textFields =
         rememberSaveable { mutableStateOf(getDataStringToList(data.dataItem.dataValue)) }
+
     val number = rememberSaveable { mutableStateOf(textFields.value.size) }
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(70F + (itemHeight * number.value)) }
@@ -177,6 +178,7 @@ private fun getDataStringToList(textsFieldsString: String): HashMap<Int, String>
     return if (textsFieldsString.isBlank()) {
         hashMapOf<Int, String>(0 to "")
     } else {
+        Log.d("json", "getDataStringToList: " + textsFieldsString)
         val mapType = HashMap<Int, String>().javaClass
         gson.fromJson(textsFieldsString, mapType)
     }

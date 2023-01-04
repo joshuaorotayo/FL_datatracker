@@ -80,7 +80,6 @@ fun formTimeRowV2(
         }, mHour, mMinute, true
     )
 
-
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     Column(
         modifier = Modifier

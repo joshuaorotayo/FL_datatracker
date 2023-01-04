@@ -18,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -172,8 +171,11 @@ fun DataFieldsScreen(
                                                     .clickable(
                                                         onClick = {
                                                             presetExpanded = false
-                                                            viewModel.onPresetEvent(PresetEvent.TogglePresetDeleteDialog(
-                                                                value = preset))
+                                                            viewModel.onPresetEvent(
+                                                                PresetEvent.TogglePresetDeleteDialog(
+                                                                    value = preset
+                                                                )
+                                                            )
                                                         }
                                                     ),
                                                 imageVector = Icons.Default.Close,
@@ -319,10 +321,9 @@ fun DataFieldsScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                                .shadow(5.dp, RoundedCornerShape(10.dp))
+                                .padding(10.dp)
                                 .clip(shape = RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colors.onBackground)
+                                .background(MaterialTheme.colors.surface)
                                 .wrapContentHeight(),
                         ) {
                             // Show New Data Field Message
