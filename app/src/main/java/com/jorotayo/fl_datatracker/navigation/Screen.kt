@@ -26,7 +26,7 @@ sealed class Screen(
     )
 
     object DataEntry : Screen(
-        route = "dataEntry_screen",
+        route = "data_entry_screen",
         pageName = "Data Entry",
         pageDescription = "Edit forms based on the Data Entry Screen",
         selectedIcon = Icons.Default.Edit,

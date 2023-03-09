@@ -2,9 +2,20 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -54,9 +65,9 @@ fun BasicAddPresetDialog(
         Card(
             modifier = modifier
                 .padding(32.dp)
-                .shadow(10.dp, RoundedCornerShape(10.dp))
                 .defaultMinSize(minWidth = 280.dp)
-                .wrapContentHeight(),
+                .wrapContentHeight()
+                .shadow(10.dp, RoundedCornerShape(28.dp)),
             shape = RoundedCornerShape(28.dp),
             elevation = 8.dp
         ) {

@@ -1,11 +1,11 @@
 package com.jorotayo.fl_datatracker.domain.repository
 
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import kotlinx.coroutines.flow.Flow
 
 interface DataItemRepository {
 
-    fun getDataItemList(): Flow<DataItem>
+    fun getDataItemList(): List<DataItem>
+    fun getDataItemListByDataAndPresetId(dataId: Long, presetId: Long): List<DataItem>
 
     fun getDataItemById(dataItemId: Long): DataItem
 

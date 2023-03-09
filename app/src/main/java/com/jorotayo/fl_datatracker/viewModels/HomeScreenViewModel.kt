@@ -6,15 +6,19 @@ import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.TestRowItem
+import com.jorotayo.fl_datatracker.domain.useCases.DataItemUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.DataUseCases
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
-import com.jorotayo.fl_datatracker.util.BoxState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor() : ViewModel() {
+class HomeScreenViewModel @Inject constructor(
+    private val dataUseCases: DataUseCases,
+    private val dataItemUseCases: DataItemUseCases
+) : ViewModel() {
 
     private var _uiState = mutableStateOf(
         HomeScreenState(
@@ -37,9 +41,6 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
     private val _testRowItemBox = mutableStateOf(TestState())
 
     val testRowItemBox: State<TestState> = _testRowItemBox
-
-    private val _boxState = mutableStateOf(BoxState())
-    val boxState: State<BoxState> = _boxState
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
@@ -71,17 +72,34 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
             is HomeScreenEvent.ToggleDeleteDataDialog -> {
 
                 _uiState.value = uiState.value.copy(
-                    deletedItem = event.dataItem,
+                    deletedItem = event.data,
                     isDeleteDialogVisible = if (!uiState.value.isDeleteDialogVisible.value) mutableStateOf(
-                        true) else mutableStateOf(false)
+                        true
+                    ) else mutableStateOf(false)
                 )
             }
             is HomeScreenEvent.DeleteDataItem -> {
-                val newBox = ObjectBox.get().boxFor(Data::class.java)
-                newBox.remove(uiState.value.deletedItem)
+                /*val newBox = ObjectBox.get().boxFor(Data::class.java)
+                newBox.remove(uiState.value.deletedItem)*/
+
+                //delete the data item objects
+
+                //delete the data object
+
+                //refresh the data list
+                val data = uiState.value.deletedItem
+                val removeDataItems = dataItemUseCases.getDataItemListByDataAndPresetId(
+                    data.dataId,
+                    data.dataPresetId + 1
+                )
+                for (item in removeDataItems) {
+                    dataItemUseCases.removeDataItem(item)
+                }
+
+                dataUseCases.deleteData(data)
 
                 _uiState.value = uiState.value.copy(
-                    dataList = newBox.all
+                    dataList = dataUseCases.getData()
                 )
             }
 

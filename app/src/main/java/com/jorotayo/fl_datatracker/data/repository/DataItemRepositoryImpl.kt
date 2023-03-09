@@ -5,14 +5,18 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.DataItem_
 import com.jorotayo.fl_datatracker.domain.repository.DataItemRepository
 import io.objectbox.Box
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 
 class DataItemRepositoryImpl : DataItemRepository {
     private val dataItemBox: Box<DataItem> = ObjectBox.get().boxFor(DataItem::class.java)
 
-    override fun getDataItemList(): Flow<DataItem> {
-        return dataItemBox.all.asFlow()
+    override fun getDataItemList(): List<DataItem> {
+        return ObjectBox.get().boxFor(DataItem::class.java).all.toList()
+    }
+
+    override fun getDataItemListByDataAndPresetId(dataId: Long, presetId: Long): List<DataItem> {
+        return dataItemBox.query(
+            DataItem_.dataId.equal(dataId).and(DataItem_.presetId.equal(presetId))
+        ).build().find()
     }
 
     override fun getDataItemById(dataItemId: Long): DataItem {

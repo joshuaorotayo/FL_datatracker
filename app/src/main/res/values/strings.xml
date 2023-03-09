@@ -31,6 +31,7 @@
     <string name="dataField_type_dropdown">Drop down arrow for Field Type Dropdown</string>
     <string name="add_new_data_field">Add New Data Field Text</string>
     <string name="delete_row_header">Delete Row</string>
+    <string name="delete_datafield_header">Delete DataField</string>
     <string name="amend_row_hint">Amend row Hint</string>
     <string name="edit_hint_text">Edit the Hint Text</string>
     <string name="hint_prompt">"Please enter Hint for field: %s"</string>

@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -45,8 +43,7 @@ import kotlinx.coroutines.launch
 fun PreviewPageTemplate() {
     DataFieldsScreen(
         navController = rememberNavController(),
-        viewModel = hiltViewModel(),
-        context = LocalContext.current
+        viewModel = hiltViewModel()
     )
 }
 
@@ -54,8 +51,7 @@ fun PreviewPageTemplate() {
 @Composable
 fun DataFieldsScreen(
     navController: NavController,
-    viewModel: DataFieldsViewModel = hiltViewModel(),
-    context: Context,
+    viewModel: DataFieldsViewModel = hiltViewModel()
     ) {
 
     val bottomNavigationItems = listOf(
@@ -220,7 +216,7 @@ fun DataFieldsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp))
+                    .clip(shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
                     .background(MaterialTheme.colors.background)
             ) {
                 item {

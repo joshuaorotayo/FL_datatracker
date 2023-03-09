@@ -7,6 +7,7 @@ import io.objectbox.annotation.Id
 data class Data(
     @Id
     var dataId: Long = 0,
+    var dataPresetId: Long = 0,
     var name: String = "",
     var lastEditedTime: String = "",
     var createdTime: String = "",

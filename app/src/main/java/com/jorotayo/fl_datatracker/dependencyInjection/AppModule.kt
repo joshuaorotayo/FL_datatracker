@@ -75,6 +75,7 @@ object AppModule {
     @Singleton
     fun provideDataUseCases(dataRepository: DataRepositoryImpl): DataUseCases {
         return DataUseCases(
+            getData = GetData(dataRepository),
             addData = AddData(dataRepository),
             deleteData = DeleteData(dataRepository),
             deleteDataById = DeleteDataById(dataRepository),
@@ -123,6 +124,7 @@ object AppModule {
             getDataItemList = GetDataItemList(dataItemRepository),
             getDataItemById = GetDataItemById(dataItemRepository),
             getDataItemsByPresetId = GetDataItemsByPresetId(dataItemRepository),
+            getDataItemListByDataAndPresetId = GetDataItemListByDataAndPresetId(dataItemRepository),
             getDataItemsEnabledByPresetId = GetDataItemsEnabledByPresetId(dataItemRepository)
         )
     }

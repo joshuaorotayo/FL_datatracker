@@ -53,7 +53,7 @@ fun PreviewSimpleDataRow() {
 fun SimpleDataRow(
     modifier: Modifier,
     data: Data,
-    editData: (Long) -> Unit,
+    editData: () -> Unit,
     deleteData: (Data) -> Unit,
 ) {
 
@@ -89,7 +89,7 @@ fun SimpleDataRow(
         Icon(
             modifier = Modifier
                 .weight(0.25f)
-                .clickable(onClick = { editData(data.dataId) }),
+                .clickable(onClick = { editData() }),
             imageVector = Icons.Default.Edit,
             contentDescription = "Edit icon for data ${data.name}",
             tint = textColour

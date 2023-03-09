@@ -35,7 +35,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 )
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
-fun PreviewFormImageRowV3() {
+fun PreviewFormImageRowV4() {
     FL_DatatrackerTheme {
         val modalBottomSheetState =
             rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -50,7 +50,7 @@ fun PreviewFormImageRowV3() {
             hasError = false,
             errorMsg = ""
         )
-        formImageRowV3(
+        formImageRowV4(
             data = dataItem,
             onClick = {},
             showBottomSheet = {
@@ -63,7 +63,7 @@ fun PreviewFormImageRowV3() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun formImageRowV3(
+fun formImageRowV4(
     data: DataRowState,
     onClick: () -> Unit,
     showBottomSheet: (ModalBottomSheetState) -> Unit,
@@ -91,7 +91,7 @@ fun formImageRowV3(
             color = MaterialTheme.colors.onSurface,
         )
         Log.d("formImageRowV3", data.dataItem.dataValue)
-        AnimatedVisibility(visible = data.dataItem.dataValue.isBlank()) {
+        AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -111,8 +111,8 @@ fun formImageRowV3(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .align(Alignment.CenterHorizontally),
-                    onClick = {
-                        ModalBottomSheetState(ModalBottomSheetValue.Expanded)
+                    onClick =
+                    {
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
                         onClick()
                     },
@@ -123,21 +123,7 @@ fun formImageRowV3(
             }
 
         }
-//        AnimatedVisibility(visible = data.dataItem.dataValue.isNotBlank()) {
-//            Image(
-//                modifier = Modifier
-//                    .size(160.dp)
-//                    .padding(bottom = 8.dp),
-//                painter = rememberAsyncImagePainter(
-//                    ImageRequest
-//                        .Builder(LocalContext.current)
-//                        .data(data = imageUri.value)
-//                        .build()
-//                ),
-//                contentDescription = "Select Image Placeholder"
-//            )
-//        }
-        AnimatedVisibility(visible = data.dataItem.dataValue.isNotBlank()) {
+        AnimatedVisibility(imageUri.value.toString().contains("content", ignoreCase = true)) {
             Column(
                 modifier = Modifier
                     .wrapContentHeight()

@@ -5,14 +5,12 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.Data_
 import com.jorotayo.fl_datatracker.domain.repository.DataRepository
 import io.objectbox.Box
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 
 class DataRepositoryImpl : DataRepository {
     private val dataBox: Box<Data> = ObjectBox.get().boxFor(Data::class.java)
 
-    override fun getData(): Flow<Data> {
-        return dataBox.all.asFlow()
+    override fun getData(): List<Data> {
+        return dataBox.all
     }
 
     override fun getDataByDataId(dataId: Long): Data {

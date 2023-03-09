@@ -1,10 +1,11 @@
 package com.jorotayo.fl_datatracker.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,8 +19,8 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.ui.PageTemplate
-import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
@@ -84,33 +85,36 @@ fun SetupNavGraph(
         }
         composable(route = Screen.HomeScreen.route) {
             HomeScreen(
-                viewModel = HomeScreenViewModel(),
+                viewModel = hiltViewModel(),
                 viewModel2 = hiltViewModel(),
                 navController = navController
             )
         }
         composable(
-            route = Screen.DataEntry.route + "?dataId={dataId}",
+            route = Screen.DataEntry.route + "?id={dataId}",
             arguments = listOf(
                 navArgument(
                     name = "dataId"
                 ) {
                     type = NavType.LongType
                     defaultValue = -1
-                })
-        ) {
-            val dataId = it.arguments?.getLong("dataId", -1)
-            DataEntryScreen(
-                viewModel = hiltViewModel(),
-                navController = navController,
-                dataId = dataId!!
+                },
             )
+        ) { navBackStackEntry ->
+            val dataId = navBackStackEntry.arguments?.getLong("dataId")
+            if (dataId != null) {
+                DataEntryScreen(
+                    viewModel = hiltViewModel(),
+                    navController = navController
+                )
+            }
         }
-        composable(route = Screen.DataFieldsScreen.route) {
+        composable(
+            route = Screen.DataFieldsScreen.route
+        ) {
             DataFieldsScreen(
                 navController = navController,
-                viewModel = hiltViewModel(),
-                context = LocalContext.current
+                viewModel = hiltViewModel()
             )
         }
     }

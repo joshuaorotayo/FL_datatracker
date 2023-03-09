@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:4892981492671855116",
-      "lastPropertyId": "4:1342673702023191843",
+      "lastPropertyId": "5:1766782749009130419",
       "name": "Data",
       "properties": [
         {
@@ -28,6 +28,11 @@
           "id": "4:1342673702023191843",
           "name": "createdTime",
           "type": 9
+        },
+        {
+          "id": "5:1766782749009130419",
+          "name": "dataPresetId",
+          "type": 6
         }
       ],
       "relations": []

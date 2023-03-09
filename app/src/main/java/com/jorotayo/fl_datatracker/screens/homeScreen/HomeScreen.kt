@@ -1,11 +1,22 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -21,7 +32,12 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.*
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
@@ -100,7 +116,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .clip(shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp))
+                    .clip(shape = RoundedCornerShape(topEnd = 40.dp, topStart = 40.dp))
                     .background(color = MaterialTheme.colors.background)
             ) {
                 // Item Count Header
@@ -133,14 +149,24 @@ fun HomeScreen(
                                 SimpleDataRow(
                                     modifier = Modifier,
                                     data = data,
-                                    editData = { dataId ->
-                                        navController.navigate(Screen.DataEntry.route + "?dataId=${dataId}")
-                                        viewModel2.onEvent(DataEvent.UpdateDataId(
-                                            dataId))
+                                    editData = {
+                                        navController.navigate(Screen.DataEntry.route + "?id=${data.dataId}")
+                                        viewModel2.onEvent(
+                                            DataEvent.UpdateDataId(
+                                                data.dataId
+                                            )
+                                        )
+                                        Log.d(
+                                            "fl_datatracker",
+                                            "HomeScreen: edit value ${data.dataId} "
+                                        )
                                     },
                                     deleteData = {
-                                        viewModel.onEvent(HomeScreenEvent.ToggleDeleteDataDialog(
-                                            data))
+                                        viewModel.onEvent(
+                                            HomeScreenEvent.ToggleDeleteDataDialog(
+                                                data
+                                            )
+                                        )
                                     }
                                 )
                             }

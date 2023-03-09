@@ -80,7 +80,6 @@ fun ImageBottomActionSheet(
     ) { isGranted ->
         if (isGranted) {
             Log.d("request permission", "ImageBottomActionSheet: granted ")
-
         } else {
             // Show dialog
             Log.d("request permission", "ImageBottomActionSheet: failed ")
@@ -92,7 +91,7 @@ fun ImageBottomActionSheet(
             .createSource(context.contentResolver, it)
         bitmap.value = ImageDecoder.decodeBitmap(source)
         setDataValue(it.toString())
-        Log.d("Image Picker", "ImageBottomActionSheet: $it")
+        Log.d("fl_datatracker", "ImageBottomActionSheet: $it")
     }
 
     ModalBottomSheetLayout(

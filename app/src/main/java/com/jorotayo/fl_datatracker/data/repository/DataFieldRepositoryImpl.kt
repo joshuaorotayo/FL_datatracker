@@ -63,8 +63,8 @@ class DataFieldRepositoryImpl : DataFieldRepository {
         dataFieldBox.remove(dataField)
     }
 
-    override fun deleteDataFields(datafields: List<DataField>) {
-        dataFieldBox.remove(datafields)
+    override fun deleteDataFields(dataFields: List<DataField>) {
+        dataFieldBox.remove(dataFields)
     }
 
     override fun updateDataField(dataField: DataField) {

@@ -6,7 +6,7 @@ import com.jorotayo.fl_datatracker.domain.repository.DataItemRepository
 class RemoveDataItem(
     private val repository: DataItemRepository,
 ) {
-    suspend operator fun invoke(dataItem: DataItem) {
+    operator fun invoke(dataItem: DataItem) {
         return repository.removeDataItem(dataItem)
     }
 }

@@ -40,8 +40,7 @@ import kotlinx.coroutines.launch
 fun PreviewDataEntryScreen() {
     DataEntryScreen(
         viewModel = hiltViewModel(),
-        navController = rememberNavController(),
-        dataId = -1L
+        navController = rememberNavController()
     )
 }
 
@@ -51,7 +50,6 @@ fun PreviewDataEntryScreen() {
 fun DataEntryScreen(
     viewModel: DataEntryScreenViewModel,
     navController: NavController,
-    dataId: Long,
 ) {
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
@@ -81,21 +79,30 @@ fun DataEntryScreen(
     var formSubmitted = false
 
 
-    viewModel.currentDataId.value = dataId
+//    viewModel.currentDataId.value = dataId
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is DataEntryScreenViewModel.UiEvent.ShowSnackbar -> {
-//                    listState.animateScrollToItem(index = 0)
+                    listState.animateScrollToItem(index = 0)
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
+
                 DataEntryScreenViewModel.UiEvent.SaveDataForm -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Form Saved!"
                     )
+                    navController.navigate(Screen.HomeScreen.route)
+                }
+
+                DataEntryScreenViewModel.UiEvent.UpdateDataForm -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Data Form Updated!"
+                    )
+                    navController.navigate(Screen.HomeScreen.route)
                 }
             }
         }
@@ -315,7 +322,7 @@ fun DataEntryScreen(
                                         }
                                     )
                                 }
-                                7 -> {
+                                /*7 -> {
                                     data.dataItem.dataValue = formImageRowV3(
                                         data = data,
                                         onClick = {
@@ -327,7 +334,21 @@ fun DataEntryScreen(
                                             }
                                         }
                                     )
+                                }*/
+                                7 -> {
+                                    data.dataItem.dataValue = formImageRowV4(
+                                        data = data,
+                                        onClick = {
+                                            viewModel.currentImageIndex.value = index
+                                        },
+                                        showBottomSheet = {
+                                            scope.launch {
+                                                modalBottomSheetState.show()
+                                            }
+                                        }
+                                    )
                                 }
+
                                 8 -> {
                                     data.dataItem.dataValue = formListRowV4(
                                         data = data,
@@ -385,12 +406,9 @@ fun DataEntryScreen(
                 onTakeImage.value
             },
             setDataValue = {
-                uiState.value.value.dataRows[currentImageIndex.value.value].dataItem.dataValue = it
-                val newUiState = uiState
                 viewModel.onEvent(
-                    DataEvent.SetDataValue(value = it, rowIndex = viewModel.currentImageIndex.value)
+                    DataEvent.SetDataValue(value = it, rowIndex = currentImageIndex.value.value)
                 )
-                viewModel.onEvent(DataEvent.UpdateUiState(newUiState.value.value))
             }
         )
     }

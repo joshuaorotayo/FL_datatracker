@@ -5,13 +5,18 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataException
-import com.jorotayo.fl_datatracker.domain.useCases.*
+import com.jorotayo.fl_datatracker.domain.useCases.DataFieldUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.DataItemUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.DataUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
+import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
@@ -28,6 +33,7 @@ class DataEntryScreenViewModel @Inject constructor(
     private val dataFieldUseCases: DataFieldUseCases,
     private val dataItemUseCases: DataItemUseCases,
     private val dataUseCases: DataUseCases,
+    savedStateHandle: SavedStateHandle,
     presetUseCases: PresetUseCases,
     settingsUseCases: SettingsUseCases,
 ) : ViewModel() {
@@ -36,8 +42,8 @@ class DataEntryScreenViewModel @Inject constructor(
     val presetSetting =
         presetUseCases.getPresetByPresetName(settingPreset.settingStringValue)
 
-    private val _currentDataId = mutableStateOf(0.toLong())
-    var currentDataId: MutableState<Long> = _currentDataId
+    private val _currentId = mutableStateOf(savedStateHandle.get<Long>("dataId") ?: -1)
+    var currentDataId: MutableState<Long> = _currentId
 
     private val _currentDataFields = mutableStateOf(listOf<DataField>())
     var currentDataFields: MutableState<List<DataField>> = _currentDataFields
@@ -48,14 +54,17 @@ class DataEntryScreenViewModel @Inject constructor(
     private val _currentImageIndex = mutableStateOf(0)
     var currentImageIndex: MutableState<Int> = _currentImageIndex
 
-    private val _uiState = mutableStateOf(
-        DataEntryScreenState(
-            dataName = dataName.value,
-            dataRows = makeDataRows(),
-            nameError = false,
-            nameErrorMsg = ""
-        ), neverEqualPolicy()
-    )
+    /*  private val _uiState = mutableStateOf(
+          DataEntryScreenState(
+              dataName = dataName.value,
+              dataRows = makeDataRows(),
+              nameError = false,
+              nameErrorMsg = ""
+          ), neverEqualPolicy()
+      )
+      val uiState: MutableState<DataEntryScreenState> = _uiState*/
+
+    private val _uiState = mutableStateOf(initData(), neverEqualPolicy())
     val uiState: MutableState<DataEntryScreenState> = _uiState
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -90,8 +99,13 @@ class DataEntryScreenViewModel @Inject constructor(
 
                             throw InvalidDataException("Data Form could not be saved. Please check fields")
                         } else {
-                            saveDataForm(dataFormResults.second)
-                            _eventFlow.emit(UiEvent.SaveDataForm)
+                            if (currentDataId.value == (-1).toLong()) {
+                                saveDataForm(dataFormResults.second)
+                                _eventFlow.emit(UiEvent.SaveDataForm)
+                            } else {
+                                updateDataForm(dataFormResults.second)
+                                _eventFlow.emit(UiEvent.UpdateDataForm)
+                            }
                         }
                     } catch (e: InvalidDataException) {
                         _eventFlow.emit(
@@ -118,7 +132,7 @@ class DataEntryScreenViewModel @Inject constructor(
                 _uiState.value = newUiState
             }
             is DataEvent.UpdateDataId -> {
-                _currentDataId.value = event.value
+                currentDataId.value = event.value
             }
         }
     }
@@ -129,9 +143,26 @@ class DataEntryScreenViewModel @Inject constructor(
 
         val newData = Data(
             dataId = 0,
+            dataPresetId = presetSetting.presetId,
             name = dataForm.dataName,
             createdTime = dateInString,
             lastEditedTime = dateInString
+        )
+        saveDataItems(
+            dataId = dataUseCases.addData(newData),
+            formData = dataForm
+        )
+    }
+
+    private fun updateDataForm(dataForm: DataEntryScreenState) {
+        val currentData = dataUseCases.getDataByDataId(currentDataId.value)
+
+        val newData = Data(
+            dataId = currentDataId.value,
+            name = dataForm.dataName,
+            dataPresetId = currentData.dataPresetId,
+            createdTime = currentData.createdTime,
+            lastEditedTime = getCurrentDateTime().toString("HH:mm - dd/MM/yyyy ")
         )
         saveDataItems(
             dataId = dataUseCases.addData(newData),
@@ -146,7 +177,7 @@ class DataEntryScreenViewModel @Inject constructor(
         for (item in formData.dataRows) {
             val newDataItem = DataItem(
                 dataId = dataId,
-                dataItemId = 0,
+                dataItemId = item.dataItem.dataItemId,
                 presetId = item.dataItem.presetId,
                 fieldName = item.dataItem.fieldName,
                 dataFieldType = item.dataItem.dataFieldType,
@@ -161,11 +192,62 @@ class DataEntryScreenViewModel @Inject constructor(
         }
     }
 
-    private fun makeDataRows(): MutableList<DataRowState> {
+    private fun initData(): DataEntryScreenState {
         val list: MutableList<DataRowState> = ArrayList()
 
-        Log.i(TAG, "current Data Rows value: LOAD  " + currentDataFields)
-        if (currentDataId.value != (0).toLong()) {
+        if (currentDataId.value == (-1).toLong()) {
+            // If creating a new record of data to save
+            // check for the current preset
+            Log.i(TAG, "makeDataRows: NEW " + currentDataId.value)
+
+            val datafields =
+                dataFieldUseCases.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)
+
+            datafields.forEach { dataField ->
+                list += DataRowState(
+                    DataItem(
+                        dataId = currentDataId.value,
+                        presetId = presetSetting.presetId,
+                        fieldName = dataField.fieldName,
+                        dataFieldType = dataField.dataFieldType,
+                        first = dataField.first,
+                        second = dataField.second,
+                        third = dataField.third,
+                        isEnabled = dataField.isEnabled,
+                        fieldDescription = dataField.fieldHint,
+                        dataValue = ""
+                    )
+                )
+            }
+
+            return DataEntryScreenState(
+                dataName = "",
+                dataRows = list,
+                nameError = false,
+                nameErrorMsg = ""
+            )
+        } else {
+            Log.i(TAG, "current Data Rows value: LOAD  " + currentDataId.value)
+
+            val currentData = dataUseCases.getDataByDataId(currentDataId.value)
+            val currentDataItems = dataItemUseCases.getDataItemListByDataAndPresetId(
+                currentData.dataId,
+                presetSetting.presetId
+            )
+
+            currentDataItems.forEach { item ->
+                list += DataRowState(
+                    item
+                )
+            }
+
+            return DataEntryScreenState(
+                dataName = currentData.name,
+                dataRows = list,
+                nameError = false,
+                nameErrorMsg = ""
+            )
+
             //Returns all enabled data fields in the data item
             // val dataFields = dataBox.value.get(currentDataId.value).dataFields.filter { it.isEnabled }
 
@@ -180,40 +262,16 @@ class DataEntryScreenViewModel @Inject constructor(
                      errorMsg = ""
                  ))
              }*/
-        } else {
-            // If creating a new record of data to save
-            // check for the current preset
-            Log.i(TAG, "makeDataRows: NEW " + currentDataId.value)
 
-            val datafields =
-                dataFieldUseCases.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)
-
-            datafields.forEach { dataField ->
-                list += DataRowState(
-
-                    DataItem(
-                        dataId = currentDataId.value,
-                        presetId = presetSetting.presetId,
-                        fieldName = dataField.fieldName,
-                        dataFieldType = dataField.dataFieldType,
-                        first = dataField.first,
-                        second = dataField.second,
-                        third = dataField.third,
-                        isEnabled = dataField.isEnabled,
-                        fieldDescription = dataField.fieldHint,
-                        dataValue = ""
-                    )
-                )
-                Log.d("datafield type", "makeDataRows: " + dataField.dataFieldType.toString())
-            }
         }
-        return list
+
     }
 
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
         object SaveDataForm : UiEvent()
+        object UpdateDataForm : UiEvent()
     }
 
 }

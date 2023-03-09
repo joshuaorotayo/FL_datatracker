@@ -11,7 +11,7 @@ sealed class HomeScreenEvent {
     object EditDataItem : HomeScreenEvent()
     object DeleteDataItem : HomeScreenEvent()
 
-    data class ToggleDeleteDataDialog(val dataItem: Data) : HomeScreenEvent()
+    data class ToggleDeleteDataDialog(val data: Data) : HomeScreenEvent()
     data class UpdateData(val operation: String, val testRowItem: TestRowItem) : HomeScreenEvent()
     data class SearchFocusChanged(val focusState: FocusState) : HomeScreenEvent()
     data class SearchItemEntered(val searchItem: String) : HomeScreenEvent()

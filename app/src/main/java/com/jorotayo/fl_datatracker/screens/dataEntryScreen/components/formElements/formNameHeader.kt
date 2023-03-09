@@ -4,11 +4,22 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
@@ -59,8 +70,7 @@ fun formNameHeader(
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val focusManager = LocalFocusManager.current
     val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
-    val formSubmitted by remember { mutableStateOf(formSubmitted) }
-
+    val submittedForm by remember { mutableStateOf(formSubmitted) }
 
     Column(
         modifier = Modifier
@@ -71,7 +81,7 @@ fun formNameHeader(
             .background(MaterialTheme.colors.surface)
     ) {
 
-        AnimatedVisibility(visible = data.nameError && (data.dataName.isBlank() && formSubmitted)) {
+        AnimatedVisibility(visible = data.nameError && (data.dataName.isBlank() && submittedForm)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
