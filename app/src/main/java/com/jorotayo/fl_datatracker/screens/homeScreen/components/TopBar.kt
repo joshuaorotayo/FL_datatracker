@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,21 +16,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewTopBar() {
-    TopBar(
-        toggleSearchBar = {},
-        showSettingsView = {},
-        settingsNavigate = {},
-    )
+    FL_DatatrackerTheme {
+        TopBar(
+            toggleSearchBar = {},
+            settingsNavigate = {},
+        )
+    }
 }
 
 @Composable
 fun TopBar(
     toggleSearchBar: () -> Unit,
-    showSettingsView: () -> Unit,
     settingsNavigate: () -> Unit,
 ) {
     Row(
@@ -43,20 +43,17 @@ fun TopBar(
     ) {
         SimpleIconButton(
             modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    settingsNavigate()
-                },
+                .weight(1f),
             icon = Icons.Default.Settings,
-            tint = MaterialTheme.colors.onPrimary,
+            tint = MaterialTheme.colors.primary,
             contentDescription = "Settings Icon to edit in App Settings",
-            onClick = showSettingsView
+            onClick = settingsNavigate
         )
         Text(
             text = "FL DataTracker",
             modifier = Modifier
                 .weight(10f),
-            color = MaterialTheme.colors.onPrimary,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h5.also { FontWeight.Bold },
             textAlign = TextAlign.Center
         )
@@ -64,7 +61,7 @@ fun TopBar(
             modifier = Modifier
                 .weight(1f),
             icon = Icons.Default.Search,
-            tint = MaterialTheme.colors.onPrimary,
+            tint = MaterialTheme.colors.primary,
             contentDescription = "Search Icon to toggle Search Bar and search for Data",
             onClick = toggleSearchBar
         )

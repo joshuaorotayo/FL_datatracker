@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -18,6 +20,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -25,11 +28,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
@@ -39,18 +42,17 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
-import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.xLarge
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenViewModel = hiltViewModel(),
-    viewModel2: DataEntryScreenViewModel = hiltViewModel(),
+    homeState: HomeScreenState,
+    onHomeEvent: (HomeScreenEvent) -> Unit,
+    onDataEvent: (DataEvent) -> Unit,
     navController: NavController,
 ) {
-
-    val uiState = viewModel.uiState.value
 
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
@@ -71,20 +73,20 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.2f)
-                    .background(MaterialTheme.colors.primary)
+                    .wrapContentHeight()
+                    .padding(top = xLarge)
+                    .background(MaterialTheme.colors.background)
             ) {
                 // Top Bar/Search Bar Area
-                AnimatedVisibility(visible = uiState.isSearchVisible) {
+                AnimatedVisibility(visible = homeState.isSearchVisible) {
                     SearchBar(
-                        viewModel = viewModel,
-                        searchState = uiState
+                        onHomeEvent = onHomeEvent,
+                        searchState = homeState
                     )
                 }
-                AnimatedVisibility(visible = !uiState.isSearchVisible) {
+                AnimatedVisibility(visible = !homeState.isSearchVisible) {
                     TopBar(
-                        toggleSearchBar = { viewModel.onEvent(HomeScreenEvent.ToggleSearchBar) },
-                        showSettingsView = { viewModel.onEvent(HomeScreenEvent.ShowSettingsView) },
+                        toggleSearchBar = { onHomeEvent(HomeScreenEvent.ToggleSearchBar) },
                         settingsNavigate = { navController.navigate(Screen.Settings.route) }
                     )
                 }
@@ -103,7 +105,7 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.primary)
+                .background(color = MaterialTheme.colors.background)
         ) {
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,
@@ -116,7 +118,6 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .clip(shape = RoundedCornerShape(topEnd = 40.dp, topStart = 40.dp))
                     .background(color = MaterialTheme.colors.background)
             ) {
                 // Item Count Header
@@ -127,9 +128,11 @@ fun HomeScreen(
                 )
                 {
                     Text(
-                        text = pluralStringResource(id = R.plurals.items_showing_header,
-                            count = uiState.dataList.size,
-                            uiState.dataList.size),
+                        text = pluralStringResource(
+                            id = R.plurals.items_showing_header,
+                            count = homeState.dataList.size,
+                            homeState.dataList.size
+                        ),
                         style = MaterialTheme.typography.h5,
                         color = headerColours
                     )
@@ -144,14 +147,14 @@ fun HomeScreen(
                     Column(
                         modifier = Modifier
                     ) {
-                        if (uiState.dataList.isNotEmpty()) {
-                            for (data in uiState.dataList) {
+                        if (homeState.dataList.isNotEmpty()) {
+                            for (data in homeState.dataList) {
                                 SimpleDataRow(
                                     modifier = Modifier,
                                     data = data,
                                     editData = {
                                         navController.navigate(Screen.DataEntry.route + "?id=${data.dataId}")
-                                        viewModel2.onEvent(
+                                        onDataEvent(
                                             DataEvent.UpdateDataId(
                                                 data.dataId
                                             )
@@ -162,7 +165,7 @@ fun HomeScreen(
                                         )
                                     },
                                     deleteData = {
-                                        viewModel.onEvent(
+                                        onHomeEvent(
                                             HomeScreenEvent.ToggleDeleteDataDialog(
                                                 data
                                             )
@@ -174,25 +177,36 @@ fun HomeScreen(
                     }
                     BasicDeleteDataDialog(
                         modifier = Modifier,
-                        confirmDelete = { viewModel.onEvent(HomeScreenEvent.DeleteDataItem) },
+                        confirmDelete = { onHomeEvent(HomeScreenEvent.DeleteDataItem) },
                         scaffold = scaffoldState,
-                        state = uiState.isDeleteDialogVisible,
-                        data = uiState.deletedItem
+                        state = homeState.isDeleteDialogVisible,
+                        data = homeState.deletedItem
                     )
-
                 }
-
             }
         }
     }
 }
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview(showBackground = false)
 fun HomeScreenPreview() {
-    HomeScreen(
-        viewModel = hiltViewModel(),
-        navController = rememberNavController()
-    )
+    FL_DatatrackerTheme {
+        HomeScreen(
+            navController = rememberNavController(),
+            onHomeEvent = {},
+            onDataEvent = {},
+            homeState = HomeScreenState(
+                isSearchVisible = false,
+                text = "",
+                hint = "",
+                isHintVisible = true,
+                isDeleteDialogVisible = mutableStateOf(false),
+                deletedItem = Data(),
+                dataList = emptyList()
+            )
+        )
+    }
 }

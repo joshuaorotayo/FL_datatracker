@@ -7,14 +7,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -40,6 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -72,82 +74,81 @@ fun formNameHeader(
     val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
     val submittedForm by remember { mutableStateOf(formSubmitted) }
 
-    Column(
+    Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface)
+            .padding(xSmall),
+        shape = RoundedCornerShape(xSmall),
+        elevation = small,
     ) {
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .background(MaterialTheme.colors.surface)
+        ) {
+            AnimatedVisibility(visible = data.nameError && (data.dataName.isBlank() && submittedForm)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
+                        .clip(shape = RoundedCornerShape(10.dp)),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = data.nameErrorMsg,
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Red,
+                    )
+                    Icon(
+                        modifier = Modifier,
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = stringResource(id = R.string.row_error_description),
+                        tint = Color.Red
+                    )
+                }
+            }
 
-        AnimatedVisibility(visible = data.nameError && (data.dataName.isBlank() && submittedForm)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp)
-                    .clip(shape = RoundedCornerShape(10.dp)),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    modifier = Modifier,
-                    text = data.nameErrorMsg,
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Red,
-                )
-                Icon(
-                    modifier = Modifier,
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = stringResource(id = R.string.row_error_description),
-                    tint = Color.Red
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = nameText.value,
+                    placeholder = {
+                        Text(
+                            text = "Please enter a meeting or Service Name...",
+                            color = textColour,
+                            textAlign = TextAlign.Center
+                        )
+                    },
+                    singleLine = true,
+                    onValueChange = {
+                        nameText.value = it
+                        setName(nameText.value.text)
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        textColor = MaterialTheme.colors.onSurface
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                 )
             }
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = nameText.value,
-                placeholder = {
-                    Text(
-                        text = "Please enter a meeting or Service Name...",
-                        color = textColour,
-                        textAlign = TextAlign.Center
-                    )
-                },
-                singleLine = true,
-                onValueChange = {
-                    nameText.value = it
-                    setName(nameText.value.text)
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    textColor = MaterialTheme.colors.onSurface
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
-                    }
-                ),
-            )
-        }
     }
-
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(10.dp)
-    )
 }

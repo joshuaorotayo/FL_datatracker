@@ -6,8 +6,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -20,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -30,11 +37,15 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import java.util.*
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import java.util.Calendar
 
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormTimeRowV2() {
@@ -81,21 +92,20 @@ fun formTimeRowV2(
     )
 
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
-    Column(
+    Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface)
+            .padding(xSmall),
+        shape = RoundedCornerShape(xSmall),
+        elevation = small,
     ) {
         Column(
             modifier = Modifier
+                .wrapContentSize()
+                .background(MaterialTheme.colors.surface)
                 .padding(16.dp)
-                .fillMaxWidth()
-                .wrapContentHeight()
         ) {
-
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -105,67 +115,61 @@ fun formTimeRowV2(
             )
 
             AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = stringResource(id = R.string.time_row_error),
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Red,
+                    )
+                    Icon(
+                        modifier = Modifier,
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = stringResource(id = R.string.row_error_description),
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    modifier = Modifier,
-                    text = stringResource(id = R.string.time_row_error),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Red,
-                )
-                Icon(
-                    modifier = Modifier,
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = stringResource(id = R.string.row_error_description),
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                onClick = {
-                    mTimePickerDialog.show()
-                }) {
-                Icon(
-                    modifier = Modifier,
-                    imageVector = Icons.Default.Timer,
-                    contentDescription = "Select Time from Clock",
-                    tint = textColour
-                )
-            }
-            Text(
-                modifier = Modifier
-                    .clickable(
-                        onClick = {
-                            mTimePickerDialog.show()
-                        }
+                IconButton(
+                    onClick = {
+                        mTimePickerDialog.show()
+                    }) {
+                    Icon(
+                        modifier = Modifier,
+                        imageVector = Icons.Default.Timer,
+                        contentDescription = "Select Time from Clock",
+                        tint = textColour
                     )
-                    .fillMaxWidth(),
-                text = mTime.value.ifBlank { "HH:MM" },
-                color = if (mTime.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1
-            )
-        }
+                }
+                Text(
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                mTimePickerDialog.show()
+                            }
+                        )
+                        .wrapContentWidth(),
+                    text = mTime.value.ifBlank { "HH:MM" },
+                    color = if (mTime.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body1
+                )
+            }
         }
     }
-
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(10.dp)
-    )
 
     return mTime.value
 }
@@ -183,7 +187,8 @@ private fun formattedTimeString(hour: Int, minute: Int): String {
 
     val formattedMinute =
         if (mTime.get(Calendar.MINUTE) < 10) "0" + mTime.get(Calendar.MINUTE) else "" + mTime.get(
-            Calendar.MINUTE)
+            Calendar.MINUTE
+        )
 
     return "$formattedHrs:$formattedMinute $amPm"
 

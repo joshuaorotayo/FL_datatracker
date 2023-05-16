@@ -1,11 +1,14 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
+import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -24,15 +27,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@Preview
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    name = "Light Mode"
+)
 @Composable
 fun PreviewFormImageDialog() {
-    formImageDialog(
-        onDismiss = {},
-        modifier = Modifier
-    )
-
+    FL_DatatrackerTheme {
+        formImageDialog(
+            onDismiss = {},
+            modifier = Modifier
+        )
+    }
 }
 
 @Composable
@@ -50,13 +66,13 @@ fun formImageDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(16.dp),
-            elevation = 4.dp
+                .padding(small),
+            elevation = xSmall
         ) {
             Column(
                 modifier = Modifier
-                    .wrapContentHeight()
-                    .wrapContentWidth(),
+                    .wrapContentSize()
+                    .background(MaterialTheme.colors.surface),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 

@@ -17,8 +17,6 @@ private val DarkColorPalette = darkColors(
     surface = Color(27, 31, 36, 255),
     onBackground = Color(0, 0, 0, 255),
     onSurface = Color.White,
-/*
- Other default colors to override*/
 )
 
 private val LightColorPalette = lightColors(
@@ -30,9 +28,7 @@ private val LightColorPalette = lightColors(
     secondary = Color(237, 200, 182, 125), //darker light red for panels/sections
     surface = Color(255, 255, 255, 255), //pure white
     onSurface = Color.Black, //text colour for headings, Gray will be subheadings
-/*
- Other default colors to override
-    */
+
 )
 
 @Composable

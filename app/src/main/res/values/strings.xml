@@ -30,6 +30,7 @@
     <string name="next_btn">Next</string>
     <string name="dataField_type_dropdown">Drop down arrow for Field Type Dropdown</string>
     <string name="add_new_data_field">Add New Data Field Text</string>
+    <string name="dataFieldScreen_addFieldName">Data Field Name</string>
     <string name="delete_row_header">Delete Row</string>
     <string name="delete_datafield_header">Delete DataField</string>
     <string name="amend_row_hint">Amend row Hint</string>

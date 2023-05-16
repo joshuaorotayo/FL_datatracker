@@ -335,17 +335,20 @@ fun DataFieldsScreen(
                         }
                     }
                 }
+
                 itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
                     itemContent = { index, item ->
+                        val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
                         DataFieldRow(
-                            viewModel = hiltViewModel(),
+                            onRowEvent = dataFieldsViewModel::onRowEvent,
                             currentDataField = item,
                             editName = {
                                 viewModel.onRowEvent(
                                     RowEvent.EditFieldName(
                                         index = item.dataFieldId,
                                         value = it
-                                    ))
+                                    )
+                                )
                                 item.fieldName = it
                             },
                             editRowType = {

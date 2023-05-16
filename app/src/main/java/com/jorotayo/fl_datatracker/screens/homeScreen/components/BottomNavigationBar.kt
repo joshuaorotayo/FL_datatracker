@@ -1,26 +1,43 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewBottomNavigationBar() {
-    BottomNavigationBar(navController = rememberNavController(), items = hiltViewModel())
+    FL_DatatrackerTheme {
+        BottomNavigationBar(
+            navController = rememberNavController(),
+            items = listOf(
+                Screen.DataFieldsScreen,
+                Screen.HomeScreen,
+                Screen.DataEntry
+            )
+        )
+    }
 }
 
 @Composable
@@ -36,8 +53,7 @@ fun BottomNavigationBar(
     BottomNavigation(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clip(shape = RoundedCornerShape(16.dp)),
+            .shadow(elevation = xSmall)
     ) {
         val currentRoute = sanitiseRoute(navController)
 
@@ -62,6 +78,7 @@ fun BottomNavigationBar(
                                     tint = if (screen.route.contains(currentRoute)) highlightColour else unselectedColour,
                                 )
                                 Text(
+                                    modifier = Modifier,
                                     text = screen.pageName,
                                     color = if (currentRoute == screen.route) highlightColour else unselectedColour
                                 )

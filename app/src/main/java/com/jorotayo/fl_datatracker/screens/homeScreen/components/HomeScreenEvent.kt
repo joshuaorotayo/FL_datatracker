@@ -7,9 +7,11 @@ import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 sealed class HomeScreenEvent {
     object ResetSearchBar : HomeScreenEvent()
     object ToggleSearchBar : HomeScreenEvent()
-    object ShowSettingsView : HomeScreenEvent()
     object EditDataItem : HomeScreenEvent()
     object DeleteDataItem : HomeScreenEvent()
+
+    //    object NavigateToSettings : HomeScreenEvent()
+    object NavigateToDataEntry : HomeScreenEvent()
 
     data class ToggleDeleteDataDialog(val data: Data) : HomeScreenEvent()
     data class UpdateData(val operation: String, val testRowItem: TestRowItem) : HomeScreenEvent()

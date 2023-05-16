@@ -19,6 +19,8 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.ui.PageTemplate
+import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @ExperimentalAnimationApi
@@ -84,10 +86,14 @@ fun SetupNavGraph(
             PageTemplate(navController = navController)
         }
         composable(route = Screen.HomeScreen.route) {
+            val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
+            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
+
             HomeScreen(
-                viewModel = hiltViewModel(),
-                viewModel2 = hiltViewModel(),
-                navController = navController
+                homeState = homeScreenViewModel.uiState.value,
+                navController = navController,
+                onHomeEvent = homeScreenViewModel::onEvent,
+                onDataEvent = dataEntryScreenViewModel::onEvent
             )
         }
         composable(

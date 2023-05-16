@@ -4,8 +4,15 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,8 +34,9 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import kotlin.math.floor
-
 
 @Preview(showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -89,24 +97,22 @@ fun formRadioRowV2(
         selectedOption = text
     }
 
-    Column(
+    Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface)
+            .padding(xSmall),
+        shape = RoundedCornerShape(xSmall),
+        elevation = small,
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .wrapContentHeight()
+                .wrapContentSize()
+                .background(MaterialTheme.colors.surface)
+                .padding(small)
         ) {
-
             Text(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp)
                     .fillMaxWidth(),
                 text = data.dataItem.fieldName,
                 textAlign = TextAlign.Start,
@@ -141,7 +147,7 @@ fun formRadioRowV2(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
+                    .padding(top = xSmall),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -183,11 +189,6 @@ fun formRadioRowV2(
             }
         }
     }
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(10.dp)
-    )
 
     return selectedOption
 }

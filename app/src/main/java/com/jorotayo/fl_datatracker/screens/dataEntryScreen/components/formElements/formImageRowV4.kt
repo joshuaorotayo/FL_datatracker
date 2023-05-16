@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -26,6 +25,8 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @OptIn(ExperimentalMaterialApi::class)
 @Preview(
@@ -73,108 +74,113 @@ fun formImageRowV4(
         mutableStateOf(data.dataItem.dataValue.toUri())
     }
 
-    Column(
+    Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(xSmall)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(xSmall),
+        elevation = small,
     ) {
-        Text(
+        Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                .fillMaxWidth(),
-            text = data.dataItem.fieldName,
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
-        )
-        Log.d("formImageRowV3", data.dataItem.dataValue)
-        AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
-            Column(
+                .wrapContentSize()
+                .background(MaterialTheme.colors.surface),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
                 modifier = Modifier
-                    .wrapContentHeight()
-                    .padding(bottom = 8.dp)
-                    .fillMaxWidth(0.8f)
-            ) {
-                Image(
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                    .fillMaxWidth(),
+                text = data.dataItem.fieldName,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.onSurface,
+            )
+            Log.d("formImageRowV3", data.dataItem.dataValue)
+            AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
+                Column(
                     modifier = Modifier
-                        .size(160.dp)
+                        .wrapContentHeight()
                         .padding(bottom = 8.dp)
-                        .align(Alignment.CenterHorizontally),
-                    imageVector = Icons.Default.Image,
-                    colorFilter = ColorFilter.tint(color = MaterialTheme.colors.background),
-                    contentDescription = "Select Image Placeholder"
-                )
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .align(Alignment.CenterHorizontally),
-                    onClick =
-                    {
-                        showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
-                        onClick()
-                    },
-                )
-                {
-                    Text(text = "Add image")
-                }
-            }
-
-        }
-        AnimatedVisibility(imageUri.value.toString().contains("content", ignoreCase = true)) {
-            Column(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .padding(bottom = 8.dp)
-                    .fillMaxWidth(0.8f)
-            ) {
-                Button(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.End),
-                    onClick = {
-                        //clear image
-                    },
-                )
-                {
-                    Text(
-                        text = "-",
-                        style = MaterialTheme.typography.h6
+                        .fillMaxWidth(0.8f)
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .size(160.dp)
+                            .padding(bottom = 8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        imageVector = Icons.Default.Image,
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colors.background),
+                        contentDescription = "Select Image Placeholder"
                     )
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .align(Alignment.CenterHorizontally),
+                        onClick =
+                        {
+                            showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
+                            onClick()
+                        },
+                    )
+                    {
+                        Text(text = "Add image")
+                    }
                 }
-                Image(
+
+            }
+            AnimatedVisibility(imageUri.value.toString().contains("content", ignoreCase = true)) {
+                Column(
                     modifier = Modifier
-                        .size(160.dp)
+                        .wrapContentHeight()
                         .padding(bottom = 8.dp)
-                        .align(Alignment.CenterHorizontally),
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest
-                            .Builder(LocalContext.current)
-                            .crossfade(true)
-                            .data(data = imageUri.value)
-                            .build()
-                    ),
-                    contentDescription = "Image for ${data.dataItem.fieldName}"
-                )
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .align(Alignment.CenterHorizontally),
-                    onClick = {
-                        ModalBottomSheetState(ModalBottomSheetValue.Expanded)
-                        showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
-                        onClick()
-                    },
-                )
-                {
-                    Text(text = "Add image")
+                        .fillMaxWidth(0.8f)
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.End),
+                        onClick = {
+                            //clear image
+                        },
+                    )
+                    {
+                        Text(
+                            text = "-",
+                            style = MaterialTheme.typography.h6
+                        )
+                    }
+                    Image(
+                        modifier = Modifier
+                            .size(160.dp)
+                            .padding(bottom = 8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest
+                                .Builder(LocalContext.current)
+                                .crossfade(true)
+                                .data(data = imageUri.value)
+                                .build()
+                        ),
+                        contentDescription = "Image for ${data.dataItem.fieldName}"
+                    )
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .align(Alignment.CenterHorizontally),
+                        onClick = {
+                            ModalBottomSheetState(ModalBottomSheetValue.Expanded)
+                            showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
+                            onClick()
+                        },
+                    )
+                    {
+                        Text(text = "Add image")
+                    }
                 }
             }
         }
     }
-
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
