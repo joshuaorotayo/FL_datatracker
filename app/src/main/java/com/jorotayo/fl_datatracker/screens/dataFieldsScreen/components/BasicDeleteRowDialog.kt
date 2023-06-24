@@ -20,9 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import kotlinx.coroutines.launch
 
@@ -47,13 +45,13 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun PreviewBasicDeleteRowDialog() {
-    val mutableValue = remember { mutableStateOf(true) }
     FL_DatatrackerTheme {
         BasicDeleteRowDialog(
             modifier = Modifier,
             confirmDelete = {},
             scaffold = rememberScaffoldState(),
-            state = mutableValue,
+            dialogIsVisible = true,
+            hideDeleteRowDialog = {},
             dataField = DataField(
                 dataFieldId = 0,
                 fieldName = "Test Field",
@@ -74,14 +72,15 @@ fun PreviewBasicDeleteRowDialog() {
 fun BasicDeleteRowDialog(
     modifier: Modifier,
     confirmDelete: (DataField) -> Unit,
+    hideDeleteRowDialog: (DataFieldEvent) -> Unit,
     scaffold: ScaffoldState,
-    state: MutableState<Boolean>,
+    dialogIsVisible: Boolean,
     dataField: DataField,
 ) {
 
     val scope = rememberCoroutineScope()
 
-    if (state.value) {
+    if (dialogIsVisible) {
         Card(
             modifier = modifier
                 .padding(32.dp)
@@ -142,7 +141,7 @@ fun BasicDeleteRowDialog(
                 )
                 {
                     TextButton(onClick = {
-                        state.value = false
+                        hideDeleteRowDialog(DataFieldEvent.ToggleDeleteRowDialog)
                     }) {
                         Text(
                             text = "Cancel",
@@ -151,7 +150,7 @@ fun BasicDeleteRowDialog(
                         )
                     }
                     TextButton(onClick = {
-                        state.value = false
+                        hideDeleteRowDialog(DataFieldEvent.ToggleDeleteRowDialog)
                         scope.launch {
                             scaffold.snackbarHostState.showSnackbar(
                                 message = "Deleted DataField: ${dataField.fieldName}",
@@ -159,7 +158,6 @@ fun BasicDeleteRowDialog(
                             )
                         }
                         confirmDelete(dataField)
-
                     }) {
                         Text(
                             "Delete",

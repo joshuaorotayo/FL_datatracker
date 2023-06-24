@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.content.res.Configuration
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,11 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(
@@ -45,46 +39,37 @@ fun PreviewFormComponentTemplateV2() {
 fun formComponentTemplateV2(
     fieldName: String
 ): String {
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
 
     val count = remember { mutableStateOf(0) }
 
-    Card(
+    Column(
         modifier = Modifier
             .padding(xSmall)
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(xSmall),
-        elevation = small,
+            .wrapContentSize()
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .wrapContentSize()
+                .padding(bottom = 10.dp)
+                .fillMaxWidth()
         ) {
-            Row(
+            Text(
                 modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    text = fieldName,
-                    textAlign = TextAlign.Start,
-                    color = Color.Gray,
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //Button Data capture
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .fillMaxWidth(),
+                text = fieldName,
+                textAlign = TextAlign.Start,
+                color = Color.Gray,
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //Button Data capture
 
-            }
         }
     }
 

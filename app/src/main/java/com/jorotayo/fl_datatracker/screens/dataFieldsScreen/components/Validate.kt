@@ -48,7 +48,7 @@ class Validate {
         if (!isError) {
             dataField.fieldName = capitaliseWord(dataField.fieldName)
             dataField.presetId = boxState.currentPreset?.presetId!!.plus(1)
-            viewModel.onDataEvent(DataFieldEvent.SaveDataField(dataField))
+            viewModel.onDataFieldEvent(DataFieldEvent.SaveDataField(dataField))
             msg = "Data Field '${dataField.fieldName}' saved!"
         }
         return Pair(isError, msg)

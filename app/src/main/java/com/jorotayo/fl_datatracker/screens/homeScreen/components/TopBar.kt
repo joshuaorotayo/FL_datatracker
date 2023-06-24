@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewTopBar() {
     FL_DatatrackerTheme {
@@ -41,6 +47,14 @@ fun TopBar(
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {
+        Text(
+            text = "FL DataTracker",
+            modifier = Modifier
+                .weight(10f),
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.h4.also { FontWeight.SemiBold },
+            textAlign = TextAlign.Start
+        )
         SimpleIconButton(
             modifier = Modifier
                 .weight(1f),
@@ -48,14 +62,6 @@ fun TopBar(
             tint = MaterialTheme.colors.primary,
             contentDescription = "Settings Icon to edit in App Settings",
             onClick = settingsNavigate
-        )
-        Text(
-            text = "FL DataTracker",
-            modifier = Modifier
-                .weight(10f),
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h5.also { FontWeight.Bold },
-            textAlign = TextAlign.Center
         )
         SimpleIconButton(
             modifier = Modifier

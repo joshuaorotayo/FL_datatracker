@@ -20,9 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.TogglePresetDeleteDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import kotlinx.coroutines.launch
 
@@ -47,14 +45,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun PreviewBasicDeletePresetDialog() {
     FL_DatatrackerTheme {
-        val mutableValue = remember { mutableStateOf(true) }
         BasicDeletePresetDialog(
             modifier = Modifier,
             confirmDelete = {},
+            onPresetEvent = {},
             scaffold = rememberScaffoldState(),
-            state = mutableValue,
             preset = Preset(0, "Church")
-
         )
     }
 }
@@ -64,14 +60,13 @@ fun PreviewBasicDeletePresetDialog() {
 fun BasicDeletePresetDialog(
     modifier: Modifier,
     confirmDelete: (Preset) -> Unit,
+    onPresetEvent: (TogglePresetDeleteDialog) -> Unit,
     scaffold: ScaffoldState,
-    state: MutableState<Boolean>,
     preset: Preset,
 ) {
 
     val scope = rememberCoroutineScope()
 
-    if (state.value) {
         Card(
             modifier = modifier
                 .padding(32.dp)
@@ -133,7 +128,7 @@ fun BasicDeletePresetDialog(
                 ) {
 
                     TextButton(onClick = {
-                        state.value = false
+                        onPresetEvent(TogglePresetDeleteDialog)
                     }) {
                         Text(
                             modifier = Modifier
@@ -143,7 +138,7 @@ fun BasicDeletePresetDialog(
                         )
                     }
                     TextButton(onClick = {
-                        state.value = false
+
                         scope.launch {
                             scaffold.snackbarHostState.showSnackbar(
                                 message = "Deleted Preset: ${preset.presetName}",
@@ -162,5 +157,4 @@ fun BasicDeletePresetDialog(
                 }
             }
         }
-    }
 }

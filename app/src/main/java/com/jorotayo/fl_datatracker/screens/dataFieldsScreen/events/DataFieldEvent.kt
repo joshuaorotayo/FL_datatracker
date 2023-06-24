@@ -4,7 +4,11 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 
 sealed class DataFieldEvent {
     object ToggleAddNewDataField : DataFieldEvent()
+    object TogglePresetDeleteDialog : DataFieldEvent()
+    object ToggleAddPresetDialog : DataFieldEvent()
+    object ToggleDeleteRowDialog : DataFieldEvent()
     object RestoreDeletedField : DataFieldEvent()
+    object TogglePresetDropDownMenu : DataFieldEvent()
     data class OpenDeleteDialog(val dataField: DataField) : DataFieldEvent()
     data class AddFieldName(val value: String) : DataFieldEvent()
     data class SelectFieldType(val value: Int) : DataFieldEvent()

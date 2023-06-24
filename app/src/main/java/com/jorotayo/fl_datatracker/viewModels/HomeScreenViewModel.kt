@@ -21,8 +21,8 @@ class HomeScreenViewModel @Inject constructor(
 
     private var _uiState = mutableStateOf(HomeScreenState())
     val uiState: State<HomeScreenState> = _uiState
-    private val _testRowItemBox = mutableStateOf(TestState())
 
+    private val _testRowItemBox = mutableStateOf(TestState())
     private val testRowItemBox: State<TestState> = _testRowItemBox
 
     fun onEvent(event: HomeScreenEvent) {

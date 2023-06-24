@@ -20,7 +20,9 @@ import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.ui.PageTemplate
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
+import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
+import com.jorotayo.fl_datatracker.viewModels.WelcomeScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @ExperimentalAnimationApi
@@ -76,9 +78,11 @@ fun SetupNavGraph(
         startDestination = startDestination
     ) {
         composable(route = Screen.Welcome.route) {
+            val welcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>()
             WelcomeScreen(
                 navController = navController,
-                viewModel = hiltViewModel(),
+                onWelcomeEvent = welcomeScreenViewModel::onEvent,
+                welcomeState = welcomeScreenViewModel.uiState.value,
                 pages = pages
             )
         }
@@ -93,7 +97,7 @@ fun SetupNavGraph(
                 homeState = homeScreenViewModel.uiState.value,
                 navController = navController,
                 onHomeEvent = homeScreenViewModel::onEvent,
-                onDataEvent = dataEntryScreenViewModel::onEvent
+                onDataEvent = dataEntryScreenViewModel::onDataEvent
             )
         }
         composable(
@@ -108,19 +112,29 @@ fun SetupNavGraph(
             )
         ) { navBackStackEntry ->
             val dataId = navBackStackEntry.arguments?.getLong("dataId")
+
+            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
             if (dataId != null) {
                 DataEntryScreen(
-                    viewModel = hiltViewModel(),
-                    navController = navController
+                    navController = navController,
+                    uiState = dataEntryScreenViewModel.uiState.value,
+                    onUiEvent = dataEntryScreenViewModel.eventFlow,
+                    onDataEvent = dataEntryScreenViewModel::onDataEvent
                 )
             }
         }
         composable(
             route = Screen.DataFieldsScreen.route
         ) {
+            val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
+
             DataFieldsScreen(
                 navController = navController,
-                viewModel = hiltViewModel()
+                state = dataFieldsViewModel.dataFieldScreenState.value,
+                onUiEvent = dataFieldsViewModel.eventFlow,
+                onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
+                onPresetEvent = dataFieldsViewModel::onPresetEvent,
+                onRowEvent = dataFieldsViewModel::onRowEvent,
             )
         }
     }

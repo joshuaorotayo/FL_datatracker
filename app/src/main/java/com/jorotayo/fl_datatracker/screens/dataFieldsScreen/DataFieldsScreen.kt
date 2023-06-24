@@ -1,14 +1,17 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
+import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,32 +31,57 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
+import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Preview
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewPageTemplate() {
-    DataFieldsScreen(
-        navController = rememberNavController(),
-        viewModel = hiltViewModel()
-    )
+    FL_DatatrackerTheme {
+        DataFieldsScreen(
+            navController = rememberNavController(),
+            state = DataFieldScreenState(
+                presetList = listOf(Preset(0, "Default"))
+            ),
+            onUiEvent = MutableSharedFlow(),
+            onRowEvent = {},
+            onDataFieldEvent = {},
+            onPresetEvent = {}
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataFieldsScreen(
     navController: NavController,
-    viewModel: DataFieldsViewModel = hiltViewModel()
-    ) {
+    state: DataFieldScreenState,
+    onUiEvent: SharedFlow<UiEvent>,
+    onPresetEvent: (PresetEvent) -> Unit,
+    onRowEvent: (RowEvent) -> Unit,
+    onDataFieldEvent: (DataFieldEvent) -> Unit
+) {
 
     val bottomNavigationItems = listOf(
         Screen.DataFieldsScreen,
@@ -60,26 +89,22 @@ fun DataFieldsScreen(
         Screen.DataEntry
     )
 
-    val headerColours =
-        if (isSystemInDarkTheme()) MaterialTheme.colors.onPrimary else MaterialTheme.colors.primary
-
-    var presetExpanded by remember { mutableStateOf(false) }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    val isAddDataFieldVisible = viewModel.dataFieldScreenState
-    val fields = viewModel.dataFieldScreenState.value.dataFields
-    val presets = viewModel.dataFieldScreenState.value.presetList
-    val currentPreset = viewModel.dataFieldScreenState.value.currentPreset
+    val fields = state.dataFields
+    val presets = state.presetList
+    val currentPreset = state.currentPreset
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        onUiEvent.collectLatest { event ->
             when (event) {
-                is DataFieldsViewModel.UiEvent.ShowSnackbar -> {
+                is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
-                DataFieldsViewModel.UiEvent.SaveDataField -> {
+
+                UiEvent.SaveDataField -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Field Saved!"
                     )
@@ -88,15 +113,22 @@ fun DataFieldsScreen(
         }
     }
 
-
     Scaffold(
         topBar = {
             Column(
                 modifier = Modifier
+                    .wrapContentHeight()
                     .fillMaxWidth()
-                    .fillMaxHeight(0.2f)
-                    .background(MaterialTheme.colors.primary))
-            {
+                    .padding(top = Dimen.large)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = small),
+                    text = "Data Fields",
+                    color = colors.primary,
+                    style = typography.h4.also { SemiBold },
+                    textAlign = TextAlign.Start
+                )
                 Row( //Heading row
                     modifier = Modifier
                         .fillMaxWidth()
@@ -107,17 +139,16 @@ fun DataFieldsScreen(
                     Text(
                         modifier = Modifier,
                         text = stringResource(id = R.string.presetShowing),
-                        color = MaterialTheme.colors.onPrimary,
-                        style = MaterialTheme.typography.h6.also { FontStyle.Italic },
+                        color = colors.onBackground,
+                        style = typography.h6,
                         textAlign = TextAlign.Start
                     )
                     Row(
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(horizontal = 5.dp)
-                            .clickable(onClick = { presetExpanded = true })
+                            .clickable(onClick = { onDataFieldEvent(DataFieldEvent.TogglePresetDropDownMenu) })
                             .clip(shape = RoundedCornerShape(10.dp))
-                            .background(if (isSystemInDarkTheme()) MaterialTheme.colors.background else MaterialTheme.colors.onBackground)
                             .padding(5.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -125,73 +156,21 @@ fun DataFieldsScreen(
                         Text(
                             modifier = Modifier.padding(horizontal = 5.dp),
                             text = currentPreset!!.presetName,
-                            color = headerColours,
+                            color = colors.primary,
+                            style = typography.h6,
                             textAlign = TextAlign.Center
                         )
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
                             contentDescription = "Drop down arrow for Preset Dropdown",
-                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                            tint = colors.onSurface.copy(alpha = 0.5f)
                         )
-                        DropdownMenu(
-                            expanded = presetExpanded,
-                            onDismissRequest = { presetExpanded = false },
-                            modifier = Modifier
-                                .wrapContentWidth()
-                                .background(
-                                    MaterialTheme.colors.background
-                                )
-                        ) {
-                            presets.forEachIndexed { index, preset ->
-                                DropdownMenuItem(onClick = {
-                                    viewModel.onPresetEvent(PresetEvent.ChangePreset(preset.presetName))
-                                    presetExpanded = false
-                                },
-                                    modifier = Modifier)
-                                {
-                                    Row(modifier = Modifier
-                                        .fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween)
-                                    {
-                                        Text(
-                                            text = preset.presetName,
-                                            textAlign = TextAlign.Center,
-                                            color = MaterialTheme.colors.onSurface,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                        // Default shouldn't show the 'x'
-                                        if (index > 0) {
-                                            Icon(
-                                                modifier = Modifier
-                                                    .padding(start = 5.dp)
-                                                    .clickable(
-                                                        onClick = {
-                                                            presetExpanded = false
-                                                            viewModel.onPresetEvent(
-                                                                PresetEvent.TogglePresetDeleteDialog(
-                                                                    value = preset
-                                                                )
-                                                            )
-                                                        }
-                                                    ),
-                                                imageVector = Icons.Default.Close,
-                                                contentDescription = "Delete icon for ${preset.presetName}",
-                                                tint = MaterialTheme.colors.onSurface
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                            DropdownMenuItem(onClick = {
-                                viewModel.onPresetEvent(PresetEvent.TogglePresetDialog)
-                            }) {
-                                Text(
-                                    modifier = Modifier,
-                                    text = stringResource(R.string.add_preset_text_btn),
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colors.onSurface
-                                )
-                            }
+                        if (state.isPresetDropDownMenuExpanded) {
+                            PresetDropDownMenu(
+                                hidePresetDropDownMenu = { onDataFieldEvent(DataFieldEvent.TogglePresetDropDownMenu) },
+                                onPresetEvent = onPresetEvent,
+                                presets = presets,
+                            )
                         }
                     }
                 }
@@ -209,15 +188,13 @@ fun DataFieldsScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(MaterialTheme.colors.primary)
-
         ) {
 
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                    .background(MaterialTheme.colors.background)
+                    .background(colors.background)
             ) {
                 item {
 
@@ -233,15 +210,15 @@ fun DataFieldsScreen(
                         Text(
                             modifier = Modifier,
                             text = stringResource(id = R.string.add_edit_fields_label),
-                            color = headerColours,
-                            style = MaterialTheme.typography.h6.also { FontStyle.Italic },
+                            color = colors.onBackground,
+                            style = typography.h6.also { FontStyle.Italic },
                             textAlign = TextAlign.Start
                         )
                         IconButton(
                             modifier = Modifier,
                             onClick = {
                                 scope.launch {
-                                    viewModel.onDataEvent(DataFieldEvent.ToggleAddNewDataField)
+                                    onDataFieldEvent(DataFieldEvent.ToggleAddNewDataField)
                                 }
                             }) {
                             Icon(
@@ -249,13 +226,13 @@ fun DataFieldsScreen(
                                     .size(48.dp),
                                 imageVector = Icons.Default.AddBox,
                                 contentDescription = stringResource(id = R.string.add_field_description),
-                                tint = MaterialTheme.colors.primary
+                                tint = colors.primary
                             )
                         }
                     }
                 }
                 item {
-                    AnimatedVisibility(visible = fields.isNotEmpty() && !isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                    AnimatedVisibility(visible = fields.isNotEmpty() && !state.isAddDataFieldVisible) {
                         Row(
                             modifier = Modifier
                                 .wrapContentHeight()
@@ -268,43 +245,40 @@ fun DataFieldsScreen(
                                     .weight(3f),
                                 text = "Field Name",
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
+                                color = colors.onSurface
                             )
                             Text(
                                 modifier = Modifier
                                     .weight(3f),
                                 text = "Field Type",
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
+                                color = colors.onSurface
                             )
                             Text(
                                 modifier = Modifier
                                     .weight(1.5f),
                                 text = "Enabled?",
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
+                                color = colors.onSurface
                             )
                             Text(
                                 modifier = Modifier
                                     .weight(0.5f),
                                 text = "",
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colors.onSurface
+                                color = colors.onSurface
                             )
                         }
                     }
                 }
                 item {
 
-                    AnimatedVisibility(visible = !isAddDataFieldVisible.value.isAddDataFieldVisible && fields.isEmpty()) {
+                    AnimatedVisibility(visible = !state.isAddDataFieldVisible && fields.isEmpty()) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
-                                .clip(shape = RoundedCornerShape(10.dp)),
-                            verticalArrangement = Arrangement.SpaceAround,
+                                .padding(top = Dimen.large)
                         ) {
-                            //Show No Data Field Message
                             NoDataField()
                         }
                     }
@@ -313,13 +287,14 @@ fun DataFieldsScreen(
                     AnimatedVisibility(
                         modifier = Modifier
                             .wrapContentHeight(),
-                        visible = isAddDataFieldVisible.value.isAddDataFieldVisible) {
+                        visible = state.isAddDataFieldVisible
+                    ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp)
                                 .clip(shape = RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colors.surface)
+                                .background(colors.surface)
                                 .wrapContentHeight(),
                         ) {
                             // Show New Data Field Message
@@ -329,7 +304,7 @@ fun DataFieldsScreen(
                                     if (currentPreset != null) {
                                         it.presetId = currentPreset.presetId
                                     }
-                                        viewModel.onDataEvent(DataFieldEvent.SaveDataField(it))
+                                    onDataFieldEvent(DataFieldEvent.SaveDataField(it))
                                 }
                             )
                         }
@@ -343,7 +318,7 @@ fun DataFieldsScreen(
                             onRowEvent = dataFieldsViewModel::onRowEvent,
                             currentDataField = item,
                             editName = {
-                                viewModel.onRowEvent(
+                                onRowEvent(
                                     RowEvent.EditFieldName(
                                         index = item.dataFieldId,
                                         value = it
@@ -352,81 +327,91 @@ fun DataFieldsScreen(
                                 item.fieldName = it
                             },
                             editRowType = {
-                                viewModel.onRowEvent(
+                                onRowEvent(
                                     RowEvent.EditRowType(
                                         index = item.dataFieldId,
                                         value = it
-                                    ))
+                                    )
+                                )
                                 item.dataFieldType = it
                             },
                             checkedChange = {
-                                viewModel.onRowEvent(RowEvent.EditIsEnabled(
-                                    index = item.dataFieldId
-                                ))
+                                onRowEvent(
+                                    RowEvent.EditIsEnabled(
+                                        index = item.dataFieldId
+                                    )
+                                )
                                 item.isEnabled = !item.isEnabled
                             },
                             editHintText = {
-                                viewModel.onRowEvent(
+                                onRowEvent(
                                     RowEvent.EditHintText(
                                         index = item.dataFieldId,
                                         value = it
-                                    ))
+                                    )
+                                )
                                 item.fieldHint = it
                             },
                             deleteIcon = {
-                                viewModel.onDataEvent(
+                                onDataFieldEvent(
                                     DataFieldEvent.OpenDeleteDialog(
                                         dataField = item
-                                    ))
+                                    )
+                                )
                             }
                         )
                     }
                 )
             }
 
-            BasicAddPresetDialog(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                state = viewModel.dataFieldScreenState.value.isAddPresetDialogVisible,
-                addPreset = {
-                    val toastMessage = if (Validate().validatePreset(it)) {
-                        viewModel.onPresetEvent(PresetEvent.AddPreset(it))
-                        "Preset: $it added!"
-                    } else {
-                        "Preset not added. Name already exists!"
-                    }
-                    scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = toastMessage
-                        )
-                    }
-                }
-            )
+            if (state.isAddPresetDialogVisible) {
+                BasicAddPresetDialog(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    addPreset = {
+                        Log.i("testing", "DataFieldsScreen:  add preset event")
+                        val toastMessage = if (Validate().validatePreset(it)) {
+                            onPresetEvent(PresetEvent.AddPreset(it))
+                            "Preset: $it added!"
+                        } else {
+                            "Preset not added. Name already exists!"
+                        }
+                        scope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = toastMessage
+                            )
+                        }
+                    },
+                    toggleAddPresetDialog = { onDataFieldEvent(DataFieldEvent.ToggleAddPresetDialog) }
+                )
+            }
 
-            if (currentPreset != null) {
+            if (currentPreset != null && state.isPresetDeleteDialogVisible) {
                 BasicDeletePresetDialog(
                     modifier = Modifier
                         .align(Alignment.Center),
-                    state = viewModel.dataFieldScreenState.value.isPresetDeleteDialogVisible,
-                    preset = viewModel.dataFieldScreenState.value.deletedPreset,
+                    preset = state.deletedPreset,
                     scaffold = scaffoldState,
                     confirmDelete = {
-                        viewModel.onPresetEvent(PresetEvent.DeletePreset(value = it))
-                    }
+                        onPresetEvent(PresetEvent.DeletePreset(value = it))
+                    },
+                    onPresetEvent = { onPresetEvent(PresetEvent.TogglePresetDeleteDialog) }
                 )
             }
 
             BasicDeleteRowDialog(
                 modifier = Modifier
                     .align(Alignment.Center),
-                state = viewModel.dataFieldScreenState.value.isDeleteDialogVisible,
-                dataField = viewModel.dataFieldScreenState.value.deletedDataField,
+                dialogIsVisible = state.isDeleteDialogVisible,
+                dataField = state.deletedDataField,
                 scaffold = scaffoldState,
+
                 confirmDelete = {
                     scope.launch {
-                        viewModel.onDataEvent(DataFieldEvent.DeleteDataField(value = it))
+                        onDataFieldEvent(DataFieldEvent.DeleteDataField(value = it))
                     }
-                }
+                },
+                hideDeleteRowDialog = { onDataFieldEvent(DataFieldEvent.ToggleDeleteRowDialog) }
             )
 
             DefaultSnackbar(
@@ -435,11 +420,79 @@ fun DataFieldsScreen(
                 snackbarHostState = scaffoldState.snackbarHostState,
                 onDismiss = {
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains("Restore") == true) {
-//                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
-                        // TODO: default snackbar to show on top
+                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
+                            "Restore"
+                        ) == true
+                    ) {
+                        onDataFieldEvent(DataFieldEvent.RestoreDeletedField)
                     }
                 }
+            )
+        }
+    }
+}
+
+@Composable
+private fun PresetDropDownMenu(
+    hidePresetDropDownMenu: (DataFieldEvent) -> Unit,
+    presets: List<Preset>,
+    onPresetEvent: (PresetEvent) -> Unit
+) {
+    DropdownMenu(
+        expanded = true,
+        onDismissRequest = { hidePresetDropDownMenu(DataFieldEvent.TogglePresetDropDownMenu) },
+        modifier = Modifier
+            .wrapContentWidth()
+    ) {
+        presets.forEachIndexed { index, preset ->
+            DropdownMenuItem(
+                onClick = {
+                    hidePresetDropDownMenu(DataFieldEvent.TogglePresetDropDownMenu)
+                    onPresetEvent(PresetEvent.ChangePreset(preset.presetName))
+                },
+                modifier = Modifier
+            )
+            {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                )
+                {
+                    Text(
+                        text = preset.presetName,
+                        textAlign = TextAlign.Center,
+                        color = colors.onSurface,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    // Default shouldn't show the 'x'
+                    if (index > 0) {
+                        Icon(modifier = Modifier
+                            .padding(start = 5.dp)
+                            .clickable(
+                                onClick = {
+                                    onPresetEvent(
+                                        PresetEvent.ToggleAddPresetDialog
+                                    )
+                                }
+                            ),
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Delete icon for ${preset.presetName}",
+                            tint = colors.onSurface
+                        )
+                    }
+                }
+            }
+        }
+        DropdownMenuItem(onClick = {
+            onPresetEvent(PresetEvent.ToggleAddPresetDialog)
+            hidePresetDropDownMenu(DataFieldEvent.TogglePresetDropDownMenu)
+        }) {
+            Text(
+                modifier = Modifier,
+                text = stringResource(R.string.add_preset_text_btn),
+                textAlign = TextAlign.Center,
+                color = colors.onSurface
             )
         }
     }

@@ -1,30 +1,26 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @Preview(
     showBackground = true,
@@ -56,25 +52,18 @@ fun SimpleDataRow(
     editData: () -> Unit,
     deleteData: (Data) -> Unit,
 ) {
-
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
-
-
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface)
-            .padding(4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier
+            .padding(xxSmall)
+            .fillMaxWidth(),
+        horizontalArrangement = SpaceEvenly,
+        verticalAlignment = CenterVertically
     ) {
         Text(
             modifier = Modifier
                 .weight(1f),
             text = data.name,
-            color = textColour,
+            color = colors.onBackground,
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
@@ -82,7 +71,7 @@ fun SimpleDataRow(
             modifier = Modifier
                 .weight(1f),
             text = data.createdTime,
-            color = textColour,
+            color = colors.onBackground,
             style = MaterialTheme.typography.caption,
             textAlign = TextAlign.Center
         )
@@ -92,7 +81,7 @@ fun SimpleDataRow(
                 .clickable(onClick = { editData() }),
             imageVector = Icons.Default.Edit,
             contentDescription = "Edit icon for data ${data.name}",
-            tint = textColour
+            tint = colors.primary
         )
         Icon(
             modifier = Modifier
@@ -100,7 +89,7 @@ fun SimpleDataRow(
                 .clickable(onClick = { deleteData(data) }),
             imageVector = Icons.Default.Close,
             contentDescription = "Delete icon for data ${data.name}",
-            tint = textColour
+            tint = colors.primary
         )
     }
 }

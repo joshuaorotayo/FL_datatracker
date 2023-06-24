@@ -1,34 +1,40 @@
 package com.jorotayo.fl_datatracker.ui.theme
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-
+/*
 @SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = primaryDarkRed,
-    onPrimary = Color.White,
-    primaryVariant = primaryLightRed,
-    background = Color(18, 20, 24, 255),
-    surface = Color(27, 31, 36, 255),
-    onBackground = Color(0, 0, 0, 255),
-    onSurface = Color.White,
+    primary = primaryLightRed,
+    onPrimary = Color.Black,
+    background = Color(0, 0, 0, 255), //white
+    onBackground = Color(37, 9, 2, 255),
+    primaryVariant = Color(100, 13, 20, 255),
+    secondary = Color(237, 200, 182, 125), //darker light red for panels/sections
+    surface = Color(26, 25, 25, 255), //grey text colour for headings, Gray will be subheadings
+    onSurface = Color(255, 255, 255, 255), //pure white
 )
+
+*/
+/*private val LightColorPalette = lightColors(
+    primary = primaryLightRed,
+    onPrimary = Color.White,
+    primaryVariant = primaryDarkRed,
+    background = Color(248, 248, 248, 255), //ghost white
+    onBackground = Color(255, 44, 44, 255),//light red
+    secondary = Color(237, 200, 182, 125), //darker light red for panels/sections
+    surface = Color(255, 255, 255, 255), //pure white
+    onSurface = Color.Black, //text colour for headings, Gray will be subheadings
+)*//*
+
 
 private val LightColorPalette = lightColors(
     primary = primaryLightRed,
     onPrimary = Color.White,
     primaryVariant = primaryDarkRed,
-    background = Color(248, 248, 248, 255), //ghost white
-    onBackground = Color(241, 241, 241, 250),//light red
+    background = Color(255, 255, 255, 255), //white
+    onBackground = Color(0, 0, 0, 255),//grey
     secondary = Color(237, 200, 182, 125), //darker light red for panels/sections
     surface = Color(255, 255, 255, 255), //pure white
-    onSurface = Color.Black, //text colour for headings, Gray will be subheadings
-
+    onSurface = Color(0, 0, 0, 255) //grey text colour for headings, Gray will be subheadings
 )
 
 @Composable
@@ -42,6 +48,61 @@ fun FL_DatatrackerTheme(
         LightColorPalette
     }
 
+
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
+}*/
+
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
+import androidx.compose.runtime.Composable
+
+
+private val LightColors = lightColors(
+    primary = md_theme_light_primary,
+    onPrimary = md_theme_light_onPrimary,
+    secondary = md_theme_light_secondary,
+    onSecondary = md_theme_light_onSecondary,
+    error = md_theme_light_error,
+    onError = md_theme_light_onError,
+    background = md_theme_light_background,
+    onBackground = md_theme_light_onBackground,
+    surface = md_theme_light_surface,
+    onSurface = md_theme_light_onSurface,
+)
+
+
+private val DarkColors = darkColors(
+    primary = md_theme_dark_primary,
+    onPrimary = md_theme_dark_onPrimary,
+    secondary = md_theme_dark_secondary,
+    onSecondary = md_theme_dark_onSecondary,
+    error = md_theme_dark_error,
+    onError = md_theme_dark_onError,
+    background = md_theme_dark_background,
+    onBackground = md_theme_dark_onBackground,
+    surface = md_theme_dark_surface,
+    onSurface = md_theme_dark_onSurface,
+)
+
+@Composable
+fun FL_DatatrackerTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
+) {
+    val colors = if (!useDarkTheme) {
+        LightColors
+    } else {
+        DarkColors
+    }
+
     MaterialTheme(
         colors = colors,
         typography = Typography,
@@ -49,3 +110,5 @@ fun FL_DatatrackerTheme(
         content = content
     )
 }
+
+

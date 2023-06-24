@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalTextStyle
@@ -39,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = "Light Mode")
@@ -72,139 +69,133 @@ fun formCountRowV2(
     var count = remember { mutableStateOf(0) }
     var unChanged = remember { mutableStateOf(true) }
 
-    Card(
+
+    Column(
         modifier = Modifier
+            .padding(xSmall)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(Dimen.xSmall),
-        shape = RoundedCornerShape(Dimen.xSmall),
-        elevation = Dimen.small,
+            .wrapContentSize()
+            .background(MaterialTheme.colors.surface)
     ) {
+        Text(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface,
+        )
+
+        AnimatedVisibility(visible = data.hasError && unChanged.value) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                    text = stringResource(id = R.string.count_row_error),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Red,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = MaterialTheme.colors.primary
+                )
+            }
+        }
+
         Column(
             modifier = Modifier
-                .wrapContentSize()
-                .background(MaterialTheme.colors.surface)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
+            Row(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                    .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface,
-            )
-
-            AnimatedVisibility(visible = data.hasError && unChanged.value) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, top = 5.dp),
-                        text = stringResource(id = R.string.count_row_error),
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Red,
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .padding(end = 10.dp),
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = stringResource(id = R.string.row_error_description),
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth(0.5f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
+                IconButton(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .weight(1f)
-                            .background(MaterialTheme.colors.primary)
-                            .padding(vertical = 5.dp),
-                        onClick = {
-                            if ((count.value - 1) >= 0) {
-                                count.value = count.value - 1
-                                unChanged.value = false
-                                setDataValue(count.value.toString())
-                            }
-                        })
-                    {
-                        Icon(
-                            imageVector = Icons.Default.Remove,
-                            contentDescription = stringResource(id = R.string.decrement_description),
-                            tint = MaterialTheme.colors.onPrimary
-                        )
-                    }
-                    TextField(
-                        modifier = Modifier
-                            .weight(3f),
-                        value = count.value.toString(),
-                        maxLines = 1,
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                        placeholder = {
-                            Text(
-                                text = if (count.value == 0) "0" else count.value.toString(),
-                                style = MaterialTheme.typography.h6,
-                                color = MaterialTheme.colors.primary
-                            )
-                        },
-                        onValueChange = {
-                            if (it.toIntOrNull() == null) {
-                            } else if (it.isBlank()) {
-                                count.value = 0
-                            } else {
-                                count.value = it.toInt()
-                            }
-                            unChanged.value = false
-                            setDataValue(count.value.toString())
-                        },
-                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
-                            .also { MaterialTheme.typography.subtitle1 },
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                            textColor = MaterialTheme.colors.onSurface
-                        )
-                    )
-                    IconButton(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .weight(1f)
-                            .background(MaterialTheme.colors.primary)
-                            .padding(vertical = 5.dp),
-                        onClick = {
-                            count.value = count.value + 1
+                        .size(28.dp)
+                        .weight(1f)
+                        .background(MaterialTheme.colors.primary)
+                        .padding(vertical = 5.dp),
+                    onClick = {
+                        if ((count.value - 1) >= 0) {
+                            count.value = count.value - 1
                             unChanged.value = false
                             setDataValue(count.value.toString())
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(id = R.string.increment_description),
-                            tint = MaterialTheme.colors.onPrimary
+                    })
+                {
+                    Icon(
+                        imageVector = Icons.Default.Remove,
+                        contentDescription = stringResource(id = R.string.decrement_description),
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                }
+                TextField(
+                    modifier = Modifier
+                        .weight(3f),
+                    value = count.value.toString(),
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    placeholder = {
+                        Text(
+                            text = if (count.value == 0) "0" else count.value.toString(),
+                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colors.primary
                         )
+                    },
+                    onValueChange = {
+                        if (it.toIntOrNull() == null || it.isBlank()) {
+                            count.value = 0
+                        } else {
+                            count.value = it.toInt()
+                        }
+                        unChanged.value = false
+                        setDataValue(count.value.toString())
+                    },
+                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                        .also { MaterialTheme.typography.subtitle1 },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        textColor = MaterialTheme.colors.onSurface
+                    )
+                )
+                IconButton(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .weight(1f)
+                        .background(MaterialTheme.colors.primary)
+                        .padding(vertical = 5.dp),
+                    onClick = {
+                        count.value = count.value + 1
+                        unChanged.value = false
+                        setDataValue(count.value.toString())
                     }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.increment_description),
+                        tint = MaterialTheme.colors.onPrimary
+                    )
                 }
             }
         }
     }
+
 
     return count.value.toString()
 }

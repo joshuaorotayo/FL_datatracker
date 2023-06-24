@@ -8,7 +8,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
@@ -25,16 +24,15 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @OptIn(ExperimentalMaterialApi::class)
 @Preview(
-    showBackground = true,
+    showBackground = false,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "Dark Mode"
 )
-@Preview(showBackground = true, name = "Light Mode")
+@Preview(showBackground = false, name = "Light Mode")
 @Composable
 fun PreviewFormImageRowV4() {
     FL_DatatrackerTheme {
@@ -74,49 +72,43 @@ fun formImageRowV4(
         mutableStateOf(data.dataItem.dataValue.toUri())
     }
 
-    Card(
+    Column(
         modifier = Modifier
             .padding(xSmall)
             .fillMaxWidth()
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(xSmall),
-        elevation = small,
+            .wrapContentHeight()
+            .background(MaterialTheme.colors.surface),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
+        Text(
             modifier = Modifier
-                .wrapContentSize()
-                .background(MaterialTheme.colors.surface),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface,
+        )
+        Log.d("formImageRowV3", data.dataItem.dataValue)
+        AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
+            Column(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                    .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface,
-            )
-            Log.d("formImageRowV3", data.dataItem.dataValue)
-            AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
-                Column(
+                    .wrapContentHeight()
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(0.8f)
+            ) {
+                Image(
                     modifier = Modifier
-                        .wrapContentHeight()
+                        .size(160.dp)
                         .padding(bottom = 8.dp)
-                        .fillMaxWidth(0.8f)
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .size(160.dp)
-                            .padding(bottom = 8.dp)
-                            .align(Alignment.CenterHorizontally),
-                        imageVector = Icons.Default.Image,
-                        colorFilter = ColorFilter.tint(color = MaterialTheme.colors.background),
-                        contentDescription = "Select Image Placeholder"
-                    )
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .align(Alignment.CenterHorizontally),
+                        .align(Alignment.CenterHorizontally),
+                    imageVector = Icons.Default.Image,
+                    colorFilter = ColorFilter.tint(color = MaterialTheme.colors.background),
+                    contentDescription = "Select Image Placeholder"
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .align(Alignment.CenterHorizontally),
                         onClick =
                         {
                             showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
@@ -180,7 +172,7 @@ fun formImageRowV4(
                 }
             }
         }
-    }
+
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

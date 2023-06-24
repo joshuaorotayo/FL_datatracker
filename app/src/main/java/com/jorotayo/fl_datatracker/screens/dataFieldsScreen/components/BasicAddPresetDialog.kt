@@ -17,12 +17,10 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,19 +31,22 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewBasicAddPresetDialog() {
     FL_DatatrackerTheme {
-        val state = remember { mutableStateOf(true) }
         BasicAddPresetDialog(
-            state = state,
             modifier = Modifier,
-            addPreset = {}
+            addPreset = {},
+            toggleAddPresetDialog = {}
         )
     }
 }
@@ -53,103 +54,102 @@ fun PreviewBasicAddPresetDialog() {
 
 @Composable
 fun BasicAddPresetDialog(
-    state: MutableState<Boolean>,
     modifier: Modifier,
     addPreset: (String) -> Unit,
+    toggleAddPresetDialog: () -> Unit
 ) {
-
     val (presetText, setText) = remember { mutableStateOf(TextFieldValue("")) }
     val maxChar = 30
 
-    if (state.value) {
-        Card(
-            modifier = modifier
-                .padding(32.dp)
-                .defaultMinSize(minWidth = 280.dp)
-                .wrapContentHeight()
-                .shadow(10.dp, RoundedCornerShape(28.dp)),
-            shape = RoundedCornerShape(28.dp),
-            elevation = 8.dp
+    Card(
+        modifier = modifier
+            .padding(32.dp)
+            .defaultMinSize(minWidth = 280.dp)
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(medium),
+        elevation = xxSmall
+    ) {
+        Column(
+            modifier
+                .background(MaterialTheme.colors.surface)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier
-                    .background(MaterialTheme.colors.surface)
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.addPresetHeader),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onSurface
-                )
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.h6,
-                    value = presetText,
-                    maxLines = 1,
-                    placeholder = {
-                        Text(
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .padding(0.dp),
-                            text = stringResource(R.string.enterPresetPlaceholder),
-                            style = MaterialTheme.typography.h6,
-                            color = MaterialTheme.colors.onSurface,
-                            textAlign = TextAlign.Center
-                        )
-                    },
-                    onValueChange = {
-
-                        setText(it.ofMaxLength(maxLength = maxChar))
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.surface,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        textColor = MaterialTheme.colors.onSurface
+            Text(
+                text = stringResource(R.string.addPresetHeader),
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth(),
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.onSurface
+            )
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textStyle = MaterialTheme.typography.h6,
+                value = presetText,
+                maxLines = 1,
+                placeholder = {
+                    Text(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .padding(0.dp),
+                        text = stringResource(R.string.enterPresetPlaceholder),
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onSurface,
+                        textAlign = TextAlign.Center
                     )
+                },
+                onValueChange = {
+
+                    setText(it.ofMaxLength(maxLength = maxChar))
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = MaterialTheme.colors.surface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    textColor = MaterialTheme.colors.onSurface
                 )
-                Text(text = "${presetText.text.length} / $maxChar",
-                    textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.caption,
-                    color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp, end = 10.dp)
-                        .background(Color.Transparent)
-                )
-                Row(
-                    Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+            )
+            Text(
+                text = "${presetText.text.length} / $maxChar",
+                textAlign = TextAlign.End,
+                style = MaterialTheme.typography.caption,
+                color = MaterialTheme.colors.onSurface,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp, end = 10.dp)
+                    .background(Color.Transparent)
+            )
+            Row(
+                Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(
+                    onClick =
+                    toggleAddPresetDialog
                 ) {
-                    TextButton(onClick = {
-                        state.value = false
-                    }) {
-                        Text(
-                            modifier = Modifier
-                                .padding(end = 8.dp),
-                            text = stringResource(R.string.cancelText),
-                            color = MaterialTheme.colors.primary,
-                        )
-                    }
-                    TextButton(onClick = {
-                        state.value = false
+                    Text(
+                        modifier = Modifier
+                            .padding(end = 8.dp),
+                        text = stringResource(R.string.cancelText),
+                        color = MaterialTheme.colors.primary,
+                    )
+                }
+                TextButton(
+                    enabled = presetText.text.isNotBlank(),
+                    onClick = {
                         addPreset(presetText.text)
                     }) {
-                        Text(
-                            modifier = Modifier,
-                            text = stringResource(R.string.addPresetBtn),
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colors.primary,
-                        )
-                    }
+                    Text(
+                        modifier = Modifier,
+                        text = stringResource(R.string.addPresetBtn),
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (presetText.text.isNotBlank()) MaterialTheme.colors.primary else Color.DarkGray,
+                    )
                 }
             }
         }

@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -36,9 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import java.util.Calendar
 import java.util.Date
 
@@ -111,84 +106,76 @@ fun formDateRowV2(
         }, mYear, mMonth, mDay
     )
 
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(xSmall),
-        shape = RoundedCornerShape(Dimen.xSmall),
-        elevation = small,
+            .background(MaterialTheme.colors.surface)
+            .padding(small)
     ) {
-        Column(
+        Text(
             modifier = Modifier
-                .wrapContentSize()
-                .background(MaterialTheme.colors.surface)
-                .padding(small)
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface,
-            )
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface,
+        )
 
-            AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier,
-                        text = stringResource(id = R.string.date_row_error),
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Red,
-                    )
-                    Icon(
-                        modifier = Modifier,
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = stringResource(id = R.string.row_error_description),
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
-            }
-
+        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = {
-                        mDatePickerDialog.show()
-                    })
-                {
-                    Icon(
-                        modifier = Modifier,
-                        imageVector = Icons.Default.EditCalendar,
-                        contentDescription = "Select Date from Calendar",
-                        tint = textColour
-                    )
-                }
                 Text(
-                    modifier = Modifier
-                        .clickable(
-                            onClick = {
-                                mDatePickerDialog.show()
-                            }
-                        )
-                        .fillMaxWidth(),
-                    text = mDate.value.ifBlank { "DDnd Month, Year" },
-                    color = if (mDate.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1
+                    modifier = Modifier,
+                    text = stringResource(id = R.string.date_row_error),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Red,
                 )
-
+                Icon(
+                    modifier = Modifier,
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = MaterialTheme.colors.primary
+                )
             }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = {
+                    mDatePickerDialog.show()
+                })
+            {
+                Icon(
+                    modifier = Modifier,
+                    imageVector = Icons.Default.EditCalendar,
+                    contentDescription = "Select Date from Calendar",
+                    tint = textColour
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .clickable(
+                        onClick = {
+                            mDatePickerDialog.show()
+                        }
+                    )
+                    .fillMaxWidth(),
+                text = mDate.value.ifBlank { "DDnd Month, Year" },
+                color = if (mDate.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body1
+            )
+
         }
     }
 

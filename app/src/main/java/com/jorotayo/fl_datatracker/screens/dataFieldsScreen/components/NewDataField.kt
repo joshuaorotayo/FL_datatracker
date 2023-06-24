@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -29,6 +30,8 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 
@@ -67,7 +70,8 @@ fun NewDataField(
     val newDataField = viewModel.newDataField.value
 
     val newData = newDataField.let {
-        DataField(dataFieldId = 0,
+        DataField(
+            dataFieldId = 0,
             presetId = 0,
             fieldName = it.fieldName,
             dataFieldType = newDataField.fieldType,
@@ -75,337 +79,364 @@ fun NewDataField(
             first = newDataField.firstValue,
             second = newDataField.secondValue,
             third = newDataField.thirdValue,
-            isEnabled = true)
+            isEnabled = true
+        )
     }
-
-    Column(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth()
-        .wrapContentHeight()
-    )
-    {
-        Text(
+    Card(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(xSmall),
+        shape = RoundedCornerShape(xSmall),
+        elevation = xSmall
+    ) {
+        Column(
             modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .fillMaxWidth(),
-            text = "New Data Field",
-            style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onSurface,
-        )
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
+                .padding(xxSmall)
                 .fillMaxWidth()
-                .padding(top = 16.dp),
-            text = "Data Field Name",
-            textAlign = TextAlign.Start,
-            color = Color.Gray
-        )
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .fillMaxWidth(),
-            text = "This name will be formatted and capitalised on save",
-            textAlign = TextAlign.Start,
-            color = Color.Gray,
-            style = MaterialTheme.typography.caption
-        )
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            value = newDataField.fieldName,
-            onValueChange = {
-                viewModel.onDataEvent(DataFieldEvent.AddFieldName(it))
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = MaterialTheme.colors.surface,
-                backgroundColor = Color.Transparent,
-                textColor = MaterialTheme.colors.onSurface
-            ),
-            placeholder = {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = "Add New Data Field Text",
-                    color = textColour,
-                    textAlign = TextAlign.Center
-                )
-            },
-            singleLine = true,
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = {
-                focusManager.moveFocus(FocusDirection.Down)
-            }),
-        )
-        //Max Chars count
-        Text(
-            text = "${newDataField.fieldName.length} / $maxChar",
-            textAlign = TextAlign.End,
-            style = MaterialTheme.typography.caption,
-            color = Color.Gray,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 10.dp)
-                .background(Color.Transparent)
-        )
-
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .padding(top = 16.dp)
-                .fillMaxWidth(),
-            text = stringResource(R.string.select_data_field_type),
-            textAlign = TextAlign.Start,
-            color = Color.Gray,
-        )
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .fillMaxWidth(),
-            text = stringResource(R.string.select_data_field_type_caption),
-            textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.caption,
-            color = Color.Gray,
-        )
-
-        Box(
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .wrapContentSize(Alignment.Center),
+                .wrapContentHeight()
         ) {
-            Row(
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth(),
+                text = "New Data Field",
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSurface,
+            )
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                text = "Data Field Name",
+                textAlign = TextAlign.Start,
+                color = Color.Gray
+            )
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth(),
+                text = "This name will be formatted and capitalised on save",
+                textAlign = TextAlign.Start,
+                color = Color.Gray,
+                style = MaterialTheme.typography.caption
+            )
+            TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    modifier = Modifier
-                        .clickable(onClick = { expanded = true }),
-                    text = items[newDataField.fieldType],
-                    color = textColour,
-                    textAlign = TextAlign.Center
-                )
-                Icon(
-                    modifier = Modifier
-                        .clickable(onClick = { expanded = true }),
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Drop down arrow for Field Type Dropdown",
-                    tint = textColour
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
+                    .padding(top = 8.dp),
+                value = newDataField.fieldName,
+                onValueChange = {
+                    viewModel.onDataFieldEvent(DataFieldEvent.AddFieldName(it))
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = MaterialTheme.colors.surface,
+                    backgroundColor = Color.Transparent,
+                    textColor = MaterialTheme.colors.onSurface
+                ),
+                placeholder = {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = "Add New Data Field Text",
+                        color = textColour,
+                        textAlign = TextAlign.Center
+                    )
+                },
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }),
+            )
+            //Max Chars count
+            Text(
+                text = "${newDataField.fieldName.length} / $maxChar",
+                textAlign = TextAlign.End,
+                style = MaterialTheme.typography.caption,
+                color = Color.Gray,
                 modifier = Modifier
-                    .wrapContentWidth()
-                    .background(MaterialTheme.colors.background),
+                    .fillMaxWidth()
+                    .padding(end = 10.dp)
+                    .background(Color.Transparent)
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
+                text = stringResource(R.string.select_data_field_type),
+                textAlign = TextAlign.Start,
+                color = Color.Gray,
+            )
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth(),
+                text = stringResource(R.string.select_data_field_type_caption),
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.caption,
+                color = Color.Gray,
+            )
+
+            Box(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .wrapContentSize(Alignment.Center),
             ) {
-                items.forEachIndexed { index, s ->
-                    DropdownMenuItem(onClick = {
-                        viewModel.onDataEvent(DataFieldEvent.SelectFieldType(index))
-                        expanded = false
-                    }) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .clickable(onClick = { expanded = true }),
+                        text = items[newDataField.fieldType],
+                        color = textColour,
+                        textAlign = TextAlign.Center
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .clickable(onClick = { expanded = true }),
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Drop down arrow for Field Type Dropdown",
+                        tint = textColour
+                    )
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .background(MaterialTheme.colors.background),
+                ) {
+                    items.forEachIndexed { index, s ->
+                        DropdownMenuItem(onClick = {
+                            viewModel.onDataFieldEvent(DataFieldEvent.SelectFieldType(index))
+                            expanded = false
+                        }) {
+                            Text(
+                                modifier = Modifier.weight(3f),
+                                text = s,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colors.onSurface
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .padding(end = 10.dp)
+                                    .weight(1f),
+                                imageVector = icons[index],
+                                contentDescription = String.format(
+                                    stringResource(
+                                        id = R.string.dropdown_icon_description,
+                                        items[index]
+                                    )
+                                ),
+                                tint = MaterialTheme.colors.primary
+                            )
+                        }
+                    }
+                }
+            }
+
+            AnimatedVisibility(visible = newDataField.fieldType <= 1 || newDataField.fieldType >= 7) { // ShortString = int 0, LongString = int 1
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 10.dp),
+                        text = "Data Field Hint",
+                        textAlign = TextAlign.Start,
+                        color = Color.Gray
+                    )
+                    //Button Data capture
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        value = hintText,
+                        onValueChange = { newText ->
+                            setHintText(newText.ofMaxLength(maxLength = maxHintChar))
+                            viewModel.onDataFieldEvent(DataFieldEvent.AddHintText(newText.text))
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedIndicatorColor = MaterialTheme.colors.surface,
+                            backgroundColor = Color.Transparent,
+                            textColor = MaterialTheme.colors.onSurface
+                        ),
+                        singleLine = true,
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                            onClick(newData)
+                        }),
+                        placeholder = {
+                            Text(
+                                text = "Please enter hint text for " + DataFieldType.values()[newDataField.fieldType] + " Field",
+                                color = textColour,
+                                textAlign = TextAlign.Start
+                            )
+                        })
+                    //Max Chars count
+                    Text(
+                        text = "${hintText.text.length} / $maxHintChar",
+                        textAlign = TextAlign.End,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Gray,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 10.dp)
+                            .background(Color.Transparent)
+                    )
+                }
+            }
+            AnimatedVisibility(visible = newDataField.fieldType == 2) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 5.dp)
+                    ) {
                         Text(
-                            modifier = Modifier.weight(3f),
-                            text = s,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colors.onSurface
+                            text = "Enter in the values for the boolean e.g. Yes and No",
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.caption,
+                            color = Color.Gray
                         )
-                        Icon(
-                            modifier = Modifier
-                                .padding(end = 10.dp)
-                                .weight(1f),
-                            imageVector = icons[index],
-                            contentDescription = String.format(
-                                stringResource(
-                                    id = R.string.dropdown_icon_description,
-                                    items[index]
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TransparentTextField(
+                            modifier = Modifier.weight(1f),
+                            text = newDataField.firstValue,
+                            label = "1st Value",
+                            placeholder = newDataField.firstValue.ifBlank { "1st Value" },
+                            onValueChange = {
+                                if (it.length <= optionsMaxChars) viewModel.onDataFieldEvent(
+                                    DataFieldEvent.AddFirstValue(
+                                        it
+                                    )
                                 )
-                            ),
-                            tint = MaterialTheme.colors.primary
+                            })
+                        TransparentTextField(modifier = Modifier.weight(1f),
+                            text = newDataField.secondValue,
+                            label = "2nd Value",
+                            placeholder = newDataField.secondValue.ifBlank { "2nd Value" },
+                            onValueChange = {
+                                if (it.length <= optionsMaxChars) viewModel.onDataFieldEvent(
+                                    DataFieldEvent.AddSecondValue(
+                                        it
+                                    )
+                                )
+                            }
                         )
                     }
                 }
             }
-        }
 
-        AnimatedVisibility(visible = newDataField.fieldType <= 1 || newDataField.fieldType >= 7) { // ShortString = int 0, LongString = int 1
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
+            AnimatedVisibility(visible = newDataField.fieldType == 6) {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
-                        .padding(horizontal = 10.dp),
-                    text = "Data Field Hint",
-                    textAlign = TextAlign.Start,
-                    color = Color.Gray
+                        .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
                 )
-                //Button Data capture
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    value = hintText,
-                    onValueChange = { newText ->
-                        setHintText(newText.ofMaxLength(maxLength = maxHintChar))
-                        viewModel.onDataEvent(DataFieldEvent.AddHintText(newText.text))
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = MaterialTheme.colors.surface,
-                        backgroundColor = Color.Transparent,
-                        textColor = MaterialTheme.colors.onSurface
-                    ),
-                    singleLine = true,
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                        onClick(newData)
-                    }),
-                    placeholder = {
+                {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 5.dp)
+                    ) {
                         Text(
-                            text = "Please enter hint text for " + DataFieldType.values()[newDataField.fieldType] + " Field",
-                            color = textColour,
-                            textAlign = TextAlign.Start
+                            text = "Enter in the values for the Tri-state e.g. No, N/A and Yes",
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.caption,
+                            color = Color.Gray
                         )
-                    })
-                //Max Chars count
-                Text(text = "${hintText.text.length} / $maxHintChar",
-                    textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 10.dp)
-                        .background(Color.Transparent))
-            }
-        }
-        AnimatedVisibility(visible = newDataField.fieldType == 2) {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 5.dp)
-                ) {
-                    Text(
-                        text = "Enter in the values for the boolean e.g. Yes and No",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Gray
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TransparentTextField(
-                        modifier = Modifier.weight(1f),
-                        text = newDataField.firstValue,
-                        label = "1st Value",
-                        placeholder = newDataField.firstValue.ifBlank { "1st Value" },
-                        onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddFirstValue(
-                                it))
-                        })
-                    TransparentTextField(modifier = Modifier.weight(1f),
-                        text = newDataField.secondValue,
-                        label = "2nd Value",
-                        placeholder = newDataField.secondValue.ifBlank { "2nd Value" },
-                        onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddSecondValue(
-                                it))
-                        }
-                    )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TransparentTextField(
+                            modifier = Modifier.weight(1f),
+                            text = newDataField.firstValue,
+                            label = "1st Value",
+                            placeholder = newDataField.firstValue.ifBlank { "1st Value" },
+                            onValueChange = {
+                                if (it.length <= optionsMaxChars) viewModel.onDataFieldEvent(
+                                    DataFieldEvent.AddFirstValue(
+                                        it
+                                    )
+                                )
+                            })
+                        TransparentTextField(modifier = Modifier.weight(1f),
+                            text = newDataField.secondValue,
+                            label = "2nd Value",
+                            placeholder = "2nd Value",
+                            onValueChange = {
+                                if (it.length <= optionsMaxChars) viewModel.onDataFieldEvent(
+                                    DataFieldEvent.AddSecondValue(
+                                        it
+                                    )
+                                )
+                            })
+                        TransparentTextField(modifier = Modifier.weight(1f),
+                            text = newDataField.thirdValue,
+                            label = "3rd Value",
+                            placeholder = "3rd Value",
+                            onValueChange = {
+                                if (it.length <= optionsMaxChars) viewModel.onDataFieldEvent(
+                                    DataFieldEvent.AddThirdValue(
+                                        it
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
-        }
-
-        AnimatedVisibility(visible = newDataField.fieldType == 6) {
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
-            )
-            {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 5.dp)
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    modifier = Modifier,
+                    onClick = {
+                        newDataField.fieldName = ""
+                        onClick(newData)
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                 ) {
                     Text(
-                        text = "Enter in the values for the Tri-state e.g. No, N/A and Yes",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Gray
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TransparentTextField(
-                        modifier = Modifier.weight(1f),
-                        text = newDataField.firstValue,
-                        label = "1st Value",
-                        placeholder = newDataField.firstValue.ifBlank { "1st Value" },
-                        onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddFirstValue(
-                                it))
-                        })
-                    TransparentTextField(modifier = Modifier.weight(1f),
-                        text = newDataField.secondValue,
-                        label = "2nd Value",
-                        placeholder = "2nd Value",
-                        onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddSecondValue(
-                                it))
-                        })
-                    TransparentTextField(modifier = Modifier.weight(1f),
-                        text = newDataField.thirdValue,
-                        label = "3rd Value",
-                        placeholder = "3rd Value",
-                        onValueChange = {
-                            if (it.length <= optionsMaxChars) viewModel.onDataEvent(DataFieldEvent.AddThirdValue(
-                                it))
-                        }
+                        modifier = Modifier,
+                        text = "Save Data Field"
                     )
                 }
             }
+            /*  Spacer(modifier = Modifier
+                  .fillMaxWidth()
+                  .height(10.dp))*/
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                modifier = Modifier,
-                onClick = {
-                    newDataField.fieldName = ""
-                    onClick(newData)
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-            ) {
-                Text(
-                    modifier = Modifier,
-                    text = "Save Data Field"
-                )
-            }
-        }
-        /*  Spacer(modifier = Modifier
-              .fillMaxWidth()
-              .height(10.dp))*/
     }
 }

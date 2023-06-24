@@ -9,9 +9,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.model.Data
-import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataException
+import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.useCases.DataFieldUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.DataItemUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.DataUseCases
@@ -45,96 +45,106 @@ class DataEntryScreenViewModel @Inject constructor(
     private val _currentId = mutableStateOf(savedStateHandle.get<Long>("dataId") ?: -1)
     var currentDataId: MutableState<Long> = _currentId
 
-    private val _currentDataFields = mutableStateOf(listOf<DataField>())
-    var currentDataFields: MutableState<List<DataField>> = _currentDataFields
+    /*private val _currentDataFields = mutableStateOf(listOf<DataField>())
+    var currentDataFields: MutableState<List<DataField>> = _currentDataFields*/
 
-    private val _dataName = mutableStateOf("")
-    var dataName: MutableState<String> = _dataName
-
-    private val _currentImageIndex = mutableStateOf(0)
-    var currentImageIndex: MutableState<Int> = _currentImageIndex
-
-    /*  private val _uiState = mutableStateOf(
-          DataEntryScreenState(
-              dataName = dataName.value,
-              dataRows = makeDataRows(),
-              nameError = false,
-              nameErrorMsg = ""
-          ), neverEqualPolicy()
-      )
-      val uiState: MutableState<DataEntryScreenState> = _uiState*/
-
-    private val _uiState = mutableStateOf(initData(), neverEqualPolicy())
+    private val _uiState = mutableStateOf(initData(presetSetting), neverEqualPolicy())
     val uiState: MutableState<DataEntryScreenState> = _uiState
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun onEvent(event: DataEvent) {
+    fun onDataEvent(event: DataEvent) {
         when (event) {
-            is DataEvent.ValidateInsertDataForm -> {
-                viewModelScope.launch {
-                    try {
-                        val fieldNames = dataFieldUseCases.getDataFields().map { it.fieldName }
-                        val dataFormResults =
-                            dataUseCases.validateInsertDataForm(
-                                fieldNames = fieldNames,
-                                dataForm = event.dataEntryScreenState
-                            )
+            is DataEvent.ValidateInsertDataForm -> onValidateInsertDataForm(event)
+            is DataEvent.SetName -> onSetName(event)
+            is DataEvent.SetDataValue -> onSetDataValue(event)
+            is DataEvent.UpdateUiState -> onUpdateUiState(event)
+            is DataEvent.UpdateImageIndex -> onUpdateImageIndex(event)
+            is DataEvent.UpdateDataId -> onUpdateDataID(event)
+            DataEvent.FormSubmitted -> onFormSubmitted()
+        }
+    }
 
-                        val dataFormValid = dataFormResults.first
-                        val dataFormData = dataFormResults.second
-                        if (!dataFormValid) {
 
-                            val newUiState = mutableStateOf(
-                                DataEntryScreenState(
-                                    dataName = dataFormData.dataName,
-                                    dataRows = dataFormData.dataRows,
-                                    nameError = dataFormData.nameError,
-                                    nameErrorMsg = dataFormData.nameErrorMsg
-                                )
-                            )
+    private fun onValidateInsertDataForm(event: DataEvent.ValidateInsertDataForm) {
+        viewModelScope.launch {
+            try {
+                val fieldNames = dataFieldUseCases.getDataFields().map { it.fieldName }
+                val dataFormResults =
+                    dataUseCases.validateInsertDataForm(
+                        fieldNames = fieldNames,
+                        dataForm = event.dataEntryScreenState
+                    )
 
-                            _uiState.value = newUiState.value
+                val dataFormValid = dataFormResults.first
+                val dataFormData = dataFormResults.second
+                if (!dataFormValid) {
 
-                            throw InvalidDataException("Data Form could not be saved. Please check fields")
-                        } else {
-                            if (currentDataId.value == (-1).toLong()) {
-                                saveDataForm(dataFormResults.second)
-                                _eventFlow.emit(UiEvent.SaveDataForm)
-                            } else {
-                                updateDataForm(dataFormResults.second)
-                                _eventFlow.emit(UiEvent.UpdateDataForm)
-                            }
-                        }
-                    } catch (e: InvalidDataException) {
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message.toString().ifBlank { "" }
-                            )
+                    val newUiState = mutableStateOf(
+                        DataEntryScreenState(
+                            dataName = dataFormData.dataName,
+                            dataRows = dataFormData.dataRows,
+                            nameError = dataFormData.nameError,
+                            nameErrorMsg = dataFormData.nameErrorMsg,
+                            formSubmitted = false
                         )
+                    )
+
+                    _uiState.value = newUiState.value
+
+                    throw InvalidDataException("Data Form could not be saved. Please check fields")
+                } else {
+                    if (currentDataId.value == (-1).toLong()) {
+                        saveDataForm(dataFormResults.second)
+                        _eventFlow.emit(UiEvent.SaveDataForm)
+                    } else {
+                        updateDataForm(dataFormResults.second)
+                        _eventFlow.emit(UiEvent.UpdateDataForm)
                     }
                 }
-            }
-            is DataEvent.SetName -> {
-                _uiState.value = uiState.value.copy(
-                    dataName = event.value
+            } catch (e: InvalidDataException) {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar(
+                        message = e.message.toString().ifBlank { "" }
+                    )
                 )
             }
-            is DataEvent.SetDataValue -> {
-                _uiState.value.dataRows[event.rowIndex].dataItem =
-                    uiState.value.dataRows[event.rowIndex].dataItem.copy(
-                        dataValue = event.value
-                    )
-            }
-            is DataEvent.UpdateUiState -> {
-                val newUiState = event.value
-                _uiState.value = newUiState
-            }
-            is DataEvent.UpdateDataId -> {
-                currentDataId.value = event.value
-            }
         }
+    }
+
+    private fun onSetName(event: DataEvent.SetName) {
+        _uiState.value = uiState.value.copy(
+            dataName = event.value
+        )
+    }
+
+    private fun onSetDataValue(event: DataEvent.SetDataValue) {
+        _uiState.value.dataRows[event.rowIndex].dataItem =
+            uiState.value.dataRows[event.rowIndex].dataItem.copy(
+                dataValue = event.value
+            )
+    }
+
+    private fun onUpdateUiState(event: DataEvent.UpdateUiState) {
+        val newUiState = event.value
+        _uiState.value = newUiState
+    }
+
+    private fun onUpdateDataID(event: DataEvent.UpdateDataId) {
+        currentDataId.value = event.value
+    }
+
+    private fun onUpdateImageIndex(event: DataEvent.UpdateImageIndex) {
+        _uiState.value = uiState.value.copy(
+            currentImageIndex = event.value
+        )
+    }
+
+    private fun onFormSubmitted() {
+        _uiState.value = uiState.value.copy(
+            formSubmitted = true
+        )
     }
 
     private fun saveDataForm(dataForm: DataEntryScreenState) {
@@ -192,7 +202,7 @@ class DataEntryScreenViewModel @Inject constructor(
         }
     }
 
-    private fun initData(): DataEntryScreenState {
+    private fun initData(presetSetting: Preset): DataEntryScreenState {
         val list: MutableList<DataRowState> = ArrayList()
 
         if (currentDataId.value == (-1).toLong()) {
@@ -207,7 +217,7 @@ class DataEntryScreenViewModel @Inject constructor(
                 list += DataRowState(
                     DataItem(
                         dataId = currentDataId.value,
-                        presetId = presetSetting.presetId,
+                        presetId = this.presetSetting.presetId,
                         fieldName = dataField.fieldName,
                         dataFieldType = dataField.dataFieldType,
                         first = dataField.first,
@@ -224,7 +234,10 @@ class DataEntryScreenViewModel @Inject constructor(
                 dataName = "",
                 dataRows = list,
                 nameError = false,
-                nameErrorMsg = ""
+                nameErrorMsg = "",
+                formSubmitted = false,
+                currentImageIndex = 0,
+                presetSetting = presetSetting
             )
         } else {
             Log.i(TAG, "current Data Rows value: LOAD  " + currentDataId.value)
@@ -245,7 +258,10 @@ class DataEntryScreenViewModel @Inject constructor(
                 dataName = currentData.name,
                 dataRows = list,
                 nameError = false,
-                nameErrorMsg = ""
+                nameErrorMsg = "",
+                formSubmitted = false,
+                currentImageIndex = 0,
+                presetSetting = presetSetting
             )
 
             //Returns all enabled data fields in the data item
@@ -262,18 +278,14 @@ class DataEntryScreenViewModel @Inject constructor(
                      errorMsg = ""
                  ))
              }*/
-
         }
-
     }
-
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
         object SaveDataForm : UiEvent()
         object UpdateDataForm : UiEvent()
     }
-
 }
 
 

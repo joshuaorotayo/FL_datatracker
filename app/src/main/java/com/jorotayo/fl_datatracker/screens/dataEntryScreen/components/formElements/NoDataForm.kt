@@ -37,26 +37,19 @@ fun PreviewNoDataForm() {
 
 @Composable
 fun NoDataForm() {
-    /*  Box(
-          modifier = Modifier
-              .wrapContentSize()
-              .padding(vertical = 20.dp, horizontal = 16.dp)
-              .clip(shape = RoundedCornerShape(20.dp))
-      )
-      {*/
-
     //empty Message
     Card(
         modifier = Modifier
-            .wrapContentSize(),
-        elevation = xSmall,
-        shape = RoundedCornerShape(xSmall)
+            .wrapContentSize()
+            .padding(xSmall),
+        shape = RoundedCornerShape(xSmall),
+        elevation = xSmall
     ) {
         Column(
             modifier = Modifier
                 .wrapContentSize()
                 .background(MaterialTheme.colors.surface)
-                .padding(10.dp),
+                .padding(xSmall),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

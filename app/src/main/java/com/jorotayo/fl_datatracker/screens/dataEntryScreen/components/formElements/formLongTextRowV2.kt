@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -34,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 
 @Preview(
@@ -74,36 +70,31 @@ fun formLongTextRowV2(
     val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataValue)) }
 
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(Dimen.xSmall),
-        shape = RoundedCornerShape(Dimen.xSmall),
-        elevation = small,
+            .background(MaterialTheme.colors.surface)
+            .padding(small)
     ) {
-        Column(
+        Text(
             modifier = Modifier
-                .wrapContentSize()
-                .background(MaterialTheme.colors.surface)
-                .padding(small)
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = data.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface,
-            )
-            // Data Field Name Data Capture
+                .fillMaxWidth(),
+            text = data.fieldName,
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface,
+        )
+        // Data Field Name Data Capture
 
-            val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
+        val lineHeight = MaterialTheme.typography.body1.fontSize * 4 / 3
         TextField(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = String.format(stringResource(id = R.string.edit_long_text),
-                        data.fieldName),
+                    contentDescription = String.format(
+                        stringResource(id = R.string.edit_long_text),
+                        data.fieldName
+                    ),
                     tint = textColour
                 )
             },
@@ -146,7 +137,7 @@ fun formLongTextRowV2(
                 .fillMaxWidth()
         )
     }
-    }
+
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

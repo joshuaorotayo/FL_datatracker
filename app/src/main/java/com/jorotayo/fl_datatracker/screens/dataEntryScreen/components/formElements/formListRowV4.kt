@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +21,6 @@ import androidx.compose.ui.unit.Dp
 import com.google.gson.Gson
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
@@ -68,89 +64,80 @@ fun formListRowV4(
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(75F + (itemHeight * number.value)) }
 
-    Card(
+    LazyColumn(
         modifier = Modifier
+            .padding(xSmall)
+            .background(MaterialTheme.colors.surface)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(xSmall),
-        shape = RoundedCornerShape(xSmall),
-        elevation = small,
+            .height(Dp(columnHeight.value))
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .background(MaterialTheme.colors.surface)
-                .fillMaxWidth()
-                .height(Dp(columnHeight.value))
-                .padding(small)
-        ) {
-            item {
-                Row(
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        text = data.dataItem.fieldName,
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colors.onSurface,
-                    )
-                }
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = xxxSmall)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        text = "Empty values will be removed on save",
-                        textAlign = TextAlign.Start,
-                        color = Color.DarkGray,
-                        style = MaterialTheme.typography.caption
-                    )
-                }
-            }
-            items(number.value) { index ->
-                listItem(
-                    itemValue = textFields.value[index].orEmpty(),
-                    changeValue = { newText ->
-                        textFields.value[index] = newText
-                        setDataValue(getDataMapToString(textFields.value))
-                        Log.d("formListRowV2", getDataMapToString(textFields.value))
-                    },
-                    addItem = {
-                        textFields.value[index + 1] = ""
-                        columnHeight.value += itemHeight
-                        number.value++
-                        Log.d("formListRowV2", getDataMapToString(textFields.value))
-                    },
-                    deleteItem = {
-                        textFields.value.remove(index)
-                        columnHeight.value -= itemHeight
-                        number.value--
-                        textFields.value = deleteValueAtIndex(textFields.value, index)
-                        Log.d("formListRowV2", getDataMapToString(textFields.value))
-
-                    },
-                    clearField = {
-                        textFields.value[index] = ""
-                        if (index != textFields.value.size - 1) {
-                            if (textFields.value[textFields.value.size - 1].isNullOrBlank()) {
-                                columnHeight.value -= itemHeight
-                                number.value--
-                                textFields.value =
-                                    deleteValueAtIndex(textFields.value, textFields.value.size)
-                            }
-                        }
-                        setDataValue(getDataMapToString(textFields.value))
-                    },
-                    lastItem = index == number.value - 1,
-                    index = index
+                        .fillMaxWidth(),
+                    text = data.dataItem.fieldName,
+                    textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.onSurface,
                 )
             }
+        }
+        item {
+            Row(
+                modifier = Modifier
+                    .padding(bottom = xxxSmall)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = "Empty values will be removed on save",
+                    textAlign = TextAlign.Start,
+                    color = Color.DarkGray,
+                    style = MaterialTheme.typography.caption
+                )
+            }
+        }
+        items(number.value) { index ->
+            listItem(
+                itemValue = textFields.value[index].orEmpty(),
+                changeValue = { newText ->
+                    textFields.value[index] = newText
+                    setDataValue(getDataMapToString(textFields.value))
+                    Log.d("formListRowV2", getDataMapToString(textFields.value))
+                },
+                addItem = {
+                    textFields.value[index + 1] = ""
+                    columnHeight.value += itemHeight
+                    number.value++
+                    Log.d("formListRowV2", getDataMapToString(textFields.value))
+                },
+                deleteItem = {
+                    textFields.value.remove(index)
+                    columnHeight.value -= itemHeight
+                    number.value--
+                    textFields.value = deleteValueAtIndex(textFields.value, index)
+                    Log.d("formListRowV2", getDataMapToString(textFields.value))
+
+                },
+                clearField = {
+                    textFields.value[index] = ""
+                    if (index != textFields.value.size - 1) {
+                        if (textFields.value[textFields.value.size - 1].isNullOrBlank()) {
+                            columnHeight.value -= itemHeight
+                            number.value--
+                            textFields.value =
+                                deleteValueAtIndex(textFields.value, textFields.value.size)
+                        }
+                    }
+                    setDataValue(getDataMapToString(textFields.value))
+                },
+                lastItem = index == number.value - 1,
+                index = index
+            )
         }
     }
     return getDataMapToString(textFields.value)

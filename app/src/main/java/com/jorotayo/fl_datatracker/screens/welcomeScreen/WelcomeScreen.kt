@@ -7,8 +7,21 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,11 +35,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
-import com.jorotayo.fl_datatracker.viewModels.WelcomeViewModel
+import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenEvent
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -34,7 +51,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun WelcomeScreen(
     navController: NavHostController,
-    viewModel: WelcomeViewModel,
+    welcomeState: WelcomeScreenState,
+    onWelcomeEvent: (WelcomeScreenEvent) -> Unit,
     pages: List<WelcomeScreenData>,
 ) {
 
@@ -115,7 +133,7 @@ fun WelcomeScreen(
                         OnBoardingComplete(
                             modifier = Modifier.weight(1f),
                             pagerState = pagerState,
-                            viewModel = viewModel,
+                            onWelcomeEvent = onWelcomeEvent,
                             lastIndex = pages.lastIndex
                         )
                         //Next Button Section
@@ -168,7 +186,7 @@ fun WelcomeScreen(
 @Composable
 fun OnBoardingComplete(
     pagerState: PagerState,
-    viewModel: WelcomeViewModel,
+    onWelcomeEvent: (WelcomeScreenEvent) -> Unit,
     modifier: Modifier,
     lastIndex: Int,
 ) {
@@ -191,7 +209,7 @@ fun OnBoardingComplete(
                 checked = checkedState.value,
                 onCheckedChange = {
                     checkedState.value = it
-                    viewModel.saveOnBoardingState()
+                    onWelcomeEvent(WelcomeScreenEvent.SaveOnBoarding)
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colors.primary,

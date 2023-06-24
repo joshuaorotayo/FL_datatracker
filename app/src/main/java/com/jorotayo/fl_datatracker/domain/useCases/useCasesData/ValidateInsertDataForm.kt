@@ -8,19 +8,26 @@ class ValidateInsertDataForm {
         dataForm: DataEntryScreenState,
     ): Pair<Boolean, DataEntryScreenState> {
 
+        var newForm = dataForm
+
         var noErrors = true
-        dataForm.nameError = false
-        dataForm.nameErrorMsg = ""
+        newForm = newForm.copy(
+            nameError = false,
+            nameErrorMsg = ""
+        )
 
         if (dataForm.dataName.isBlank()) {
             noErrors = false
-            dataForm.nameError = true
-            dataForm.nameErrorMsg = "Value missing for Meeting/Service name"
-
+            newForm = newForm.copy(
+                nameError = true,
+                nameErrorMsg = "Value missing for Meeting/Service name"
+            )
         } else if (fieldNames.contains(dataForm.dataName)) {
             noErrors = false
-            dataForm.nameError = true
-            dataForm.nameErrorMsg = "Name already Exists"
+            newForm = newForm.copy(
+                nameError = true,
+                nameErrorMsg = "Name already exists"
+            )
         }
         for (dr in dataForm.dataRows) {
             if (dr.dataItem.dataValue.isBlank()) {
@@ -46,6 +53,6 @@ class ValidateInsertDataForm {
             }
         }
 
-        return Pair(noErrors, dataForm)
+        return Pair(noErrors, newForm)
     }
 }

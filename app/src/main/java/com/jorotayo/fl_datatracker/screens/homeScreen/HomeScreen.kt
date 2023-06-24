@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -15,7 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -26,6 +28,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,7 +46,7 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xLarge
+import com.jorotayo.fl_datatracker.util.Dimen.medium
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -62,11 +65,10 @@ fun HomeScreen(
 
     val scaffoldState = rememberScaffoldState()
 
-    val systemUiController = rememberSystemUiController()
+    rememberSystemUiController().setSystemBarsColor(colors.background)
 
-    systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
     val headerColours =
-        if (isSystemInDarkTheme()) MaterialTheme.colors.onPrimary else MaterialTheme.colors.primary
+        if (isSystemInDarkTheme()) colors.onPrimary else colors.primary
 
     Scaffold(
         topBar = {
@@ -74,8 +76,8 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = xLarge)
-                    .background(MaterialTheme.colors.background)
+                    .padding(top = medium)
+                    .background(colors.background)
             ) {
                 // Top Bar/Search Bar Area
                 AnimatedVisibility(visible = homeState.isSearchVisible) {
@@ -105,7 +107,7 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.background)
+                .background(color = colors.background)
         ) {
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,
@@ -118,7 +120,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(color = MaterialTheme.colors.background)
+                    .background(color = colors.background)
             ) {
                 // Item Count Header
                 Row(
@@ -133,8 +135,9 @@ fun HomeScreen(
                             count = homeState.dataList.size,
                             homeState.dataList.size
                         ),
-                        style = MaterialTheme.typography.h5,
-                        color = headerColours
+                        style = typography.h5,
+                        color = colors.onBackground,
+                        fontWeight = SemiBold
                     )
                 }
                 // Items example
@@ -191,7 +194,12 @@ fun HomeScreen(
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-@Preview(showBackground = false)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
+@Preview(showBackground = true, name = "Light Mode")
 fun HomeScreenPreview() {
     FL_DatatrackerTheme {
         HomeScreen(

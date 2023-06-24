@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -38,9 +37,11 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import kotlin.math.floor
 
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormRadioRowV2() {
@@ -80,9 +81,11 @@ fun formRadioRowV2(
                 options[0] -> {
                     (0).toDouble()
                 }
+
                 options[1] -> {
                     (1).toDouble()
                 }
+
                 else -> {
                     (2).toDouble()
                 }
@@ -97,93 +100,85 @@ fun formRadioRowV2(
         selectedOption = text
     }
 
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(xSmall),
-        shape = RoundedCornerShape(xSmall),
-        elevation = small,
+            .background(MaterialTheme.colors.surface)
+            .padding(small)
     ) {
-        Column(
+        Text(
             modifier = Modifier
-                .wrapContentSize()
-                .background(MaterialTheme.colors.surface)
-                .padding(small)
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface,
-            )
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface,
+        )
 
-            AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, top = 5.dp),
-                        text = stringResource(id = R.string.radio_row_error),
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Red,
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .padding(end = 10.dp),
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = stringResource(id = R.string.row_error_description),
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
-            }
-
+        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = xSmall),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                //Button Data capture
-                Row(
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .clip(shape = RoundedCornerShape(15.dp))
-                        .wrapContentSize()
-                ) {
-                    options.forEach { text ->
-                        if (text.isNotBlank()) {
-                            Text(
-                                text = text,
-                                style = MaterialTheme.typography.body1,
-                                color = if (data.dataItem.dataValue.isNotEmpty()) Color.White else Color.Black,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clickable {
-                                        onSelectionChange(text)
-                                        setDataValue(selectedOption)
+                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                    text = stringResource(id = R.string.radio_row_error),
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.caption,
+                    color = Color.Red,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = MaterialTheme.colors.primary
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = xSmall),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //Button Data capture
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .clip(shape = RoundedCornerShape(15.dp))
+                    .wrapContentSize()
+            ) {
+                options.forEach { text ->
+                    if (text.isNotBlank()) {
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.body1,
+                            color = if (data.dataItem.dataValue.isNotEmpty()) Color.White else Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    onSelectionChange(text)
+                                    setDataValue(selectedOption)
+                                }
+                                .background(
+                                    if (text == selectedOption) {
+                                        MaterialTheme.colors.primaryVariant
+                                    } else {
+                                        MaterialTheme.colors.primary
                                     }
-                                    .background(
-                                        if (text == selectedOption) {
-                                            MaterialTheme.colors.primaryVariant
-                                        } else {
-                                            MaterialTheme.colors.primary
-                                        }
-                                    )
-                                    .padding(
-                                        vertical = 12.dp,
-                                        horizontal = 5.dp,
-                                    ),
-                            )
-                        }
+                                )
+                                .padding(
+                                    vertical = 12.dp,
+                                    horizontal = 5.dp,
+                                ),
+                        )
                     }
                 }
             }
