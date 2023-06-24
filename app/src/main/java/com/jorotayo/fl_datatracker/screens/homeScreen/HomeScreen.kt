@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,9 +65,6 @@ fun HomeScreen(
     val scaffoldState = rememberScaffoldState()
 
     rememberSystemUiController().setSystemBarsColor(colors.background)
-
-    val headerColours =
-        if (isSystemInDarkTheme()) colors.onPrimary else colors.primary
 
     Scaffold(
         topBar = {
