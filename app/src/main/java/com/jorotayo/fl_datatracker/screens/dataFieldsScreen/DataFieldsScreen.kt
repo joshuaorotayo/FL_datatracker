@@ -69,7 +69,7 @@ fun DataFieldsScreenPreview() {
             navController = rememberNavController(),
             state = DataFieldScreenState(
                 presetList = listOf(Preset(0, "Default")),
-                dataFields = exampleDataFieldList
+//                dataFields = exampleDataFieldList
             ),
             onUiEvent = MutableSharedFlow(),
             onRowEvent = {},
