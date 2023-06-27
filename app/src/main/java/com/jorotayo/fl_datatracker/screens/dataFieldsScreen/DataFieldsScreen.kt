@@ -48,7 +48,6 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
