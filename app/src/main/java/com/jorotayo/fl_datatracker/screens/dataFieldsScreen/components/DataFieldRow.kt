@@ -54,6 +54,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -401,7 +402,7 @@ private fun HideEditRow(
     ) {
         Text(
             modifier = Modifier
-                .padding(end = 8.dp),
+                .padding(end = Dimen.xxSmall),
             text = stringResource(R.string.hideEditRowText),
             color = textColour.copy(alpha = 0.5f)
         )

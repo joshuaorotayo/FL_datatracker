@@ -30,6 +30,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.TransparentTextField
@@ -69,19 +70,17 @@ fun NewDataField(
 
     val newDataField = viewModel.newDataField.value
 
-    val newData = newDataField.let {
-        DataField(
-            dataFieldId = 0,
-            presetId = 0,
-            fieldName = it.fieldName,
-            dataFieldType = newDataField.fieldType,
-            fieldHint = newDataField.fieldHint,
-            first = newDataField.firstValue,
-            second = newDataField.secondValue,
-            third = newDataField.thirdValue,
-            isEnabled = true
-        )
-    }
+    val newData = DataField(
+        dataFieldId = 0,
+        presetId = 0,
+        fieldName = newDataField.fieldName,
+        dataFieldType = newDataField.fieldType,
+        fieldHint = newDataField.fieldHint,
+        first = newDataField.firstValue,
+        second = newDataField.secondValue,
+        third = newDataField.thirdValue,
+        isEnabled = true
+    )
     Card(
         modifier = Modifier
             .wrapContentSize()
@@ -108,7 +107,7 @@ fun NewDataField(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = Dimen.small),
                 text = "Data Field Name",
                 textAlign = TextAlign.Start,
                 color = Color.Gray
@@ -125,7 +124,7 @@ fun NewDataField(
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(top = Dimen.xxSmall),
                 value = newDataField.fieldName,
                 onValueChange = {
                     viewModel.onDataFieldEvent(DataFieldEvent.AddFieldName(it))
@@ -167,7 +166,7 @@ fun NewDataField(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
-                    .padding(top = 16.dp)
+                    .padding(top = Dimen.small)
                     .fillMaxWidth(),
                 text = stringResource(R.string.select_data_field_type),
                 textAlign = TextAlign.Start,
@@ -185,13 +184,13 @@ fun NewDataField(
 
             Box(
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = Dimen.xxSmall)
                     .wrapContentSize(Alignment.Center),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = Dimen.xxSmall),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
@@ -253,7 +252,7 @@ fun NewDataField(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
+                            .padding(top = Dimen.small)
                             .padding(horizontal = 10.dp),
                         text = "Data Field Hint",
                         textAlign = TextAlign.Start,
@@ -312,7 +311,7 @@ fun NewDataField(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 5.dp)
+                            .padding(top = Dimen.xxSmall, bottom = 5.dp)
                     ) {
                         Text(
                             text = "Enter in the values for the boolean e.g. Yes and No",
@@ -363,7 +362,7 @@ fun NewDataField(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 5.dp)
+                            .padding(top = Dimen.xxSmall, bottom = 5.dp)
                     ) {
                         Text(
                             text = "Enter in the values for the Tri-state e.g. No, N/A and Yes",
@@ -417,7 +416,7 @@ fun NewDataField(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = Dimen.small),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(

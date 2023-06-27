@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -17,13 +18,14 @@ import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Night Mode")
@@ -37,6 +39,8 @@ fun PreviewNoDataForm() {
 
 @Composable
 fun NoDataForm() {
+
+    val textColour = if(isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
     //empty Message
     Card(
         modifier = Modifier
@@ -65,15 +69,14 @@ fun NoDataForm() {
                 text = stringResource(id = R.string.no_data_form_msg),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h4,
-                color = MaterialTheme.colors.onSurface
+                color = textColour
             )
             Text(
                 modifier = Modifier
                     .padding(bottom = 10.dp),
                 text = stringResource(id = R.string.no_data_fields_msg_data_form),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h5,
-                color = Color.DarkGray
+                style = MaterialTheme.typography.h5
             )
         }
     }

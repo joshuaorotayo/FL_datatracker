@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.Screen
@@ -46,8 +48,9 @@ fun BottomNavigationBar(
     items: List<Screen>
 ) {
 
-    val highlightColour =
-        if (isSystemInDarkTheme()) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+  /*  val highlightColour =
+        if (isSystemInDarkTheme()) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary*/
+    val highlightColour = MaterialTheme.colors.primary
     val unselectedColour = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
 
     BottomNavigation(
@@ -60,7 +63,7 @@ fun BottomNavigationBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.surface),
+                .background(MaterialTheme.colors.background),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             items.forEach { screen ->
@@ -80,7 +83,8 @@ fun BottomNavigationBar(
                                 Text(
                                     modifier = Modifier,
                                     text = screen.pageName,
-                                    color = if (currentRoute == screen.route) highlightColour else unselectedColour
+                                    color = if (currentRoute == screen.route) highlightColour else unselectedColour,
+                                    style = TextStyle.Default.copy(fontSize = 16.sp) //small
                                 )
                             }
                         }
@@ -101,7 +105,7 @@ fun BottomNavigationBar(
 }
 
 private fun sanitiseRoute(navController: NavController): String {
-    var currentDestination: String =
+    val currentDestination: String =
         if (navController.currentBackStackEntry?.destination?.route?.contains("?") == true) {
             val splitString = navController.currentBackStackEntry?.destination?.route?.split("?")
             splitString!![0]

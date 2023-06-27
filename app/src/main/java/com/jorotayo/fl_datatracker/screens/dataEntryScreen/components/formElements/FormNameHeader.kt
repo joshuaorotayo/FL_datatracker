@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @Preview(
     showBackground = true,
@@ -69,6 +74,9 @@ fun FormNameHeader(
     val focusManager = LocalFocusManager.current
     val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
 
+    val headerColour =
+        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,7 +88,7 @@ fun FormNameHeader(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 0.dp),
+                    .padding(start = small, end = small, top = xxSmall, bottom = 0.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -110,7 +118,7 @@ fun FormNameHeader(
                 placeholder = {
                     Text(
                         text = "Please enter a meeting or Service Name...",
-                        color = colors.background,
+                        color = headerColour,
                         textAlign = TextAlign.Center
                     )
                 },
@@ -125,7 +133,7 @@ fun FormNameHeader(
                     unfocusedIndicatorColor = Color.Transparent,
                     errorIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    textColor = colors.onSurface
+                    textColor = headerColour
                 ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next

@@ -59,7 +59,7 @@ fun DataRow(
 
     Card(
         modifier = Modifier.run {
-            padding(horizontal = 16.dp, vertical = 8.dp)
+            padding(horizontal = Dimen.small, vertical = Dimen.xxSmall)
                 .fillMaxWidth()
                 .background(colors.surface)
         },

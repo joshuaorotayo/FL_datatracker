@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -24,7 +26,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import kotlin.math.floor
@@ -69,6 +74,9 @@ fun formRadioRowV2(
     setDataValue: (String) -> Unit,
 ): String {
     val options = listOf(data.dataItem.first, data.dataItem.second, data.dataItem.third)
+
+    val headerColour =
+        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
     // val defaultSelected = floor(options.size.toDouble() / 2)
 
@@ -112,7 +120,7 @@ fun formRadioRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = headerColour,
         )
 
         AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
@@ -124,7 +132,7 @@ fun formRadioRowV2(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                        .padding(start = Dimen.small, end = Dimen.small, top = 5.dp),
                     text = stringResource(id = R.string.radio_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,
@@ -148,40 +156,46 @@ fun formRadioRowV2(
             verticalAlignment = Alignment.CenterVertically
         ) {
             //Button Data capture
-            Row(
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .clip(shape = RoundedCornerShape(15.dp))
-                    .wrapContentSize()
+                    .fillMaxWidth(0.6f),
+                shape = RoundedCornerShape(medium),
+                elevation = xSmall
             ) {
-                options.forEach { text ->
-                    if (text.isNotBlank()) {
-                        Text(
-                            text = text,
-                            style = MaterialTheme.typography.body1,
-                            color = if (data.dataItem.dataValue.isNotEmpty()) Color.White else Color.Black,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    onSelectionChange(text)
-                                    setDataValue(selectedOption)
-                                }
-                                .background(
-                                    if (text == selectedOption) {
-                                        MaterialTheme.colors.primaryVariant
-                                    } else {
-                                        MaterialTheme.colors.primary
+                Row(
+                    modifier = Modifier
+                        .wrapContentSize()
+                ) {
+                    options.forEach { text ->
+                        if (text.isNotBlank()) {
+                            Text(
+                                text = text,
+                                style = MaterialTheme.typography.body1,
+                                color = if (text == selectedOption) Color.White else Color.Black,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        onSelectionChange(text)
+                                        setDataValue(selectedOption)
                                     }
-                                )
-                                .padding(
-                                    vertical = 12.dp,
-                                    horizontal = 5.dp,
-                                ),
-                        )
+                                    .background(
+                                        if (text == selectedOption) {
+                                            MaterialTheme.colors.primary
+                                        } else {
+                                            MaterialTheme.colors.surface
+                                        }
+                                    )
+                                    .padding(
+                                        vertical = Dimen.xSmall,
+                                        horizontal = 5.dp,
+                                    ),
+                            )
+                        }
                     }
                 }
             }
+
         }
     }
 

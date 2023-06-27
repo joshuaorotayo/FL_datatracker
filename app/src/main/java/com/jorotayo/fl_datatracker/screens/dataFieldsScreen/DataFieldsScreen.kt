@@ -35,7 +35,12 @@ import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.HidePresetDropdown
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.RestoreDeletedField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ToggleDeleteRowDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ChangePreset
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.TogglePresetDeleteDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
@@ -43,6 +48,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -57,12 +63,13 @@ import kotlinx.coroutines.launch
 )
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
-fun PreviewPageTemplate() {
+fun DataFieldsScreenPreview() {
     FL_DatatrackerTheme {
         DataFieldsScreen(
             navController = rememberNavController(),
             state = DataFieldScreenState(
-                presetList = listOf(Preset(0, "Default"))
+                presetList = listOf(Preset(0, "Default")),
+                dataFields = exampleDataFieldList
             ),
             onUiEvent = MutableSharedFlow(),
             onRowEvent = {},
@@ -133,7 +140,7 @@ fun DataFieldsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 0.dp),
+                        .padding(start = small, end = small, top = 24.dp, bottom = 0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -147,7 +154,7 @@ fun DataFieldsScreen(
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(horizontal = 5.dp)
-                            .clickable(onClick = { onDataFieldEvent(DataFieldEvent.TogglePresetDropDownMenu) })
+                            .clickable(onClick = { onDataFieldEvent(DataFieldEvent.ExpandPresetDropdown) })
                             .clip(shape = RoundedCornerShape(10.dp))
                             .padding(5.dp),
                         horizontalArrangement = Arrangement.Center,
@@ -167,7 +174,7 @@ fun DataFieldsScreen(
                         )
                         if (state.isPresetDropDownMenuExpanded) {
                             PresetDropDownMenu(
-                                hidePresetDropDownMenu = { onDataFieldEvent(DataFieldEvent.TogglePresetDropDownMenu) },
+                                onDataFieldEvent = { onDataFieldEvent(HidePresetDropdown) },
                                 onPresetEvent = onPresetEvent,
                                 presets = presets,
                             )
@@ -201,9 +208,8 @@ fun DataFieldsScreen(
                     Row( //Add/Edit row
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxWidth()
                             .fillMaxHeight()
-                            .padding(top = 24.dp, bottom = 16.dp, end = 16.dp, start = 16.dp),
+                            .padding(top = 24.dp, bottom = small, end = small, start = small),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -236,7 +242,7 @@ fun DataFieldsScreen(
                         Row(
                             modifier = Modifier
                                 .wrapContentHeight()
-                                .padding(bottom = 8.dp, start = 10.dp, end = 10.dp),
+                                .padding(bottom = Dimen.xxSmall, start = 10.dp, end = 10.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -279,7 +285,9 @@ fun DataFieldsScreen(
                                 .fillMaxSize()
                                 .padding(top = Dimen.large)
                         ) {
+                            Spacer(modifier = Modifier.fillMaxSize(1F))
                             NoDataField()
+                            Spacer(modifier = Modifier.fillMaxSize(1F))
                         }
                     }
                 }
@@ -311,8 +319,8 @@ fun DataFieldsScreen(
                     }
                 }
 
-                itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
-                    itemContent = { index, item ->
+                itemsIndexed(items = fields, key = { _, item -> item.dataFieldId.toInt() },
+                    itemContent = { _, item ->
                         val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
                         DataFieldRow(
                             onRowEvent = dataFieldsViewModel::onRowEvent,
@@ -395,7 +403,7 @@ fun DataFieldsScreen(
                     confirmDelete = {
                         onPresetEvent(PresetEvent.DeletePreset(value = it))
                     },
-                    onPresetEvent = { onPresetEvent(PresetEvent.TogglePresetDeleteDialog) }
+                    onPresetEvent = { onPresetEvent(TogglePresetDeleteDialog) }
                 )
             }
 
@@ -411,7 +419,7 @@ fun DataFieldsScreen(
                         onDataFieldEvent(DataFieldEvent.DeleteDataField(value = it))
                     }
                 },
-                hideDeleteRowDialog = { onDataFieldEvent(DataFieldEvent.ToggleDeleteRowDialog) }
+                hideDeleteRowDialog = { onDataFieldEvent(ToggleDeleteRowDialog) }
             )
 
             DefaultSnackbar(
@@ -424,7 +432,7 @@ fun DataFieldsScreen(
                             "Restore"
                         ) == true
                     ) {
-                        onDataFieldEvent(DataFieldEvent.RestoreDeletedField)
+                        onDataFieldEvent(RestoreDeletedField)
                     }
                 }
             )
@@ -434,21 +442,21 @@ fun DataFieldsScreen(
 
 @Composable
 private fun PresetDropDownMenu(
-    hidePresetDropDownMenu: (DataFieldEvent) -> Unit,
+    onDataFieldEvent: (DataFieldEvent) -> Unit,
     presets: List<Preset>,
     onPresetEvent: (PresetEvent) -> Unit
 ) {
     DropdownMenu(
         expanded = true,
-        onDismissRequest = { hidePresetDropDownMenu(DataFieldEvent.TogglePresetDropDownMenu) },
+        onDismissRequest = { onDataFieldEvent(HidePresetDropdown) },
         modifier = Modifier
             .wrapContentWidth()
     ) {
         presets.forEachIndexed { index, preset ->
             DropdownMenuItem(
                 onClick = {
-                    hidePresetDropDownMenu(DataFieldEvent.TogglePresetDropDownMenu)
-                    onPresetEvent(PresetEvent.ChangePreset(preset.presetName))
+                    onDataFieldEvent(HidePresetDropdown)
+                    onPresetEvent(ChangePreset(preset.presetName))
                 },
                 modifier = Modifier
             )
@@ -486,7 +494,7 @@ private fun PresetDropDownMenu(
         }
         DropdownMenuItem(onClick = {
             onPresetEvent(PresetEvent.ToggleAddPresetDialog)
-            hidePresetDropDownMenu(DataFieldEvent.TogglePresetDropDownMenu)
+            onDataFieldEvent(HidePresetDropdown)
         }) {
             Text(
                 modifier = Modifier,

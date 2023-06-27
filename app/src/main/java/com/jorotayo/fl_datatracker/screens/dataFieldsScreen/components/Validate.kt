@@ -56,7 +56,7 @@ class Validate {
 
     fun validatePreset(presetName: String): Boolean {
         val results =
-            boxState._presetsBox.query(Preset_.presetName.equal(presetName)).build().find()
+            boxState.presetsBox.query(Preset_.presetName.equal(presetName)).build().find()
         return results.size <= 0
     }
 }

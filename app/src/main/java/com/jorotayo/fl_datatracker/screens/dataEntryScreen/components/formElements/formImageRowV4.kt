@@ -24,6 +24,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -82,7 +83,7 @@ fun formImageRowV4(
     ) {
         Text(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .padding(start = Dimen.small, end = Dimen.small, top = Dimen.xxSmall)
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
@@ -93,13 +94,13 @@ fun formImageRowV4(
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = Dimen.xxSmall)
                     .fillMaxWidth(0.8f)
             ) {
                 Image(
                     modifier = Modifier
                         .size(160.dp)
-                        .padding(bottom = 8.dp)
+                        .padding(bottom = Dimen.xxSmall)
                         .align(Alignment.CenterHorizontally),
                     imageVector = Icons.Default.Image,
                     colorFilter = ColorFilter.tint(color = MaterialTheme.colors.background),
@@ -125,7 +126,7 @@ fun formImageRowV4(
                 Column(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(bottom = 8.dp)
+                        .padding(bottom = Dimen.xxSmall)
                         .fillMaxWidth(0.8f)
                 ) {
                     Button(
@@ -145,7 +146,7 @@ fun formImageRowV4(
                     Image(
                         modifier = Modifier
                             .size(160.dp)
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = Dimen.xxSmall)
                             .align(Alignment.CenterHorizontally),
                         painter = rememberAsyncImagePainter(
                             ImageRequest

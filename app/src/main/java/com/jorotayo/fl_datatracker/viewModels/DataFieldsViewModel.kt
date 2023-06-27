@@ -18,6 +18,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
+import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -40,7 +41,8 @@ class DataFieldsViewModel @Inject constructor(
 
     private var _dataFieldScreenState = mutableStateOf(
         DataFieldScreenState(
-            dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
+//            dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
+            dataFields = exampleDataFieldList,
             presetList = newPresetList,
             currentPreset = presetUseCases.getCurrentPresetFromSettings(currentPreset.presetName)
         )
@@ -63,7 +65,8 @@ class DataFieldsViewModel @Inject constructor(
             DataFieldEvent.ToggleAddPresetDialog -> onToggleAddPresetDialog()
             DataFieldEvent.ToggleDeleteRowDialog -> onToggleDeleteRowDialog()
             DataFieldEvent.TogglePresetDeleteDialog -> onTogglePresetDeleteDialog()
-            DataFieldEvent.TogglePresetDropDownMenu -> onTogglePresetDropDownMenu()
+            DataFieldEvent.ExpandPresetDropdown -> onExpandPresetDropdown()
+            DataFieldEvent.HidePresetDropdown -> onHidePresetDropdown()
             is DataFieldEvent.AddFieldName -> onAddFieldName(event)
             is DataFieldEvent.AddHintText -> onAddHintText(event)
             is DataFieldEvent.AddFirstValue -> onAddFirstValue(event)
@@ -148,15 +151,21 @@ class DataFieldsViewModel @Inject constructor(
         }
     }
 
-    private fun onTogglePresetDropDownMenu() {
-        _dataFieldScreenState.value = _dataFieldScreenState.value.copy(
-            isPresetDropDownMenuExpanded = !_dataFieldScreenState.value.isPresetDropDownMenuExpanded
-        )
-    }
-
     private fun onToggleDeleteRowDialog() {
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
             isDeleteDialogVisible = !_dataFieldScreenState.value.isDeleteDialogVisible
+        )
+    }
+
+    private fun onExpandPresetDropdown(){
+        _dataFieldScreenState.value = _dataFieldScreenState.value.copy(
+            isPresetDropDownMenuExpanded = true
+        )
+    }
+
+    private fun onHidePresetDropdown(){
+        _dataFieldScreenState.value = _dataFieldScreenState.value.copy(
+            isPresetDropDownMenuExpanded = false
         )
     }
 

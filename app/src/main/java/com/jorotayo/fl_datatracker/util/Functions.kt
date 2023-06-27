@@ -1,7 +1,9 @@
 package com.jorotayo.fl_datatracker.util
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 fun capitaliseWord(word: String): String {
     return word.lowercase(Locale.ROOT)

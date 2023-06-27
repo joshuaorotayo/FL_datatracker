@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,9 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
@@ -69,6 +73,9 @@ fun formCountRowV2(
     var count = remember { mutableStateOf(0) }
     var unChanged = remember { mutableStateOf(true) }
 
+    val headerColour =
+        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
+
 
     Column(
         modifier = Modifier
@@ -79,11 +86,11 @@ fun formCountRowV2(
     ) {
         Text(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .padding(start = Dimen.small, end = Dimen.small, top = Dimen.xxSmall)
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = headerColour,
         )
 
         AnimatedVisibility(visible = data.hasError && unChanged.value) {
@@ -95,7 +102,7 @@ fun formCountRowV2(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 5.dp),
+                        .padding(start = Dimen.small, end = Dimen.small, top = 5.dp),
                     text = stringResource(id = R.string.count_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,

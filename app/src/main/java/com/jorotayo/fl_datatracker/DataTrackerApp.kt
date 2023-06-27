@@ -10,5 +10,4 @@ class DataTrackerApp : Application() {
         super.onCreate()
         ObjectBox.init(this)
     }
-
 }

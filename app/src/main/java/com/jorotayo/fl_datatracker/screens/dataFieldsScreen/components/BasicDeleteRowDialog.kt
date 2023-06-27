@@ -2,17 +2,21 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.Center
+import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -21,19 +25,26 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.R.string.delete_datafield_header
+import com.jorotayo.fl_datatracker.R.string.delete_row_body
+import com.jorotayo.fl_datatracker.R.string.row_delete_dialog_icon
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ToggleDeleteRowDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.regular
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true,
@@ -83,74 +94,68 @@ fun BasicDeleteRowDialog(
     if (dialogIsVisible) {
         Card(
             modifier = modifier
-                .padding(32.dp)
+                .padding(small)
                 .defaultMinSize(minWidth = 280.dp)
-                .wrapContentHeight()
-                .shadow(10.dp, RoundedCornerShape(28.dp)),
-            shape = RoundedCornerShape(28.dp),
-            elevation = 8.dp
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(medium),
+            elevation = xSmall
         ) {
             Column(
                 modifier
-                    .background(MaterialTheme.colors.surface)
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .background(colors.surface)
+                    .padding(regular),
+                horizontalAlignment = CenterHorizontally
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                )
-                {
+                        .padding(bottom = small),
+
+                    verticalAlignment = CenterVertically,
+                    horizontalArrangement = Center
+                ) {
                     Icon(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp),
+                            .padding(end = xxSmall),
                         imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(id = R.string.row_delete_dialog_icon),
-                        tint = MaterialTheme.colors.primary
+                        contentDescription = stringResource(id = row_delete_dialog_icon),
+                        tint = colors.primary
                     )
                     Text(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.delete_datafield_header),
-                        style = MaterialTheme.typography.h6,
-                        color = MaterialTheme.colors.onSurface
+                            .wrapContentWidth(),
+                        text = String.format(stringResource(delete_datafield_header), dataField.fieldName),
+                        textAlign = TextAlign.Center,
+                        style = typography.h5,
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
 
                 Text(
                     modifier = Modifier
-                        .padding(bottom = 16.dp),
-                    text = stringResource(id = R.string.delete_row_body),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface
-                )
-                Text(
-                    modifier = Modifier
                         .padding(bottom = 24.dp),
-                    text = dataField.fieldName,
-                    style = MaterialTheme.typography.h5,
-                    color = MaterialTheme.colors.onSurface
+                    text = stringResource(id = delete_row_body),
+                    textAlign = TextAlign.Center,
+                    style = typography.h6,
+                    color = colors.onSurface
                 )
 
                 Row(
                     Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                )
-                {
+                    horizontalArrangement = End
+                ) {
                     TextButton(onClick = {
-                        hideDeleteRowDialog(DataFieldEvent.ToggleDeleteRowDialog)
+                        hideDeleteRowDialog(ToggleDeleteRowDialog)
                     }) {
                         Text(
+                            modifier = Modifier.padding(end = xxSmall),
                             text = "Cancel",
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                            color = colors.primary
                         )
                     }
                     TextButton(onClick = {
-                        hideDeleteRowDialog(DataFieldEvent.ToggleDeleteRowDialog)
+                        hideDeleteRowDialog(ToggleDeleteRowDialog)
                         scope.launch {
                             scaffold.snackbarHostState.showSnackbar(
                                 message = "Deleted DataField: ${dataField.fieldName}",
@@ -160,10 +165,9 @@ fun BasicDeleteRowDialog(
                         confirmDelete(dataField)
                     }) {
                         Text(
-                            "Delete",
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                            modifier = Modifier,
+                            text = "Delete",
+                            color = MaterialTheme.colors.onPrimary
                         )
                     }
                 }

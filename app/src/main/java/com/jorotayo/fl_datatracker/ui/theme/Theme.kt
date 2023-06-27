@@ -65,7 +65,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 
-private val LightColors = lightColors(
+private val lightColours = lightColors(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     secondary = md_theme_light_secondary,
@@ -79,7 +79,7 @@ private val LightColors = lightColors(
 )
 
 
-private val DarkColors = darkColors(
+private val darkColours = darkColors(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     secondary = md_theme_dark_secondary,
@@ -98,9 +98,9 @@ fun FL_DatatrackerTheme(
     content: @Composable() () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
-        LightColors
+        lightColours
     } else {
-        DarkColors
+        darkColours
     }
 
     MaterialTheme(

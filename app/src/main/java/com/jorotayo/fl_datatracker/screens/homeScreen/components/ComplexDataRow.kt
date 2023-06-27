@@ -29,6 +29,7 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.DataItem_
 import com.jorotayo.fl_datatracker.util.BoxState
+import com.jorotayo.fl_datatracker.util.Dimen
 
 @Composable
 @Preview
@@ -56,14 +57,14 @@ fun ComplexDataRow(
     val textColor = if (isSystemInDarkTheme()) Color.Gray else Color.DarkGray
 
     val dataItemsList: List<DataItem> =
-        BoxState()._dataItemBox.query(DataItem_.dataId.equal(data.dataId)).build().find()
+        BoxState().dataItemBox.query(DataItem_.dataId.equal(data.dataId)).build().find()
 
-    val largestCountField = BoxState()._dataItemBox.query(DataItem_.dataId.equal(data.dataId)).and()
+    val largestCountField = BoxState().dataItemBox.query(DataItem_.dataId.equal(data.dataId)).and()
         .equal(DataItem_.dataFieldType, 5).build().findFirst()
 
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 24.dp, vertical = 8.dp)
+        .padding(horizontal = 24.dp, vertical = Dimen.xxSmall)
         .clip(shape = RoundedCornerShape(10.dp))
         .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,

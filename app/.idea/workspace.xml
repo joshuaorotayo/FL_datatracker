@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="04ff7e6e-bcdc-4860-a0ff-4e5c531fa4ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/ExampleData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/DataFieldUseCases.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/DataFieldUseCases.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/PresetUseCases.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/PresetUseCases.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/SettingsUseCases.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/SettingsUseCases.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/useCasesPreset/GetPresetById.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/useCases/useCasesPreset/GetPresetById.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/util/DataFieldType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/domain/util/DataFieldType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/DataEntryScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/DataEntryScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/FormImageDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/FormImageDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/FormNameHeader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/FormNameHeader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/ImageBottomActionSheet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/ImageBottomActionSheet.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/NoDataForm.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/NoDataForm.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formComponentTemplateV2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formComponentTemplateV2.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formCountRowV2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formCountRowV2.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV2.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV3.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV3.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV4.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV4.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formRadioRowV2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formRadioRowV2.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/listItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/listItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/DataFieldsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/DataFieldsScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/BasicAddPresetDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/BasicAddPresetDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/BasicDeletePresetDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/BasicDeletePresetDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/BasicDeleteRowDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/BasicDeleteRowDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/DataFieldRow.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/DataFieldRow.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/NewDataField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/NewDataField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/NoDataField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/NoDataField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/Validate.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/Validate.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/events/DataFieldEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/events/DataFieldEvent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/HomeScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/BottomNavigationBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/BottomNavigationBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/ComplexDataRow.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/ComplexDataRow.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/DataItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/DataItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/DataRow.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/screens/homeScreen/components/DataRow.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/DefaultSnackBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/DefaultSnackBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/theme/Color.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/theme/Color.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/theme/Theme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/theme/Theme.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/theme/Type.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/ui/theme/Type.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/BoxState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/BoxState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/Dimen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/Dimen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/Functions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/util/Functions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/viewModels/DataFieldsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jorotayo/fl_datatracker/viewModels/DataFieldsViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../build.gradle" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2Rnjr7BO5lnUr5TOZrMRTS4oMSL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "android.gradle.sync.needed": "true",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "D:/Documents/Creating/Code/FL_Apps/app"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="04ff7e6e-bcdc-4860-a0ff-4e5c531fa4ce" name="Changes" comment="" />
+      <created>1687892937751</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687892937751</updated>
+    </task>
+    <servers />
+  </component>
+</project>

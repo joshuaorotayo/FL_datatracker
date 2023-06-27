@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
 
 @Preview(showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -118,7 +119,7 @@ fun listItem(
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp),
+                    .padding(end = Dimen.xxSmall),
                 enabled = text.isNotBlank(),
                 onClick = { addItem() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
@@ -134,7 +135,7 @@ fun listItem(
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp),
+                    .padding(end = Dimen.xxSmall),
                 onClick = { deleteItem() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {

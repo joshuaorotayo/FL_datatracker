@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
 
 @Preview(
     showBackground = true,
@@ -69,7 +70,7 @@ fun FormImageDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(horizontal = Dimen.small, vertical = Dimen.small),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -89,7 +90,7 @@ fun FormImageDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
+                    .padding(start = Dimen.small, end = Dimen.small, bottom = Dimen.xxSmall, top = Dimen.xxSmall),
                 horizontalArrangement = Arrangement.SpaceBetween
             )
             {

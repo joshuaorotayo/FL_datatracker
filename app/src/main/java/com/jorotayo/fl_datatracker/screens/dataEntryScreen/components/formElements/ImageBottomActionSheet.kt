@@ -27,6 +27,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.jorotayo.fl_datatracker.BuildConfig
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -181,7 +183,7 @@ fun BottomActionOptions(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
+                    .padding(start = small, end = small, bottom = xxSmall, top = xxSmall),
                 horizontalArrangement = Arrangement.SpaceBetween
             )
             {

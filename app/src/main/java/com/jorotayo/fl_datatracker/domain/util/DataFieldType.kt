@@ -1,7 +1,15 @@
 package com.jorotayo.fl_datatracker.domain.util
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.filled.HorizontalRule
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Notes
+import androidx.compose.material.icons.filled.Pin
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.ToggleOn
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class DataFieldType(val type: String, val image: ImageVector) {

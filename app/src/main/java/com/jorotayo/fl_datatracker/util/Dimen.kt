@@ -8,7 +8,7 @@ object Dimen {
     val xxxxSmall = 2.dp
     val xxxSmall = 4.dp
     val xxSmall = 8.dp
-    val xSmall = 12.dp
+    val xSmall  = 12.dp
     val small = 16.dp
     val regular = 28.dp
     val medium = 32.dp
