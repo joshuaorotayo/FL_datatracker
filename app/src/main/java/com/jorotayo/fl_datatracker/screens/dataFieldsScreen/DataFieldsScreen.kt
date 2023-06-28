@@ -318,13 +318,14 @@ fun DataFieldsScreen(
                     }
                 }
 
-                itemsIndexed(items = fields, key = { _, item -> item.dataFieldId.toInt() },
-                    itemContent = { _, item ->
+                itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
+                    itemContent = { index, item ->
                         val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
                         DataFieldRow(
-                            onRowEvent = dataFieldsViewModel::onRowEvent,
                             currentDataField = item,
-                            editName = {
+                            onRowEvent = dataFieldsViewModel::onRowEvent,
+                            rowIndex = item.dataFieldId,
+                          /*  editName = {
                                 onRowEvent(
                                     RowEvent.EditFieldName(
                                         index = item.dataFieldId,
@@ -358,7 +359,7 @@ fun DataFieldsScreen(
                                     )
                                 )
                                 item.fieldHint = it
-                            },
+                            },*/
                             deleteIcon = {
                                 onDataFieldEvent(
                                     DataFieldEvent.OpenDeleteDialog(

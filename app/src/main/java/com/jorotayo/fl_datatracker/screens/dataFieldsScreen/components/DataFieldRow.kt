@@ -82,12 +82,9 @@ fun PreviewDataFieldRow() {
     )
     FL_DatatrackerTheme {
         DataFieldRow(
-            onRowEvent = {},
             currentDataField = currentDataField,
-            editName = {},
-            editHintText = {},
-            editRowType = {},
-            checkedChange = { (!currentDataField.isEnabled) },
+            onRowEvent = {},
+            rowIndex = 0,
             deleteIcon = {}
         )
     }
@@ -96,12 +93,9 @@ fun PreviewDataFieldRow() {
 
 @Composable
 fun DataFieldRow(
-    onRowEvent: (RowEvent) -> Unit,
     currentDataField: DataField,
-    editName: (String) -> Unit,
-    editHintText: (String) -> Unit,
-    editRowType: (Int) -> Unit,
-    checkedChange: (Boolean) -> Unit,
+    onRowEvent: (RowEvent) -> Unit,
+    rowIndex: Long,
     deleteIcon: () -> Unit,
 ) {
 
@@ -186,14 +180,14 @@ fun DataFieldRow(
                         onValueChange =
                         { newText ->
                             setText(newText.ofMaxLength(60))
-                            editName(newText.text)
+                            onRowEvent(RowEvent.EditFieldName(rowIndex, newText.text))
                         }
                     )
                     Row(
                         modifier = Modifier
                             .weight(3f)
                             .wrapContentHeight()
-                            .clickable(onClick = { expanded = true }),
+                            .clickable { expanded = true },
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
@@ -211,7 +205,8 @@ fun DataFieldRow(
                     DataFieldTypeDropDown(
                         expanded,
                         items,
-                        editRowType,
+                        onRowEvent,
+                        rowIndex,
                         isEditOptionsVisible,
                         isHintVisible,
                         currentRowState,
@@ -226,7 +221,7 @@ fun DataFieldRow(
                         checked = isRowEnabled.value,
                         enabled = true,
                         onCheckedChange = {
-                            checkedChange(it)
+                            onRowEvent(RowEvent.EditIsEnabled(rowIndex))
                             isRowEnabled.value = it
                         },
                         colors = CheckboxDefaults.colors(
@@ -261,7 +256,8 @@ fun DataFieldRow(
                     hintText,
                     currentRowState,
                     setHintText,
-                    editHintText
+                    onRowEvent,
+                    rowIndex
                 )
             }
             AnimatedVisibility(currentRowState.value.fieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
@@ -292,27 +288,29 @@ fun DataFieldRow(
 
 @Composable
 private fun DataFieldTypeDropDown(
-    expanded: Boolean,
+    expandedMenu: Boolean,
     items: List<String>,
-    editRowType: (Int) -> Unit,
+    editRowType: (RowEvent) -> Unit,
+    rowIndex: Long,
     isEditOptionsVisible: MutableState<Boolean>,
     isHintVisible: MutableState<Boolean>,
     currentRowState: MutableState<DataFieldRowState>,
     textColour: Color,
     icons: List<ImageVector>
 ) {
-    var expanded1 = expanded
+    var expandedMenu2 = expandedMenu
     DropdownMenu(
         modifier = Modifier
-            .wrapContentWidth()
+            .fillMaxWidth()
+            .wrapContentHeight()
             .background(MaterialTheme.colors.background),
-        expanded = expanded1,
-        onDismissRequest = { expanded1 = false },
+        expanded = expandedMenu2,
+        onDismissRequest = { expandedMenu2 = false },
     ) {
         items.forEachIndexed { index, s ->
             DropdownMenuItem(onClick = {
-                editRowType(index)
-                expanded1 = false
+                editRowType(RowEvent.EditRowType(rowIndex, index))
+                expandedMenu2 = false
                 isEditOptionsVisible.value = true
                 isEditOptionsVisible.value = false
                 isHintVisible.value = false
@@ -466,7 +464,8 @@ private fun HiddenHintRow(
     hintText: TextFieldValue,
     currentRowState: MutableState<DataFieldRowState>,
     setHintText: (TextFieldValue) -> Unit,
-    editHintText: (String) -> Unit
+    editHintText: (RowEvent) -> Unit,
+    rowIndex: Long
 ) {
     Row(
         modifier = Modifier
@@ -503,7 +502,7 @@ private fun HiddenHintRow(
                 onValueChange =
                 { newText ->
                     setHintText(newText.ofMaxLength(60))
-                    editHintText(newText.text)
+                    editHintText(RowEvent.EditHintText(rowIndex, newText.text))
                 }
             )
         }
