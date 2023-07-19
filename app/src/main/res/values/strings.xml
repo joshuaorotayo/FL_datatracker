@@ -4,11 +4,8 @@
     <string name="deleteText">Delete</string>
     <string name="finish_btn">Finish</string>
 
-    <string name="landing_enable_explanation">Click the floating action button to add new Data</string>
-
     <string name="dataRow_lastEdited"> <b>Last Edited: </b></string>
     <string name="presetShowing">Showing Preset: </string>
-    <string name="addPresetText">+ Add Preset</string>
     <string name="enterPresetPlaceholder">Enter a new Preset Name</string>
     <string name="addPresetHeader">Add New Preset</string>
     <string name="deletePresetHeader">Delete Preset: %s</string>
@@ -29,22 +26,20 @@
     <string name="hide_welcome_screen">Don\'t show on next run</string>
     <string name="next_btn">Next</string>
     <string name="dataField_type_dropdown">Drop down arrow for Field Type Dropdown</string>
-    <string name="add_new_data_field">Add New Data Field Text</string>
     <string name="dataFieldScreen_addFieldName">Data Field Name</string>
     <string name="delete_row_header">Delete Row</string>
     <string name="delete_datafield_header">Delete DataField: %s</string>
     <string name="amend_row_hint">Amend row Hint</string>
     <string name="edit_hint_text">Edit the Hint Text</string>
     <string name="hint_prompt">"Please enter Hint for field: %s"</string>
-    <string name="bool_placeholder">Boolean: </string>
-    <string name="tristate_placeholder">Tristate: </string>
+    <string name="bool_placeholder">Boolean options: </string>
+    <string name="tristate_placeholder">Tristate options: </string>
     <string name="add_list_item_placeholder">Enter Item %d</string>
     <string name="amend_bool_value">Amend Boolean values</string>
     <string name="amend_tristate_value">Amend Tri-state</string>
     <string name="list_item_add_item">Add new list item</string>
     <string name="delete_list_item">Delete list item</string>
     <string name="clear_list_item">Clear list item</string>
-    <string name="list_warning_caption">Empty values will be removed on save</string>
     <string name="image_gallery_select">Select image from gallery</string>
     <string name="image_camera">Open Camera</string>
     <string name="image_selection_dialog_msg">How would you like to add an image?</string>
@@ -58,9 +53,11 @@
     <string name="preset_dialog_icon">Delete Preset dialog, delete icon</string>
     <string name="confirm_delete_preset">Are you sure you want to delete this Preset?</string>
     <string name="delete_preset_warning">*Any Data Fields associated to this Preset will also be deleted*</string>
-    <string name="restoreText">Restore?</string>
     <string name="data_entry_form_header">Fill in the information below:</string>
-    <string name="form_fields_description">The form below has been created from the %s DataField(s) in the preset</string>
+    <plurals name="numberOfDatafields">
+        <item quantity="one">The form below has been created from the %d DataField in the preset</item>
+        <item quantity="other">The form below has been created from the %d DataFields in the preset</item>
+    </plurals>
     <string name="save_data_btn">Save Data</string>
     <string name="no_data_fields_msg_icon">No Data Fields Message</string>
     <string name="no_data_fields_msg">There are currently no Data Fields. Add Data Fields to begin adding Data</string>
@@ -74,15 +71,11 @@
     <string name="delete_data_header">Delete Data</string>
     <string name="delete_data_body">Are you sure you want to delete this Data Item?</string>
     <string name="enter_data_header">Enter Data: %s</string>
-    <string name="short_text_error_msg">Please enter a value for text field: %s</string>
     <plurals name="items_showing_header">
         <item quantity="one">%d item showing</item>
         <item quantity="other">%d items showing</item>
     </plurals>
 
-    <string name="empty_json">"{\"\"}"</string>
-    <string name="name_missing_error">Value missing for Meeting/Service name</string>
-    <string name="name_duplicate_error">Name already exists</string>
     <string name="select_data_field_type">Select Data Field Type</string>
     <string name="select_data_field_type_caption">Select the field type that will be used for this data field</string>
     <string name="Add_preset_dialog_icon">Add Preset dialog, add box icon</string>

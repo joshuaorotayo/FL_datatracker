@@ -103,6 +103,7 @@ fun formListRowV4(
         }
         items(number.value) { index ->
             listItem(
+                modifier = Modifier,
                 itemValue = textFields.value[index].orEmpty(),
                 changeValue = { newText ->
                     textFields.value[index] = newText
@@ -113,7 +114,6 @@ fun formListRowV4(
                     textFields.value[index + 1] = ""
                     columnHeight.value += itemHeight
                     number.value++
-                    Log.d("formListRowV2", getDataMapToString(textFields.value))
                 },
                 deleteItem = {
                     textFields.value.remove(index)
@@ -121,7 +121,6 @@ fun formListRowV4(
                     number.value--
                     textFields.value = deleteValueAtIndex(textFields.value, index)
                     Log.d("formListRowV2", getDataMapToString(textFields.value))
-
                 },
                 clearField = {
                     textFields.value[index] = ""

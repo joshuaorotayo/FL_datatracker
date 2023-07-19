@@ -40,7 +40,6 @@ import com.jorotayo.fl_datatracker.R.string.addPresetBtn
 import com.jorotayo.fl_datatracker.R.string.addPresetHeader
 import com.jorotayo.fl_datatracker.R.string.cancelText
 import com.jorotayo.fl_datatracker.R.string.enterPresetPlaceholder
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
@@ -49,6 +48,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @Preview(
     showBackground = true,
@@ -134,7 +134,6 @@ fun BasicAddPresetDialog(
                     )
                 },
                 onValueChange = {
-
                     setText(it.ofMaxLength(maxLength = maxChar))
                 },
                 colors = textFieldColors(

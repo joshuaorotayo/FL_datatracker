@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.domain.useCases
 
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.AddSetting
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.DeleteSetting
+import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.EditSetting
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.GetSettingByBool
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.GetSettingById
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.GetSettingByName
@@ -10,6 +11,7 @@ import com.jorotayo.fl_datatracker.domain.useCases.useCasesSettings.GetSettingsL
 
 data class SettingsUseCases(
     val addSetting: AddSetting,
+    val editSetting: EditSetting,
     val getSettingsList: GetSettingsList,
     val getSettingById: GetSettingById,
     val getSettingByValue: GetSettingByValue,

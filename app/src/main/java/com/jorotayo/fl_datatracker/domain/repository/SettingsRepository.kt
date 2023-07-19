@@ -15,6 +15,7 @@ interface SettingsRepository {
     fun getSettingByValue(settingValue: String): List<Setting>
 
     fun addSetting(setting: Setting)
+    fun editSetting(setting: Setting)
 
     fun deleteSetting(setting: Setting)
 }

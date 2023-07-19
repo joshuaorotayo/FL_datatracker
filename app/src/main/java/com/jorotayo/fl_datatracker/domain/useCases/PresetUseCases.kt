@@ -8,10 +8,10 @@ import com.jorotayo.fl_datatracker.domain.useCases.useCasesPreset.GetPresetByPre
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesPreset.GetPresetList
 
 data class PresetUseCases(
-    val getPresetByPresetName: GetPresetByPresetName,
     val addPreset: AddPreset,
     val deletePreset: DeletePreset,
     val getPresetList: GetPresetList,
     val getPresetById: GetPresetById,
+    val getPresetByPresetName: GetPresetByPresetName,
     val getCurrentPresetFromSettings: GetCurrentPresetFromSettings,
 )

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.ScaffoldState
@@ -38,7 +37,6 @@ import com.jorotayo.fl_datatracker.R.string.row_delete_dialog_icon
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ToggleDeleteRowDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
@@ -127,7 +125,7 @@ fun BasicDeleteRowDialog(
                         text = String.format(stringResource(delete_datafield_header), dataField.fieldName),
                         textAlign = TextAlign.Center,
                         style = typography.h5,
-                        color = MaterialTheme.colors.onPrimary
+                        color = colors.onPrimary
                     )
                 }
 
@@ -146,7 +144,7 @@ fun BasicDeleteRowDialog(
                     horizontalArrangement = End
                 ) {
                     TextButton(onClick = {
-                        hideDeleteRowDialog(ToggleDeleteRowDialog)
+//                        hideDeleteRowDialog(ShowDeleteRowDialog)
                     }) {
                         Text(
                             modifier = Modifier.padding(end = xxSmall),
@@ -155,7 +153,7 @@ fun BasicDeleteRowDialog(
                         )
                     }
                     TextButton(onClick = {
-                        hideDeleteRowDialog(ToggleDeleteRowDialog)
+//                        hideDeleteRowDialog(ShowDeleteRowDialog)
                         scope.launch {
                             scaffold.snackbarHostState.showSnackbar(
                                 message = "Deleted DataField: ${dataField.fieldName}",
@@ -167,7 +165,7 @@ fun BasicDeleteRowDialog(
                         Text(
                             modifier = Modifier,
                             text = "Delete",
-                            color = MaterialTheme.colors.onPrimary
+                            color = colors.onPrimary
                         )
                     }
                 }

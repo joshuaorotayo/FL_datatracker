@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -38,7 +36,6 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
@@ -82,13 +79,12 @@ fun FormNameHeader(
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(xSmall)
-            .background(colors.surface)
     ) {
         AnimatedVisibility(visible = data.nameError || (data.dataName.isBlank() && data.formSubmitted)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = small, end = small, top = xxSmall, bottom = 0.dp),
+                    .padding(start = xSmall, end = xSmall, top = xxSmall, bottom = 0.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -96,7 +92,7 @@ fun FormNameHeader(
                     modifier = Modifier,
                     text = data.nameErrorMsg,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.caption,
+                    style = MaterialTheme.typography.h6,
                     color = Color.Red,
                 )
                 Icon(
@@ -119,7 +115,8 @@ fun FormNameHeader(
                     Text(
                         text = "Please enter a meeting or Service Name...",
                         color = headerColour,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.h6
                     )
                 },
                 singleLine = true,

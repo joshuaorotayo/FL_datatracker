@@ -10,15 +10,15 @@ import io.objectbox.annotation.Unique
 data class DataField(
     @Id
     var dataFieldId: Long,
+    var presetId: Long,
     @Unique(onConflict = ConflictStrategy.REPLACE)
     var fieldName: String = "",
     var dataFieldType: Int = DataFieldType.SHORT_TEXT.ordinal,
-    var presetId: Long,
     var first: String = "",
     var second: String = "",
     var third: String = "",
-    var isEnabled: Boolean = true,
     var fieldHint: String? = "Enter value for $fieldName",
+    var isEnabled: Boolean = true
 )
 
 class InvalidDataFieldException(message: String) : Exception(message)

@@ -134,7 +134,7 @@ fun SetupNavGraph(
                 onUiEvent = dataFieldsViewModel.eventFlow,
                 onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
                 onPresetEvent = dataFieldsViewModel::onPresetEvent,
-                onRowEvent = dataFieldsViewModel::onRowEvent,
+                onRowEvent = dataFieldsViewModel::onRowEvent
             )
         }
     }

@@ -15,8 +15,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 
 @Preview(showBackground = true,
@@ -50,7 +50,7 @@ fun TransparentTextField(
 
     Box(
         modifier = modifier
-            .padding(horizontal = 2.dp)
+            .padding(xxSmall)
     ) {
         OutlinedTextField(
             value = text,

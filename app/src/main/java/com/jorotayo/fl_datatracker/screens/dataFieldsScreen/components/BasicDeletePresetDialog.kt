@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.TogglePresetDeleteDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
@@ -58,7 +57,7 @@ fun PreviewBasicDeletePresetDialog() {
         BasicDeletePresetDialog(
             modifier = Modifier,
             confirmDelete = {},
-            onPresetEvent = {},
+//            onPresetEvent = {},
             scaffold = rememberScaffoldState(),
             preset = Preset(0, "Church")
         )
@@ -70,7 +69,7 @@ fun PreviewBasicDeletePresetDialog() {
 fun BasicDeletePresetDialog(
     modifier: Modifier,
     confirmDelete: (Preset) -> Unit,
-    onPresetEvent: (TogglePresetDeleteDialog) -> Unit,
+//    onPresetEvent: (TogglePresetDeleteDialog) -> Unit,
     scaffold: ScaffoldState,
     preset: Preset,
 ) {
@@ -141,7 +140,7 @@ fun BasicDeletePresetDialog(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = {
-                    onPresetEvent(TogglePresetDeleteDialog)
+//                    onPresetEvent(TogglePresetDeleteDialog)
                 }) {
                     Text(
                         modifier = Modifier

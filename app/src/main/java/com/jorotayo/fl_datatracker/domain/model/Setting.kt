@@ -7,7 +7,7 @@ import io.objectbox.annotation.Unique
 
 @Entity
 data class Setting(
-    @Id(assignable = true)
+    @Id
     var settingId: Long,
     @Unique(onConflict = REPLACE)
     var settingName: String = "",

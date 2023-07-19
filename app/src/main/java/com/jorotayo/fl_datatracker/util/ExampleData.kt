@@ -1,18 +1,19 @@
 package com.jorotayo.fl_datatracker.util
 
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 
-    val exampleShortField = DataField(
-        dataFieldId = 0,
-        fieldName = "Short Field",
-        dataFieldType = 0,
-        presetId = 0,
-        first = "0",
-        second = "2",
-        third = "4",
-        isEnabled = true,
-        fieldHint = null
-    )
+val exampleShortField = DataField(
+    dataFieldId = 0,
+    fieldName = "Short Field",
+    dataFieldType = 0,
+    presetId = 0,
+    first = "0",
+    second = "2",
+    third = "4",
+    isEnabled = true,
+    fieldHint = ""
+)
 
     val exampleLongField = DataField(
         dataFieldId = 1,
@@ -23,7 +24,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
     val exampleBooleanField = DataField(
@@ -35,7 +36,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
     val exampleDateField = DataField(
@@ -47,7 +48,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
     val exampleTimeField = DataField(
@@ -59,7 +60,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
     val exampleCountField = DataField(
@@ -71,7 +72,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
     val exampleTristateField = DataField(
@@ -83,7 +84,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
 private val dataField = DataField(
@@ -95,7 +96,7 @@ private val dataField = DataField(
     second = "2",
     third = "4",
     isEnabled = true,
-    fieldHint = null
+    fieldHint = ""
 )
 
 val exampleImageField = DataField(
@@ -107,7 +108,7 @@ val exampleImageField = DataField(
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+    fieldHint = ""
     )
 
     val exampleListField = DataField(
@@ -119,7 +120,7 @@ val exampleImageField = DataField(
         second = "2",
         third = "4",
         isEnabled = true,
-        fieldHint = null
+        fieldHint = ""
     )
 
     val exampleDataFieldList = listOf(
@@ -132,4 +133,9 @@ val exampleImageField = DataField(
         exampleTristateField,
         exampleImageField,
         exampleListField
+    )
+
+val exampleShortDataRowState =
+    DataFieldRowState(
+        dataField = exampleTristateField
     )

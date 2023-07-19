@@ -98,6 +98,7 @@ object AppModule {
     fun provideSettingUseCases(settingsRepository: SettingsRepositoryImpl): SettingsUseCases {
         return SettingsUseCases(
             addSetting = AddSetting(settingsRepository),
+            editSetting = EditSetting(settingsRepository),
             deleteSetting = DeleteSetting(settingsRepository),
             getSettingById = GetSettingById(settingsRepository),
             getSettingByValue = GetSettingByValue(settingsRepository),

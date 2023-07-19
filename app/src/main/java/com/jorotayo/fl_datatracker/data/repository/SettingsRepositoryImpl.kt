@@ -34,6 +34,10 @@ class SettingsRepositoryImpl : SettingsRepository {
         settingBox.put(setting)
     }
 
+    override fun editSetting(setting: Setting) {
+        settingBox.put(setting)
+    }
+
     override fun deleteSetting(setting: Setting) {
         settingBox.remove(setting)
     }

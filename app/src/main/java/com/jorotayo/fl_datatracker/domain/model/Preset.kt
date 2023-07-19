@@ -8,7 +8,9 @@ import io.objectbox.annotation.Unique
 @Entity
 data class Preset(
     @Id
-    var presetId: Long,
+    var presetId: Long = 0,
     @Unique(onConflict = ConflictStrategy.FAIL)
     var presetName: String,
 )
+
+class InvalidPresetException(message: String) : Exception(message)

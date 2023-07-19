@@ -50,16 +50,16 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ofMaxLength
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.TransparentTextField
+import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @Preview(
     showBackground = true,
@@ -90,7 +90,6 @@ fun PreviewDataFieldRow() {
     }
 }
 
-
 @Composable
 fun DataFieldRow(
     currentDataField: DataField,
@@ -98,35 +97,16 @@ fun DataFieldRow(
     rowIndex: Long,
     deleteIcon: () -> Unit,
 ) {
-
     val textColour = if (isSystemInDarkTheme()) Color.Gray else MaterialTheme.colors.primary
     var expanded by remember { mutableStateOf(false) }
-
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
     val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
-
-    val optionsMaxChars = 20
-
-    val currentRowState = remember {
-        mutableStateOf(
-            DataFieldRowState(
-                id = currentDataField.dataFieldId,
-                fieldName = currentDataField.fieldName,
-                fieldHint = currentDataField.fieldHint,
-                fieldType = currentDataField.dataFieldType,
-                firstValue = currentDataField.first,
-                secondValue = currentDataField.second,
-                thirdValue = currentDataField.third,
-                isEnabled = currentDataField.isEnabled,
-                presetId = currentDataField.presetId
-            )
-        )
-    }
-
+    val currentRowState =
+        remember { mutableStateOf(DataFieldRowState(dataField = currentDataField)) }
     val isHintVisible = remember { mutableStateOf(true) }
     val isEditOptionsVisible = remember { mutableStateOf(false) }
-    val isRowEnabled = remember { mutableStateOf(currentRowState.value.isEnabled) }
-    val (text, setText) = remember { mutableStateOf(TextFieldValue(currentRowState.value.fieldName)) }
+    val isRowEnabled = remember { mutableStateOf(currentRowState.value.dataField.isEnabled) }
+    val (text, setText) = remember { mutableStateOf(TextFieldValue(currentRowState.value.dataField.fieldName)) }
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
     val firstText = remember { mutableStateOf("") }
     val secondText = remember { mutableStateOf("") }
@@ -172,7 +152,11 @@ fun DataFieldRow(
                         value = text,
                         placeholder = {
                             Text(
-                                text = currentRowState.value.fieldName.ifBlank { stringResource(R.string.dataFieldScreen_addFieldName) },
+                                text = currentRowState.value.dataField.fieldName.ifBlank {
+                                    stringResource(
+                                        R.string.dataFieldScreen_addFieldName
+                                    )
+                                },
                                 color = if (text.text.isBlank()) textColour else Color.Black,
                                 textAlign = TextAlign.Center
                             )
@@ -209,11 +193,9 @@ fun DataFieldRow(
                         rowIndex,
                         isEditOptionsVisible,
                         isHintVisible,
-                        currentRowState,
                         textColour,
                         icons
                     )
-
                     Checkbox(
                         modifier = Modifier
                             .padding(end = small)
@@ -230,7 +212,6 @@ fun DataFieldRow(
                             checkedColor = textColour,
                         )
                     )
-
                     IconButton(
                         modifier = Modifier
                             .weight(1f),
@@ -245,11 +226,11 @@ fun DataFieldRow(
                     }
                 }
             }
-            AnimatedVisibility((currentRowState.value.fieldType <= 1 || currentRowState.value.fieldType >= 7) && isHintVisible.value && !isEditOptionsVisible.value) {
+            AnimatedVisibility((currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && isHintVisible.value && !isEditOptionsVisible.value) {
 
                 VisibleHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(visible = (currentRowState.value.fieldType <= 1 || currentRowState.value.fieldType >= 7) && !isHintVisible.value && isEditOptionsVisible.value) {
+            AnimatedVisibility(visible = (currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && !isHintVisible.value && isEditOptionsVisible.value) {
                 HiddenHintRow(
                     currentDataField,
                     textColour,
@@ -260,24 +241,17 @@ fun DataFieldRow(
                     rowIndex
                 )
             }
-            AnimatedVisibility(currentRowState.value.fieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
+            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
                 BooleanHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(currentRowState.value.fieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value) {
+            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value) {
                 TriStateHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(currentRowState.value.fieldType == 2 && isEditOptionsVisible.value) {
-                BooleanHintRow(firstText, currentRowState, optionsMaxChars, onRowEvent, secondText)
+            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 2 && isEditOptionsVisible.value) {
+                BooleanHintRow(firstText, currentRowState, onRowEvent, secondText)
             }
-            AnimatedVisibility(currentRowState.value.fieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value) {
-                TriStateEditHintRow(
-                    firstText,
-                    currentRowState,
-                    optionsMaxChars,
-                    onRowEvent,
-                    secondText,
-                    thirdText
-                )
+            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value) {
+                TriStateEditHintRow(currentRowState, onRowEvent, firstText, secondText, thirdText)
             }
             AnimatedVisibility(isEditOptionsVisible.value) {
                 HideEditRow(isHintVisible, isEditOptionsVisible, textColour)
@@ -294,7 +268,6 @@ private fun DataFieldTypeDropDown(
     rowIndex: Long,
     isEditOptionsVisible: MutableState<Boolean>,
     isHintVisible: MutableState<Boolean>,
-    currentRowState: MutableState<DataFieldRowState>,
     textColour: Color,
     icons: List<ImageVector>
 ) {
@@ -315,7 +288,7 @@ private fun DataFieldTypeDropDown(
                 isEditOptionsVisible.value = false
                 isHintVisible.value = false
                 isHintVisible.value = true
-                currentRowState.value.fieldType = index
+//                currentRowState.value.fieldType = index
             })
             {
                 Text(
@@ -400,7 +373,7 @@ private fun HideEditRow(
     ) {
         Text(
             modifier = Modifier
-                .padding(end = Dimen.xxSmall),
+                .padding(end = xxSmall),
             text = stringResource(R.string.hideEditRowText),
             color = textColour.copy(alpha = 0.5f)
         )
@@ -488,12 +461,12 @@ private fun HiddenHintRow(
                 value = hintText,
                 placeholder = {
                     Text(
-                        text = (if (currentRowState.value.fieldHint?.isBlank() == true) String.format(
+                        text = (if (currentRowState.value.dataField.fieldHint?.isBlank() == true) String.format(
                             stringResource(
                                 R.string.hint_prompt,
-                                currentRowState.value.fieldName
+                                currentRowState.value.dataField.fieldName
                             )
-                        ) else currentRowState.value.fieldHint!!),
+                        ) else currentRowState.value.dataField.fieldHint!!),
                         color = if (hintText.text.isBlank()) textColour else Color.Black,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold
@@ -554,7 +527,6 @@ private fun TriStateHintRow(
 private fun BooleanHintRow(
     firstText: MutableState<String>,
     currentRowState: MutableState<DataFieldRowState>,
-    optionsMaxChars: Int,
     onRowEvent: (RowEvent) -> Unit,
     secondText: MutableState<String>
 ) {
@@ -569,12 +541,12 @@ private fun BooleanHintRow(
             modifier = Modifier.weight(1f),
             text = firstText.value,
             label = "1st Value",
-            placeholder = firstText.value.ifBlank { currentRowState.value.firstValue },
+            placeholder = firstText.value.ifBlank { currentRowState.value.dataField.first },
             onValueChange = {
                 if (it.length <= optionsMaxChars) {
                     onRowEvent(
                         RowEvent.EditFirstValue(
-                            currentRowState.value.id,
+                            currentRowState.value.dataField.dataFieldId,
                             it
                         )
                     )
@@ -586,12 +558,12 @@ private fun BooleanHintRow(
             modifier = Modifier.weight(1f),
             text = secondText.value,
             label = "2nd Value",
-            placeholder = secondText.value.ifBlank { currentRowState.value.secondValue },
+            placeholder = secondText.value.ifBlank { currentRowState.value.dataField.second },
             onValueChange = {
                 if (it.length <= optionsMaxChars) {
                     onRowEvent(
                         RowEvent.EditSecondValue(
-                            currentRowState.value.id,
+                            currentRowState.value.dataField.dataFieldId,
                             it
                         )
                     )
@@ -604,10 +576,9 @@ private fun BooleanHintRow(
 
 @Composable
 private fun TriStateEditHintRow(
-    firstText: MutableState<String>,
     currentRowState: MutableState<DataFieldRowState>,
-    optionsMaxChars: Int,
     onRowEvent: (RowEvent) -> Unit,
+    firstText: MutableState<String>,
     secondText: MutableState<String>,
     thirdText: MutableState<String>
 ) {
@@ -622,12 +593,12 @@ private fun TriStateEditHintRow(
             modifier = Modifier.weight(1f),
             text = firstText.value,
             label = "1st Value",
-            placeholder = firstText.value.ifBlank { currentRowState.value.firstValue },
+            placeholder = firstText.value.ifBlank { currentRowState.value.dataField.first },
             onValueChange = {
                 if (it.length <= optionsMaxChars) {
                     onRowEvent(
                         RowEvent.EditFirstValue(
-                            currentRowState.value.id,
+                            currentRowState.value.dataField.dataFieldId,
                             it
                         )
                     )
@@ -639,12 +610,12 @@ private fun TriStateEditHintRow(
             modifier = Modifier.weight(1f),
             text = secondText.value,
             label = "2nd Value",
-            placeholder = secondText.value.ifBlank { currentRowState.value.secondValue },
+            placeholder = secondText.value.ifBlank { currentRowState.value.dataField.second },
             onValueChange = {
                 if (it.length <= optionsMaxChars) {
                     onRowEvent(
                         RowEvent.EditSecondValue(
-                            currentRowState.value.id,
+                            currentRowState.value.dataField.dataFieldId,
                             it
                         )
                     )
@@ -656,12 +627,12 @@ private fun TriStateEditHintRow(
             modifier = Modifier.weight(1f),
             text = thirdText.value,
             label = "3rd Value",
-            placeholder = thirdText.value.ifBlank { currentRowState.value.thirdValue },
+            placeholder = thirdText.value.ifBlank { currentRowState.value.dataField.third },
             onValueChange = {
                 if (it.length <= optionsMaxChars) {
                     onRowEvent(
                         RowEvent.EditThirdValue(
-                            currentRowState.value.id,
+                            currentRowState.value.dataField.dataFieldId,
                             it
                         )
                     )
@@ -671,10 +642,3 @@ private fun TriStateEditHintRow(
         )
     }
 }
-
-
-
-
-
-
-

@@ -4,6 +4,6 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 
 data class DataRowState(
     var dataItem: DataItem,
-    var hasError: Boolean = false,
-    var errorMsg: String = "",
+    val hasError: Boolean = false,
+    val errorMsg: String = ""
 )

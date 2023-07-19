@@ -53,9 +53,8 @@ fun PreviewFormImageRowV4() {
         formImageRowV4(
             data = dataItem,
             onClick = {},
-            showBottomSheet = {
-                modalBottomSheetState
-            }
+            showBottomSheet =
+            { modalBottomSheetState }
         )
     }
 }
@@ -89,7 +88,7 @@ fun formImageRowV4(
             textAlign = TextAlign.Start,
             color = MaterialTheme.colors.onSurface,
         )
-        Log.d("formImageRowV3", data.dataItem.dataValue)
+        Log.d("formImageRowV4", data.dataItem.dataValue)
         AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
             Column(
                 modifier = Modifier
@@ -103,7 +102,7 @@ fun formImageRowV4(
                         .padding(bottom = Dimen.xxSmall)
                         .align(Alignment.CenterHorizontally),
                     imageVector = Icons.Default.Image,
-                    colorFilter = ColorFilter.tint(color = MaterialTheme.colors.background),
+                    colorFilter = ColorFilter.tint(color = MaterialTheme.colors.onSurface),
                     contentDescription = "Select Image Placeholder"
                 )
                 Button(

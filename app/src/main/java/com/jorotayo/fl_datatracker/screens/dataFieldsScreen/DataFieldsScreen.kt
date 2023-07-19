@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
@@ -37,19 +35,22 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.HidePresetDropdown
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.RestoreDeletedField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ToggleDeleteRowDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ChangePreset
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.TogglePresetDeleteDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.components.AlertDialog
+import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -63,12 +64,15 @@ import kotlinx.coroutines.launch
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun DataFieldsScreenPreview() {
+    val examplePreset = Preset(presetId = 0L, presetName = "Default")
+
     FL_DatatrackerTheme {
         DataFieldsScreen(
             navController = rememberNavController(),
             state = DataFieldScreenState(
-                presetList = listOf(Preset(0, "Defaulta")),
-//                dataFields = exampleDataFieldList
+                presetList = listOf(examplePreset),
+                dataFields = exampleDataFieldList,
+                currentPreset = examplePreset
             ),
             onUiEvent = MutableSharedFlow(),
             onRowEvent = {},
@@ -84,8 +88,8 @@ fun DataFieldsScreen(
     navController: NavController,
     state: DataFieldScreenState,
     onUiEvent: SharedFlow<UiEvent>,
-    onPresetEvent: (PresetEvent) -> Unit,
     onRowEvent: (RowEvent) -> Unit,
+    onPresetEvent: (PresetEvent) -> Unit,
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
 
@@ -115,6 +119,7 @@ fun DataFieldsScreen(
                         message = "Data Field Saved!"
                     )
                 }
+
             }
         }
     }
@@ -161,7 +166,7 @@ fun DataFieldsScreen(
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 5.dp),
-                            text = currentPreset!!.presetName,
+                            text = currentPreset.presetName,
                             color = colors.primary,
                             style = typography.h6,
                             textAlign = TextAlign.Center
@@ -176,6 +181,7 @@ fun DataFieldsScreen(
                                 onDataFieldEvent = { onDataFieldEvent(HidePresetDropdown) },
                                 onPresetEvent = onPresetEvent,
                                 presets = presets,
+                                scope = scope
                             )
                         }
                     }
@@ -241,37 +247,33 @@ fun DataFieldsScreen(
                         Row(
                             modifier = Modifier
                                 .wrapContentHeight()
-                                .padding(bottom = Dimen.xxSmall, start = 10.dp, end = 10.dp),
+                                .padding(bottom = xxSmall, start = medium, end = small),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 modifier = Modifier
-                                    .weight(3f),
+                                    .weight(0.35f),
                                 text = "Field Name",
-                                textAlign = TextAlign.Center,
-                                color = colors.onSurface
+                                textAlign = TextAlign.Start,
+                                color = colors.onSurface,
+                                style = typography.h6
                             )
                             Text(
                                 modifier = Modifier
-                                    .weight(3f),
+                                    .weight(0.35f),
                                 text = "Field Type",
-                                textAlign = TextAlign.Center,
-                                color = colors.onSurface
+                                textAlign = TextAlign.Start,
+                                color = colors.onSurface,
+                                style = typography.h6
                             )
                             Text(
                                 modifier = Modifier
-                                    .weight(1.5f),
+                                    .weight(0.2f),
                                 text = "Enabled?",
-                                textAlign = TextAlign.Center,
-                                color = colors.onSurface
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .weight(0.5f),
-                                text = "",
-                                textAlign = TextAlign.Center,
-                                color = colors.onSurface
+                                textAlign = TextAlign.Start,
+                                color = colors.onSurface,
+                                style = typography.h6
                             )
                         }
                     }
@@ -293,134 +295,31 @@ fun DataFieldsScreen(
                 item {
                     AnimatedVisibility(
                         modifier = Modifier
-                            .wrapContentHeight(),
+                            .fillMaxSize(),
                         visible = state.isAddDataFieldVisible
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                                .clip(shape = RoundedCornerShape(10.dp))
-                                .background(colors.surface)
-                                .wrapContentHeight(),
-                        ) {
-                            // Show New Data Field Message
-                            NewDataField(
-                                viewModel = hiltViewModel(),
-                                onClick = {
-                                    if (currentPreset != null) {
-                                        it.presetId = currentPreset.presetId
-                                    }
-                                    onDataFieldEvent(DataFieldEvent.SaveDataField(it))
-                                }
-                            )
-                        }
+
+                        Spacer(modifier = Modifier.fillMaxSize(1F))
+                        NewDataField(
+                            currentPresetId = state.currentPreset.presetId,
+                            onDataFieldEvent = onDataFieldEvent
+                        )
+                        Spacer(modifier = Modifier.fillMaxSize(1F))
                     }
                 }
 
                 itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
                     itemContent = { index, item ->
-                        val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
-                        DataFieldRow(
+                        DataFieldRowV2(
                             currentDataField = item,
-                            onRowEvent = dataFieldsViewModel::onRowEvent,
-                            rowIndex = item.dataFieldId,
-                          /*  editName = {
-                                onRowEvent(
-                                    RowEvent.EditFieldName(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    )
-                                )
-                                item.fieldName = it
-                            },
-                            editRowType = {
-                                onRowEvent(
-                                    RowEvent.EditRowType(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    )
-                                )
-                                item.dataFieldType = it
-                            },
-                            checkedChange = {
-                                onRowEvent(
-                                    RowEvent.EditIsEnabled(
-                                        index = item.dataFieldId
-                                    )
-                                )
-                                item.isEnabled = !item.isEnabled
-                            },
-                            editHintText = {
-                                onRowEvent(
-                                    RowEvent.EditHintText(
-                                        index = item.dataFieldId,
-                                        value = it
-                                    )
-                                )
-                                item.fieldHint = it
-                            },*/
-                            deleteIcon = {
-                                onDataFieldEvent(
-                                    DataFieldEvent.OpenDeleteDialog(
-                                        dataField = item
-                                    )
-                                )
-                            }
+                            onRowEvent = onRowEvent,
+                            onDataFieldEvent = onDataFieldEvent
                         )
                     }
                 )
             }
 
-            if (state.isAddPresetDialogVisible) {
-                BasicAddPresetDialog(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    addPreset = {
-                        Log.i("testing", "DataFieldsScreen:  add preset event")
-                        val toastMessage = if (Validate().validatePreset(it)) {
-                            onPresetEvent(PresetEvent.AddPreset(it))
-                            "Preset: $it added!"
-                        } else {
-                            "Preset not added. Name already exists!"
-                        }
-                        scope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar(
-                                message = toastMessage
-                            )
-                        }
-                    },
-                    toggleAddPresetDialog = { onDataFieldEvent(DataFieldEvent.ToggleAddPresetDialog) }
-                )
-            }
-
-            if (currentPreset != null && state.isPresetDeleteDialogVisible) {
-                BasicDeletePresetDialog(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    preset = state.deletedPreset,
-                    scaffold = scaffoldState,
-                    confirmDelete = {
-                        onPresetEvent(PresetEvent.DeletePreset(value = it))
-                    },
-                    onPresetEvent = { onPresetEvent(TogglePresetDeleteDialog) }
-                )
-            }
-
-            BasicDeleteRowDialog(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                dialogIsVisible = state.isDeleteDialogVisible,
-                dataField = state.deletedDataField,
-                scaffold = scaffoldState,
-
-                confirmDelete = {
-                    scope.launch {
-                        onDataFieldEvent(DataFieldEvent.DeleteDataField(value = it))
-                    }
-                },
-                hideDeleteRowDialog = { onDataFieldEvent(ToggleDeleteRowDialog) }
-            )
+            state.alertDialogState?.let { AlertDialog(alertDialogState = it) }
 
             DefaultSnackbar(
                 modifier = Modifier
@@ -444,7 +343,8 @@ fun DataFieldsScreen(
 private fun PresetDropDownMenu(
     onDataFieldEvent: (DataFieldEvent) -> Unit,
     presets: List<Preset>,
-    onPresetEvent: (PresetEvent) -> Unit
+    onPresetEvent: (PresetEvent) -> Unit,
+    scope: CoroutineScope?
 ) {
     DropdownMenu(
         expanded = true,
@@ -455,7 +355,6 @@ private fun PresetDropDownMenu(
         presets.forEachIndexed { index, preset ->
             DropdownMenuItem(
                 onClick = {
-                    onDataFieldEvent(HidePresetDropdown)
                     onPresetEvent(ChangePreset(preset.presetName))
                 },
                 modifier = Modifier
@@ -480,7 +379,7 @@ private fun PresetDropDownMenu(
                             .clickable(
                                 onClick = {
                                     onPresetEvent(
-                                        PresetEvent.ToggleAddPresetDialog
+                                        ShowDeletePresetDialog(preset)
                                     )
                                 }
                             ),
@@ -493,8 +392,7 @@ private fun PresetDropDownMenu(
             }
         }
         DropdownMenuItem(onClick = {
-            onPresetEvent(PresetEvent.ToggleAddPresetDialog)
-            onDataFieldEvent(HidePresetDropdown)
+            onPresetEvent(PresetEvent.ShowAddPresetDialog)
         }) {
             Text(
                 modifier = Modifier,

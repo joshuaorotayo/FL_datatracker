@@ -8,7 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -34,6 +40,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 fun PreviewListItem() {
     FL_DatatrackerTheme {
         listItem(
+            modifier = Modifier,
             changeValue = {},
             addItem = {},
             deleteItem = {},
@@ -47,6 +54,7 @@ fun PreviewListItem() {
 
 @Composable
 fun listItem(
+    modifier: Modifier,
     itemValue: String,
     changeValue: (String) -> Unit,
     addItem: () -> Unit,
@@ -61,7 +69,8 @@ fun listItem(
     val (text, setText) = mutableStateOf(itemValue)
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

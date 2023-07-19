@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import com.jorotayo.fl_datatracker.domain.model.Preset
 
 data class DataEntryScreenState(
+    val currentDataId: Long = -1,
     val dataName: String = "",
     val dataRows: MutableList<DataRowState> = mutableListOf(),
     val nameError: Boolean = false,

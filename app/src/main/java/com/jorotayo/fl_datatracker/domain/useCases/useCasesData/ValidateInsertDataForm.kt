@@ -30,7 +30,7 @@ class ValidateInsertDataForm {
             )
         }
         for (dr in dataForm.dataRows) {
-            if (dr.dataItem.dataValue.isBlank()) {
+       /*     if (dr.dataItem.dataValue.isBlank()) {
                 dr.hasError = true
                 noErrors = false
                 when (dr.dataItem.dataFieldType) {
@@ -50,7 +50,7 @@ class ValidateInsertDataForm {
                 }
             } else {
                 dr.hasError = false
-            }
+            }*/
         }
 
         return Pair(noErrors, newForm)

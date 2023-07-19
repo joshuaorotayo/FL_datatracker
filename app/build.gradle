@@ -4,7 +4,6 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.android'
-    id 'io.objectbox' // Apply last.
 }
 
 android {
@@ -12,8 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.jorotayo.fl_datatracker"
-        minSdk 27
-        //noinspection EditedTargetSdkVersion
+        minSdk 31
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -136,7 +134,7 @@ dependencies {
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 
     // ObjectBox
-//    debugImplementation('io.objectbox:objectbox-android-objectbrowser:3.6.0')
+    debugImplementation('io.objectbox:objectbox-android-objectbrowser:3.6.0')
     releaseImplementation('io.objectbox:objectbox-android:3.6.0')
 
     // Coil Image Picker

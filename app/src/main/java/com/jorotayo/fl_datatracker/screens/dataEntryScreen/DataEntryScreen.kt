@@ -13,13 +13,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +40,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -134,33 +134,37 @@ fun DataEntryScreen(
                         .wrapContentHeight()
                         .padding(top = large)
                 ) {
-
-                    Text(
+                    Row(
                         modifier = Modifier
-                            .padding(start = small),
-                        text = "Data Entry",
-                        color = colors.primary,
-                        style = typography.h4.also { FontWeight.SemiBold },
-                        textAlign = TextAlign.Start
-                    )
-
+                            .padding(start = small)
+                            .fillMaxWidth(),
+                        verticalAlignment = CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = colors.primary,
+                            modifier = Modifier
+                                .padding(end = Dimen.regular)
+                                .clickable { navController.navigateUp() }
+                        )
+                        Text(
+                            modifier = Modifier,
+                            text = "Data Entry",
+                            color = colors.primary,
+                            style = typography.h4.also { FontWeight.SemiBold },
+                            textAlign = TextAlign.Start
+                        )
+                    }
                     if (uiState.dataRows.isNotEmpty()) {
                         Row(
                             modifier = Modifier,
                             verticalAlignment = CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Filled.ArrowBack,
-                                contentDescription = "Back",
-                                tint = colors.primary,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .clickable {
-                                        navController.navigateUp()
-                                    }
-                            )
                             Text(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = small, top = small),
                                 text = String.format(
                                     stringResource(id = R.string.enter_data_header),
                                     uiState.presetSetting.presetName
@@ -170,13 +174,12 @@ fun DataEntryScreen(
                                 textAlign = TextAlign.Start
                             )
                         }
-
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    start = Dimen.small,
-                                    end = Dimen.small,
+                                    start = small,
+                                    end = small,
                                 ),
                             text = stringResource(id = R.string.data_entry_form_header),
                             color = colors.onBackground,
@@ -185,17 +188,17 @@ fun DataEntryScreen(
                         )
                         Text(
                             modifier = Modifier.padding(
-                                start = Dimen.small,
-                                top = 5.dp,
-                                bottom = 10.dp
+                                start = small,
+                                top = small,
+                                bottom = small
                             ),
-                            text = String.format(
-                                stringResource(id = R.string.form_fields_description),
+                            text = pluralStringResource(
+                                id = R.plurals.numberOfDatafields,
+                                count = uiState.dataRows.size,
                                 uiState.dataRows.size
                             ),
-                            color = colors.onBackground,
-                            style = typography.body1.also { Italic },
-                            textAlign = TextAlign.Start
+                            color = colors.onSurface,
+                            style = typography.h6
                         )
                     } else {
                         Column(
@@ -233,7 +236,7 @@ fun DataEntryScreen(
                         modifier = Modifier
                             .wrapContentHeight()
                             .fillMaxWidth()
-                            .background(color = colors.background)
+                            .background(color = colors.surface)
                     ) {
                         item {
                             // Contents of data entry form
@@ -355,19 +358,7 @@ fun DataEntryScreen(
                                         }
                                     )
                                 }
-                                /*7 -> {
-                                    data.dataItem.dataValue = formImageRowV3(
-                                        data = data,
-                                        onClick = {
-                                            viewModel.currentImageIndex.value = index
-                                        },
-                                        showBottomSheet = {
-                                            scope.launch {
-                                                modalBottomSheetState.show()
-                                            }
-                                        }
-                                    )
-                                }*/
+
                                 7 -> {
                                     data.dataItem.dataValue = formImageRowV4(
                                         data = data,
@@ -397,14 +388,14 @@ fun DataEntryScreen(
                                 }
                             }
                             if (index < uiState.dataRows.size) {
-                                Divider(modifier = Modifier.padding(xxSmall))
+                                Divider(modifier = Modifier.padding(xSmall))
                             }
                         }
 
                         item {
                             // Save Button Footer
                             TextButton(modifier = Modifier
-                                .padding(horizontal = Dimen.small)
+                                .padding(small)
                                 .fillMaxWidth()
                                 .clip(shape = RoundedCornerShape(medium)),
                                 colors = ButtonDefaults.textButtonColors(
