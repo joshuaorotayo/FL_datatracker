@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events
 import com.jorotayo.fl_datatracker.domain.model.DataField
 
 sealed class DataFieldEvent {
+    object InitScreen : DataFieldEvent()
     object ToggleAddNewDataField : DataFieldEvent()
     object ExpandPresetDropdown : DataFieldEvent()
     object HidePresetDropdown : DataFieldEvent()

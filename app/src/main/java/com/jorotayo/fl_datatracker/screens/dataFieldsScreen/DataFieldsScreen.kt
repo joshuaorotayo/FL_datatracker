@@ -99,6 +99,8 @@ fun DataFieldsScreen(
         Screen.DataEntry
     )
 
+    onDataFieldEvent(DataFieldEvent.InitScreen)
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val fields = state.dataFields

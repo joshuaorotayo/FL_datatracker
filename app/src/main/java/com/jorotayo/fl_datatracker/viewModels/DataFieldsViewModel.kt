@@ -14,6 +14,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
 import com.jorotayo.fl_datatracker.domain.model.InvalidPresetException
 import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.domain.useCases.DataFieldUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
@@ -58,6 +59,7 @@ class DataFieldsViewModel @Inject constructor(
     )
     val dataFieldScreenState: State<DataFieldScreenState> = _dataFieldScreenState
 
+
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -65,6 +67,7 @@ class DataFieldsViewModel @Inject constructor(
 
     fun onDataFieldEvent(event: DataFieldEvent) {
         when (event) {
+            DataFieldEvent.InitScreen -> onInitScreen()
             RestoreDeletedField -> onRestoreDataField()
             ToggleAddNewDataField -> onToggleAddNewDataField()
             ExpandPresetDropdown -> onExpandPresetDropdown()
@@ -72,6 +75,27 @@ class DataFieldsViewModel @Inject constructor(
             is DeleteDataField -> onDeleteDataField(event)
             is ShowDeleteRowDialog -> onShowDeleteRowDialog(event)
             is SaveDataField -> onSaveDataField(event)
+        }
+    }
+
+    private fun onInitScreen() {
+        val presetList = presetUseCases.getPresetList()
+        if (presetList.isEmpty()) {
+            presetUseCases.addPreset(
+                Preset(
+                    presetId = 0,
+                    presetName = "Default"
+                )
+            )
+
+            settingsUseCases.addSetting(
+                Setting(
+                    settingId = 0,
+                    settingName = "currentPreset",
+                    settingBoolValue = false,
+                    settingStringValue = "Default"
+                )
+            )
         }
     }
 

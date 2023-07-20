@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
@@ -54,23 +53,5 @@ class SplashViewModel @Inject constructor(
                 onBoardingCompleteSetting
             )
 
-        val presetList = presetUseCases.getPresetList()
-        if (presetList.isEmpty()) {
-            presetUseCases.addPreset(
-                Preset(
-                    presetId = 0,
-                    presetName = "Default"
-                )
-            )
-
-            settingsUseCases.addSetting(
-                Setting(
-                    settingId = 0,
-                    settingName = "currentPreset",
-                    settingBoolValue = false,
-                    settingStringValue = "Default"
-                )
-            )
-        }
     }
 }
