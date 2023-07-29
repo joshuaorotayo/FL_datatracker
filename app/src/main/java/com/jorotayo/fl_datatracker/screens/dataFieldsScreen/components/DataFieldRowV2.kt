@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +22,6 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.exampleShortField
-import com.jorotayo.fl_datatracker.util.getHeaderColour
 
 @Preview(
     showBackground = true,
@@ -44,8 +42,6 @@ fun DataFieldRowV2(
     onRowEvent: (RowEvent) -> Unit,
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
-
-    val textColour = getHeaderColour(isSystemInDarkTheme())
 
     val currentRowState = remember {
         mutableStateOf(

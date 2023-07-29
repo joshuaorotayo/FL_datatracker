@@ -1,13 +1,9 @@
 package com.jorotayo.fl_datatracker.util
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import com.google.gson.Gson
 import com.jorotayo.fl_datatracker.domain.model.DataField
-import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
 import com.jorotayo.fl_datatracker.ui.theme.md_theme_light_primary
 import java.text.SimpleDateFormat
@@ -54,24 +50,7 @@ fun TextFieldValue.ofMaxLength(maxLength: Int): TextFieldValue {
     }
 }
 
-fun SaveSetting(context: Context, setting: Setting) {
-    val mPrefs: SharedPreferences = context.getSharedPreferences("Name", Context.MODE_PRIVATE)
-    val prefsEditor: SharedPreferences.Editor = mPrefs.edit()
-    val gson = Gson()
-    val json = gson.toJson(setting)
-    prefsEditor.putString(setting.settingName, json)
-    prefsEditor.apply()
-}
-
-fun GetSetting(context: Context, settingName: String): Setting {
-    val mPrefs: SharedPreferences = context.getSharedPreferences("Name", Context.MODE_PRIVATE)
-
-    val gson = Gson()
-    val json = mPrefs.getString(settingName, "")
-    return gson.fromJson(json, Setting::class.java)
-}
-
-fun ReturnNewDataField(newDataFieldState: NewDataFieldState): DataField {
+fun returnNewDataField(newDataFieldState: NewDataFieldState): DataField {
     return DataField(
         dataFieldId = newDataFieldState.dataFieldId,
         presetId = newDataFieldState.presetId,

@@ -52,13 +52,13 @@ import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.regular
+import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.ReturnNewDataField
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.ofMaxLength
+import com.jorotayo.fl_datatracker.util.returnNewDataField
 
 @Preview(
     showBackground = true,
@@ -131,7 +131,7 @@ fun NewDataField(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .fillMaxWidth()
-                    .padding(top = Dimen.small),
+                    .padding(top = small),
                 text = "Data Field Name",
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.body2,
@@ -191,7 +191,7 @@ fun NewDataField(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
-                    .padding(top = Dimen.small)
+                    .padding(top = small)
                     .fillMaxWidth(),
                 text = stringResource(R.string.select_data_field_type),
                 textAlign = TextAlign.Start,
@@ -287,7 +287,7 @@ fun NewDataField(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = Dimen.small)
+                            .padding(top = small)
                             .padding(horizontal = 10.dp),
                         text = "Data Field Hint",
                         textAlign = TextAlign.Start,
@@ -443,16 +443,17 @@ fun NewDataField(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = Dimen.small),
+                    .padding(top = small),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
                     modifier = Modifier
-                        .wrapContentSize()
-                        .clip(shape = RoundedCornerShape(regular)),
+                        .padding(small)
+                        .fillMaxWidth()
+                        .clip(shape = RoundedCornerShape(medium)),
                     onClick = {
                         _newDataField.value = newDataField.value.copy(presetId = currentPresetId)
-                        val dataField = ReturnNewDataField(newDataField.value)
+                        val dataField = returnNewDataField(newDataField.value)
                         onDataFieldEvent(DataFieldEvent.SaveDataField(dataField))
                         _newDataField = mutableStateOf(NewDataFieldState())
 

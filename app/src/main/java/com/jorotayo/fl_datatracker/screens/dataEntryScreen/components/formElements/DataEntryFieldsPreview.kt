@@ -72,6 +72,6 @@ fun DataEntryFieldsPreview() {
         formCountRowV2(data = dataRowStateEx, setDataValue = {})
         formListRowV4(data = dataRowStateEx.copy(), setDataValue = {})
         formTimeRowV2(data = dataRowStateEx.copy(), setDataValue = {})
-        formImageRowV2(data = dataRowStateEx.copy(), setDataValue = {})
+        formImageRowV2(data = dataRowStateEx.copy())
     }
 }

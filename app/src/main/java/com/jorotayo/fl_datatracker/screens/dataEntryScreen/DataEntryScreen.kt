@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
@@ -62,7 +64,35 @@ fun PreviewDataEntryScreen() {
     FL_DatatrackerTheme {
         DataEntryScreen(
             navController = rememberNavController(),
-            uiState = DataEntryScreenState(),
+            uiState = DataEntryScreenState(
+                dataRows = mutableListOf(
+                    DataRowState(
+                        DataItem(
+                            dataItemId = 1,
+                            dataId = 1,
+                            presetId = 1,
+                            fieldName = "",
+                            dataFieldType = 0,
+                            first = "",
+                            second = "",
+                            third = "",
+                            isEnabled = false,
+                            fieldDescription = null,
+                            dataValue = ""
+                        ), hasError = false, errorMsg = ""
+                    )
+                ),
+                currentDataId = 0L,
+                dataName = "",
+                nameError = false,
+                nameErrorMsg = "",
+                formSubmitted = false,
+                currentImageIndex = 0,
+                presetSetting = Preset(
+                    presetId = 0L,
+                    presetName = "Default"
+                )
+            ),
             onUiEvent = MutableSharedFlow(),
             onDataEvent = {}
         )
@@ -157,49 +187,7 @@ fun DataEntryScreen(
                         )
                     }
                     if (uiState.dataRows.isNotEmpty()) {
-                        Row(
-                            modifier = Modifier,
-                            verticalAlignment = CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = small, top = small),
-                                text = String.format(
-                                    stringResource(id = R.string.enter_data_header),
-                                    uiState.presetSetting.presetName
-                                ),
-                                color = colors.onBackground,
-                                style = typography.h5.also { Italic },
-                                textAlign = TextAlign.Start
-                            )
-                        }
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    start = small,
-                                    end = small,
-                                ),
-                            text = stringResource(id = R.string.data_entry_form_header),
-                            color = colors.onBackground,
-                            style = typography.h6.also { Italic },
-                            textAlign = TextAlign.Start
-                        )
-                        Text(
-                            modifier = Modifier.padding(
-                                start = small,
-                                top = small,
-                                bottom = small
-                            ),
-                            text = pluralStringResource(
-                                id = R.plurals.numberOfDatafields,
-                                count = uiState.dataRows.size,
-                                uiState.dataRows.size
-                            ),
-                            color = colors.onSurface,
-                            style = typography.h6
-                        )
+                        DataFormHeadings(uiState)
                     } else {
                         Column(
                             modifier = Modifier
@@ -442,4 +430,51 @@ fun DataEntryScreen(
     }
 }
 
-
+@Composable
+private fun DataFormHeadings(
+    uiState: DataEntryScreenState,
+) {
+    Row(
+        modifier = Modifier,
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = small, top = small),
+            text = String.format(
+                stringResource(id = R.string.enter_data_header),
+                uiState.presetSetting.presetName
+            ),
+            color = colors.onBackground,
+            style = typography.h5.also { Italic },
+            textAlign = TextAlign.Start
+        )
+    }
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = small,
+                end = small,
+            ),
+        text = stringResource(id = R.string.data_entry_form_header),
+        color = colors.onBackground,
+        style = typography.h6.also { Italic },
+        textAlign = TextAlign.Start
+    )
+    Text(
+        modifier = Modifier.padding(
+            start = small,
+            top = small,
+            bottom = small
+        ),
+        text = pluralStringResource(
+            id = R.plurals.numberOfDatafields,
+            count = uiState.dataRows.size,
+            uiState.dataRows.size
+        ),
+        color = colors.onSurface,
+        style = typography.h6
+    )
+}

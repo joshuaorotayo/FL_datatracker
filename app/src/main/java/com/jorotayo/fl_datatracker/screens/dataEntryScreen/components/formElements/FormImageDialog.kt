@@ -42,8 +42,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 fun PreviewFormImageDialog() {
     FL_DatatrackerTheme {
         FormImageDialog(
-            onDismiss = {},
-            modifier = Modifier
+            onDismiss = {}
         )
     }
 }
@@ -51,7 +50,6 @@ fun PreviewFormImageDialog() {
 @Composable
 fun FormImageDialog(
     onDismiss: () -> Unit,
-    modifier: Modifier,
 ) {
 
     Dialog(
@@ -90,7 +88,12 @@ fun FormImageDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = Dimen.small, end = Dimen.small, bottom = Dimen.xxSmall, top = Dimen.xxSmall),
+                    .padding(
+                        start = Dimen.small,
+                        end = Dimen.small,
+                        bottom = Dimen.xxSmall,
+                        top = Dimen.xxSmall
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween
             )
             {

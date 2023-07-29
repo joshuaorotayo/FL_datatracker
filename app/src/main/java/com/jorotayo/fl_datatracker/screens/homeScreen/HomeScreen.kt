@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -23,9 +27,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,11 +49,14 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.components.AlertDialog
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    homeState: HomeScreenState,
+    state: HomeScreenState,
     onHomeEvent: (HomeScreenEvent) -> Unit,
     onDataEvent: (DataEvent) -> Unit,
     navController: NavController,
@@ -74,16 +79,15 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(top = medium)
-                    .background(colors.background)
             ) {
                 // Top Bar/Search Bar Area
-                AnimatedVisibility(visible = homeState.isSearchVisible) {
+                AnimatedVisibility(visible = state.isSearchVisible) {
                     SearchBar(
                         onHomeEvent = onHomeEvent,
-                        searchState = homeState
+                        searchState = state
                     )
                 }
-                AnimatedVisibility(visible = !homeState.isSearchVisible) {
+                AnimatedVisibility(visible = !state.isSearchVisible) {
                     TopBar(
                         toggleSearchBar = { onHomeEvent(HomeScreenEvent.ToggleSearchBar) },
                         settingsNavigate = { navController.navigate(Screen.Settings.route) }
@@ -123,64 +127,88 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp, bottom = Dimen.small, end = Dimen.small, start = Dimen.small)
+                        .padding(
+                            top = 24.dp,
+                            bottom = small,
+                            end = small,
+                            start = small
+                        )
                 )
                 {
                     Text(
                         text = pluralStringResource(
                             id = R.plurals.items_showing_header,
-                            count = homeState.dataList.size,
-                            homeState.dataList.size
+                            count = state.dataList.size,
+                            state.dataList.size
                         ),
                         style = typography.h5,
                         color = colors.onBackground,
                         fontWeight = SemiBold
                     )
                 }
-                // Items example
                 Box(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(innerPadding)
                         .fillMaxSize()
-                        .clip(shape = RoundedCornerShape(20.dp))
                 ) {
-                    Column(
+                    Card(
                         modifier = Modifier
+                            .padding(xSmall)
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        shape = RoundedCornerShape(small),
+                        elevation = xSmall
                     ) {
-                        if (homeState.dataList.isNotEmpty()) {
-                            for (data in homeState.dataList) {
-                                SimpleDataRow(
-                                    modifier = Modifier,
-                                    data = data,
-                                    editData = {
-                                        navController.navigate(Screen.DataEntry.route + "?id=${data.dataId}")
-                                        onDataEvent(
-                                            DataEvent.UpdateDataId(
-                                                data.dataId
+                        LazyColumn(
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .fillMaxWidth()
+                                .background(color = colors.surface)
+                        ) {
+                            itemsIndexed(items = state.dataList) { index, data ->
+                                if (state.dataList.isNotEmpty()) {
+                                    SimpleDataRow(
+                                        data = data,
+                                        editData = {
+                                            navController.navigate(Screen.DataEntry.route + "?id=${data.dataId}")
+                                            onDataEvent(
+                                                DataEvent.UpdateDataId(
+                                                    data.dataId
+                                                )
                                             )
-                                        )
-                                        Log.d(
-                                            "fl_datatracker",
-                                            "HomeScreen: edit value ${data.dataId} "
-                                        )
-                                    },
-                                    deleteData = {
-                                        onHomeEvent(
-                                            HomeScreenEvent.ToggleDeleteDataDialog(
-                                                data
+                                            Log.d(
+                                                "fl_datatracker",
+                                                "HomeScreen: edit value ${data.dataId} "
                                             )
+                                        },
+                                        deleteData = {
+                                            onHomeEvent(
+                                                HomeScreenEvent.ToggleDeleteDataDialog(
+                                                    data
+                                                )
+                                            )
+                                        }
+                                    )
+                                    if (index < state.dataList.size - 1) {
+                                        Divider(
+                                            modifier = Modifier
+                                                .padding(xSmall),
+                                            thickness = Dimen.xxxxSmall
                                         )
                                     }
-                                )
+                                }
                             }
                         }
                     }
+
+                    state.alertDialogState?.let { AlertDialog(alertDialogState = it) }
+
                     BasicDeleteDataDialog(
                         modifier = Modifier,
                         confirmDelete = { onHomeEvent(HomeScreenEvent.DeleteDataItem) },
                         scaffold = scaffoldState,
-                        state = homeState.isDeleteDialogVisible,
-                        data = homeState.deletedItem
+                        state = state.isDeleteDialogVisible,
+                        data = state.deletedItem
                     )
                 }
             }
@@ -203,7 +231,7 @@ fun HomeScreenPreview() {
             navController = rememberNavController(),
             onHomeEvent = {},
             onDataEvent = {},
-            homeState = HomeScreenState(
+            state = HomeScreenState(
                 isSearchVisible = false,
                 text = "",
                 hint = "",

@@ -82,7 +82,6 @@ fun SetupNavGraph(
             WelcomeScreen(
                 navController = navController,
                 onWelcomeEvent = welcomeScreenViewModel::onEvent,
-                welcomeState = welcomeScreenViewModel.uiState.value,
                 pages = pages
             )
         }
@@ -94,10 +93,10 @@ fun SetupNavGraph(
             val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
 
             HomeScreen(
-                homeState = homeScreenViewModel.uiState.value,
+                state = homeScreenViewModel.uiState.value,
                 navController = navController,
                 onHomeEvent = homeScreenViewModel::onEvent,
-                onDataEvent = dataEntryScreenViewModel::onDataEvent
+                onDataEvent = dataEntryScreenViewModel::onDataEvent,
             )
         }
         composable(
@@ -106,22 +105,19 @@ fun SetupNavGraph(
                 navArgument(
                     name = "dataId"
                 ) {
-                    type = NavType.LongType
+                    type = NavType.IntType
                     defaultValue = -1
                 },
             )
-        ) { navBackStackEntry ->
-            val dataId = navBackStackEntry.arguments?.getLong("dataId")
-
+        ) {
             val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
-            if (dataId != null) {
-                DataEntryScreen(
-                    navController = navController,
-                    uiState = dataEntryScreenViewModel.uiState.value,
-                    onUiEvent = dataEntryScreenViewModel.eventFlow,
-                    onDataEvent = dataEntryScreenViewModel::onDataEvent
-                )
-            }
+            DataEntryScreen(
+                navController = navController,
+                uiState = dataEntryScreenViewModel.uiState.value,
+                onUiEvent = dataEntryScreenViewModel.eventFlow,
+                onDataEvent = dataEntryScreenViewModel::onDataEvent
+            )
+
         }
         composable(
             route = Screen.DataFieldsScreen.route

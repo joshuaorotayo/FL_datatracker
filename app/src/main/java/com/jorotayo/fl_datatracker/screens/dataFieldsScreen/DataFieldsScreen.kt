@@ -50,7 +50,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.components.AlertDialog
 import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -183,7 +182,6 @@ fun DataFieldsScreen(
                                 onDataFieldEvent = { onDataFieldEvent(HidePresetDropdown) },
                                 onPresetEvent = onPresetEvent,
                                 presets = presets,
-                                scope = scope
                             )
                         }
                     }
@@ -346,7 +344,6 @@ private fun PresetDropDownMenu(
     onDataFieldEvent: (DataFieldEvent) -> Unit,
     presets: List<Preset>,
     onPresetEvent: (PresetEvent) -> Unit,
-    scope: CoroutineScope?
 ) {
     DropdownMenu(
         expanded = true,

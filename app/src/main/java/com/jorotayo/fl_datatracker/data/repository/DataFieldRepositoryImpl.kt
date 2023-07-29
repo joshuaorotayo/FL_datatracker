@@ -13,10 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 
 class DataFieldRepositoryImpl : DataFieldRepository {
-    private val dataFieldBox: Box<DataField> = ObjectBox.get().boxFor(DataField::class.java)
-
-    @OptIn(ExperimentalCoroutinesApi::class)// Listen to all changes to a Box
-    val flow = dataFieldBox.store.subscribe(DataField::class.java).toFlow()
+    private val dataFieldBox: Box<DataField> = ObjectBox.boxStore().boxFor(DataField::class.java)
 
     private val dataFieldQuery: Query<DataField> =
         dataFieldBox.query(DataField_.isEnabled.equal(true)).build()
@@ -31,7 +28,7 @@ class DataFieldRepositoryImpl : DataFieldRepository {
     }
 
     override fun getDataFields(): List<DataField> {
-        return ObjectBox.get().boxFor(DataField::class.java).all.toList()
+        return ObjectBox.boxStore().boxFor(DataField::class.java).all.toList()
     }
 
     override fun getDataFieldById(dataFieldId: Long): DataField {

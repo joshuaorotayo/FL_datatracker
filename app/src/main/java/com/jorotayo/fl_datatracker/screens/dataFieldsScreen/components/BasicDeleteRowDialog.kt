@@ -36,7 +36,6 @@ import com.jorotayo.fl_datatracker.R.string.delete_row_body
 import com.jorotayo.fl_datatracker.R.string.row_delete_dialog_icon
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
@@ -60,7 +59,6 @@ fun PreviewBasicDeleteRowDialog() {
             confirmDelete = {},
             scaffold = rememberScaffoldState(),
             dialogIsVisible = true,
-            hideDeleteRowDialog = {},
             dataField = DataField(
                 dataFieldId = 0,
                 fieldName = "Test Field",
@@ -81,7 +79,6 @@ fun PreviewBasicDeleteRowDialog() {
 fun BasicDeleteRowDialog(
     modifier: Modifier,
     confirmDelete: (DataField) -> Unit,
-    hideDeleteRowDialog: (DataFieldEvent) -> Unit,
     scaffold: ScaffoldState,
     dialogIsVisible: Boolean,
     dataField: DataField,

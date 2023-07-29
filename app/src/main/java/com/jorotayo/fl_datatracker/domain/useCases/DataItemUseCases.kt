@@ -6,6 +6,7 @@ import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.GetDataItemL
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.GetDataItemListByDataAndPresetId
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.GetDataItemsByPresetId
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.GetDataItemsEnabledByPresetId
+import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.GetDataItemsListByDataId
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.RemoveDataItem
 import com.jorotayo.fl_datatracker.domain.useCases.useCasesDataItem.UpdateDataItem
 
@@ -15,6 +16,7 @@ data class DataItemUseCases(
     val updateDataItem: UpdateDataItem,
     val getDataItemList: GetDataItemList,
     val getDataItemById: GetDataItemById,
+    val getDataItemsListByDataId: GetDataItemsListByDataId,
     val getDataItemsByPresetId: GetDataItemsByPresetId,
     val getDataItemListByDataAndPresetId: GetDataItemListByDataAndPresetId,
     val getDataItemsEnabledByPresetId: GetDataItemsEnabledByPresetId,

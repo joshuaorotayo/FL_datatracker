@@ -54,7 +54,7 @@ fun PreviewFormImageRowV4() {
             data = dataItem,
             onClick = {},
             showBottomSheet =
-            { modalBottomSheetState }
+            { modalBottomSheetState.isVisible }
         )
     }
 }

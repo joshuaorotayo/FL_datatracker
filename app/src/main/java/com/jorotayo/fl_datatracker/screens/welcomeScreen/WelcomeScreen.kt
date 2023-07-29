@@ -51,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun WelcomeScreen(
     navController: NavHostController,
-    welcomeState: WelcomeScreenState,
     onWelcomeEvent: (WelcomeScreenEvent) -> Unit,
     pages: List<WelcomeScreenData>,
 ) {

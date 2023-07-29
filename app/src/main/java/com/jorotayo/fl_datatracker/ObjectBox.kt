@@ -17,6 +17,7 @@ object ObjectBox {
             .androidContext(context.applicationContext)
             .build()
 
+
         if (BuildConfig.DEBUG) {
             val started = Admin(boxStore).start(context.applicationContext)
             Log.i("ObjectBoxAdmin", "Started: $started")
@@ -24,7 +25,7 @@ object ObjectBox {
     }
 
 
-    fun get(): BoxStore {
+    fun boxStore(): BoxStore {
         return boxStore
     }
 }

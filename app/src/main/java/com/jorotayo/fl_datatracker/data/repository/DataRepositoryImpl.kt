@@ -7,7 +7,7 @@ import com.jorotayo.fl_datatracker.domain.repository.DataRepository
 import io.objectbox.Box
 
 class DataRepositoryImpl : DataRepository {
-    private val dataBox: Box<Data> = ObjectBox.get().boxFor(Data::class.java)
+    private val dataBox: Box<Data> = ObjectBox.boxStore().boxFor(Data::class.java)
 
     override fun getData(): List<Data> {
         return dataBox.all

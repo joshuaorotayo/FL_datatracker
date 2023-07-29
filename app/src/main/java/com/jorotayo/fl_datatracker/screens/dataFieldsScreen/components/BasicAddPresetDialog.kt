@@ -1,6 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +52,7 @@ import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @Preview(
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    uiMode = UI_MODE_NIGHT_YES,
     name = "Dark Mode"
 )
 @Preview(showBackground = true, name = "Light Mode")

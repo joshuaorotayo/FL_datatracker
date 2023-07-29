@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
@@ -20,7 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(
     showBackground = true,
@@ -32,7 +34,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 fun PreviewSimpleDataRow() {
     FL_DatatrackerTheme {
         SimpleDataRow(
-            modifier = Modifier,
             data = Data(
                 dataId = 0,
                 createdTime = "Yesterday",
@@ -47,14 +48,13 @@ fun PreviewSimpleDataRow() {
 
 @Composable
 fun SimpleDataRow(
-    modifier: Modifier,
     data: Data,
     editData: () -> Unit,
     deleteData: (Data) -> Unit,
 ) {
     Row(
         modifier = Modifier
-            .padding(xxSmall)
+            .padding(xSmall)
             .fillMaxWidth(),
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically
@@ -64,20 +64,21 @@ fun SimpleDataRow(
                 .weight(1f),
             text = data.name,
             color = colors.onBackground,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             modifier = Modifier
-                .weight(1f),
+                .weight(1.5f),
             text = data.createdTime,
             color = colors.onBackground,
-            style = MaterialTheme.typography.caption,
+            style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center
         )
         Icon(
             modifier = Modifier
-                .weight(0.25f)
+                .weight(0.5f)
+                .size(medium)
                 .clickable(onClick = { editData() }),
             imageVector = Icons.Default.Edit,
             contentDescription = "Edit icon for data ${data.name}",
@@ -85,7 +86,8 @@ fun SimpleDataRow(
         )
         Icon(
             modifier = Modifier
-                .weight(0.25f)
+                .weight(0.5f)
+                .size(medium)
                 .clickable(onClick = { deleteData(data) }),
             imageVector = Icons.Default.Close,
             contentDescription = "Delete icon for data ${data.name}",

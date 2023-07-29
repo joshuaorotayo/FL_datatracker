@@ -1,7 +1,10 @@
 package com.jorotayo.fl_datatracker.viewModels
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.TestRowItem
@@ -10,7 +13,10 @@ import com.jorotayo.fl_datatracker.domain.useCases.DataUseCases
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
+import com.jorotayo.fl_datatracker.util.components.AlertDialogState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,9 +24,15 @@ class HomeScreenViewModel @Inject constructor(
     private val dataUseCases: DataUseCases,
     private val dataItemUseCases: DataItemUseCases,
 ) : ViewModel() {
+    sealed class UiEvent {
+        object DeleteDataItem : UiEvent()
+    }
 
     private var _uiState = mutableStateOf(HomeScreenState())
     val uiState: State<HomeScreenState> = _uiState
+
+    private var _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     private val _testRowItemBox = mutableStateOf(TestState())
     private val testRowItemBox: State<TestState> = _testRowItemBox
@@ -70,9 +82,27 @@ class HomeScreenViewModel @Inject constructor(
     private fun onToggleDeleteDataDialog(event: HomeScreenEvent.ToggleDeleteDataDialog) {
         _uiState.value = uiState.value.copy(
             deletedItem = event.data,
-            isDeleteDialogVisible = if (!uiState.value.isDeleteDialogVisible.value) mutableStateOf(
-                true
-            ) else mutableStateOf(false)
+            alertDialogState = AlertDialogState(
+                title = String.format("Delete Data Item: %s", event.data.name),
+                imageIcon = Icons.Default.Delete,
+                text = "Are you sure you want to delete this Data item?",
+                onDismissRequest = { dismissAlertDialog() },
+                confirmButtonLabel = "Delete",
+                confirmButtonOnClick = {
+                    onDeleteDataItem()
+                    dismissAlertDialog()
+                },
+                dismissButtonLabel = "Cancel",
+                dismissButtonOnClick = { dismissAlertDialog() },
+                titleTextAlign = TextAlign.Center,
+                dismissible = true
+            )
+        )
+    }
+
+    private fun dismissAlertDialog() {
+        _uiState.value = uiState.value.copy(
+            alertDialogState = null
         )
     }
 
@@ -88,7 +118,7 @@ class HomeScreenViewModel @Inject constructor(
         val data = uiState.value.deletedItem
         val removeDataItems = dataItemUseCases.getDataItemListByDataAndPresetId(
             data.dataId,
-            data.dataPresetId + 1
+            data.dataPresetId
         )
         for (item in removeDataItems) {
             dataItemUseCases.removeDataItem(item)
@@ -102,7 +132,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun onUpdateData(event: HomeScreenEvent.UpdateData) {
-        val newBox = ObjectBox.get().boxFor(TestRowItem::class.java)
+        val newBox = ObjectBox.boxStore().boxFor(TestRowItem::class.java)
         if (event.operation == "put") {
             newBox.put(event.testRowItem)
         } else {

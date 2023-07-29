@@ -179,37 +179,6 @@
       "relations": []
     },
     {
-      "id": "5:4344097748831030760",
-      "lastPropertyId": "4:4583051573940024736",
-      "name": "Setting",
-      "properties": [
-        {
-          "id": "1:1245966578697031152",
-          "name": "settingId",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:1144358414615645924",
-          "name": "settingName",
-          "indexId": "3:4336065889340610287",
-          "type": 9,
-          "flags": 34848
-        },
-        {
-          "id": "3:774581211635619008",
-          "name": "settingBoolValue",
-          "type": 1
-        },
-        {
-          "id": "4:4583051573940024736",
-          "name": "settingStringValue",
-          "type": 9
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "6:4071416627135483911",
       "lastPropertyId": "1:344459163148518001",
       "name": "TestRowItem",
@@ -230,9 +199,18 @@
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
-  "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredEntityUids": [
+    4344097748831030760
+  ],
+  "retiredIndexUids": [
+    4336065889340610287
+  ],
+  "retiredPropertyUids": [
+    1245966578697031152,
+    1144358414615645924,
+    774581211635619008,
+    4583051573940024736
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
