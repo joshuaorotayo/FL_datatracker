@@ -1,7 +1,9 @@
 package com.jorotayo.fl_datatracker
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.RowScope
@@ -62,22 +64,21 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
-
-    val itemSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+    val trimmedRoute = trimRoute(currentDestination?.route.toString())
+    val itemSelected = currentDestination?.hierarchy?.any { trimmedRoute == screen.route } == true
     BottomNavigationItem(
         label = {
             Text(text = screen.title)
         },
         icon = {
-            (if (itemSelected) screen.selectedIcon else screen.unselectedIcon)?.let {
-                Icon(
-                    imageVector = it,
-                    contentDescription = screen.pageDescription
-                )
-            }
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = screen.pageDescription
+            )
         },
         selected = itemSelected,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        selectedContentColor = MaterialTheme.colors.primary,
         onClick = {
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
@@ -85,4 +86,9 @@ fun RowScope.AddItem(
             }
         }
     )
+}
+
+fun trimRoute(route: String): String {
+    Log.i(TAG, "trimRoute: " + route.substringBefore("?id=", route))
+    return route.substringBefore("?id=", route)
 }

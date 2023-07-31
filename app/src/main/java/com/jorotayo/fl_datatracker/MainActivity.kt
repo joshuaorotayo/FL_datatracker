@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination
-                //NavGraph(startDestination = screen)
                 if (screen == "onboarding_screen") {
                     NavGraph(navController = rememberNavController(), startDestination = screen)
                 } else {

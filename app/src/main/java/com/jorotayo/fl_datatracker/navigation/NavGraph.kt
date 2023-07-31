@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
@@ -76,6 +77,8 @@ fun NavGraph(
         navController = navController,
         startDestination = startDestination
     ) {
+
+        Log.d("BottomNavGraph", navController.currentDestination.toString())
         composable(route = Screen.Welcome.route) {
             val welcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>()
             WelcomeScreen(
@@ -85,7 +88,7 @@ fun NavGraph(
             )
         }
         composable(route = Screen.Settings.route) {
-            SettingsScreen(navController = navController)
+            SettingsScreen()
         }
         composable(route = Screen.HomeScreen.route) {
             val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
