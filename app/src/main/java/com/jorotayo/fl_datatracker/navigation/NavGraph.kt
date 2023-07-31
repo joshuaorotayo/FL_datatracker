@@ -7,18 +7,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
+import com.jorotayo.fl_datatracker.screens.settingsScreen.SettingsScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
-import com.jorotayo.fl_datatracker.ui.PageTemplate
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
@@ -28,7 +28,8 @@ import com.jorotayo.fl_datatracker.viewModels.WelcomeScreenViewModel
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
-fun SetupNavGraph(
+fun NavGraph(
+    navController: NavHostController,
     startDestination: String
 ) {
     val pages = ArrayList<WelcomeScreenData>()
@@ -71,8 +72,6 @@ fun SetupNavGraph(
             description = "View the breakdown of information in statistical form."
         )
     )
-
-    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -86,7 +85,7 @@ fun SetupNavGraph(
             )
         }
         composable(route = Screen.Settings.route) {
-            PageTemplate(navController = navController)
+            SettingsScreen(navController = navController)
         }
         composable(route = Screen.HomeScreen.route) {
             val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
@@ -125,7 +124,6 @@ fun SetupNavGraph(
             val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
 
             DataFieldsScreen(
-                navController = navController,
                 state = dataFieldsViewModel.dataFieldScreenState.value,
                 onUiEvent = dataFieldsViewModel.eventFlow,
                 onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,

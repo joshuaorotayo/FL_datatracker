@@ -40,7 +40,6 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
@@ -61,13 +60,6 @@ fun HomeScreen(
     onDataEvent: (DataEvent) -> Unit,
     navController: NavController,
 ) {
-
-    val bottomNavigationItems = listOf(
-        Screen.DataFieldsScreen,
-        Screen.HomeScreen,
-        Screen.DataEntry
-    )
-
     val scaffoldState = rememberScaffoldState()
 
     rememberSystemUiController().setSystemBarsColor(colors.background)
@@ -94,9 +86,6 @@ fun HomeScreen(
                     )
                 }
             }
-        },
-        bottomBar = {
-            BottomNavigationBar(navController, bottomNavigationItems)
         },
         scaffoldState = scaffoldState,
         snackbarHost = {

@@ -278,6 +278,7 @@ class DataFieldsViewModel @Inject constructor(
     private fun onShowAddPresetDialog() {
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
             isPresetDropDownMenuExpanded = false,
+            newPreset = null,
             alertDialogState = AlertDialogState(
                 title = "Add New Preset",
                 imageIcon = Icons.Default.AddBox,
@@ -298,32 +299,39 @@ class DataFieldsViewModel @Inject constructor(
 
     private fun saveNewPreset() {
         val newPreset = _dataFieldScreenState.value.newPreset
-
         viewModelScope.launch {
-            try {
-                presetUseCases.addPreset(newPreset!!)
-                val presets = presetUseCases.getPresetList()
-                val currentPreset = presetUseCases.getPresetByPresetName(newPreset.presetName)
+            if (newPreset == null || newPreset.presetName.isBlank()) {
                 _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-                    alertDialogState = null,
-                    isPresetDropDownMenuExpanded = false,
-                    isAddDataFieldVisible = false,
-                    presetList = presets,
-                    currentPreset = newPreset,
-                    dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
+                    alertDialogState = _dataFieldScreenState.value.alertDialogState?.copy(
+                        textFieldErrorText = "Enter Preset Name!"
+                    )
                 )
-                userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
-                _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
+            } else {
+                try {
+                    presetUseCases.addPreset(newPreset)
+                    val presets = presetUseCases.getPresetList()
+                    val currentPreset = presetUseCases.getPresetByPresetName(newPreset.presetName)
+                    _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                        alertDialogState = null,
+                        isPresetDropDownMenuExpanded = false,
+                        isAddDataFieldVisible = false,
+                        presetList = presets,
+                        currentPreset = newPreset,
+                        dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
+                    )
+                    userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
+                    _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
 
-            } catch (e: InvalidPresetException) {
-                _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-                    alertDialogState = null,
-                    isPresetDropDownMenuExpanded = false,
-                    isAddDataFieldVisible = false
-                )
-                _eventFlow.emit(
-                    ShowSnackbar(message = e.message!!)
-                )
+                } catch (e: InvalidPresetException) {
+                    _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                        alertDialogState = null,
+                        isPresetDropDownMenuExpanded = false,
+                        isAddDataFieldVisible = false
+                    )
+                    _eventFlow.emit(
+                        ShowSnackbar(message = e.message!!)
+                    )
+                }
             }
         }
     }

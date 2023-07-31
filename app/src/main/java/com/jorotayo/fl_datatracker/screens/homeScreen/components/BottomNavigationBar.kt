@@ -82,7 +82,7 @@ fun BottomNavigationBar(
                                 )
                                 Text(
                                     modifier = Modifier,
-                                    text = screen.pageName,
+                                    text = screen.title,
                                     color = if (currentRoute == screen.route) highlightColour else unselectedColour,
                                     style = TextStyle.Default.copy(fontSize = 16.sp) //small
                                 )

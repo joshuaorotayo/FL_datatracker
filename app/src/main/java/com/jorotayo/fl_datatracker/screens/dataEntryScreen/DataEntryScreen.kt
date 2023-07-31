@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -13,8 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -34,10 +31,8 @@ import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -108,11 +103,6 @@ fun DataEntryScreen(
     onUiEvent: SharedFlow<DataEntryScreenViewModel.UiEvent>,
     onDataEvent: (DataEvent) -> Unit
 ) {
-    val bottomNavigationItems = listOf(
-        Screen.DataFieldsScreen,
-        Screen.HomeScreen,
-        Screen.DataEntry
-    )
 
     val scaffoldState = rememberScaffoldState()
 
@@ -155,9 +145,6 @@ fun DataEntryScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {//box for ModalBottomSheet
         Scaffold(
-            bottomBar = {
-                BottomNavigationBar(navController, bottomNavigationItems)
-            },
             topBar = {
                 Column(
                     modifier = Modifier
@@ -170,14 +157,6 @@ fun DataEntryScreen(
                             .fillMaxWidth(),
                         verticalAlignment = CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = colors.primary,
-                            modifier = Modifier
-                                .padding(end = Dimen.regular)
-                                .clickable { navController.navigateUp() }
-                        )
                         Text(
                             modifier = Modifier,
                             text = "Data Entry",

@@ -11,10 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
-import com.jorotayo.fl_datatracker.navigation.SetupNavGraph
+import com.jorotayo.fl_datatracker.navigation.NavGraph
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.viewModels.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +56,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             FL_DatatrackerTheme {
                 val screen by splashViewModel.startDestination
-                SetupNavGraph(startDestination = screen)
+                //NavGraph(startDestination = screen)
+                if (screen == "onboarding_screen") {
+                    NavGraph(navController = rememberNavController(), startDestination = screen)
+                } else {
+                    MainScreen(startDestination = screen)
+                }
             }
         }
     }

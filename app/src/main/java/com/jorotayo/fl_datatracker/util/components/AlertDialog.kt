@@ -16,6 +16,8 @@ import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +36,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
 
@@ -50,6 +53,7 @@ data class AlertDialogState(
     val editField: Boolean? = false,
     val editFieldFunction: ((String) -> Unit?)? = null,
     val editFieldHint: String? = null,
+    val textFieldErrorText: String? = null,
     val imageIcon: ImageVector? = null,
     val scope: CoroutineScope? = null
 )
@@ -117,14 +121,37 @@ fun AlertDialog(
                     value = fieldText,
                     maxLines = 1,
                     placeholder = {
-                        Text(
-                            modifier = Modifier
-                                .wrapContentHeight(),
-                            text = stringResource(R.string.enterPresetPlaceholder),
-                            style = MaterialTheme.typography.h6,
-                            color = colors.onSurface,
-                            textAlign = TextAlign.Center
-                        )
+                        if (alertDialogState.textFieldErrorText != null) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .padding(end = xxSmall),
+                                    text = alertDialogState.textFieldErrorText,
+                                    style = MaterialTheme.typography.h6,
+                                    color = colors.primary,
+                                    textAlign = TextAlign.Center
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.Warning,
+                                    tint = colors.primary,
+                                    contentDescription = "Text field error"
+                                )
+                            }
+                        } else {
+                            Text(
+                                modifier = Modifier
+                                    .wrapContentHeight(),
+                                text = stringResource(R.string.enterPresetPlaceholder),
+                                style = MaterialTheme.typography.h6,
+                                color = colors.onSurface,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
                     },
                     onValueChange = {
                         setText(it.ofMaxLength(maxLength = maxChar))
@@ -167,7 +194,6 @@ fun AlertDialog(
                     contentColor = colors.primary
                 )
             )
-
         },
         properties = DialogProperties(
             dismissOnBackPress = alertDialogState.dismissible,

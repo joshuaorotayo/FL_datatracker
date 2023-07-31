@@ -26,11 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.*
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.HidePresetDropdown
@@ -40,7 +37,6 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.C
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
@@ -67,7 +63,6 @@ fun DataFieldsScreenPreview() {
 
     FL_DatatrackerTheme {
         DataFieldsScreen(
-            navController = rememberNavController(),
             state = DataFieldScreenState(
                 presetList = listOf(examplePreset),
                 dataFields = exampleDataFieldList,
@@ -84,19 +79,12 @@ fun DataFieldsScreenPreview() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataFieldsScreen(
-    navController: NavController,
     state: DataFieldScreenState,
     onUiEvent: SharedFlow<UiEvent>,
     onRowEvent: (RowEvent) -> Unit,
     onPresetEvent: (PresetEvent) -> Unit,
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
-
-    val bottomNavigationItems = listOf(
-        Screen.DataFieldsScreen,
-        Screen.HomeScreen,
-        Screen.DataEntry
-    )
 
     onDataFieldEvent(DataFieldEvent.InitScreen)
 
@@ -191,9 +179,6 @@ fun DataFieldsScreen(
         scaffoldState = scaffoldState,
         snackbarHost = {
             scaffoldState.snackbarHostState
-        },
-        bottomBar = {
-            BottomNavigationBar(navController, bottomNavigationItems)
         }
     ) { innerPadding ->
         Box(
@@ -286,9 +271,9 @@ fun DataFieldsScreen(
                                 .fillMaxSize()
                                 .padding(top = Dimen.large)
                         ) {
-                            Spacer(modifier = Modifier.fillMaxSize(1F))
+                            Spacer(modifier = Modifier.weight(1F))
                             NoDataField()
-                            Spacer(modifier = Modifier.fillMaxSize(1F))
+                            Spacer(modifier = Modifier.weight(1F))
                         }
                     }
                 }

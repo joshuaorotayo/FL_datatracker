@@ -9,7 +9,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,7 +32,7 @@ data class ButtonState(
     val contentPadding: PaddingValues? = null,
     val modifier: Modifier = Modifier,
     val contentColor: Color = Yellow,
-    val disabledContentColor: Color = Green,
+    val disabledContentColor: Color = Transparent,
     val backgroundColor: Color = Transparent,
     val disabledBackgroundColor: Color = Transparent,
     val borderColor: Color = Transparent,
