@@ -116,7 +116,7 @@ fun FormNameHeader(
                         text = "Please enter a meeting or Service Name...",
                         color = headerColour,
                         textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.h2
                     )
                 },
                 singleLine = true,

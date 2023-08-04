@@ -37,7 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
-import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
@@ -82,7 +82,7 @@ fun HomeScreen(
                 AnimatedVisibility(visible = !state.isSearchVisible) {
                     TopBar(
                         toggleSearchBar = { onHomeEvent(HomeScreenEvent.ToggleSearchBar) },
-                        settingsNavigate = { navController.navigate(Screen.Settings.route) }
+                        settingsNavigate = { navController.navigate(MainScreens.Settings.route) }
                     )
                 }
             }
@@ -159,7 +159,7 @@ fun HomeScreen(
                                     SimpleDataRow(
                                         data = data,
                                         editData = {
-                                            navController.navigate(Screen.DataEntry.route + "?id=${data.dataId}")
+                                            navController.navigate(MainScreens.DataEntry.route + "?id=${data.dataId}")
                                             onDataEvent(
                                                 DataEvent.UpdateDataId(
                                                     data.dataId

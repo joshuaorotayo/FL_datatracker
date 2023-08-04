@@ -79,9 +79,9 @@ class DataFieldsViewModel @Inject constructor(
         when (event) {
             DataFieldEvent.InitScreen -> onInitScreen()
             RestoreDeletedField -> onRestoreDataField()
-            ToggleAddNewDataField -> onToggleAddNewDataField()
             ExpandPresetDropdown -> onExpandPresetDropdown()
             HidePresetDropdown -> onHidePresetDropdown()
+            ToggleAddNewDataField -> onToggleAddNewDataField()
             is DeleteDataField -> onDeleteDataField(event)
             is ShowDeleteRowDialog -> onShowDeleteRowDialog(event)
             is SaveDataField -> onSaveDataField(event)
@@ -118,7 +118,7 @@ class DataFieldsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 dataFieldUseCases.addDataField(event.value)
-                _eventFlow.emit(SaveDataField)
+                _eventFlow.emit(SaveDataField("Data Field Saved: ${event.value.fieldName}"))
                 _dataFieldScreenState.value = dataFieldScreenState.value.copy(
                     isAddDataFieldVisible = !dataFieldScreenState.value.isAddDataFieldVisible
                 )
@@ -126,7 +126,7 @@ class DataFieldsViewModel @Inject constructor(
             } catch (e: InvalidDataFieldException) {
                 _eventFlow.emit(
                     ShowSnackbar(
-                        message = "Data Field Not Saved!"
+                        message = e.message ?: "DataField Not saved"
                     )
                 )
             }
@@ -396,7 +396,7 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
-        object SaveDataField : UiEvent()
+        data class SaveDataField(val message: String) : UiEvent()
         data class ShowSnackbar(val message: String) : UiEvent()
     }
 }

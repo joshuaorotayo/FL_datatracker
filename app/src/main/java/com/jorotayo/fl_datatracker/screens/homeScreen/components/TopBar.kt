@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -13,11 +14,10 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(
     showBackground = true,
@@ -43,7 +43,7 @@ fun TopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(xSmall),
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {
@@ -52,7 +52,7 @@ fun TopBar(
             modifier = Modifier
                 .weight(10f),
             color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h4.also { FontWeight.SemiBold },
+            style = typography.h1,
             textAlign = TextAlign.Start
         )
         SimpleIconButton(
@@ -72,5 +72,4 @@ fun TopBar(
             onClick = toggleSearchBar
         )
     }
-
 }

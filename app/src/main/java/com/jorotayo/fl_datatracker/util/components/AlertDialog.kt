@@ -81,7 +81,8 @@ fun AlertDialog(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(medium),
+                            .size(medium)
+                            .padding(end = xxSmall),
                         imageVector = icon!!,
                         contentDescription = "Icon for ${alertDialogState.title}",
                         tint = colors.primary

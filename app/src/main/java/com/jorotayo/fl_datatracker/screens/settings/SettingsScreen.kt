@@ -1,40 +1,54 @@
-package com.jorotayo.fl_datatracker.screens.settingsScreen
+package com.jorotayo.fl_datatracker.screens.settings
 
+import android.content.res.Configuration
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRowV2
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.exampleBooleanField
-import com.jorotayo.fl_datatracker.util.exampleShortField
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@Preview
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    name = "Light Mode"
+)
 @Composable
-fun PreviewSettingsScreen() {
+private fun PreviewSettingsScreen() {
 
     FL_DatatrackerTheme {
-        SettingsScreen()
+        SettingsScreen(
+            {},
+            {},
+            {})
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onDisplaySettingsClick: () -> Unit,
+    onDataFieldSettingsClick: () -> Unit,
+    onFAQSListClick: () -> Unit
+) {
 
     val scaffoldState = rememberScaffoldState()
 
@@ -48,15 +62,15 @@ fun SettingsScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = medium)
+                    .padding(top = large)
                     .background(colors.background)
             ) {
                 Text(
                     modifier = Modifier
                         .padding(start = small),
-                    text = "Page Heading",
+                    text = "Settings",
                     color = colors.primary,
-                    style = typography.h4.also { FontWeight.SemiBold },
+                    style = typography.h1,
                     textAlign = Start
                 )
             }
@@ -66,7 +80,23 @@ fun SettingsScreen() {
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(colors.background)
         ) {
+
+            LazyColumn(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                item {
+                    Card(modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(xSmall)) {
+
+                    }
+                }
+            }
 
             DefaultSnackbar(
                 modifier = Modifier
@@ -83,27 +113,6 @@ fun SettingsScreen() {
                     }
                 }
             )
-            LazyColumn(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                    .background(colors.background)
-            ) {
-
-                item {
-                    DataFieldRowV2(
-                        currentDataField = exampleShortField,
-                        onRowEvent = {},
-                        onDataFieldEvent = {}
-                    )
-                    DataFieldRowV2(
-                        currentDataField = exampleBooleanField,
-                        onRowEvent = {},
-                        onDataFieldEvent = {}
-                    )
-                }
-            }
         }
     }
 }

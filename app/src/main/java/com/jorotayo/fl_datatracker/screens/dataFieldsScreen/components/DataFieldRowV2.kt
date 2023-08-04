@@ -21,6 +21,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowS
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.exampleShortField
 
 @Preview(
@@ -54,7 +55,7 @@ fun DataFieldRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(xSmall),
+            .padding(horizontal = xSmall, vertical = xxxSmall),
         shape = RoundedCornerShape(xSmall),
         elevation = small,
     ) {

@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
@@ -17,7 +16,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
-import com.jorotayo.fl_datatracker.screens.settingsScreen.SettingsScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreen
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
@@ -33,6 +31,91 @@ fun NavGraph(
     navController: NavHostController,
     startDestination: String
 ) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
+
+        composable(route = MainScreens.Welcome.route) {
+            val welcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>()
+            WelcomeScreen(
+                navController = navController,
+                onWelcomeEvent = welcomeScreenViewModel::onEvent,
+                pages = getWelcomePages()
+            )
+        }
+        composable(route = MainScreens.HomeMainScreens.route) {
+            val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
+            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
+
+            HomeScreen(
+                state = homeScreenViewModel.uiState.value,
+                navController = navController,
+                onHomeEvent = homeScreenViewModel::onEvent,
+                onDataEvent = dataEntryScreenViewModel::onDataEvent,
+            )
+        }
+        settingsNavGraph(navController)
+        /*composable(route = MainScreens.Settings.route) {
+            SettingsScreen({
+                navController.navigate(SettingsScreens.DisplaySettings.name) {
+                    popUpTo(SettingsScreens.SettingsHome.name)
+                    launchSingleTop = true
+                }
+            }, {
+                navController.navigate(SettingsScreens.DataFieldsSettings.name) {
+                    popUpTo(SettingsScreens.SettingsHome.name)
+                    launchSingleTop = true
+                }
+            }) {
+                navController.navigate(SettingsScreens.FAQsListSettings.name) {
+                    popUpTo(SettingsScreens.SettingsHome.name)
+                    launchSingleTop = true
+                }
+            }
+        }*/
+        composable(
+            route = MainScreens.DataEntry.route + "?id={dataId}",
+            arguments = listOf(
+                navArgument(
+                    name = "dataId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
+            DataEntryScreen(
+                navController = navController,
+                uiState = dataEntryScreenViewModel.uiState.value,
+                onUiEvent = dataEntryScreenViewModel.eventFlow,
+                onDataEvent = dataEntryScreenViewModel::onDataEvent
+            )
+
+        }
+        composable(
+            route = MainScreens.DataFieldsMainScreens.route
+        ) {
+            val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
+
+            DataFieldsScreen(
+                state = dataFieldsViewModel.dataFieldScreenState.value,
+                onUiEvent = dataFieldsViewModel.eventFlow,
+                onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
+                onPresetEvent = dataFieldsViewModel::onPresetEvent,
+                onRowEvent = dataFieldsViewModel::onRowEvent
+            )
+        }
+    }
+}
+
+object Graph {
+    const val MAIN = "main_graph"
+    const val SETTINGS = "settings_graph"
+}
+
+private fun getWelcomePages(): List<WelcomeScreenData> {
     val pages = ArrayList<WelcomeScreenData>()
     pages.add(
         WelcomeScreenData(
@@ -73,66 +156,6 @@ fun NavGraph(
             description = "View the breakdown of information in statistical form."
         )
     )
-    NavHost(
-        navController = navController,
-        startDestination = startDestination
-    ) {
 
-        Log.d("BottomNavGraph", navController.currentDestination.toString())
-        composable(route = Screen.Welcome.route) {
-            val welcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>()
-            WelcomeScreen(
-                navController = navController,
-                onWelcomeEvent = welcomeScreenViewModel::onEvent,
-                pages = pages
-            )
-        }
-        composable(route = Screen.Settings.route) {
-            SettingsScreen()
-        }
-        composable(route = Screen.HomeScreen.route) {
-            val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
-            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
-
-            HomeScreen(
-                state = homeScreenViewModel.uiState.value,
-                navController = navController,
-                onHomeEvent = homeScreenViewModel::onEvent,
-                onDataEvent = dataEntryScreenViewModel::onDataEvent,
-            )
-        }
-        composable(
-            route = Screen.DataEntry.route + "?id={dataId}",
-            arguments = listOf(
-                navArgument(
-                    name = "dataId"
-                ) {
-                    type = NavType.IntType
-                    defaultValue = -1
-                },
-            )
-        ) {
-            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
-            DataEntryScreen(
-                navController = navController,
-                uiState = dataEntryScreenViewModel.uiState.value,
-                onUiEvent = dataEntryScreenViewModel.eventFlow,
-                onDataEvent = dataEntryScreenViewModel::onDataEvent
-            )
-
-        }
-        composable(
-            route = Screen.DataFieldsScreen.route
-        ) {
-            val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
-
-            DataFieldsScreen(
-                state = dataFieldsViewModel.dataFieldScreenState.value,
-                onUiEvent = dataFieldsViewModel.eventFlow,
-                onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
-                onPresetEvent = dataFieldsViewModel::onPresetEvent,
-                onRowEvent = dataFieldsViewModel::onRowEvent
-            )
-        }
-    }
+    return pages
 }

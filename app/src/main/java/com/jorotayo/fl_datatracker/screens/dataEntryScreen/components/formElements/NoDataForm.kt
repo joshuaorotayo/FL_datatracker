@@ -5,9 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -26,6 +27,7 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Night Mode")
@@ -44,14 +46,15 @@ fun NoDataForm() {
     //empty Message
     Card(
         modifier = Modifier
-            .wrapContentSize()
-            .padding(xSmall),
+            .padding(small)
+            .fillMaxWidth()
+            .wrapContentHeight(),
         shape = RoundedCornerShape(xSmall),
         elevation = xSmall
     ) {
         Column(
             modifier = Modifier
-                .wrapContentSize()
+                .wrapContentHeight()
                 .background(MaterialTheme.colors.surface)
                 .padding(xSmall),
             verticalArrangement = Arrangement.Center,
@@ -59,7 +62,7 @@ fun NoDataForm() {
         ) {
 
             Icon(
-                modifier = Modifier.size(128.dp),
+                modifier = Modifier.size(96.dp),
                 imageVector = Icons.Default.AddBox,
                 tint = MaterialTheme.colors.primary,
                 contentDescription = stringResource(id = R.string.no_data_fields_msg_icon),
@@ -68,7 +71,7 @@ fun NoDataForm() {
                 modifier = Modifier,
                 text = stringResource(id = R.string.no_data_form_msg),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.h1,
                 color = textColour
             )
             Text(
@@ -76,7 +79,7 @@ fun NoDataForm() {
                     .padding(bottom = 10.dp),
                 text = stringResource(id = R.string.no_data_fields_msg_data_form),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.body1
             )
         }
     }

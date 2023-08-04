@@ -66,8 +66,8 @@ fun formListRowV4(
 
     LazyColumn(
         modifier = Modifier
-            .padding(xSmall)
             .background(MaterialTheme.colors.surface)
+            .padding(xSmall)
             .fillMaxWidth()
             .height(Dp(columnHeight.value))
     ) {

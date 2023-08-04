@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys.ONBOARDING_COMPLETE
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
-import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.navigation.MainScreens
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,15 +17,15 @@ class SplashViewModel @Inject constructor(
 
     private val _isLoading: MutableState<Boolean> = mutableStateOf(true)
 
-    private val _startDestination: MutableState<String> = mutableStateOf(Screen.Welcome.route)
+    private val _startDestination: MutableState<String> = mutableStateOf(MainScreens.Welcome.route)
     val startDestination: State<String> = _startDestination
 
     init {
         viewModelScope.launch {
             if (userPreferenceStore.getBoolean(ONBOARDING_COMPLETE)) {
-                _startDestination.value = Screen.HomeScreen.route
+                _startDestination.value = MainScreens.HomeMainScreens.route
             } else {
-                _startDestination.value = Screen.Welcome.route
+                _startDestination.value = MainScreens.Welcome.route
             }
         }
         _isLoading.value = false

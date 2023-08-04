@@ -19,24 +19,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle.Companion.Italic
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -59,35 +56,7 @@ fun PreviewDataEntryScreen() {
     FL_DatatrackerTheme {
         DataEntryScreen(
             navController = rememberNavController(),
-            uiState = DataEntryScreenState(
-                dataRows = mutableListOf(
-                    DataRowState(
-                        DataItem(
-                            dataItemId = 1,
-                            dataId = 1,
-                            presetId = 1,
-                            fieldName = "",
-                            dataFieldType = 0,
-                            first = "",
-                            second = "",
-                            third = "",
-                            isEnabled = false,
-                            fieldDescription = null,
-                            dataValue = ""
-                        ), hasError = false, errorMsg = ""
-                    )
-                ),
-                currentDataId = 0L,
-                dataName = "",
-                nameError = false,
-                nameErrorMsg = "",
-                formSubmitted = false,
-                currentImageIndex = 0,
-                presetSetting = Preset(
-                    presetId = 0L,
-                    presetName = "Default"
-                )
-            ),
+            uiState = DataEntryScreenState(),
             onUiEvent = MutableSharedFlow(),
             onDataEvent = {}
         )
@@ -130,14 +99,14 @@ fun DataEntryScreen(
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Form Saved!"
                     )
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigate(MainScreens.HomeMainScreens.route)
                 }
 
                 DataEntryScreenViewModel.UiEvent.UpdateDataForm -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Form Updated!"
                     )
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigate(MainScreens.HomeMainScreens.route)
                 }
             }
         }
@@ -153,7 +122,7 @@ fun DataEntryScreen(
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(start = small)
+                            .padding(start = xSmall)
                             .fillMaxWidth(),
                         verticalAlignment = CenterVertically
                     ) {
@@ -161,22 +130,14 @@ fun DataEntryScreen(
                             modifier = Modifier,
                             text = "Data Entry",
                             color = colors.primary,
-                            style = typography.h4.also { FontWeight.SemiBold },
+                            style = typography.h1,
                             textAlign = TextAlign.Start
                         )
                     }
                     if (uiState.dataRows.isNotEmpty()) {
                         DataFormHeadings(uiState)
                     } else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(bottom = large)
-                        ) {
-                            Spacer(modifier = Modifier.weight(1F))
-                            NoDataForm()
-                            Spacer(modifier = Modifier.weight(1F))
-                        }
+                        NoDataFormSection()
                     }
                 }
             },
@@ -189,6 +150,7 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
+                    .padding(bottom = bottomBarPadding)
             ) {
                 Card(
                     modifier = Modifier
@@ -211,11 +173,6 @@ fun DataEntryScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                             ) {
-                                Spacer(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .size(16.dp)
-                                )
                                 FormNameHeader(
                                     setName = {
                                         onDataEvent(DataEvent.SetName(value = it))
@@ -355,7 +312,12 @@ fun DataEntryScreen(
                                 }
                             }
                             if (index < uiState.dataRows.size) {
-                                Divider(modifier = Modifier.padding(xSmall))
+                                Divider(
+                                    modifier = Modifier.padding(
+                                        horizontal = xSmall,
+                                        vertical = xxxSmall
+                                    )
+                                )
                             }
                         }
 
@@ -426,7 +388,7 @@ private fun DataFormHeadings(
                 uiState.presetSetting.presetName
             ),
             color = colors.onBackground,
-            style = typography.h5.also { Italic },
+            style = typography.h2,
             textAlign = TextAlign.Start
         )
     }
@@ -439,7 +401,7 @@ private fun DataFormHeadings(
             ),
         text = stringResource(id = R.string.data_entry_form_header),
         color = colors.onBackground,
-        style = typography.h6.also { Italic },
+        style = typography.h2,
         textAlign = TextAlign.Start
     )
     Text(
@@ -454,6 +416,19 @@ private fun DataFormHeadings(
             uiState.dataRows.size
         ),
         color = colors.onSurface,
-        style = typography.h6
+        style = typography.h2
     )
+}
+
+@Composable
+private fun NoDataFormSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = large)
+    ) {
+        Spacer(modifier = Modifier.weight(1F))
+        NoDataForm()
+        Spacer(modifier = Modifier.weight(1F))
+    }
 }

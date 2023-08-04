@@ -41,7 +41,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
 import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenEvent
 import kotlinx.coroutines.launch
@@ -171,7 +171,7 @@ fun WelcomeScreen(
                             lastIndex = pages.lastIndex
                         ) {
                             navController.popBackStack()
-                            navController.navigate(Screen.HomeScreen.route)
+                            navController.navigate(MainScreens.HomeMainScreens.route)
                         }
                     }
                 }

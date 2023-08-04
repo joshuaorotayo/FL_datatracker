@@ -19,4 +19,5 @@ object Dimen {
 
     val statusBarPadding = 48.dp
     val optionsMaxChars: Int = 15
+    val bottomBarPadding = 60.dp
 }
