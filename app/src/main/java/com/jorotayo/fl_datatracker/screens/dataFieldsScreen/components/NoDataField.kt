@@ -39,17 +39,18 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 @Composable
 fun PreviewNoDataField() {
     FL_DatatrackerTheme {
-        NoDataField()
+        NoDataField(modifier = Modifier)
     }
 }
 
 @Composable
 fun NoDataField(
+    modifier: Modifier
 ) {
     val textColour = if(isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
     //empty Message
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(small)
             .fillMaxWidth()
             .wrapContentHeight(),

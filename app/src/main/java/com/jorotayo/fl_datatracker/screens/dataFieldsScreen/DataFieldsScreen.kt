@@ -41,8 +41,9 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
+import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -69,7 +70,7 @@ fun DataFieldsScreenPreview() {
 
     FL_DatatrackerTheme {
         DataFieldsScreen(
-            state = DataFieldScreenState(
+            uiState = DataFieldScreenState(
                 presetList = listOf(examplePreset),
                 dataFields = exampleDataFieldList,
                 currentPreset = examplePreset
@@ -85,7 +86,7 @@ fun DataFieldsScreenPreview() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataFieldsScreen(
-    state: DataFieldScreenState,
+    uiState: DataFieldScreenState,
     onUiEvent: SharedFlow<UiEvent>,
     onRowEvent: (RowEvent) -> Unit,
     onPresetEvent: (PresetEvent) -> Unit,
@@ -96,9 +97,9 @@ fun DataFieldsScreen(
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    val fields = state.dataFields
-    val presets = state.presetList
-    val currentPreset = state.currentPreset
+    val fields = uiState.dataFields
+    val presets = uiState.presetList
+    val currentPreset = uiState.currentPreset
     val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = true) {
@@ -125,12 +126,22 @@ fun DataFieldsScreen(
                 modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth()
-                    .padding(top = Dimen.large)
+                    .padding(top = large)
             ) {
                 HeaderRow()
-                PresetSelection(onDataFieldEvent, currentPreset, state, onPresetEvent, presets)
+                PresetSelection(
+                    onDataFieldEvent,
+                    currentPreset,
+                    uiState,
+                    onPresetEvent,
+                    presets
+                )
                 AddEditRow(scope, onDataFieldEvent, listState)
-                DataFieldColumnHeaders(fields, state)
+                if (uiState.dataFields.isNotEmpty()) {
+                    DataFieldColumnHeaders(fields, uiState)
+                } else {
+                    NoDataFieldSection(uiState, fields)
+                }
             } //end of top bar
         },
         scaffoldState = scaffoldState,
@@ -144,7 +155,6 @@ fun DataFieldsScreen(
                 .fillMaxSize()
                 .background(colors.background)
         ) {
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -152,10 +162,7 @@ fun DataFieldsScreen(
                 state = listState
             ) {
                 item {
-                    NoDataFieldSection(state, fields)
-                }
-                item {
-                    NewDataFieldSection(state, onDataFieldEvent)
+                    NewDataFieldSection(uiState, onDataFieldEvent)
                 }
 
                 itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
@@ -169,7 +176,7 @@ fun DataFieldsScreen(
                 )
             }
 
-            state.alertDialogState?.let { AlertDialog(alertDialogState = it) }
+            uiState.alertDialogState?.let { AlertDialog(alertDialogState = it) }
 
             DefaultSnackbar(
                 modifier = Modifier
@@ -202,6 +209,46 @@ private fun HeaderRow() {
 }
 
 @Composable
+private fun AddEditRow(
+    scope: CoroutineScope,
+    onDataFieldEvent: (DataFieldEvent) -> Unit,
+    listState: LazyListState
+) {
+    Row( //Add/Edit row
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = small, vertical = zero),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier,
+            text = stringResource(id = R.string.add_edit_fields_label),
+            style = typography.h2,
+            textAlign = TextAlign.Start,
+            color = colors.subtitleTextColour,
+        )
+        IconButton(
+            modifier = Modifier,
+            onClick = {
+                scope.launch {
+                    onDataFieldEvent(DataFieldEvent.ToggleAddNewDataField)
+                    scrollUp(scope, listState)
+                }
+            }) {
+            Icon(
+                modifier = Modifier
+                    .size(regular),
+                imageVector = Icons.Default.AddBox,
+                contentDescription = stringResource(id = R.string.add_field_description),
+                tint = colors.primary
+            )
+        }
+    }
+}
+
+@Composable
 private fun PresetSelection(
     onDataFieldEvent: (DataFieldEvent) -> Unit,
     currentPreset: Preset,
@@ -219,9 +266,9 @@ private fun PresetSelection(
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.presetShowing),
-            color = colors.onBackground,
             style = typography.h2,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            color = colors.subtitleTextColour,
         )
         Row(
             modifier = Modifier
@@ -243,7 +290,7 @@ private fun PresetSelection(
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Drop down arrow for Preset Dropdown",
-                tint = colors.onSurface.copy(alpha = 0.5f)
+                tint = colors.primary.copy(alpha = 0.5f)
             )
             if (state.isPresetDropDownMenuExpanded) {
                 PresetDropDownMenu(
@@ -252,46 +299,6 @@ private fun PresetSelection(
                     presets = presets,
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun AddEditRow(
-    scope: CoroutineScope,
-    onDataFieldEvent: (DataFieldEvent) -> Unit,
-    listState: LazyListState
-) {
-    Row( //Add/Edit row
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(horizontal = small, vertical = zero),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier,
-            text = stringResource(id = R.string.add_edit_fields_label),
-            color = colors.onBackground,
-            style = typography.h2,
-            textAlign = TextAlign.Start
-        )
-        IconButton(
-            modifier = Modifier,
-            onClick = {
-                scope.launch {
-                    onDataFieldEvent(DataFieldEvent.ToggleAddNewDataField)
-                    scrollUp(scope, listState)
-                }
-            }) {
-            Icon(
-                modifier = Modifier
-                    .size(regular),
-                imageVector = Icons.Default.AddBox,
-                contentDescription = stringResource(id = R.string.add_field_description),
-                tint = colors.primary
-            )
         }
     }
 }
@@ -314,24 +321,24 @@ private fun ColumnScope.DataFieldColumnHeaders(
                     .weight(0.4f),
                 text = "Field Name",
                 textAlign = TextAlign.Start,
-                color = colors.onSurface,
-                style = typography.h2
+                style = typography.h2,
+                color = colors.subtitleTextColour
             )
             Text(
                 modifier = Modifier
                     .weight(0.35f),
                 text = "Field Type",
                 textAlign = TextAlign.Start,
-                color = colors.onSurface,
-                style = typography.h2
+                style = typography.h2,
+                color = colors.subtitleTextColour
             )
             Text(
                 modifier = Modifier
                     .weight(0.2f),
                 text = "Enabled?",
                 textAlign = TextAlign.Start,
-                color = colors.onSurface,
-                style = typography.h2
+                style = typography.h2,
+                color = colors.subtitleTextColour
             )
         }
     }
@@ -346,11 +353,12 @@ private fun NoDataFieldSection(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = Dimen.large)
+                .padding(bottom = bottomBarPadding)
         ) {
-            Spacer(modifier = Modifier.weight(1F))
-            NoDataField()
-            Spacer(modifier = Modifier.weight(1F))
+
+            Box(modifier = Modifier.fillMaxSize()) {
+                NoDataField(modifier = Modifier.align(alignment = Alignment.Center))
+            }
         }
     }
 }
@@ -361,17 +369,24 @@ private fun NewDataFieldSection(
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
     AnimatedVisibility(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         visible = state.isAddDataFieldVisible
     ) {
-
-        Spacer(modifier = Modifier.fillMaxSize(1F))
-        NewDataField(
-            currentPresetId = state.currentPreset.presetId,
-            onDataFieldEvent = onDataFieldEvent
-        )
-        Spacer(modifier = Modifier.fillMaxSize(1F))
+        if (state.dataFields.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                NewDataField(
+                    modifier = Modifier.align(alignment = Alignment.Center),
+                    currentPresetId = state.currentPreset.presetId,
+                    onDataFieldEvent = onDataFieldEvent
+                )
+            }
+        } else {
+            NewDataField(
+                modifier = Modifier,
+                currentPresetId = state.currentPreset.presetId,
+                onDataFieldEvent = onDataFieldEvent
+            )
+        }
     }
 }
 

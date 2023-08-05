@@ -125,13 +125,14 @@ fun SettingsScreen(
                 snackbarHostState = scaffoldState.snackbarHostState,
                 onDismiss = {
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
+                    // TODO: snackbar method
+                    /*if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
                             "Restore"
                         ) == true
                     ) {
-//                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
-                        // TODO: default snackbar to show on top
-                    }
+                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
+
+                    }*/
                 }
             )
         }

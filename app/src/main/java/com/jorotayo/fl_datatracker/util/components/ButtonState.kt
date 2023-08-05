@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -74,7 +75,8 @@ fun Button(buttonState: ButtonState) {
         contentPadding = buttonState.contentPadding ?: defaultContentPadding
     ) {
         Text(
-            text = buttonState.label
+            text = buttonState.label,
+            fontSize = MaterialTheme.typography.subtitle1.fontSize
             //style = buttonState.textStyle,
         )
     }

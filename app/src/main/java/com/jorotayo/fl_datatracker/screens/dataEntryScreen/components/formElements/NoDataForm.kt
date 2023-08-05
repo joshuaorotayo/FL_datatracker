@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,8 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
@@ -35,17 +33,19 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 @Composable
 fun PreviewNoDataForm() {
     FL_DatatrackerTheme {
-        NoDataForm()
+        NoDataForm(
+            modifier = Modifier
+        )
     }
 }
 
 @Composable
-fun NoDataForm() {
-
-    val textColour = if(isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
+fun NoDataForm(
+    modifier: Modifier
+) {
     //empty Message
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(small)
             .fillMaxWidth()
             .wrapContentHeight(),
@@ -72,7 +72,7 @@ fun NoDataForm() {
                 text = stringResource(id = R.string.no_data_form_msg),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h1,
-                color = textColour
+                color = MaterialTheme.colors.headingTextColour
             )
             Text(
                 modifier = Modifier

@@ -14,6 +14,7 @@ import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -120,20 +121,7 @@ fun DataEntryScreen(
                         .wrapContentHeight()
                         .padding(top = large)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(start = xSmall)
-                            .fillMaxWidth(),
-                        verticalAlignment = CenterVertically
-                    ) {
-                        Text(
-                            modifier = Modifier,
-                            text = "Data Entry",
-                            color = colors.primary,
-                            style = typography.h1,
-                            textAlign = TextAlign.Start
-                        )
-                    }
+                    HeaderRow()
                     if (uiState.dataRows.isNotEmpty()) {
                         DataFormHeadings(uiState)
                     } else {
@@ -351,7 +339,7 @@ fun DataEntryScreen(
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                         },
                         modifier = Modifier
-                            .align(Alignment.Center)
+                            .align(Center)
                     )
                 }
             }
@@ -367,6 +355,24 @@ fun DataEntryScreen(
                     DataEvent.SetDataValue(value = it, rowIndex = uiState.currentImageIndex)
                 )
             }
+        )
+    }
+}
+
+@Composable
+private fun HeaderRow() {
+    Row(
+        modifier = Modifier
+            .padding(start = xSmall)
+            .fillMaxWidth(),
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            modifier = Modifier,
+            text = "Data Entry",
+            color = colors.primary,
+            style = typography.h1,
+            textAlign = TextAlign.Start
         )
     }
 }
@@ -425,10 +431,10 @@ private fun NoDataFormSection() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = large)
+            .padding(bottom = bottomBarPadding)
     ) {
-        Spacer(modifier = Modifier.weight(1F))
-        NoDataForm()
-        Spacer(modifier = Modifier.weight(1F))
+        Box(modifier = Modifier.fillMaxSize()) {
+            NoDataForm(modifier = Modifier.align(alignment = Center))
+        }
     }
 }

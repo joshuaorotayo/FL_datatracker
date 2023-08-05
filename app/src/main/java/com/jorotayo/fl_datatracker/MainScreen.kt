@@ -6,9 +6,11 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -17,6 +19,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
+import com.jorotayo.fl_datatracker.ui.theme.highLightColours
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -64,6 +68,7 @@ fun RowScope.AddItem(
     BottomNavigationItem(
         label = {
             Text(
+                modifier = Modifier.padding(top = xxSmall),
                 text = mainScreens.title,
                 style = MaterialTheme.typography.body1
             )
@@ -76,7 +81,7 @@ fun RowScope.AddItem(
         },
         selected = itemSelected,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
-        selectedContentColor = MaterialTheme.colors.background,
+        selectedContentColor = MaterialTheme.colors.highLightColours,
         onClick = {
             navController.navigate(mainScreens.route) {
                 popUpTo(navController.graph.findStartDestination().id)

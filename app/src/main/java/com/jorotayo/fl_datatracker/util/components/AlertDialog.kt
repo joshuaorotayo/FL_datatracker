@@ -26,15 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
@@ -75,42 +76,40 @@ fun AlertDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = small),
+                        .padding(top = regular),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(medium)
+                            .size(large)
                             .padding(end = xxSmall),
                         imageVector = icon!!,
                         contentDescription = "Icon for ${alertDialogState.title}",
                         tint = colors.primary
                     )
                     Text(
-                        text = alertDialogState.title,
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = SemiBold,
                         modifier = Modifier.wrapContentWidth(),
+                        text = alertDialogState.title,
+                        style = MaterialTheme.typography.subtitle1,
                         textAlign = alertDialogState.titleTextAlign,
-                        color = colors.onBackground
+                        color = colors.subtitleTextColour
                     )
                 }
             } else {
                 Text(
-                    text = alertDialogState.title,
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = SemiBold,
                     modifier = Modifier.fillMaxWidth(),
+                    text = alertDialogState.title,
+                    style = MaterialTheme.typography.subtitle1,
                     textAlign = alertDialogState.titleTextAlign,
-                    color = colors.onBackground
+                    color = colors.subtitleTextColour
                 )
             }
         },
         text = {
             Text(
                 text = alertDialogState.text,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 color = colors.onBackground
             )
