@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
+import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.large
@@ -33,7 +35,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 )
 @Composable
 private fun PreviewSettingsScreen() {
-
     FL_DatatrackerTheme {
         SettingsScreen(
             {},
@@ -42,6 +43,7 @@ private fun PreviewSettingsScreen() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreen(
@@ -82,17 +84,36 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .background(colors.background)
         ) {
-
             LazyColumn(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
                 item {
-                    Card(modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(xSmall)) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(xSmall),
+                        shape = RoundedCornerShape(xSmall),
+                        elevation = xSmall
+                    ) {
+                        Column {
+                            SettingRow(
+                                setting = SettingScreens.DisplaySettings,
+                                onSettingSelected = onDisplaySettingsClick
+                            )
+                            SettingDivider()
+                            SettingRow(
+                                setting = SettingScreens.DataFieldSettings,
+                                onSettingSelected = onDataFieldSettingsClick
+                            )
+                            SettingDivider()
+                            SettingRow(
+                                setting = SettingScreens.FAQsList,
+                                onSettingSelected = onFAQSListClick
+                            )
+                        }
 
                     }
                 }

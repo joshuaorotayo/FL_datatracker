@@ -13,7 +13,6 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
@@ -50,9 +49,9 @@ fun DisplaySettings() {
         Text(
             modifier = Modifier
                 .padding(start = small),
-            text = "DataField Settings",
+            text = "Display Settings",
             color = colors.primary,
-            style = typography.h4.also { FontWeight.SemiBold },
+            style = typography.h1,
             textAlign = Start
         )
     }

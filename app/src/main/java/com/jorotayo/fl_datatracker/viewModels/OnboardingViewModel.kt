@@ -5,22 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
-import com.jorotayo.fl_datatracker.screens.welcomeScreen.WelcomeScreenState
-import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenEvent
+import com.jorotayo.fl_datatracker.screens.onboarding.OnboardingScreenState
+import com.jorotayo.fl_datatracker.screens.onboarding.components.OnboardingEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class WelcomeScreenViewModel @Inject constructor(
+class OnboardingViewModel @Inject constructor(
     private val userPreferenceStore: UserPreferenceStore
 ) : ViewModel() {
 
-    private var _uiState = mutableStateOf(WelcomeScreenState())
-    val uiState: State<WelcomeScreenState> = _uiState
+    private var _uiState = mutableStateOf(OnboardingScreenState())
+    val uiState: State<OnboardingScreenState> = _uiState
 
-    fun onEvent(event: WelcomeScreenEvent) {
+    fun onEvent(event: OnboardingEvent) {
         when (event) {
-            WelcomeScreenEvent.SaveOnBoarding -> saveOnBoardingState()
+            OnboardingEvent.SaveOnBoarding -> saveOnBoardingState()
         }
     }
 

@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class SettingScreens(
     val route: String,
     val settingName: String,
-    val settingDescription: String? = "",
+    val settingDescription: String = "",
     val settingIcon: ImageVector = Icons.Filled.Close,
 ) {
     object DataFieldSettings : SettingScreens(

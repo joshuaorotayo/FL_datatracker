@@ -5,7 +5,6 @@ import android.content.ContentValues.TAG
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,23 +15,18 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
+import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
-import com.jorotayo.fl_datatracker.navigation.NavGraph
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(startDestination: String) {
+fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        NavGraph(
-            navController = navController,
-            startDestination = startDestination
-        )
+        MainNavGraph(navController)
     }
 }
 
@@ -69,7 +63,10 @@ fun RowScope.AddItem(
         currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
     BottomNavigationItem(
         label = {
-            Text(text = mainScreens.title)
+            Text(
+                text = mainScreens.title,
+                style = MaterialTheme.typography.body1
+            )
         },
         icon = {
             Icon(
@@ -89,7 +86,16 @@ fun RowScope.AddItem(
     )
 }
 
+/**
+ *
+ */
 fun trimRoute(route: String): String {
     Log.i(TAG, "trimRoute: " + route.substringBefore("?id=", route))
-    return route.substringBefore("?id=", route)
+    return if (route.contains("?id=")) {
+        route.substringBefore("?id=", route)
+    } else if (route.contains("settings")) {
+        "settings_screen"
+    } else {
+        route
+    }
 }

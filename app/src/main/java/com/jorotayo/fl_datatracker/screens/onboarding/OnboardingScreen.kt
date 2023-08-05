@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.welcomeScreen
+package com.jorotayo.fl_datatracker.screens.onboarding
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -34,25 +34,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.navigation.MainScreens
-import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenData
-import com.jorotayo.fl_datatracker.screens.welcomeScreen.components.WelcomeScreenEvent
+import com.jorotayo.fl_datatracker.screens.onboarding.components.OnboardingEvent
+import com.jorotayo.fl_datatracker.screens.onboarding.components.OnboardingScreenData
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
-fun WelcomeScreen(
-    navController: NavHostController,
-    onWelcomeEvent: (WelcomeScreenEvent) -> Unit,
-    pages: List<WelcomeScreenData>,
+fun OnboardingScreen(
+    onBoardingEvent: (OnboardingEvent) -> Unit,
+    finishOnboarding: () -> Unit,
+    pages: List<OnboardingScreenData>,
 ) {
 
     val pagerState = rememberPagerState()
@@ -132,7 +130,7 @@ fun WelcomeScreen(
                         OnBoardingComplete(
                             modifier = Modifier.weight(1f),
                             pagerState = pagerState,
-                            onWelcomeEvent = onWelcomeEvent,
+                            onboardingEvent = onBoardingEvent,
                             lastIndex = pages.lastIndex
                         )
                         //Next Button Section
@@ -168,11 +166,9 @@ fun WelcomeScreen(
                         FinishButton(
                             modifier = Modifier.weight(1f),
                             pagerState = pagerState,
-                            lastIndex = pages.lastIndex
-                        ) {
-                            navController.popBackStack()
-                            navController.navigate(MainScreens.HomeMainScreens.route)
-                        }
+                            lastIndex = pages.lastIndex,
+                            onClick = finishOnboarding
+                        )
                     }
                 }
             }
@@ -185,7 +181,7 @@ fun WelcomeScreen(
 @Composable
 fun OnBoardingComplete(
     pagerState: PagerState,
-    onWelcomeEvent: (WelcomeScreenEvent) -> Unit,
+    onboardingEvent: (OnboardingEvent) -> Unit,
     modifier: Modifier,
     lastIndex: Int,
 ) {
@@ -208,7 +204,7 @@ fun OnBoardingComplete(
                 checked = checkedState.value,
                 onCheckedChange = {
                     checkedState.value = it
-                    onWelcomeEvent(WelcomeScreenEvent.SaveOnBoarding)
+                    onboardingEvent(OnboardingEvent.SaveOnBoarding)
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colors.primary,
