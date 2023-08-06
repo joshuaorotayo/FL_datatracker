@@ -219,13 +219,13 @@ fun NewDataField(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = xxSmall),
+                        .padding(vertical = xxSmall)
+                        .clickable(onClick = { expanded = true }),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         modifier = Modifier
-                            .clickable(onClick = { expanded = true })
                             .padding(end = xSmall),
                         text = items[newDataField.value.fieldType],
                         textAlign = TextAlign.Center,
@@ -239,8 +239,7 @@ fun NewDataField(
                         tint = MaterialTheme.colors.primary
                     )
                     Icon(
-                        modifier = Modifier
-                            .clickable(onClick = { expanded = true }),
+                        modifier = Modifier,
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Drop down arrow for Field Type Dropdown",
                         tint = MaterialTheme.colors.subtitleTextColour
@@ -321,7 +320,7 @@ fun NewDataField(
                             unfocusedIndicatorColor = Color.Transparent,
                             focusedIndicatorColor = MaterialTheme.colors.surface,
                             backgroundColor = Color.Transparent,
-                            textColor = MaterialTheme.colors.onSurface
+                            textColor = MaterialTheme.colors.subtitleTextColour
                         ),
                         singleLine = true,
                         maxLines = 1,
@@ -381,7 +380,7 @@ fun NewDataField(
                             label = "1st Value",
                             placeholder = firstText.text.ifBlank { "1st Value" },
                             onValueChange = { firstText ->
-                                setSecondText(TextFieldValue(firstText).ofMaxLength(maxLength = optionsMaxChars))
+                                setFirstText(TextFieldValue(firstText).ofMaxLength(maxLength = optionsMaxChars))
                                 _newDataField.value.firstValue = firstText
                             }
                         )

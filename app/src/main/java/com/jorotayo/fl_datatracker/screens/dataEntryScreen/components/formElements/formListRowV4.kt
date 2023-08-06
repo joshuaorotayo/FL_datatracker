@@ -120,7 +120,6 @@ fun formListRowV4(
                     columnHeight.value -= itemHeight
                     number.value--
                     textFields.value = deleteValueAtIndex(textFields.value, index)
-                    Log.d("formListRowV2", getDataMapToString(textFields.value))
                 },
                 clearField = {
                     textFields.value[index] = ""
@@ -170,7 +169,6 @@ private fun getDataStringToList(textsFieldsString: String): HashMap<Int, String>
     return if (textsFieldsString.isBlank()) {
         hashMapOf<Int, String>(0 to "")
     } else {
-        Log.d("json", "getDataStringToList: $textsFieldsString")
         val mapType = HashMap<Int, String>().javaClass
         gson.fromJson(textsFieldsString, mapType)
     }

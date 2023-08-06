@@ -1,9 +1,7 @@
 package com.jorotayo.fl_datatracker
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -11,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -19,7 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
-import com.jorotayo.fl_datatracker.ui.theme.highLightColours
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -45,7 +44,10 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = small
+    ) {
         mainScreens.forEach { screen ->
             AddItem(
                 mainScreens = screen,
@@ -70,7 +72,7 @@ fun RowScope.AddItem(
             Text(
                 modifier = Modifier.padding(top = xxSmall),
                 text = mainScreens.title,
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1.copy(fontSize = 12.sp)
             )
         },
         icon = {
@@ -81,7 +83,7 @@ fun RowScope.AddItem(
         },
         selected = itemSelected,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
-        selectedContentColor = MaterialTheme.colors.highLightColours,
+        selectedContentColor = MaterialTheme.colors.primary,
         onClick = {
             navController.navigate(mainScreens.route) {
                 popUpTo(navController.graph.findStartDestination().id)
@@ -92,10 +94,9 @@ fun RowScope.AddItem(
 }
 
 /**
- *
+ * Trims and adjusts routes to show the correctly selected item
  */
 fun trimRoute(route: String): String {
-    Log.i(TAG, "trimRoute: " + route.substringBefore("?id=", route))
     return if (route.contains("?id=")) {
         route.substringBefore("?id=", route)
     } else if (route.contains("settings")) {

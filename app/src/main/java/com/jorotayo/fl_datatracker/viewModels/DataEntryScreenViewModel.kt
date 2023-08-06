@@ -218,8 +218,6 @@ class DataEntryScreenViewModel @Inject constructor(
         if (this.dataId == -1) {
             // If creating a new record of data to save
             // check for the current preset
-            Log.i(TAG, "makeDataRows: NEW " + longID)
-            Log.i(TAG, "makeDataRows: NEW_CURRENT_PRESET " + presetSetting.presetName)
 
             val datafields =
                 dataFieldUseCases.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)

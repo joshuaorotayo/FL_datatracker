@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,22 +33,16 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import kotlin.math.floor
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Empty Dark Mode")
+@Preview(showBackground = true, name = "Empty Light Mode")
 @Composable
-fun PreviewFormRadioRowV2() {
+fun PreviewEmptyFormRadioRowV2() {
     FL_DatatrackerTheme {
         formRadioRowV2(
             data = DataRowState(
@@ -68,17 +61,36 @@ fun PreviewFormRadioRowV2() {
     }
 }
 
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
+@Composable
+fun PreviewFormRadioRowV2() {
+    FL_DatatrackerTheme {
+        formRadioRowV2(
+            data = DataRowState(
+                DataItem(
+                    dataItemId = 0,
+                    fieldName = "Data Field for Radio Row",
+                    first = "No",
+                    second = "N/A",
+                    third = "Yes",
+                    presetId = 0,
+                    dataId = 1,
+                    dataValue = "afds"
+                )
+            ),
+            setDataValue = {}
+        )
+    }
+}
+
+
 @Composable
 fun formRadioRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
     val options = listOf(data.dataItem.first, data.dataItem.second, data.dataItem.third)
-
-    val headerColour =
-        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
-
-    // val defaultSelected = floor(options.size.toDouble() / 2)
 
     val defaultSelected =
         if (data.dataItem.dataValue == "") {
@@ -107,95 +119,121 @@ fun formRadioRowV2(
     val onSelectionChange = { text: String ->
         selectedOption = text
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .background(MaterialTheme.colors.surface)
-            .padding(small)
-    ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = data.dataItem.fieldName,
-            textAlign = TextAlign.Start,
-            color = headerColour,
-        )
-
-        AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(start = Dimen.small, end = Dimen.small, top = 5.dp),
-                    text = stringResource(id = R.string.radio_row_error),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Red,
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 10.dp),
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = stringResource(id = R.string.row_error_description),
-                    tint = MaterialTheme.colors.primary
-                )
-            }
-        }
-
-        Row(
+    if (data.dataItem.dataValue == "") {
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = xSmall),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+                .wrapContentHeight()
+                .background(MaterialTheme.colors.surface)
+                .padding(small)
         ) {
-            //Button Data capture
-            Card(
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth(0.6f),
-                shape = RoundedCornerShape(medium),
-                elevation = xSmall
-            ) {
+                    .fillMaxWidth(),
+                text = data.dataItem.fieldName,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.subtitleTextColour,
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(xSmall),
+                text = "No options provided for ${data.dataItem.fieldName}. Please edit the Data Field and provide values",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.primary,
+            )
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(MaterialTheme.colors.surface)
+                .padding(small)
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = data.dataItem.fieldName,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.subtitleTextColour,
+            )
+
+            AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
                 Row(
                     modifier = Modifier
-                        .wrapContentSize()
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    options.forEach { text ->
-                        if (text.isNotBlank()) {
-                            Text(
-                                text = text,
-                                style = MaterialTheme.typography.body1,
-                                color = if (text == selectedOption) Color.White else Color.Black,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clickable {
-                                        onSelectionChange(text)
-                                        setDataValue(selectedOption)
-                                    }
-                                    .background(
-                                        if (text == selectedOption) {
-                                            MaterialTheme.colors.primary
-                                        } else {
-                                            MaterialTheme.colors.surface
-                                        }
-                                    )
-                                    .padding(
-                                        vertical = Dimen.xSmall,
-                                        horizontal = 5.dp,
-                                    ),
-                            )
-                        }
-                    }
+                    Text(
+                        modifier = Modifier
+                            .padding(start = small, end = small, top = 5.dp),
+                        text = stringResource(id = R.string.radio_row_error),
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Red,
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .padding(end = 10.dp),
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = stringResource(id = R.string.row_error_description),
+                        tint = MaterialTheme.colors.primary
+                    )
                 }
             }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = xSmall),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Button Data capture
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f),
+                    shape = RoundedCornerShape(medium),
+                    elevation = xSmall
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .wrapContentSize()
+                    ) {
+                        options.forEach { text ->
+                            if (text.isNotBlank()) {
+                                Text(
+                                    text = text,
+                                    style = MaterialTheme.typography.body1,
+                                    color = if (text == selectedOption) Color.White else MaterialTheme.colors.primary,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clickable {
+                                            onSelectionChange(text)
+                                            setDataValue(selectedOption)
+                                        }
+                                        .background(
+                                            if (text == selectedOption) {
+                                                MaterialTheme.colors.primary
+                                            } else {
+                                                MaterialTheme.colors.surface
+                                            }
+                                        )
+                                        .padding(
+                                            vertical = xSmall,
+                                            horizontal = 5.dp,
+                                        ),
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
 

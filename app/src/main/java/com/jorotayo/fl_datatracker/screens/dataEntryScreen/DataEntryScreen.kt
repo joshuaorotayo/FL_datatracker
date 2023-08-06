@@ -13,7 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -29,6 +28,7 @@ import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
@@ -393,7 +393,7 @@ private fun DataFormHeadings(
                 stringResource(id = R.string.enter_data_header),
                 uiState.presetSetting.presetName
             ),
-            color = colors.onBackground,
+            color = colors.subtitleTextColour,
             style = typography.h2,
             textAlign = TextAlign.Start
         )
@@ -406,7 +406,7 @@ private fun DataFormHeadings(
                 end = small,
             ),
         text = stringResource(id = R.string.data_entry_form_header),
-        color = colors.onBackground,
+        color = colors.subtitleTextColour,
         style = typography.h2,
         textAlign = TextAlign.Start
     )
@@ -421,7 +421,7 @@ private fun DataFormHeadings(
             count = uiState.dataRows.size,
             uiState.dataRows.size
         ),
-        color = colors.onSurface,
+        color = colors.subtitleTextColour,
         style = typography.h2
     )
 }

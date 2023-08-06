@@ -46,6 +46,7 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -130,8 +131,8 @@ fun HomeScreen(
                             count = state.dataList.size,
                             state.dataList.size
                         ),
-                        style = typography.h5,
-                        color = colors.onBackground,
+                        style = typography.h2,
+                        color = colors.subtitleTextColour,
                         fontWeight = SemiBold
                     )
                 }

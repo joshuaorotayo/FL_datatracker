@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
@@ -63,7 +64,7 @@ fun SimpleDataRow(
             modifier = Modifier
                 .weight(1f),
             text = data.name,
-            color = colors.onBackground,
+            color = colors.subtitleTextColour,
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
@@ -71,7 +72,7 @@ fun SimpleDataRow(
             modifier = Modifier
                 .weight(1.5f),
             text = data.createdTime,
-            color = colors.onBackground,
+            color = colors.subtitleTextColour,
             style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center
         )

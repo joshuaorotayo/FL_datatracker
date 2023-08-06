@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
+import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -65,15 +66,15 @@ fun SearchBar(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(xSmall)
-            .background(MaterialTheme.colors.surface),
+            .padding(xSmall),
         shape = RoundedCornerShape(regular),
         elevation = xSmall
     ) {
         Row(
             modifier = Modifier
                 .wrapContentHeight()
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.surface),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
@@ -89,7 +90,7 @@ fun SearchBar(
                         modifier = Modifier,
                         text = searchState.hint,
                         style = typography.h2,
-                        color = MaterialTheme.colors.onSurface
+                        color = MaterialTheme.colors.headingTextColour
                     )
                 },
                 onValueChange = {
