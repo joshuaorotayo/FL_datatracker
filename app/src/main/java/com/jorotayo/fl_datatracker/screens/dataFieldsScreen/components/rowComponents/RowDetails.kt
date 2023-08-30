@@ -53,6 +53,7 @@ import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.exampleShortDataRowState
@@ -138,7 +139,7 @@ fun RowDetails(
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = xSmall),
+                        .padding(end = xxxSmall),
                     imageVector = icons[rowData.value.dataField.dataFieldType],
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
                     tint = MaterialTheme.colors.primary

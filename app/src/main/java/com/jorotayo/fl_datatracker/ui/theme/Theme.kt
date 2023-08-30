@@ -16,7 +16,7 @@ import com.jorotayo.fl_datatracker.util.SharedSettingService
 
 private val lightColours = lightColors(
     primary = md_theme_light_primary,
-    onPrimary = md_theme_light_onPrimary,
+    onPrimary = md_theme_onPrimary,
     secondary = md_theme_light_secondary,
     onSecondary = md_theme_light_onSecondary,
     error = md_theme_light_error,
@@ -29,7 +29,7 @@ private val lightColours = lightColors(
 
 private val darkColours = darkColors(
     primary = md_theme_dark_primary,
-    onPrimary = md_theme_dark_onPrimary,
+    onPrimary = md_theme_onPrimary,
     secondary = md_theme_dark_secondary,
     onSecondary = md_theme_dark_onSecondary,
     error = md_theme_dark_error,

@@ -29,26 +29,32 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
+    h3 = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        letterSpacing = 0.25.sp
+    ),
+
     subtitle1 = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
+        fontSize = 14.sp,
         letterSpacing = 0.sp
     ),
 
     body1 = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         letterSpacing = 0.sp
     ),
 
     body2 = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
-        letterSpacing = 0.25.sp
+        letterSpacing = 0.sp
     ),
 
     button = TextStyle(
-        fontWeight = FontWeight.Bold,
-        fontSize = 26.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp
     )
 )

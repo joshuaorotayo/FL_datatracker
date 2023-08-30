@@ -394,7 +394,7 @@ private fun DataFormHeadings(
                 uiState.presetSetting.presetName
             ),
             color = colors.subtitleTextColour,
-            style = typography.h2,
+            style = typography.h3,
             textAlign = TextAlign.Start
         )
     }
@@ -407,7 +407,7 @@ private fun DataFormHeadings(
             ),
         text = stringResource(id = R.string.data_entry_form_header),
         color = colors.subtitleTextColour,
-        style = typography.h2,
+        style = typography.h3,
         textAlign = TextAlign.Start
     )
     Text(
@@ -421,8 +421,8 @@ private fun DataFormHeadings(
             count = uiState.dataRows.size,
             uiState.dataRows.size
         ),
-        color = colors.subtitleTextColour,
-        style = typography.h2
+        style = typography.h3,
+        color = colors.subtitleTextColour
     )
 }
 

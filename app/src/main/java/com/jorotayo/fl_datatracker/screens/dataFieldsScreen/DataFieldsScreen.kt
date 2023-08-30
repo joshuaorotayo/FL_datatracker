@@ -225,7 +225,7 @@ private fun AddEditRow(
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.add_edit_fields_label),
-            style = typography.h2,
+            style = typography.h3,
             textAlign = TextAlign.Start,
             color = colors.subtitleTextColour,
         )
@@ -266,7 +266,7 @@ private fun PresetSelection(
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.presetShowing),
-            style = typography.h2,
+            style = typography.h3,
             textAlign = TextAlign.Start,
             color = colors.subtitleTextColour,
         )
@@ -284,7 +284,7 @@ private fun PresetSelection(
                 modifier = Modifier.padding(horizontal = 5.dp),
                 text = currentPreset.presetName,
                 color = colors.primary,
-                style = typography.h2,
+                style = typography.h3,
                 textAlign = TextAlign.Center
             )
             Icon(
@@ -318,10 +318,11 @@ private fun ColumnScope.DataFieldColumnHeaders(
         ) {
             Text(
                 modifier = Modifier
-                    .weight(0.4f),
+                    .padding(start = xSmall)
+                    .weight(0.35f),
                 text = "Field Name",
                 textAlign = TextAlign.Start,
-                style = typography.h2,
+                style = typography.h3,
                 color = colors.subtitleTextColour
             )
             Text(
@@ -329,7 +330,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
                     .weight(0.35f),
                 text = "Field Type",
                 textAlign = TextAlign.Start,
-                style = typography.h2,
+                style = typography.h3,
                 color = colors.subtitleTextColour
             )
             Text(
@@ -337,7 +338,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
                     .weight(0.2f),
                 text = "Enabled?",
                 textAlign = TextAlign.Start,
-                style = typography.h2,
+                style = typography.h3,
                 color = colors.subtitleTextColour
             )
         }

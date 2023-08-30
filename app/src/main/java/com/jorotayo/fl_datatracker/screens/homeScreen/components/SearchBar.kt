@@ -27,7 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -40,22 +42,24 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewSearchBar() {
-    SearchBar(
-        onHomeEvent = {},
-        searchState = HomeScreenState(
-            isHintVisible = true,
-            hint = "Search...",
-            text = "",
-            isSearchVisible = false,
-            dataList = listOf(),
-            deletedItem = Data(
-                dataId = 0,
-                createdTime = "Yesterday",
-                lastEditedTime = "Today",
-                name = "Simple Service Test"
+    FL_DatatrackerTheme {
+        SearchBar(
+            onHomeEvent = {},
+            searchState = HomeScreenState(
+                isHintVisible = true,
+                hint = "Search...",
+                text = "",
+                isSearchVisible = false,
+                dataList = listOf(),
+                deletedItem = Data(
+                    dataId = 0,
+                    createdTime = "Yesterday",
+                    lastEditedTime = "Today",
+                    name = "Simple Service Test"
+                )
             )
         )
-    )
+    }
 }
 
 @Composable
@@ -82,7 +86,7 @@ fun SearchBar(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .clip(shape = RoundedCornerShape(regular)),
-                textStyle = typography.h1,
+                textStyle = typography.h2,
                 value = searchState.text,
                 maxLines = 1,
                 placeholder = {
@@ -112,18 +116,17 @@ fun SearchBar(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(regular)
+                                .size(medium)
                                 .padding(end = xxSmall)
                                 .weight(1f),
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Close Search View",
-                            tint = MaterialTheme.colors.onSurface
+                            tint = MaterialTheme.colors.primary
                         )
                     }
                 }
             )
         }
     }
-
 }
 

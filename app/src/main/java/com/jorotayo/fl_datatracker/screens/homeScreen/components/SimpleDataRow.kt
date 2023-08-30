@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -83,6 +84,15 @@ fun SimpleDataRow(
                 .clickable(onClick = { editData() }),
             imageVector = Icons.Default.Edit,
             contentDescription = "Edit icon for data ${data.name}",
+            tint = colors.primary
+        )
+        Icon(
+            modifier = Modifier
+                .weight(0.5f)
+                .size(medium)
+                .clickable(onClick = {  }),
+            imageVector = Icons.Default.Share,
+            contentDescription = "Share icon for data ${data.name}",
             tint = colors.primary
         )
         Icon(
