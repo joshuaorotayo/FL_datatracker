@@ -51,9 +51,18 @@ private const val FULLY_ROUNDED = 100
 
 @Composable
 fun Button(buttonState: ButtonState) {
-    val defaultPadding = xSmall
-    val defaultContentPadding = PaddingValues(defaultPadding)
+    when (buttonState.type) {
+        ButtonType.PRIMARY -> PrimaryButton(buttonState)
+        ButtonType.SECONDARY -> SecondaryButton(buttonState)
+        else -> TODO()
+    }
+}
 
+/**
+ * Button that uses the primary colour
+ */
+@Composable
+fun PrimaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
@@ -72,7 +81,38 @@ fun Button(buttonState: ButtonState) {
         modifier = buttonState.modifier.semantics {
             contentDescription = buttonState.buttonContentDescription ?: buttonState.label
         },
-        contentPadding = buttonState.contentPadding ?: defaultContentPadding
+        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
+    ) {
+        Text(
+            text = buttonState.label,
+            fontSize = MaterialTheme.typography.subtitle1.fontSize
+            //style = buttonState.textStyle,
+        )
+    }
+}/**
+ * Button that uses the primary colour as an outline and surface as a background
+ */
+@Composable
+fun SecondaryButton(buttonState: ButtonState) {
+    Button(
+        onClick = buttonState.onClick,
+        enabled = buttonState.enabled,
+        elevation = ButtonDefaults.elevation(zero),
+        shape = RoundedCornerShape(FULLY_ROUNDED),
+        border = BorderStroke(
+            one,
+            if (buttonState.enabled) buttonState.borderColor else buttonState.disabledBorderColor
+        ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            disabledBackgroundColor = buttonState.disabledBackgroundColor,
+            contentColor = MaterialTheme.colors.onSecondary,
+            disabledContentColor = MaterialTheme.colors.onSecondary
+        ),
+        modifier = buttonState.modifier.semantics {
+            contentDescription = buttonState.buttonContentDescription ?: buttonState.label
+        },
+        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
     ) {
         Text(
             text = buttonState.label,

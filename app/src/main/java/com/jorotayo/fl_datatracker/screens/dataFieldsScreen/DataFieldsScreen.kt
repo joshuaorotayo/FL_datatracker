@@ -318,19 +318,18 @@ private fun ColumnScope.DataFieldColumnHeaders(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(start = xSmall)
-                    .weight(0.35f),
+                    .weight(0.4f),
                 text = "Field Name",
                 textAlign = TextAlign.Start,
-                style = typography.h3,
+                style = typography.body1,
                 color = colors.subtitleTextColour
             )
             Text(
                 modifier = Modifier
-                    .weight(0.35f),
+                    .weight(0.4f),
                 text = "Field Type",
                 textAlign = TextAlign.Start,
-                style = typography.h3,
+                style = typography.body1,
                 color = colors.subtitleTextColour
             )
             Text(
@@ -338,7 +337,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
                     .weight(0.2f),
                 text = "Enabled?",
                 textAlign = TextAlign.Start,
-                style = typography.h3,
+                style = typography.body1,
                 color = colors.subtitleTextColour
             )
         }

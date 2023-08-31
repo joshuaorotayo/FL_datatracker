@@ -13,7 +13,6 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
@@ -44,15 +43,15 @@ fun FAQsList() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(top = medium)
+            .padding(vertical = medium)
             .background(colors.background)
     ) {
         Text(
             modifier = Modifier
                 .padding(start = small),
             text = "FAQs List",
-            color = colors.primary,
-            style = typography.h4.also { FontWeight.SemiBold },
+            color = colors.secondary,
+            style = typography.h2,
             textAlign = Start
         )
     }

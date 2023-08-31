@@ -43,15 +43,15 @@ fun DisplaySettings() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(top = medium)
+            .padding(vertical = medium)
             .background(colors.background)
     ) {
         Text(
             modifier = Modifier
                 .padding(start = small),
             text = "Display Settings",
-            color = colors.primary,
-            style = typography.h1,
+            color = colors.secondary,
+            style = typography.h2,
             textAlign = Start
         )
     }

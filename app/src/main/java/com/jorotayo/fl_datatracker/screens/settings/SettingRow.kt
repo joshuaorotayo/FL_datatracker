@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
@@ -32,7 +33,7 @@ fun SettingRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(xxSmall)
+            .padding(horizontal = xxSmall, vertical = xSmall)
             .clickable(onClick = onSettingSelected),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -52,15 +53,15 @@ fun SettingRow(
         ) {
             Text(
                 text = setting.settingName,
-                style = MaterialTheme.typography.h2,
+                style = MaterialTheme.typography.h3,
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colors.secondary
             )
             Text(
                 text = setting.settingDescription,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colors.secondary
             )
         }
     }
@@ -70,8 +71,8 @@ fun SettingRow(
 fun SettingDivider() {
     Divider(
         modifier = Modifier
-            .padding(horizontal = regular)
+            .padding(start = regular)
             .fillMaxWidth()
-            .background(MaterialTheme.colors.onSurface.copy(alpha = 0.2F))
+            .background(MaterialTheme.colors.onSurface.copy(alpha = 0.5F))
     )
 }
