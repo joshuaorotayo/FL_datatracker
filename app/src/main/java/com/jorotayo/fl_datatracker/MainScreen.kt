@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -198,7 +199,6 @@ fun RowScope.AnimatedBottomNavItem(
     )
 }
 
-/*
 
 @Composable
 fun RowScope.ChipBottomNavItem(
@@ -213,12 +213,13 @@ fun RowScope.ChipBottomNavItem(
     val scale = if (itemSelected) 1.3f else 1f
 
     BottomNavigationItem(
+
         label = {
             Text(
                 text = mainScreens.title,
                 style = typography.body2,
                 fontSize = typography.body2.fontSize * scale,
-                color = if (itemSelected) colors.disabled
+                color = colors.secondary
             )
         },
         icon = {
@@ -239,7 +240,6 @@ fun RowScope.ChipBottomNavItem(
         modifier = Modifier.height(80.dp)
     )
 }
-*/
 
 /**
  * Trims and adjusts routes to show the correctly selected item
