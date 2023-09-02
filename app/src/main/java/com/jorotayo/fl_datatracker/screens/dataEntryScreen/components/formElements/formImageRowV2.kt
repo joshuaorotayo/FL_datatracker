@@ -96,8 +96,7 @@ fun formImageRowV2(
             .padding(horizontal = Dimen.small)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface),
+            .clip(shape = RoundedCornerShape(10.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(

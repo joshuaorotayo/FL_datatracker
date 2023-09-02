@@ -4,23 +4,34 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormBase
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview(
@@ -82,7 +93,6 @@ fun SettingsScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(colors.background)
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -94,9 +104,10 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(xSmall),
+                            .padding(xSmall)
+                            .background(colors.background),
                         shape = RoundedCornerShape(xSmall),
-                        elevation = xSmall
+                        elevation = xxxSmall
                     ) {
                         Column {
                             SettingRow(
@@ -116,6 +127,10 @@ fun SettingsScreen(
                         }
 
                     }
+                }
+
+                item {
+                    FormBase()
                 }
             }
 

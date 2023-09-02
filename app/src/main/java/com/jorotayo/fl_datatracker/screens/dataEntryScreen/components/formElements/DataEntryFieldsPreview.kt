@@ -57,14 +57,6 @@ fun DataEntryFieldsPreview() {
             formSubmitted = false
         )
 
-        /*    val data = Data(
-                0,
-                0,
-                "Preview Template",
-                "06-06-2023",
-                "01-01-2023"
-            )*/
-
         FormNameHeader(setName = {}, data = screenState)
         formShortTextRowV2(data = dataRowStateEx, setDataValue = {})
         formLongTextRowV2(data = dataRowStateEx.dataItem, setDataValue = {})

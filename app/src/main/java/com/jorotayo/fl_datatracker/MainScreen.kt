@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -29,22 +30,10 @@ import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
-@Composable
-fun MainScreensPreview() {
-    FL_DatatrackerTheme {
-        MainScreen()
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview(
@@ -87,12 +76,12 @@ fun BottomBar(navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Divider(
-            modifier = Modifier,
-            color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
-        )
+//        Divider(
+//            modifier = Modifier,
+//            color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
+//        )
         BottomNavigation(
-            backgroundColor = MaterialTheme.colors.surface,
+            backgroundColor = MaterialTheme.colors.background,
             elevation = zero
         ) {
             mainScreens.forEach { screen ->
@@ -106,7 +95,7 @@ fun BottomBar(navController: NavHostController) {
     }
 }
 
-/*
+
 
 @Composable
 fun RowScope.BottomNavItem(
@@ -122,7 +111,7 @@ fun RowScope.BottomNavItem(
             Text(
                 modifier = Modifier.padding(top = xxSmall),
                 text = mainScreens.title,
-                style = MaterialTheme.typography.body2
+                style = typography.body2
             )
         },
         icon = {
@@ -143,7 +132,8 @@ fun RowScope.BottomNavItem(
         modifier = Modifier.height(80.dp)
     )
 }
-*/
+
+
 @Composable
 fun RowScope.AnimatedBottomNavItem(
     mainScreens: MainScreens,
@@ -154,19 +144,19 @@ fun RowScope.AnimatedBottomNavItem(
     val itemSelected =
         currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
 
-    val scale = if (itemSelected) 1.5f else 1f
+    val scale = if (itemSelected) 1.3f else 1f
 
     val animatedScale: Float by animateFloatAsState(
         targetValue = scale,
         animationSpec = TweenSpec(
-            durationMillis = 2000,
+            durationMillis = 1000,
             easing = FastOutSlowInEasing
         ), label = "Nav Bar Icon size animation"
     )
     val animatedVisibleColor by animateColorAsState(
         targetValue = MaterialTheme.colors.secondary,
         animationSpec = TweenSpec(
-            durationMillis = 2000,
+            durationMillis = 1000,
             easing = FastOutSlowInEasing
         ), label = "Nav Bar visible color animation"
     )
@@ -174,7 +164,7 @@ fun RowScope.AnimatedBottomNavItem(
     val animatedHiddenColor by animateColorAsState(
         targetValue = MaterialTheme.colors.primary,
         animationSpec = TweenSpec(
-            durationMillis = 2000,
+            durationMillis = 1000,
             easing = FastOutSlowInEasing
         ), label = "Nav Bar color animation"
     )
@@ -182,9 +172,10 @@ fun RowScope.AnimatedBottomNavItem(
     BottomNavigationItem(
         label = {
             Text(
-                modifier = Modifier.padding(top = xxSmall),
+                modifier = Modifier.padding(top = xSmall * scale),
                 text = mainScreens.title,
-                style = MaterialTheme.typography.body2
+                style = typography.body2,
+                fontSize = typography.body2.fontSize * scale
             )
         },
         icon = {
@@ -207,6 +198,48 @@ fun RowScope.AnimatedBottomNavItem(
     )
 }
 
+/*
+
+@Composable
+fun RowScope.ChipBottomNavItem(
+    mainScreens: MainScreens,
+    currentDestination: NavDestination?,
+    navController: NavHostController,
+) {
+    val trimmedRoute = trimRoute(currentDestination?.route.toString())
+    val itemSelected =
+        currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
+
+    val scale = if (itemSelected) 1.3f else 1f
+
+    BottomNavigationItem(
+        label = {
+            Text(
+                text = mainScreens.title,
+                style = typography.body2,
+                fontSize = typography.body2.fontSize * scale,
+                color = if (itemSelected) colors.disabled
+            )
+        },
+        icon = {
+            Icon(
+                imageVector = mainScreens.icon,
+                contentDescription = mainScreens.pageDescription
+            )
+        },
+        selected = itemSelected,
+        unselectedContentColor = colors.background,
+        selectedContentColor = colors.primary,
+        onClick = {
+            navController.navigate(mainScreens.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        },
+        modifier = Modifier.height(80.dp)
+    )
+}
+*/
 
 /**
  * Trims and adjusts routes to show the correctly selected item

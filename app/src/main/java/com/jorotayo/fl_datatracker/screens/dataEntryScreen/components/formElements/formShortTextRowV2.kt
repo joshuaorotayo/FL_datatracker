@@ -79,7 +79,6 @@ fun formShortTextRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.surface)
     ) {
         Column(
             modifier = Modifier

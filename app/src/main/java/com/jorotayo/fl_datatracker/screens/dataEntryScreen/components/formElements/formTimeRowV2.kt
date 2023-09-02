@@ -3,7 +3,6 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 import android.app.TimePickerDialog
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -93,7 +92,6 @@ fun formTimeRowV2(
             .padding(xSmall)
             .fillMaxWidth()
             .wrapContentSize()
-            .background(MaterialTheme.colors.surface)
     ) {
         Text(
             modifier = Modifier

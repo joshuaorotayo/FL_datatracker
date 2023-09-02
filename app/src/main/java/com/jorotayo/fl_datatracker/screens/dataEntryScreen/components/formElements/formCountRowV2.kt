@@ -82,7 +82,6 @@ fun formCountRowV2(
             .padding(xSmall)
             .fillMaxWidth()
             .wrapContentSize()
-            .background(MaterialTheme.colors.surface)
     ) {
         Text(
             modifier = Modifier

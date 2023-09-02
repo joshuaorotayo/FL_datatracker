@@ -1,6 +1,8 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,7 +22,6 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEven
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.exampleShortField
@@ -51,13 +53,23 @@ fun DataFieldRowV2(
             )
         )
     }
+
+    val isRowEnabled = remember { mutableStateOf(currentDataField.isEnabled) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = xSmall, vertical = xxxSmall),
+            .padding(horizontal = xSmall, vertical = xxxSmall)
+            .background(
+                if (isSystemInDarkTheme()) {
+                    if (isRowEnabled.value) MaterialTheme.colors.surface
+                    else MaterialTheme.colors.primary.copy(0.3f)
+                } else if (isRowEnabled.value) MaterialTheme.colors.surface
+                else MaterialTheme.colors.primary.copy(0.3f)
+            ),
         shape = RoundedCornerShape(xSmall),
-        elevation = small,
+        elevation = xxxSmall,
     ) {
         Column(
             modifier = Modifier

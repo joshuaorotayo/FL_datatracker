@@ -75,7 +75,6 @@ fun formComponentTemplateV2(
         }
     }
 
-
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

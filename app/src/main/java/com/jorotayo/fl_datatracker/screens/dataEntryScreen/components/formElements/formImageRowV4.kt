@@ -77,8 +77,7 @@ fun formImageRowV4(
         modifier = Modifier
             .padding(xSmall)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .background(MaterialTheme.colors.surface),
+            .wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(

@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.settings
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
@@ -55,7 +55,7 @@ fun SettingRow(
                 text = setting.settingName,
                 style = MaterialTheme.typography.h3,
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.secondary
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 text = setting.settingDescription,
@@ -72,7 +72,8 @@ fun SettingDivider() {
     Divider(
         modifier = Modifier
             .padding(start = regular)
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.onSurface.copy(alpha = 0.5F))
+            .fillMaxWidth(),
+        color = MaterialTheme.colors.secondary,
+        thickness = 0.5.dp
     )
 }

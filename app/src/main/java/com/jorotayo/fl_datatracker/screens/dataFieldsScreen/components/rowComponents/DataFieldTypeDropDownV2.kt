@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -71,7 +71,7 @@ fun DataFieldTypeDropDownV2(
                     modifier = Modifier.weight(3f),
                     text = iconText,
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.primary
+                    color = colors.primary
                 )
                 Icon(
                     modifier = Modifier
@@ -81,7 +81,7 @@ fun DataFieldTypeDropDownV2(
                     contentDescription = String.format(
                         stringResource(id = R.string.dropdown_icon_description, items[index])
                     ),
-                    tint = MaterialTheme.colors.primary
+                    tint = colors.primary
                 )
             }
         }

@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowCompo
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -50,7 +49,6 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowS
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
@@ -95,13 +93,6 @@ fun RowDetails(
 
     Column(
         modifier = Modifier
-            .background(
-                if (isSystemInDarkTheme()) {
-                    if (isRowEnabled.value) MaterialTheme.colors.surface
-                    else MaterialTheme.colors.primary.copy(0.3f)
-                } else if (isRowEnabled.value) MaterialTheme.colors.surface
-                else MaterialTheme.colors.primary.copy(0.3f)
-            )
     ) {
         Row(
             modifier = Modifier
@@ -392,11 +383,9 @@ fun SelectEditType(
     rowData: DataFieldRowState,
     onRowEvent: (RowEvent) -> Unit
 ) {
-
     Column(
         modifier = Modifier.wrapContentHeight()
     ) {
-
         when (rowData.dataField.dataFieldType) {
             DataFieldType.SHORT_TEXT.ordinal -> {
                 BasicEditHint(rowData, onRowEvent)
@@ -434,7 +423,7 @@ fun BasicEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(bottom = Dimen.xxxSmall),
+            .padding(bottom = xxxSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

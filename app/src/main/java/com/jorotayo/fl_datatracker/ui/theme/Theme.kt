@@ -12,32 +12,33 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.util.SharedSettingService
 
 private val lightColours = lightColors(
     primary = md_theme_light_primary,
     onPrimary = md_theme_onPrimary,
     secondary = md_theme_light_secondary,
-    onSecondary = md_theme_light_onSecondary,
+    onSecondary = md_theme_white,
     error = md_theme_light_error,
     onError = md_theme_white,
     background = md_theme_light_background,
     onBackground = md_theme_light_onBackground,
     surface = md_theme_light_surface,
-    onSurface = md_theme_light_onSurface,
+    onSurface = md_theme_light_onSurface
 )
 
 private val darkColours = darkColors(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_onPrimary,
-    secondary = md_theme_white,
+    secondary = md_theme_dark_secondary,
     onSecondary = md_theme_white,
     error = md_theme_dark_error,
     onError = md_theme_white,
     background = md_theme_dark_background,
     onBackground = md_theme_white,
-    surface = md_theme_dark_surface,
-    onSurface = md_theme_dark_onSurface,
+    surface = md_theme_dark_background, //elevation xxxSmall
+    onSurface = md_theme_white,
 )
 
 val Colors.highLightColours: Color
@@ -72,6 +73,11 @@ fun FL_DatatrackerTheme(
     } else {
         darkColours
     }
+
+    val systemUiController = rememberSystemUiController()
+
+    systemUiController.setNavigationBarColor(colors.surface)
+    systemUiController.setStatusBarColor(colors.background)
 
     MaterialTheme(
         colors = colors,

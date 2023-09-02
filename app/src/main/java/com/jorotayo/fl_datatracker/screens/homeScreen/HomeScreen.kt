@@ -40,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.navigation.MainScreens
@@ -69,8 +68,6 @@ fun HomeScreen(
     navController: NavController,
 ) {
     val scaffoldState = rememberScaffoldState()
-
-    rememberSystemUiController().setSystemBarsColor(colors.background)
 
     val density = LocalDensity.current
 

@@ -109,7 +109,6 @@ fun formDateRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.surface)
             .padding(small)
     ) {
         Text(

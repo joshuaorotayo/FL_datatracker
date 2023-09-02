@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -66,7 +65,6 @@ fun formListRowV4(
 
     LazyColumn(
         modifier = Modifier
-            .background(MaterialTheme.colors.surface)
             .padding(xSmall)
             .fillMaxWidth()
             .height(Dp(columnHeight.value))
