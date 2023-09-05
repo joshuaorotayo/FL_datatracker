@@ -50,7 +50,7 @@ val Colors.subtitleTextColour: Color
     get() = if (isLight) Color.Black else Color.White
 
 val Colors.bodyTextColour: Color
-    get() = Color(0xFF888888)
+    get() = Color(color = 0xFF888888)
 
 @Composable
 fun FL_DatatrackerTheme(

@@ -250,16 +250,10 @@ class DataEntryScreenViewModel @Inject constructor(
                 presetSetting = presetSetting
             )
         } else {
-            Log.i(TAG, "current Data Rows value: LOAD  " + longID)
-
             val currentData = dataUseCases.getDataByDataId(longID)
             val currentDataItems = dataItemUseCases.getDataItemsListByDataId(
                 currentData.dataId
             )
-
-//            val currentDataItems = dataFieldUseCases.getDataFieldsByPresetIdEnabled(
-//                presetSetting.presetId
-//            )
 
             Log.i(TAG, "currentData   " + currentDataItems.size)
             val list: MutableList<DataRowState> = ArrayList()
@@ -270,7 +264,6 @@ class DataEntryScreenViewModel @Inject constructor(
                 )
             }
 
-            Log.i(TAG, "listSize   " + list.size)
             return DataEntryScreenState(
                 dataName = currentData.name,
                 dataRows = list,

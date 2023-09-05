@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Colors
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
@@ -170,34 +171,51 @@ fun AlertDialog(
             }
         },
         dismissButton = {
-            if (hasDismissButton(alertDialogState)) Button(
-                buttonState =
-                ButtonState(
-                    enabled = true,
-                    type = ButtonType.TERTIARY,
-                    label = alertDialogState.dismissButtonLabel ?: "",
-                    onClick = alertDialogState.dismissButtonOnClick!!,
-                    modifier = Modifier.padding(bottom = xSmall),
-                    contentColor = colors.onBackground
-                )
-            )
+            if (hasDismissButton(alertDialogState))
+                DismissBtn(alertDialogState, colors)
         },
         confirmButton = {
-            Button(
-                buttonState =
-                ButtonState(
-                    enabled = true,
-                    type = ButtonType.TERTIARY,
-                    label = alertDialogState.confirmButtonLabel,
-                    onClick = alertDialogState.confirmButtonOnClick,
-                    modifier = Modifier.padding(bottom = xSmall),
-                    contentColor = colors.primary
-                )
-            )
+            ConfirmBtn(alertDialogState, colors)
         },
         properties = DialogProperties(
             dismissOnBackPress = alertDialogState.dismissible,
             dismissOnClickOutside = alertDialogState.dismissible
+        )
+    )
+}
+
+@Composable
+private fun DismissBtn(
+    alertDialogState: AlertDialogState,
+    colors: Colors
+) {
+    Button(
+        buttonState =
+        ButtonState(
+            enabled = true,
+            type = ButtonType.TERTIARY,
+            label = alertDialogState.dismissButtonLabel ?: "",
+            onClick = alertDialogState.dismissButtonOnClick!!,
+            modifier = Modifier.padding(bottom = xSmall),
+            contentColor = colors.onBackground
+        )
+    )
+}
+
+@Composable
+private fun ConfirmBtn(
+    alertDialogState: AlertDialogState,
+    colors: Colors
+) {
+    Button(
+        buttonState =
+        ButtonState(
+            enabled = true,
+            type = ButtonType.TERTIARY,
+            label = alertDialogState.confirmButtonLabel,
+            onClick = alertDialogState.confirmButtonOnClick,
+            modifier = Modifier.padding(bottom = xSmall),
+            contentColor = colors.primary
         )
     )
 }

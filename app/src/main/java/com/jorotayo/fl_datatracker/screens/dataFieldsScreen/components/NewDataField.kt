@@ -281,7 +281,8 @@ fun NewDataField(
                 }
             }
 
-            AnimatedVisibility(visible = newDataField.value.fieldType <= 1 || newDataField.value.fieldType >= 7) { // ShortString = int 0, LongString = int 1
+            AnimatedVisibility(visible = newDataField.value.fieldType <= 1 || newDataField.value.fieldType >= 7)
+            { // ShortString = int 0, LongString = int 1
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
@@ -49,8 +50,7 @@ fun TopBar(
     ) {
         Text(
             text = "FL DataTracker",
-            modifier = Modifier
-                .weight(10f),
+            modifier = Modifier.wrapContentWidth(),
             color = MaterialTheme.colors.primary,
             style = typography.h1,
             textAlign = TextAlign.Start

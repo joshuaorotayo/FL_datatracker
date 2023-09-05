@@ -18,6 +18,6 @@ object Dimen {
     val xxxLarge = 96.dp
 
     val statusBarPadding = 48.dp
-    val optionsMaxChars: Int = 15
-    val bottomBarPadding = 60.dp
+    const val optionsMaxChars: Int = 15
+    const val bottomBarPadding = 60
 }
