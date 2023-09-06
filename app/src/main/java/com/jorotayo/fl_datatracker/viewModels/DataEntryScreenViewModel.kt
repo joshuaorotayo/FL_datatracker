@@ -282,5 +282,3 @@ class DataEntryScreenViewModel @Inject constructor(
         object UpdateDataForm : UiEvent()
     }
 }
-
-

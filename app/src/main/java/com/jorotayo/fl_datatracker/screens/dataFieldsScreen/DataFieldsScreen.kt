@@ -180,7 +180,7 @@ fun DataFieldsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = xSmall, bottom = bottomBarPadding.dp),
+                    .padding(top = xSmall, bottom = bottomBarPadding),
                 state = listState
             ) {
                 item {
@@ -375,7 +375,7 @@ private fun NoDataFieldSection(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = bottomBarPadding.dp)
+                .padding(bottom = bottomBarPadding)
         ) {
 
             Box(modifier = Modifier.fillMaxSize()) {

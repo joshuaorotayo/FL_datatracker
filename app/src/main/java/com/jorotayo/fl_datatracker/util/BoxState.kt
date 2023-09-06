@@ -25,8 +25,5 @@ data class BoxState(
     var dataFieldsList: List<DataField> = dataFieldBox.all.toList(),
 
     val presetsBox: Box<Preset> = ObjectBox.boxStore().boxFor(Preset::class.java),
-    val presetsList: List<Preset> = presetsBox.all.toList(),
-    /*
-        val currentPresetSetting: Setting? = settingsBox.query(Setting_.settingName.equal("currentPreset"))
-            .build().findFirst(),*/
+    val presetsList: List<Preset> = presetsBox.all.toList()
 )

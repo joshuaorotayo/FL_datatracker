@@ -86,10 +86,10 @@ fun PrimaryButton(buttonState: ButtonState) {
         Text(
             text = buttonState.label,
             fontSize = MaterialTheme.typography.subtitle1.fontSize
-            //style = buttonState.textStyle,
+            // style = buttonState.textStyle,
         )
     }
-}/**
+} /**
  * Button that uses the primary colour as an outline and surface as a background
  */
 @Composable
@@ -117,7 +117,7 @@ fun SecondaryButton(buttonState: ButtonState) {
         Text(
             text = buttonState.label,
             fontSize = MaterialTheme.typography.subtitle1.fontSize
-            //style = buttonState.textStyle,
+            // style = buttonState.textStyle,
         )
     }
 }

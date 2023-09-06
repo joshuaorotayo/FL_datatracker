@@ -22,15 +22,11 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun onDataFieldSettings() {
-
-    }
+    private fun onDataFieldSettings() { }
 
     private fun onDisplaySettings() {
-//        SettingsNavGraph()
+    // SettingsNavGraph()
     }
 
-    private fun onFAQsList() {
-
-    }
+    private fun onFAQsList() {}
 }

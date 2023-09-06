@@ -110,11 +110,11 @@ class HomeScreenViewModel @Inject constructor(
         /*val newBox = ObjectBox.get().boxFor(Data::class.java)
                 newBox.remove(uiState.value.deletedItem)*/
 
-        //delete the data item objects
+        // delete the data item objects
 
-        //delete the data object
+        // delete the data object
 
-        //refresh the data list
+        // refresh the data list
         val data = uiState.value.deletedItem
         val removeDataItems = dataItemUseCases.getDataItemListByDataAndPresetId(
             data.dataId,

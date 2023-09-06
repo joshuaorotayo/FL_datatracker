@@ -21,12 +21,14 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @Preview(showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewTransparentTextField() {
     FL_DatatrackerTheme {
-        TransparentTextField(text = "",
+        TransparentTextField(
+            text = "",
             placeholder = "Value",
             label = "Option",
             modifier = Modifier,
@@ -42,8 +44,7 @@ fun TransparentTextField(
     label: String,
     modifier: Modifier,
     onValueChange: (String) -> Unit,
-    singleLine: Boolean = false,
-) {
+    singleLine: Boolean = false) {
 
 
     val textColour = if (isSystemInDarkTheme()) Color.Gray else MaterialTheme.colors.primary
@@ -86,5 +87,4 @@ fun TransparentTextField(
             }
         )
     }
-
 }

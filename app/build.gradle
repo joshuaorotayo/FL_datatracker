@@ -3,7 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'org.jetbrains.kotlin.android'
+    id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
+    id "io.gitlab.arturbosch.detekt" version"1.23.1"
 }
 
 android {
@@ -61,14 +62,23 @@ android {
     }
 }
 
-dependencies {
+ktlint{
+    android = true
+    ignoreFailures = false
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+        reporter "sarif"
+    }
+}
 
+dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.compose.ui:ui:1.4.3'
-    implementation 'androidx.compose.material:material:1.4.3'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.4.3'
+    implementation 'androidx.compose.ui:ui:1.5.0'
+    implementation 'androidx.compose.material:material:1.5.0'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.2'
     implementation 'de.charlex.compose:bottom-drawer-scaffold:1.1.0-beta02'
@@ -80,7 +90,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.4.3"
-    debugImplementation "androidx.compose.ui:ui-tooling:1.4.3"
+    debugImplementation "androidx.compose.ui:ui-tooling:1.5.0"
 
     // constraint layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
@@ -90,8 +100,8 @@ dependencies {
 
     // Compose dependencies
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
-    implementation 'androidx.navigation:navigation-compose:2.6.0'
-    implementation 'androidx.compose.material:material-icons-extended:1.4.3'
+    implementation 'androidx.navigation:navigation-compose:2.7.1'
+    implementation 'androidx.compose.material:material-icons-extended:1.5.0'
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Splash API
@@ -130,7 +140,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 
     //LiveData
-    implementation 'androidx.compose.runtime:runtime-livedata:1.4.3'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.5.0'
 
     // Glide Image Picker
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
@@ -141,6 +151,26 @@ dependencies {
 
     // Coil Image Picker
     implementation('io.coil-kt:coil-compose:2.4.0')
+
 }
 
 apply plugin: 'io.objectbox'
+
+def projectSource = file(projectDir)
+def configFile = file("$rootDir/config/detekt/detekt.yml")
+def baselineFile = file("$rootDir/config/detekt/baseline.xml")
+def kotlinFiles = "**/*.kt"
+def resourceFiles = "**/resources/**"
+def buildFiles = "**/build/**"
+
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0"
+}
+
+task installDetektGitHook(type: Copy){
+    from new File(rootProject.rootDir, 'scripts/pre-push')
+    into { new File(rootProject.rootDir, '.git/hooks')}
+    fileMode 0775
+}

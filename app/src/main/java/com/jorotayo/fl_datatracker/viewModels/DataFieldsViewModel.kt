@@ -69,7 +69,6 @@ class DataFieldsViewModel @Inject constructor(
     )
     val dataFieldScreenState: State<DataFieldScreenState> = _dataFieldScreenState
 
-
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -320,9 +319,8 @@ class DataFieldsViewModel @Inject constructor(
                         dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
                     )
                     userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
-                    _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
-
-                } catch (e: InvalidPresetException) {
+                    _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!")) }
+                catch (e: InvalidPresetException) {
                     _dataFieldScreenState.value = dataFieldScreenState.value.copy(
                         alertDialogState = null,
                         isPresetDropDownMenuExpanded = false,
