@@ -157,7 +157,7 @@ dependencies {
 apply plugin: 'io.objectbox'
 
 def projectSource = file(projectDir)
-def configFile = file("$rootDir/config/detekt/detekt.yml")
+def configFile = file("$projectSource/config/detekt/detekt.yml")
 def baselineFile = file("$rootDir/config/detekt/baseline.xml")
 def kotlinFiles = "**/*.kt"
 def resourceFiles = "**/resources/**"
@@ -173,4 +173,25 @@ task installDetektGitHook(type: Copy){
     from new File(rootProject.rootDir, 'scripts/pre-push')
     into { new File(rootProject.rootDir, '.git/hooks')}
     fileMode 0775
+}
+
+//detekt {
+//    toolVersion = "$detekt_version"
+//    source = files("$rootProject")
+//allRules = true
+////    filters = ".*/resources/.*,.*/build/.*"
+//    config.setFrom("$rootDir/config/detekt/detekt-config.yml")
+//    autoCorrect = true
+//    reports {
+//        xml.enabled(true)
+//        html.enabled(true)
+//        txt.enabled(true)
+//    }
+//}
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = true // activate all available (even unstable) rules.
+    config.setFrom("$rootDir/config/detekt/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    baseline = file("$rootDir/config/detekt/baseline.xml") // a way of suppressing issues before introducing detekt
+    autoCorrect = true
 }
