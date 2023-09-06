@@ -7,10 +7,10 @@ import com.jorotayo.fl_datatracker.domain.repository.DataItemRepository
 import io.objectbox.Box
 
 class DataItemRepositoryImpl : DataItemRepository {
-    private val dataItemBox: Box<DataItem> = ObjectBox.get().boxFor(DataItem::class.java)
+    private val dataItemBox: Box<DataItem> = ObjectBox.boxStore().boxFor(DataItem::class.java)
 
     override fun getDataItemList(): List<DataItem> {
-        return ObjectBox.get().boxFor(DataItem::class.java).all.toList()
+        return ObjectBox.boxStore().boxFor(DataItem::class.java).all.toList()
     }
 
     override fun getDataItemListByDataAndPresetId(dataId: Long, presetId: Long): List<DataItem> {
@@ -23,13 +23,17 @@ class DataItemRepositoryImpl : DataItemRepository {
         return dataItemBox.get(dataItemId)
     }
 
+    override fun getDataItemsListByDataId(dataId: Long): List<DataItem> {
+        return dataItemBox.query(DataItem_.dataId.equal(dataId)).build().find()
+    }
+
     override fun getDataItemsByPresetId(dataPresetId: Long): List<DataItem> {
         return dataItemBox.query(DataItem_.presetId.equal(dataPresetId)).build().find()
     }
 
     override fun getDataItemsEnabledByPresetId(dataPresetId: Long): List<DataItem> {
-        return dataItemBox.query(DataItem_.presetId.equal(dataPresetId)
-            .and(DataItem_.isEnabled.equal(true))).build().find()
+        return dataItemBox.query(DataItem_.presetId.equal(dataPresetId)).build().find()
+//            .and(DataItem_.isEnabled.equal(true)
     }
 
     override fun addDataItem(dataItem: DataItem) {

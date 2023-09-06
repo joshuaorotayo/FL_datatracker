@@ -14,10 +14,10 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
 import com.jorotayo.fl_datatracker.domain.model.InvalidPresetException
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.domain.model.Setting
 import com.jorotayo.fl_datatracker.domain.useCases.DataFieldUseCases
 import com.jorotayo.fl_datatracker.domain.useCases.PresetUseCases
-import com.jorotayo.fl_datatracker.domain.useCases.SettingsUseCases
+import com.jorotayo.fl_datatracker.domain.util.SettingsKeys.CURRENT_PRESET
+import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DeleteDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ExpandPresetDropdown
@@ -30,10 +30,20 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ChangePreset
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DeletePreset
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.EditPresetName
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowAddPresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditFieldName
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditFirstValue
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditHintText
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditIsEnabled
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditRowType
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditSecondValue
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditThirdValue
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.ToggleRow
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
+import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -44,10 +54,10 @@ import javax.inject.Inject
 class DataFieldsViewModel @Inject constructor(
     private val dataFieldUseCases: DataFieldUseCases,
     private val presetUseCases: PresetUseCases,
-    private val settingsUseCases: SettingsUseCases,
+    private val userPreferenceStore: UserPreferenceStore
 ) : ViewModel() {
-    val currentPresetName: MutableState<String> =
-        mutableStateOf(settingsUseCases.getSettingsList().last().settingStringValue)
+    private val currentPresetName: MutableState<String> =
+        mutableStateOf(userPreferenceStore.getString(CURRENT_PRESET) ?: "Default")
     private var currentPreset = presetUseCases.getPresetByPresetName(currentPresetName.value)
 
     private var _dataFieldScreenState = mutableStateOf(
@@ -59,7 +69,6 @@ class DataFieldsViewModel @Inject constructor(
     )
     val dataFieldScreenState: State<DataFieldScreenState> = _dataFieldScreenState
 
-
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -69,9 +78,9 @@ class DataFieldsViewModel @Inject constructor(
         when (event) {
             DataFieldEvent.InitScreen -> onInitScreen()
             RestoreDeletedField -> onRestoreDataField()
-            ToggleAddNewDataField -> onToggleAddNewDataField()
             ExpandPresetDropdown -> onExpandPresetDropdown()
             HidePresetDropdown -> onHidePresetDropdown()
+            ToggleAddNewDataField -> onToggleAddNewDataField()
             is DeleteDataField -> onDeleteDataField(event)
             is ShowDeleteRowDialog -> onShowDeleteRowDialog(event)
             is SaveDataField -> onSaveDataField(event)
@@ -88,14 +97,7 @@ class DataFieldsViewModel @Inject constructor(
                 )
             )
 
-            settingsUseCases.addSetting(
-                Setting(
-                    settingId = 0,
-                    settingName = "currentPreset",
-                    settingBoolValue = false,
-                    settingStringValue = "Default"
-                )
-            )
+            userPreferenceStore.setString(Pair(CURRENT_PRESET, "Default"))
         }
     }
 
@@ -115,15 +117,15 @@ class DataFieldsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 dataFieldUseCases.addDataField(event.value)
-                _eventFlow.emit(UiEvent.SaveDataField)
+                _eventFlow.emit(SaveDataField("Data Field Saved: ${event.value.fieldName}"))
                 _dataFieldScreenState.value = dataFieldScreenState.value.copy(
                     isAddDataFieldVisible = !dataFieldScreenState.value.isAddDataFieldVisible
                 )
                 updateDataFields()
             } catch (e: InvalidDataFieldException) {
                 _eventFlow.emit(
-                    UiEvent.ShowSnackbar(
-                        message = "Data Field Not Saved!"
+                    ShowSnackbar(
+                        message = e.message ?: "DataField Not saved"
                     )
                 )
             }
@@ -184,16 +186,16 @@ class DataFieldsViewModel @Inject constructor(
 
     fun onRowEvent(event: RowEvent) {
         when (event) {
-            is RowEvent.EditFieldName -> onEditFieldName(event)
-            is RowEvent.EditHintText -> onEditHintText(event)
-            is RowEvent.EditRowType -> onEditRowType(event)
-            is RowEvent.EditIsEnabled -> onEditIsEnabled(event)
-            is RowEvent.EditFirstValue -> onEditFirstValue(event)
-            is RowEvent.EditSecondValue -> onEditSecondValue(event)
-            is RowEvent.EditThirdValue -> onEditThirdValue(event)
-            is RowEvent.ToggleRow -> onRowToggle(event)
+            is EditFieldName -> onEditFieldName(event)
+            is EditHintText -> onEditHintText(event)
+            is EditRowType -> onEditRowType(event)
+            is EditIsEnabled -> onEditIsEnabled(event)
+            is EditFirstValue -> onEditFirstValue(event)
+            is EditSecondValue -> onEditSecondValue(event)
+            is EditThirdValue -> onEditThirdValue(event)
+            is ToggleRow -> onRowToggle(event)
         }
-        ObjectBox.get().boxFor(DataField::class.java).put(dataField)
+        ObjectBox.boxStore().boxFor(DataField::class.java).put(dataField)
 
         dataFieldUseCases.updateDataField(dataField)
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
@@ -201,49 +203,49 @@ class DataFieldsViewModel @Inject constructor(
         )
     }
 
-    private fun onRowToggle(event: RowEvent.ToggleRow) {
+    private fun onRowToggle(event: ToggleRow) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.isEnabled = !dataField.isEnabled
     }
 
-    private fun onEditFieldName(event: RowEvent.EditFieldName) {
+    private fun onEditFieldName(event: EditFieldName) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.fieldName = event.value
     }
 
-    private fun onEditHintText(event: RowEvent.EditHintText) {
+    private fun onEditHintText(event: EditHintText) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.fieldHint = event.value
     }
 
-    private fun onEditRowType(event: RowEvent.EditRowType) {
+    private fun onEditRowType(event: EditRowType) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.dataFieldType = event.value
     }
 
-    private fun onEditIsEnabled(event: RowEvent.EditIsEnabled) {
+    private fun onEditIsEnabled(event: EditIsEnabled) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.isEnabled = !dataField.isEnabled
     }
 
-    private fun onEditFirstValue(event: RowEvent.EditFirstValue) {
+    private fun onEditFirstValue(event: EditFirstValue) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.first = event.value
     }
 
-    private fun onEditSecondValue(event: RowEvent.EditSecondValue) {
+    private fun onEditSecondValue(event: EditSecondValue) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.second = event.value
     }
 
-    private fun onEditThirdValue(event: RowEvent.EditThirdValue) {
+    private fun onEditThirdValue(event: EditThirdValue) {
         dataField =
             dataFieldScreenState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.third = event.value
@@ -251,7 +253,7 @@ class DataFieldsViewModel @Inject constructor(
 
     fun onPresetEvent(event: PresetEvent) {
         when (event) {
-            is PresetEvent.ShowAddPresetDialog -> onShowAddPresetDialog()
+            is ShowAddPresetDialog -> onShowAddPresetDialog()
             is ShowDeletePresetDialog -> onShowDeletePresetDialog(event)
             is ChangePreset -> onChangePreset(event)
             is EditPresetName -> onEditPresetName(event)
@@ -275,6 +277,7 @@ class DataFieldsViewModel @Inject constructor(
     private fun onShowAddPresetDialog() {
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
             isPresetDropDownMenuExpanded = false,
+            newPreset = null,
             alertDialogState = AlertDialogState(
                 title = "Add New Preset",
                 imageIcon = Icons.Default.AddBox,
@@ -295,33 +298,37 @@ class DataFieldsViewModel @Inject constructor(
 
     private fun saveNewPreset() {
         val newPreset = _dataFieldScreenState.value.newPreset
-
         viewModelScope.launch {
-            try {
-                presetUseCases.addPreset(newPreset!!)
-                val presets = presetUseCases.getPresetList()
-                val currentPreset = presetUseCases.getPresetByPresetName(newPreset.presetName)
+            if (newPreset == null || newPreset.presetName.isBlank()) {
                 _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-                    alertDialogState = null,
-                    isPresetDropDownMenuExpanded = false,
-                    isAddDataFieldVisible = false,
-                    presetList = presets,
-                    dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
+                    alertDialogState = _dataFieldScreenState.value.alertDialogState?.copy(
+                        textFieldErrorText = "Enter Preset Name!"
+                    )
                 )
-                _eventFlow.emit(UiEvent.ShowSnackbar("Preset: ${newPreset.presetName} added!"))
-
-            } catch (e: InvalidPresetException) {
-                _dataFieldScreenState.value = dataFieldScreenState.value.copy(
-                    alertDialogState = null,
-                    isPresetDropDownMenuExpanded = false,
-                    isAddDataFieldVisible = false
-                )
-                _eventFlow.emit(
-                    UiEvent.ShowSnackbar(message = e.message!!)
-                )
-            } finally {
-                if (newPreset != null) {
-                    ChangePreset(newPreset.presetName)
+            } else {
+                try {
+                    presetUseCases.addPreset(newPreset)
+                    val presets = presetUseCases.getPresetList()
+                    val currentPreset = presetUseCases.getPresetByPresetName(newPreset.presetName)
+                    _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                        alertDialogState = null,
+                        isPresetDropDownMenuExpanded = false,
+                        isAddDataFieldVisible = false,
+                        presetList = presets,
+                        currentPreset = newPreset,
+                        dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
+                    )
+                    userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
+                    _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!")) }
+                catch (e: InvalidPresetException) {
+                    _dataFieldScreenState.value = dataFieldScreenState.value.copy(
+                        alertDialogState = null,
+                        isPresetDropDownMenuExpanded = false,
+                        isAddDataFieldVisible = false
+                    )
+                    _eventFlow.emit(
+                        ShowSnackbar(message = e.message!!)
+                    )
                 }
             }
         }
@@ -349,10 +356,7 @@ class DataFieldsViewModel @Inject constructor(
     private fun onChangePreset(event: ChangePreset) {
         val newPreset = presetUseCases.getPresetByPresetName(event.value)
 
-        val newSettingPreset = settingsUseCases.getSettingByName("currentPreset")
-        settingsUseCases.editSetting(
-            newSettingPreset.copy(settingStringValue = event.value)
-        )
+        userPreferenceStore.setString(Pair(CURRENT_PRESET, event.value))
 
         currentPreset = newPreset
         _dataFieldScreenState.value = dataFieldScreenState.value.copy(
@@ -390,7 +394,7 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
-        object SaveDataField : UiEvent()
+        data class SaveDataField(val message: String) : UiEvent()
         data class ShowSnackbar(val message: String) : UiEvent()
     }
 }

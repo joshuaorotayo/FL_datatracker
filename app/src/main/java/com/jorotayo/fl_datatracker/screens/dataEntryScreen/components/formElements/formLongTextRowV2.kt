@@ -1,8 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
@@ -67,7 +67,6 @@ fun formLongTextRowV2(
     setDataValue: (String) -> Unit,
 ): String {
     //define any local variables
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataValue)) }
 
@@ -75,7 +74,6 @@ fun formLongTextRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.surface)
             .padding(small)
     ) {
         Text(
@@ -83,7 +81,7 @@ fun formLongTextRowV2(
                 .fillMaxWidth(),
             text = data.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.subtitleTextColour,
         )
         // Data Field Name Data Capture
 
@@ -96,7 +94,7 @@ fun formLongTextRowV2(
                         stringResource(id = R.string.edit_long_text),
                         data.fieldName
                     ),
-                    tint = textColour
+                    tint = MaterialTheme.colors.primary
                 )
             },
             modifier = Modifier
@@ -122,7 +120,7 @@ fun formLongTextRowV2(
                 (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else "Please enter content for field: ${data.fieldName}")?.let {
                     Text(
                         text = it,
-                        color = if (text.text.isBlank()) textColour else MaterialTheme.colors.onSurface,
+                        color = if (text.text.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                         textAlign = TextAlign.Start
                     )
                 }
@@ -133,7 +131,7 @@ fun formLongTextRowV2(
             text = "${text.text.length} / $maxChar",
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.caption,
-            color = Color.Gray,
+            color = MaterialTheme.colors.subtitleTextColour,
             modifier = Modifier
                 .fillMaxWidth()
         )

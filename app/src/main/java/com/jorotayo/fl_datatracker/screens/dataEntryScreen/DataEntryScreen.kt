@@ -4,42 +4,68 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle.Companion.Italic
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.navigation.Screen
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.*
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
+import com.jorotayo.fl_datatracker.navigation.MainScreens
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormNameHeader
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ImageBottomActionSheet
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formCountRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formDateRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formImageRowV4
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formListRowV4
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formLongTextRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formRadioRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formShortTextRowV2
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formTimeRowV2
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -78,11 +104,6 @@ fun DataEntryScreen(
     onUiEvent: SharedFlow<DataEntryScreenViewModel.UiEvent>,
     onDataEvent: (DataEvent) -> Unit
 ) {
-    val bottomNavigationItems = listOf(
-        Screen.DataFieldsScreen,
-        Screen.HomeScreen,
-        Screen.DataEntry
-    )
 
     val scaffoldState = rememberScaffoldState()
 
@@ -110,14 +131,14 @@ fun DataEntryScreen(
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Form Saved!"
                     )
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigate(MainScreens.HomeMainScreens.route)
                 }
 
                 DataEntryScreenViewModel.UiEvent.UpdateDataForm -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Data Form Updated!"
                     )
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigate(MainScreens.HomeMainScreens.route)
                 }
             }
         }
@@ -125,91 +146,17 @@ fun DataEntryScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {//box for ModalBottomSheet
         Scaffold(
-            bottomBar = {
-                BottomNavigationBar(navController, bottomNavigationItems)
-            },
             topBar = {
                 Column(
                     modifier = Modifier
                         .wrapContentHeight()
                         .padding(top = large)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(start = small)
-                            .fillMaxWidth(),
-                        verticalAlignment = CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = colors.primary,
-                            modifier = Modifier
-                                .padding(end = Dimen.regular)
-                                .clickable { navController.navigateUp() }
-                        )
-                        Text(
-                            modifier = Modifier,
-                            text = "Data Entry",
-                            color = colors.primary,
-                            style = typography.h4.also { FontWeight.SemiBold },
-                            textAlign = TextAlign.Start
-                        )
-                    }
+                    HeaderRow()
                     if (uiState.dataRows.isNotEmpty()) {
-                        Row(
-                            modifier = Modifier,
-                            verticalAlignment = CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = small, top = small),
-                                text = String.format(
-                                    stringResource(id = R.string.enter_data_header),
-                                    uiState.presetSetting.presetName
-                                ),
-                                color = colors.onBackground,
-                                style = typography.h5.also { Italic },
-                                textAlign = TextAlign.Start
-                            )
-                        }
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    start = small,
-                                    end = small,
-                                ),
-                            text = stringResource(id = R.string.data_entry_form_header),
-                            color = colors.onBackground,
-                            style = typography.h6.also { Italic },
-                            textAlign = TextAlign.Start
-                        )
-                        Text(
-                            modifier = Modifier.padding(
-                                start = small,
-                                top = small,
-                                bottom = small
-                            ),
-                            text = pluralStringResource(
-                                id = R.plurals.numberOfDatafields,
-                                count = uiState.dataRows.size,
-                                uiState.dataRows.size
-                            ),
-                            color = colors.onSurface,
-                            style = typography.h6
-                        )
+                        DataFormHeadings(uiState)
                     } else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(bottom = large)
-                        ) {
-                            Spacer(modifier = Modifier.weight(1F))
-                            NoDataForm()
-                            Spacer(modifier = Modifier.weight(1F))
-                        }
+                        NoDataFormSection()
                     }
                 }
             },
@@ -222,39 +169,43 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
+                    .padding(bottom = bottomBarPadding)
             ) {
                 Card(
                     modifier = Modifier
                         .padding(xSmall)
                         .fillMaxWidth()
-                        .wrapContentHeight(),
-                    shape = RoundedCornerShape(medium),
-                    elevation = xSmall
+                        .wrapContentHeight()
+                        .background(color = colors.surface),
+                    shape = RoundedCornerShape(xSmall),
+                    elevation = xxxSmall
                 ) {
                     LazyColumn(
                         state = listState,
                         modifier = Modifier
                             .wrapContentHeight()
                             .fillMaxWidth()
-                            .background(color = colors.surface)
                     ) {
                         item {
                             // Contents of data entry form
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .wrapContentHeight()
                             ) {
-                                Spacer(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .size(16.dp)
-                                )
                                 FormNameHeader(
                                     setName = {
                                         onDataEvent(DataEvent.SetName(value = it))
                                         onDataEvent(DataEvent.FormSubmitted)
                                     },
                                     data = uiState
+                                )
+                                Divider(
+                                    modifier = Modifier
+                                        .padding(horizontal = xSmall, vertical = xSmall)
+                                        .fillMaxWidth(),
+                                    color = colors.secondary,
+                                    thickness = 0.5.dp
                                 )
                             }
                         }
@@ -388,7 +339,12 @@ fun DataEntryScreen(
                                 }
                             }
                             if (index < uiState.dataRows.size) {
-                                Divider(modifier = Modifier.padding(xSmall))
+                                Divider(
+                                    modifier = Modifier.padding(
+                                        horizontal = xSmall,
+                                        vertical = xxxSmall
+                                    )
+                                )
                             }
                         }
 
@@ -422,7 +378,7 @@ fun DataEntryScreen(
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                         },
                         modifier = Modifier
-                            .align(Alignment.Center)
+                            .align(Center)
                     )
                 }
             }
@@ -442,4 +398,82 @@ fun DataEntryScreen(
     }
 }
 
+@Composable
+private fun HeaderRow() {
+    Row(
+        modifier = Modifier
+            .padding(start = xSmall)
+            .fillMaxWidth(),
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            modifier = Modifier,
+            text = "Data Entry",
+            color = colors.primary,
+            style = typography.h1,
+            textAlign = TextAlign.Start
+        )
+    }
+}
 
+@Composable
+private fun DataFormHeadings(
+    uiState: DataEntryScreenState,
+) {
+    Row(
+        modifier = Modifier,
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = small, top = small),
+            text = String.format(
+                stringResource(id = R.string.enter_data_header),
+                uiState.presetSetting.presetName
+            ),
+            color = colors.subtitleTextColour,
+            style = typography.h3,
+            textAlign = TextAlign.Start
+        )
+    }
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = small,
+                end = small,
+            ),
+        text = stringResource(id = R.string.data_entry_form_header),
+        color = colors.subtitleTextColour,
+        style = typography.h3,
+        textAlign = TextAlign.Start
+    )
+    Text(
+        modifier = Modifier.padding(
+            start = small,
+            top = small,
+            bottom = small
+        ),
+        text = pluralStringResource(
+            id = R.plurals.numberOfDatafields,
+            count = uiState.dataRows.size,
+            uiState.dataRows.size
+        ),
+        style = typography.h3,
+        color = colors.subtitleTextColour
+    )
+}
+
+@Composable
+private fun NoDataFormSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = bottomBarPadding)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            NoDataForm(modifier = Modifier.align(alignment = Center))
+        }
+    }
+}

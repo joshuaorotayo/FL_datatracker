@@ -2,33 +2,59 @@ package com.jorotayo.fl_datatracker.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+/*val Martel = FontFamily(
+    Font(R.font.martel_regular),
+    Font(R.font.martel_semi_bold, FontWeight.SemiBold),
+    Font(R.font.martel_bold, FontWeight.Bold),
+    Font(R.font.martel_light, FontWeight.Light),
+    Font(R.font.martel_extra_bold, FontWeight.ExtraBold),
+    Font(R.font.martel_extra_light, FontWeight.ExtraLight),
+    Font(R.font.martel_black, FontWeight.Black)
+)*/
+
 // Set of Material typography styles to start with
 val Typography = Typography(
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 24.sp
+    h1 = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp,
+        letterSpacing = 1.sp
     ),
-    body1 = TextStyle(
-        fontFamily = FontFamily.Default,
+
+    h2 = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
+        letterSpacing = 0.5.sp
+    ),
+
+    h3 = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
+        fontSize = 16.sp,
+        letterSpacing = 0.25.sp
+    ),
+
+    subtitle1 = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
         letterSpacing = 0.sp
-    )
-    /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
     ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
+
+    body1 = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
+        fontSize = 14.sp,
+        letterSpacing = 0.sp
+    ),
+
+    body2 = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+        letterSpacing = 0.sp
+    ),
+
+    button = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp
     )
-    */
 )

@@ -15,11 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRowV2
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.BottomNavigationBar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -31,23 +27,15 @@ import com.jorotayo.fl_datatracker.util.exampleShortField
 fun PreviewPageTemplate() {
 
     FL_DatatrackerTheme {
-        PageTemplate(navController = rememberNavController())
+        PageTemplate()
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PageTemplate(
-    navController: NavController,
-) {
+fun PageTemplate() {
 
     val scaffoldState = rememberScaffoldState()
-
-    val bottomNavigationItems = listOf(
-        Screen.DataFieldsScreen,
-        Screen.HomeScreen,
-        Screen.DataEntry
-    )
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -71,9 +59,6 @@ fun PageTemplate(
                     textAlign = Start
                 )
             }
-        },
-        bottomBar = {
-            BottomNavigationBar(navController, bottomNavigationItems)
         }
     ) { innerPadding ->
         Box(

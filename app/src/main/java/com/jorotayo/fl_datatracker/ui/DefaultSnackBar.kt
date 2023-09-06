@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @ExperimentalMaterialApi
@@ -28,7 +29,8 @@ fun DefaultSnackbar(
                 content = {
                     Text(
                         text = data.message,
-                        style = MaterialTheme.typography.body2,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.h2,
                         color = MaterialTheme.colors.onSurface
                     )
                 },

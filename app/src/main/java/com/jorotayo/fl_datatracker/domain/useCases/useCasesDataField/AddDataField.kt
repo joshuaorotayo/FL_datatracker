@@ -26,14 +26,15 @@ class AddDataField(
                 isError = true
                 msg = "Please Enter values for both fields"
             }
-        } else if (dataField.dataFieldType == 6) {
+        }
+        if (dataField.dataFieldType == 6) {
             if (dataField.first.isBlank() || dataField.second.isBlank() || dataField.third.isBlank()) {
                 isError = true
                 msg = "Please Enter a value for all 3 Fields"
             }
         }
         if (isError) {
-            throw InvalidDataFieldException("Invalid Data Field $msg")
+            throw InvalidDataFieldException("Invalid Data Field. $msg")
         } else {
             repository.insertDataField(dataField)
         }

@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,7 +33,7 @@ data class ButtonState(
     val contentPadding: PaddingValues? = null,
     val modifier: Modifier = Modifier,
     val contentColor: Color = Yellow,
-    val disabledContentColor: Color = Green,
+    val disabledContentColor: Color = Transparent,
     val backgroundColor: Color = Transparent,
     val disabledBackgroundColor: Color = Transparent,
     val borderColor: Color = Transparent,
@@ -51,9 +51,18 @@ private const val FULLY_ROUNDED = 100
 
 @Composable
 fun Button(buttonState: ButtonState) {
-    val defaultPadding = xSmall
-    val defaultContentPadding = PaddingValues(defaultPadding)
+    when (buttonState.type) {
+        ButtonType.PRIMARY -> PrimaryButton(buttonState)
+        ButtonType.SECONDARY -> SecondaryButton(buttonState)
+        else -> TODO()
+    }
+}
 
+/**
+ * Button that uses the primary colour
+ */
+@Composable
+fun PrimaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
@@ -72,11 +81,43 @@ fun Button(buttonState: ButtonState) {
         modifier = buttonState.modifier.semantics {
             contentDescription = buttonState.buttonContentDescription ?: buttonState.label
         },
-        contentPadding = buttonState.contentPadding ?: defaultContentPadding
+        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
     ) {
         Text(
-            text = buttonState.label
-            //style = buttonState.textStyle,
+            text = buttonState.label,
+            fontSize = MaterialTheme.typography.subtitle1.fontSize
+            // style = buttonState.textStyle,
+        )
+    }
+} /**
+ * Button that uses the primary colour as an outline and surface as a background
+ */
+@Composable
+fun SecondaryButton(buttonState: ButtonState) {
+    Button(
+        onClick = buttonState.onClick,
+        enabled = buttonState.enabled,
+        elevation = ButtonDefaults.elevation(zero),
+        shape = RoundedCornerShape(FULLY_ROUNDED),
+        border = BorderStroke(
+            one,
+            if (buttonState.enabled) buttonState.borderColor else buttonState.disabledBorderColor
+        ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            disabledBackgroundColor = buttonState.disabledBackgroundColor,
+            contentColor = MaterialTheme.colors.onSecondary,
+            disabledContentColor = MaterialTheme.colors.onSecondary
+        ),
+        modifier = buttonState.modifier.semantics {
+            contentDescription = buttonState.buttonContentDescription ?: buttonState.label
+        },
+        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
+    ) {
+        Text(
+            text = buttonState.label,
+            fontSize = MaterialTheme.typography.subtitle1.fontSize
+            // style = buttonState.textStyle,
         )
     }
 }

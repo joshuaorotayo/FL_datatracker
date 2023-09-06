@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowCompo
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -48,9 +47,12 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEven
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.exampleShortDataRowState
 import com.jorotayo.fl_datatracker.util.getHeaderColour
@@ -91,13 +93,6 @@ fun RowDetails(
 
     Column(
         modifier = Modifier
-            .background(
-                if (isSystemInDarkTheme()) {
-                    if (isRowEnabled.value) MaterialTheme.colors.surface
-                    else MaterialTheme.colors.primary.copy(0.3f)
-                } else if (isRowEnabled.value) MaterialTheme.colors.surface
-                else MaterialTheme.colors.primary.copy(0.3f)
-            )
     ) {
         Row(
             modifier = Modifier
@@ -118,7 +113,7 @@ fun RowDetails(
                 modifier = Modifier
                     .weight(0.30f),
                 text = rowData.value.dataField.fieldName,
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colors.subtitleTextColour,
                 style = MaterialTheme.typography.body2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -135,7 +130,7 @@ fun RowDetails(
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = xSmall),
+                        .padding(end = xxxSmall),
                     imageVector = icons[rowData.value.dataField.dataFieldType],
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
                     tint = MaterialTheme.colors.primary
@@ -143,13 +138,13 @@ fun RowDetails(
                 Text(
                     modifier = Modifier,
                     text = items[rowData.value.dataField.dataFieldType],
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colors.subtitleTextColour,
                     style = MaterialTheme.typography.body2
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
-                    tint = MaterialTheme.colors.onSurface
+                    tint = MaterialTheme.colors.subtitleTextColour
                 )
                 DataFieldTypeDropDownV2(
                     isExpanded = expanded,
@@ -199,7 +194,7 @@ fun RowDetails(
             SelectHintType(rowData.value, textColour, isHintVisible, isEditOptionsVisible)
         }
         AnimatedVisibility(visible = !isHintVisible.value && isEditOptionsVisible.value) {
-            SelectEditType(rowData.value, onRowEvent, textColour)
+            SelectEditType(rowData.value, onRowEvent)
         }
         AnimatedVisibility(visible = !isHintVisible.value && isEditOptionsVisible.value) {
             HideEditRow(isHintVisible, isEditOptionsVisible)
@@ -259,23 +254,22 @@ fun BasicVisibleHint(
     textColour: Color,
     isHintVisible: MutableState<Boolean>,
     isEditOptionsVisible: MutableState<Boolean>
-//    onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = Dimen.zero),
+            .padding(horizontal = xSmall, vertical = zero),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "Hint: ",
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            color = MaterialTheme.colors.subtitleTextColour,
+            style = MaterialTheme.typography.body1
         )
         Text(
             text = "$fieldHint",
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.body2
         )
         Spacer(modifier = Modifier.weight(1.0f))
@@ -307,19 +301,19 @@ private fun BooleanHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = Dimen.zero),
+            .padding(horizontal = xSmall, vertical = zero),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = stringResource(R.string.bool_placeholder),
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.subtitleTextColour,
             style = MaterialTheme.typography.body2
         )
         Text(
             text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}",
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.body2
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -350,19 +344,20 @@ private fun TriStateHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = Dimen.zero),
+            .padding(horizontal = xSmall, vertical = zero),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.padding(end = xxSmall),
             text = stringResource(R.string.tristate_placeholder),
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.subtitleTextColour,
             style = MaterialTheme.typography.body2
         )
         Text(
             text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.body2
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -386,25 +381,22 @@ private fun TriStateHintRow(
 @Composable
 fun SelectEditType(
     rowData: DataFieldRowState,
-    onRowEvent: (RowEvent) -> Unit,
-    textColour: Color
+    onRowEvent: (RowEvent) -> Unit
 ) {
-
     Column(
         modifier = Modifier.wrapContentHeight()
     ) {
-
         when (rowData.dataField.dataFieldType) {
             DataFieldType.SHORT_TEXT.ordinal -> {
-                BasicEditHint(rowData, onRowEvent, textColour)
+                BasicEditHint(rowData, onRowEvent)
             }
 
             DataFieldType.LONG_TEXT.ordinal -> {
-                BasicEditHint(rowData, onRowEvent, textColour)
+                BasicEditHint(rowData, onRowEvent)
             }
 
             DataFieldType.LIST.ordinal -> {
-                BasicEditHint(rowData, onRowEvent, textColour)
+                BasicEditHint(rowData, onRowEvent)
             }
 
             DataFieldType.BOOLEAN.ordinal -> {
@@ -422,8 +414,7 @@ fun SelectEditType(
 @Composable
 fun BasicEditHint(
     currentRowState: DataFieldRowState,
-    onRowEvent: (RowEvent) -> Unit,
-    textColour: Color,
+    onRowEvent: (RowEvent) -> Unit
 ) {
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
     val fieldHint =
@@ -432,7 +423,7 @@ fun BasicEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(bottom = Dimen.xxxSmall),
+            .padding(bottom = xxxSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -441,16 +432,16 @@ fun BasicEditHint(
                 .wrapContentHeight()
                 .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
-                textColor = textColour,
+                textColor = MaterialTheme.colors.subtitleTextColour,
                 backgroundColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
+                focusedIndicatorColor = Color.Transparent,
             ),
             value = hintText,
             placeholder = {
                 Text(
                     text = fieldHint!!,
-                    color = if (hintText.text.isBlank()) textColour else Color.Black,
+                    color = if (hintText.text.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )
@@ -481,7 +472,7 @@ private fun BooleanEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = xSmall, top = Dimen.zero, end = xSmall, bottom = xSmall),
+            .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         //boolean text fields for editable
@@ -536,7 +527,7 @@ private fun TriStateEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = xSmall, top = Dimen.zero, end = xSmall, bottom = xSmall),
+            .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         //boolean text fields for editable
@@ -608,7 +599,8 @@ private fun HideEditRow(
                 }
             )
             .wrapContentHeight()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = xxSmall),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

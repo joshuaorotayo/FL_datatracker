@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Colors
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,16 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
 
@@ -50,6 +55,7 @@ data class AlertDialogState(
     val editField: Boolean? = false,
     val editFieldFunction: ((String) -> Unit?)? = null,
     val editFieldHint: String? = null,
+    val textFieldErrorText: String? = null,
     val imageIcon: ImageVector? = null,
     val scope: CoroutineScope? = null
 )
@@ -71,41 +77,40 @@ fun AlertDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = small),
+                        .padding(top = regular),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(medium),
+                            .size(large)
+                            .padding(end = xxSmall),
                         imageVector = icon!!,
                         contentDescription = "Icon for ${alertDialogState.title}",
                         tint = colors.primary
                     )
                     Text(
-                        text = alertDialogState.title,
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = SemiBold,
                         modifier = Modifier.wrapContentWidth(),
+                        text = alertDialogState.title,
+                        style = MaterialTheme.typography.subtitle1,
                         textAlign = alertDialogState.titleTextAlign,
-                        color = colors.onBackground
+                        color = colors.subtitleTextColour
                     )
                 }
             } else {
                 Text(
-                    text = alertDialogState.title,
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = SemiBold,
                     modifier = Modifier.fillMaxWidth(),
+                    text = alertDialogState.title,
+                    style = MaterialTheme.typography.subtitle1,
                     textAlign = alertDialogState.titleTextAlign,
-                    color = colors.onBackground
+                    color = colors.subtitleTextColour
                 )
             }
         },
         text = {
             Text(
                 text = alertDialogState.text,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 color = colors.onBackground
             )
@@ -117,14 +122,37 @@ fun AlertDialog(
                     value = fieldText,
                     maxLines = 1,
                     placeholder = {
-                        Text(
-                            modifier = Modifier
-                                .wrapContentHeight(),
-                            text = stringResource(R.string.enterPresetPlaceholder),
-                            style = MaterialTheme.typography.h6,
-                            color = colors.onSurface,
-                            textAlign = TextAlign.Center
-                        )
+                        if (alertDialogState.textFieldErrorText != null) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .padding(end = xxSmall),
+                                    text = alertDialogState.textFieldErrorText,
+                                    style = MaterialTheme.typography.h6,
+                                    color = colors.primary,
+                                    textAlign = TextAlign.Center
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.Warning,
+                                    tint = colors.primary,
+                                    contentDescription = "Text field error"
+                                )
+                            }
+                        } else {
+                            Text(
+                                modifier = Modifier
+                                    .wrapContentHeight(),
+                                text = stringResource(R.string.enterPresetPlaceholder),
+                                style = MaterialTheme.typography.h6,
+                                color = colors.onSurface,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
                     },
                     onValueChange = {
                         setText(it.ofMaxLength(maxLength = maxChar))
@@ -143,35 +171,51 @@ fun AlertDialog(
             }
         },
         dismissButton = {
-            if (hasDismissButton(alertDialogState)) Button(
-                buttonState =
-                ButtonState(
-                    enabled = true,
-                    type = ButtonType.TERTIARY,
-                    label = alertDialogState.dismissButtonLabel ?: "",
-                    onClick = alertDialogState.dismissButtonOnClick!!,
-                    modifier = Modifier.padding(bottom = xSmall),
-                    contentColor = colors.onBackground
-                )
-            )
+            if (hasDismissButton(alertDialogState))
+                DismissBtn(alertDialogState, colors)
         },
         confirmButton = {
-            Button(
-                buttonState =
-                ButtonState(
-                    enabled = true,
-                    type = ButtonType.TERTIARY,
-                    label = alertDialogState.confirmButtonLabel,
-                    onClick = alertDialogState.confirmButtonOnClick,
-                    modifier = Modifier.padding(bottom = xSmall),
-                    contentColor = colors.primary
-                )
-            )
-
+            ConfirmBtn(alertDialogState, colors)
         },
         properties = DialogProperties(
             dismissOnBackPress = alertDialogState.dismissible,
             dismissOnClickOutside = alertDialogState.dismissible
+        )
+    )
+}
+
+@Composable
+private fun DismissBtn(
+    alertDialogState: AlertDialogState,
+    colors: Colors
+) {
+    Button(
+        buttonState =
+        ButtonState(
+            enabled = true,
+            type = ButtonType.TERTIARY,
+            label = alertDialogState.dismissButtonLabel ?: "",
+            onClick = alertDialogState.dismissButtonOnClick!!,
+            modifier = Modifier.padding(bottom = xSmall),
+            contentColor = colors.onBackground
+        )
+    )
+}
+
+@Composable
+private fun ConfirmBtn(
+    alertDialogState: AlertDialogState,
+    colors: Colors
+) {
+    Button(
+        buttonState =
+        ButtonState(
+            enabled = true,
+            type = ButtonType.TERTIARY,
+            label = alertDialogState.confirmButtonLabel,
+            onClick = alertDialogState.confirmButtonOnClick,
+            modifier = Modifier.padding(bottom = xSmall),
+            contentColor = colors.primary
         )
     )
 }

@@ -6,7 +6,6 @@ import android.widget.DatePicker
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import java.util.Calendar
 import java.util.Date
@@ -73,8 +74,6 @@ fun formDateRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
-
     // Fetching the Local Context
     val mContext = LocalContext.current
 
@@ -110,7 +109,6 @@ fun formDateRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.surface)
             .padding(small)
     ) {
         Text(
@@ -118,7 +116,7 @@ fun formDateRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.subtitleTextColour,
         )
 
         AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
@@ -159,7 +157,7 @@ fun formDateRowV2(
                     modifier = Modifier,
                     imageVector = Icons.Default.EditCalendar,
                     contentDescription = "Select Date from Calendar",
-                    tint = textColour
+                    tint = MaterialTheme.colors.primary
                 )
             }
             Text(
@@ -171,7 +169,7 @@ fun formDateRowV2(
                     )
                     .fillMaxWidth(),
                 text = mDate.value.ifBlank { "DDnd Month, Year" },
-                color = if (mDate.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
+                color = if (mDate.value.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1
             )

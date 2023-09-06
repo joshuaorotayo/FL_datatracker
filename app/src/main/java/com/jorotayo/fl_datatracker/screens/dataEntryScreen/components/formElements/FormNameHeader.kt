@@ -78,7 +78,7 @@ fun FormNameHeader(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(xSmall)
+            .padding(start = xSmall, top = xSmall, end = xSmall, bottom = xSmall)
     ) {
         AnimatedVisibility(visible = data.nameError || (data.dataName.isBlank() && data.formSubmitted)) {
             Row(
@@ -106,17 +106,17 @@ fun FormNameHeader(
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
         ) {
             TextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier,
                 value = nameText.value,
                 placeholder = {
                     Text(
                         text = "Please enter a meeting or Service Name...",
                         color = headerColour,
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.h6
+                        textAlign = TextAlign.Start
                     )
                 },
                 singleLine = true,

@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -36,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +50,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormImageRowV2() {
-    val dataItem = DataRowState(
+    val dataRow = DataRowState(
         DataItem(
             presetId = 0,
             dataItemId = 0,
@@ -65,20 +63,18 @@ fun PreviewFormImageRowV2() {
     )
     FL_DatatrackerTheme {
 
-        formImageRowV2(data = dataItem, setDataValue = {})
+        formImageRowV2(data = dataRow)
     }
 }
 
 @Composable
 fun formImageRowV2(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
 ): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
     val imageChanged = remember { mutableStateOf(false) }
     val currentImage = remember { mutableStateOf(Icons.Default.Headphones) }
-    val focusManager = LocalFocusManager.current
     val headerColour =
         if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
@@ -100,8 +96,7 @@ fun formImageRowV2(
             .padding(horizontal = Dimen.small)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(shape = RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.surface),
+            .clip(shape = RoundedCornerShape(10.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -144,20 +139,16 @@ fun formImageRowV2(
         Spacer(modifier = Modifier.height(12.dp))
 
         imageUri?.let {
-            if (android.os.Build.VERSION.SDK_INT < 28) {
-                bitmap.value = MediaStore.Images
-                    .Media.getBitmap(context.contentResolver, it)
-
-            } else {
-                val source = ImageDecoder
-                    .createSource(context.contentResolver, it)
-                bitmap.value = ImageDecoder.decodeBitmap(source)
-            }
+            val source = ImageDecoder
+                .createSource(context.contentResolver, it)
+            bitmap.value = ImageDecoder.decodeBitmap(source)
 
             bitmap.value?.let { btm ->
-                Image(bitmap = btm.asImageBitmap(),
+                Image(
+                    bitmap = btm.asImageBitmap(),
                     contentDescription = null,
-                    modifier = Modifier.size(400.dp))
+                    modifier = Modifier.size(400.dp)
+                )
             }
         }
 

@@ -30,11 +30,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.util.Dimen
 
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewListItem() {
@@ -64,7 +67,6 @@ fun listItem(
     index: Int,
 ): String {
 
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 20
     val (text, setText) = mutableStateOf(itemValue)
 
@@ -87,10 +89,12 @@ fun listItem(
             },
             label = {
                 Text(
-                    text = String.format(stringResource(R.string.add_list_item_placeholder),
-                        index + 1),
+                    text = String.format(
+                        stringResource(R.string.add_list_item_placeholder),
+                        index + 1
+                    ),
                     style = TextStyle(
-                        color = textColour
+                        color = MaterialTheme.colors.headingTextColour
                     )
                 )
             },
@@ -103,9 +107,11 @@ fun listItem(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = String.format(stringResource(id = R.string.list_item_leading_icon),
-                        index + 1),
-                    tint = textColour
+                    contentDescription = String.format(
+                        stringResource(id = R.string.list_item_leading_icon),
+                        index + 1
+                    ),
+                    tint = MaterialTheme.colors.headingTextColour
                 )
             },
             trailingIcon = {

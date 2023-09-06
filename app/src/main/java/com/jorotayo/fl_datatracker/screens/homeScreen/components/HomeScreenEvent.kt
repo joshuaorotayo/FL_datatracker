@@ -9,8 +9,6 @@ sealed class HomeScreenEvent {
     object ToggleSearchBar : HomeScreenEvent()
     object EditDataItem : HomeScreenEvent()
     object DeleteDataItem : HomeScreenEvent()
-
-    //    object NavigateToSettings : HomeScreenEvent()
     object NavigateToDataEntry : HomeScreenEvent()
 
     data class ToggleDeleteDataDialog(val data: Data) : HomeScreenEvent()

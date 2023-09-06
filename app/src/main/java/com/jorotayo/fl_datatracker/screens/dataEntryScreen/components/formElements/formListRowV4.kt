@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formEleme
 
 import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -67,7 +66,6 @@ fun formListRowV4(
     LazyColumn(
         modifier = Modifier
             .padding(xSmall)
-            .background(MaterialTheme.colors.surface)
             .fillMaxWidth()
             .height(Dp(columnHeight.value))
     ) {
@@ -120,7 +118,6 @@ fun formListRowV4(
                     columnHeight.value -= itemHeight
                     number.value--
                     textFields.value = deleteValueAtIndex(textFields.value, index)
-                    Log.d("formListRowV2", getDataMapToString(textFields.value))
                 },
                 clearField = {
                     textFields.value[index] = ""
@@ -170,7 +167,6 @@ private fun getDataStringToList(textsFieldsString: String): HashMap<Int, String>
     return if (textsFieldsString.isBlank()) {
         hashMapOf<Int, String>(0 to "")
     } else {
-        Log.d("json", "getDataStringToList: $textsFieldsString")
         val mapType = HashMap<Int, String>().javaClass
         gson.fromJson(textsFieldsString, mapType)
     }
