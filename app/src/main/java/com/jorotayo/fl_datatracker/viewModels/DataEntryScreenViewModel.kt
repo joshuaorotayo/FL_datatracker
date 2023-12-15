@@ -77,7 +77,6 @@ class DataEntryScreenViewModel @Inject constructor(
                 val dataFormValid = dataFormResults.first
                 val dataFormData = dataFormResults.second
                 if (!dataFormValid) {
-
                     val newUiState = mutableStateOf(
                         DataEntryScreenState(
                             dataName = dataFormData.dataName,

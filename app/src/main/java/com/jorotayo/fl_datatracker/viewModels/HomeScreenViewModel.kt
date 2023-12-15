@@ -76,7 +76,6 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun onEditDataItem() {
-
     }
 
     private fun onToggleDeleteDataDialog(event: HomeScreenEvent.ToggleDeleteDataDialog) {

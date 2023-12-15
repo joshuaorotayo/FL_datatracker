@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -25,18 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewSearchFilters() {
     FL_DatatrackerTheme {
@@ -61,7 +55,7 @@ fun SearchFilters() {
                 .wrapContentHeight()
                 .padding(xSmall)
         ) {
-            Row(modifier = Modifier.fillMaxWidth()){
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Icon(
                     modifier = Modifier.padding(end = xSmall),
                     imageVector = Icons.Default.ManageSearch,
@@ -75,10 +69,12 @@ fun SearchFilters() {
                     textAlign = TextAlign.Start
                 )
             }
-            FlowRow(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = xSmall)) {
-                for (filter in filterList()){
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = xSmall)
+            ) {
+                for (filter in filterList()) {
                     SearchFilter(filter = filter)
                 }
             }
@@ -91,12 +87,12 @@ fun SearchFilters() {
 fun SearchFilter(
     filter: Filters
 ) {
-    val enabled = remember { mutableStateOf(false)}
+    val enabled = remember { mutableStateOf(false) }
 
     ElevatedFilterChip(
-        modifier = Modifier.padding(end= xSmall),
+        modifier = Modifier.padding(end = xSmall),
         selected = enabled.value,
-        onClick = { enabled.value = !enabled.value},
+        onClick = { enabled.value = !enabled.value },
         label = { Text(text = filter.filterName) },
         leadingIcon = {
             AnimatedVisibility(visible = enabled.value) {
@@ -108,10 +104,10 @@ fun SearchFilter(
             }
         },
         colors = FilterChipDefaults.elevatedFilterChipColors(
-            selectedContainerColor = MaterialTheme.colors.primary.copy(alpha=0.9f),
-            selectedLabelColor =  MaterialTheme.colors.subtitleTextColour,
-            containerColor = MaterialTheme.colors.primary.copy(alpha=0.25f),
-                    labelColor =  MaterialTheme.colors.subtitleTextColour,
+            selectedContainerColor = MaterialTheme.colors.primary.copy(alpha = 0.9f),
+            selectedLabelColor = MaterialTheme.colors.subtitleTextColour,
+            containerColor = MaterialTheme.colors.primary.copy(alpha = 0.25f),
+            labelColor = MaterialTheme.colors.subtitleTextColour,
         ),
         elevation = FilterChipDefaults.elevatedFilterChipElevation(
             elevation = zero,
@@ -120,7 +116,7 @@ fun SearchFilter(
     )
 }
 
-fun filterList(): List<Filters>{
+fun filterList(): List<Filters> {
     val filterList = mutableListOf<Filters>()
     filterList.add(
         Filters("Field Name")

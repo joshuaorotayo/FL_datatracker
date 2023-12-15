@@ -6,13 +6,27 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -60,7 +74,6 @@ fun PreviewFormImageRowV4() {
     }
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun formImageRowV4(
@@ -68,7 +81,6 @@ fun formImageRowV4(
     onClick: () -> Unit,
     showBottomSheet: (ModalBottomSheetState) -> Unit,
 ): String {
-
     val imageUri = remember {
         mutableStateOf(data.dataItem.dataValue.toUri())
     }
@@ -115,15 +127,13 @@ fun formImageRowV4(
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
                         onClick()
                     },
-                )
-                {
+                ) {
                     Text(
                         text = "Add image",
                         style = typography.h2
                     )
                 }
             }
-
         }
         AnimatedVisibility(imageUri.value.toString().contains("content", ignoreCase = true)) {
             Column(
@@ -137,10 +147,9 @@ fun formImageRowV4(
                         .wrapContentSize()
                         .align(Alignment.End),
                     onClick = {
-                        //clear image
+                        // clear image
                     },
-                )
-                {
+                ) {
                     Text(
                         text = "-",
                         style = typography.h6
@@ -169,8 +178,7 @@ fun formImageRowV4(
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
                         onClick()
                     },
-                )
-                {
+                ) {
                     Text(
                         text = "Add image",
                         style = typography.h2

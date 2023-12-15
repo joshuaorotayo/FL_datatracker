@@ -11,7 +11,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-
 fun capitaliseWord(word: String): String {
     return word.lowercase(Locale.ROOT)
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }

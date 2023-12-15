@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.app.TimePickerDialog
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -28,19 +27,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import java.util.Calendar
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewFormTimeRowV2() {
     FL_DatatrackerTheme {
@@ -56,7 +50,8 @@ fun PreviewFormTimeRowV2() {
                     dataId = 1
                 )
             ),
-            setDataValue = {})
+            setDataValue = {}
+        )
     }
 }
 
@@ -82,7 +77,10 @@ fun formTimeRowV2(
         { _, hour: Int, minute: Int ->
             mTime.value = formattedTimeString(hour, minute)
             setDataValue(mTime.value)
-        }, mHour, mMinute, true
+        },
+        mHour,
+        mMinute,
+        true
     )
 
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
@@ -133,7 +131,8 @@ fun formTimeRowV2(
             IconButton(
                 onClick = {
                     mTimePickerDialog.show()
-                }) {
+                }
+            ) {
                 Icon(
                     modifier = Modifier,
                     imageVector = Icons.Default.Timer,
@@ -172,10 +171,13 @@ private fun formattedTimeString(hour: Int, minute: Int): String {
         if (mTime.get(Calendar.HOUR) == 0) "12" else mTime.get(Calendar.HOUR).toString()
 
     val formattedMinute =
-        if (mTime.get(Calendar.MINUTE) < 10) "0" + mTime.get(Calendar.MINUTE) else "" + mTime.get(
-            Calendar.MINUTE
-        )
+        if (mTime.get(Calendar.MINUTE) < 10) {
+            "0" + mTime.get(Calendar.MINUTE)
+        } else {
+            "" + mTime.get(
+                Calendar.MINUTE
+            )
+        }
 
     return "$formattedHrs:$formattedMinute $amPm"
-
 }

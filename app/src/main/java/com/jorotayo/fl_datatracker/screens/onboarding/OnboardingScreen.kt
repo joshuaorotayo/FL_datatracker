@@ -53,7 +53,6 @@ fun OnboardingScreen(
     finishOnboarding: () -> Unit,
     pages: List<OnboardingScreenData>,
 ) {
-
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val darkTheme = isSystemInDarkTheme()
@@ -61,10 +60,8 @@ fun OnboardingScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-    )
-    {
-        HorizontalPager(state = pagerState, count = pages.size)
-        { page ->
+    ) {
+        HorizontalPager(state = pagerState, count = pages.size) { page ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -72,7 +69,6 @@ fun OnboardingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-
                 Image(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
@@ -82,7 +78,7 @@ fun OnboardingScreen(
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
                 )
             }
-            //here
+            // here
 
             Box(modifier = Modifier.align(Alignment.BottomCenter)) {
                 Card(
@@ -134,7 +130,7 @@ fun OnboardingScreen(
                             onboardingEvent = onBoardingEvent,
                             lastIndex = pages.lastIndex
                         )
-                        //Next Button Section
+                        // Next Button Section
                         AnimatedVisibility(
                             modifier = Modifier
                                 .weight(1f)
@@ -147,7 +143,6 @@ fun OnboardingScreen(
                                 verticalAlignment = Alignment.Bottom,
                                 horizontalArrangement = Arrangement.Center
                             ) {
-
                                 Button(
                                     onClick = {
                                         scope.launch {

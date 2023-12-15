@@ -37,7 +37,7 @@ private val darkColours = darkColors(
     onError = md_theme_white,
     background = md_theme_dark_background,
     onBackground = md_theme_white,
-    surface = md_theme_dark_background, //elevation xxxSmall
+    surface = md_theme_dark_background, // elevation xxxSmall
     onSurface = md_theme_white,
 )
 
@@ -54,7 +54,9 @@ val Colors.bodyTextColour: Color
 
 @Composable
 fun FL_DatatrackerTheme(
-    content: @Composable() () -> Unit
+    content:
+    @Composable()
+        () -> Unit
 ) {
     val useDevicedarkModeSettings = SharedSettingService.useDeviceDarkModeSettings.observeAsState()
 

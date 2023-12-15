@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
@@ -34,12 +33,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewSearchBar() {
     FL_DatatrackerTheme {
@@ -110,7 +104,7 @@ fun SearchBar(
                 leadingIcon = {
                     IconButton(
                         onClick = {
-                            //Back arrow to close search View
+                            // Back arrow to close search View
                             onHomeEvent(HomeScreenEvent.ToggleSearchBar)
                         },
                     ) {
@@ -129,4 +123,3 @@ fun SearchBar(
         }
     }
 }
-

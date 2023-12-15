@@ -1,8 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,20 +30,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewFormShortTextRowV2() {
     val dataItem = DataRowState(
@@ -69,7 +62,6 @@ fun formShortTextRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
-
     val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
@@ -86,7 +78,6 @@ fun formShortTextRowV2(
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -163,7 +154,7 @@ fun formShortTextRowV2(
                     }
                 ),
             )
-            //Max Chars count
+            // Max Chars count
             Text(
                 text = "${text.text.length} / $maxChar",
                 textAlign = TextAlign.End,

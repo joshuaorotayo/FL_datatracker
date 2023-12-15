@@ -11,7 +11,6 @@ class AddPreset(
 ) {
     @Throws(InvalidPresetException::class)
     operator fun invoke(preset: Preset) {
-
         val boxState = BoxState()
 
         val results =
@@ -22,6 +21,5 @@ class AddPreset(
         } else {
             repository.addPreset(preset)
         }
-
     }
 }

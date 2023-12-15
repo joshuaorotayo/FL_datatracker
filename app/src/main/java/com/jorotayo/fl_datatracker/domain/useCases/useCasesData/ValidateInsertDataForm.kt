@@ -7,7 +7,6 @@ class ValidateInsertDataForm {
         fieldNames: List<String>,
         dataForm: DataEntryScreenState,
     ): Pair<Boolean, DataEntryScreenState> {
-
         var newForm = dataForm
         var noErrors = true
 

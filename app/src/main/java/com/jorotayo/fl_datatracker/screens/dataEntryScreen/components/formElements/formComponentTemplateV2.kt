@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,19 +16,14 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewFormComponentTemplateV2() {
     FL_DatatrackerTheme {
@@ -41,7 +35,6 @@ fun PreviewFormComponentTemplateV2() {
 fun formComponentTemplateV2(
     fieldName: String
 ): String {
-
     val count = remember { mutableStateOf(0) }
 
     Column(
@@ -70,8 +63,7 @@ fun formComponentTemplateV2(
             horizontalArrangement = SpaceEvenly,
             verticalAlignment = CenterVertically
         ) {
-            //Button Data capture
-
+            // Button Data capture
         }
     }
 

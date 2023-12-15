@@ -56,7 +56,6 @@ fun MainNavGraph(
                 onUiEvent = dataEntryScreenViewModel.eventFlow,
                 onDataEvent = dataEntryScreenViewModel::onDataEvent
             )
-
         }
         composable(
             route = MainScreens.DataFieldsMainScreens.route

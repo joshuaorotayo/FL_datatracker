@@ -9,4 +9,3 @@ data class Filters(
     val filterName: String = "",
     val filterEnabled: Boolean = false
 )
-

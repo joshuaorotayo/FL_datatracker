@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,12 +43,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
@@ -62,12 +61,7 @@ import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import com.jorotayo.fl_datatracker.util.returnNewDataField
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewNewDataField() {
     FL_DatatrackerTheme {
@@ -92,7 +86,6 @@ fun NewDataField(
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
     val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
 
-
     var _newDataField = remember { mutableStateOf(NewDataFieldState()) }
     val newDataField: State<NewDataFieldState> = _newDataField
 
@@ -103,9 +96,6 @@ fun NewDataField(
     val (thirdText, setThirdText) = remember { mutableStateOf(TextFieldValue(newDataField.value.thirdValue)) }
     var expanded by remember { mutableStateOf(false) } // Dropdown Menu
 
-
-//    rememberCoroutineScope()
-
     val focusManager = LocalFocusManager.current
 
     Card(
@@ -113,7 +103,7 @@ fun NewDataField(
             .wrapContentSize()
             .padding(xSmall),
         shape = RoundedCornerShape(xSmall),
-        elevation = xSmall
+        elevation = xxSmall
     ) {
         Column(
             modifier = Modifier
@@ -180,7 +170,7 @@ fun NewDataField(
                     focusManager.moveFocus(FocusDirection.Down)
                 }),
             )
-            //Max Chars count
+            // Max Chars count
             Text(
                 text = "${newDataField.value.fieldName.length} / $maxChar",
                 textAlign = TextAlign.End,
@@ -281,8 +271,9 @@ fun NewDataField(
                 }
             }
 
-            AnimatedVisibility(visible = newDataField.value.fieldType <= 1 || newDataField.value.fieldType >= 7)
-            { // ShortString = int 0, LongString = int 1
+            AnimatedVisibility(
+                visible = newDataField.value.fieldType <= 1 || newDataField.value.fieldType >= 7
+            ) { // ShortString = int 0, LongString = int 1
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -306,7 +297,7 @@ fun NewDataField(
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.bodyTextColour,
                     )
-                    //Button Data capture
+                    // Button Data capture
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -339,8 +330,9 @@ fun NewDataField(
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.subtitle1,
                             )
-                        })
-                    //Max Chars count
+                        }
+                    )
+                    // Max Chars count
                     Text(
                         text = "${hintText.text.length} / $maxHintChar",
                         textAlign = TextAlign.End,
@@ -385,7 +377,8 @@ fun NewDataField(
                                 _newDataField.value.firstValue = firstText
                             }
                         )
-                        TransparentTextField(modifier = Modifier.weight(1f),
+                        TransparentTextField(
+                            modifier = Modifier.weight(1f),
                             text = secondText.text,
                             label = "2nd Value",
                             placeholder = secondText.text.ifBlank { "2nd Value" },
@@ -403,8 +396,7 @@ fun NewDataField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 10.dp, start = 5.dp, end = 5.dp)
-                )
-                {
+                ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -470,7 +462,6 @@ fun NewDataField(
                         val dataField = returnNewDataField(newDataField.value)
                         onDataFieldEvent(DataFieldEvent.SaveDataField(dataField))
                         _newDataField = mutableStateOf(NewDataFieldState())
-
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                 ) {

@@ -8,7 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,7 +44,6 @@ import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.util.Dimen
 
-
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = "Light Mode")
 @Composable
@@ -62,7 +60,6 @@ fun PreviewFormImageRowV2() {
         errorMsg = ""
     )
     FL_DatatrackerTheme {
-
         formImageRowV2(data = dataRow)
     }
 }
@@ -86,8 +83,10 @@ fun formImageRowV2(
         mutableStateOf<Bitmap?>(null)
     }
 
-    val launcher = rememberLauncherForActivityResult(contract =
-    ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val launcher = rememberLauncherForActivityResult(
+        contract =
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         imageUri = uri
     }
 
@@ -132,7 +131,8 @@ fun formImageRowV2(
             modifier = Modifier.padding(horizontal = Dimen.small),
             onClick = {
                 launcher.launch("camera/*")
-            }) {
+            }
+        ) {
             Text(text = "Add image")
         }
 

@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColorAsState
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -30,19 +28,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
-
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun BottomBarPreview() {
     FL_DatatrackerTheme {
@@ -82,7 +75,7 @@ fun BottomBar(navController: NavHostController) {
 //            color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
 //        )
         BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = colors.background,
             elevation = zero
         ) {
             mainScreens.forEach { screen ->
@@ -95,8 +88,6 @@ fun BottomBar(navController: NavHostController) {
         }
     }
 }
-
-
 
 @Composable
 fun RowScope.BottomNavItem(
@@ -122,8 +113,8 @@ fun RowScope.BottomNavItem(
             )
         },
         selected = itemSelected,
-        unselectedContentColor = MaterialTheme.colors.secondary,
-        selectedContentColor = MaterialTheme.colors.primary,
+        unselectedContentColor = colors.secondary,
+        selectedContentColor = colors.primary,
         onClick = {
             navController.navigate(mainScreens.route) {
                 popUpTo(navController.graph.findStartDestination().id)
@@ -133,7 +124,6 @@ fun RowScope.BottomNavItem(
         modifier = Modifier.height(80.dp)
     )
 }
-
 
 @Composable
 fun RowScope.AnimatedBottomNavItem(
@@ -152,22 +142,25 @@ fun RowScope.AnimatedBottomNavItem(
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
-        ), label = "Nav Bar Icon size animation"
+        ),
+        label = "Nav Bar Icon size animation"
     )
     val animatedVisibleColor by animateColorAsState(
-        targetValue = MaterialTheme.colors.secondary,
+        targetValue = colors.secondary,
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
-        ), label = "Nav Bar visible color animation"
+        ),
+        label = "Nav Bar visible color animation"
     )
 
     val animatedHiddenColor by animateColorAsState(
-        targetValue = MaterialTheme.colors.primary,
+        targetValue = colors.primary,
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
-        ), label = "Nav Bar color animation"
+        ),
+        label = "Nav Bar color animation"
     )
 
     BottomNavigationItem(
@@ -198,7 +191,6 @@ fun RowScope.AnimatedBottomNavItem(
         modifier = Modifier.height(80.dp)
     )
 }
-
 
 @Composable
 fun RowScope.ChipBottomNavItem(

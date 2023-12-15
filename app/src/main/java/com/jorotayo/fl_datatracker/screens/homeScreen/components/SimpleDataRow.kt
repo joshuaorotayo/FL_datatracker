@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Row
@@ -19,19 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewSimpleDataRow() {
     FL_DatatrackerTheme {
@@ -90,7 +84,7 @@ fun SimpleDataRow(
             modifier = Modifier
                 .weight(0.5f)
                 .size(medium)
-                .clickable(onClick = {  }),
+                .clickable(onClick = { }),
             imageVector = Icons.Default.Share,
             contentDescription = "Share icon for data ${data.name}",
             tint = colors.primary

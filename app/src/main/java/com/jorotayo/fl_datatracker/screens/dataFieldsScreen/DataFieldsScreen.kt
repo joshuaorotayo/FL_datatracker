@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,7 +44,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
@@ -61,6 +59,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.C
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
@@ -80,12 +79,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun DataFieldsScreenPreview() {
     val examplePreset = Preset(presetId = 0L, presetName = "Default")
@@ -114,7 +108,6 @@ fun DataFieldsScreen(
     onPresetEvent: (PresetEvent) -> Unit,
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
-
     onDataFieldEvent(DataFieldEvent.InitScreen)
 
     val scaffoldState = rememberScaffoldState()
@@ -164,7 +157,7 @@ fun DataFieldsScreen(
                 } else {
                     NoDataFieldSection(uiState, fields)
                 }
-            } //end of top bar
+            } // end of top bar
         },
         scaffoldState = scaffoldState,
         snackbarHost = {
@@ -187,7 +180,9 @@ fun DataFieldsScreen(
                     NewDataFieldSection(uiState, onDataFieldEvent)
                 }
 
-                itemsIndexed(items = fields, key = { index, item -> item.dataFieldId.toInt() },
+                itemsIndexed(
+                    items = fields,
+                    key = { index, item -> item.dataFieldId.toInt() },
                     itemContent = { index, item ->
                         DataFieldRowV2(
                             currentDataField = item,
@@ -236,7 +231,7 @@ private fun AddEditRow(
     onDataFieldEvent: (DataFieldEvent) -> Unit,
     listState: LazyListState
 ) {
-    Row( //Add/Edit row
+    Row( // Add/Edit row
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -258,7 +253,8 @@ private fun AddEditRow(
                     onDataFieldEvent(DataFieldEvent.ToggleAddNewDataField)
                     scrollUp(scope, listState)
                 }
-            }) {
+            }
+        ) {
             Icon(
                 modifier = Modifier
                     .size(regular),
@@ -278,7 +274,7 @@ private fun PresetSelection(
     onPresetEvent: (PresetEvent) -> Unit,
     presets: List<Preset>
 ) {
-    Row( //Heading row
+    Row( // Heading row
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -377,7 +373,6 @@ private fun NoDataFieldSection(
                 .fillMaxSize()
                 .padding(bottom = bottomBarPadding)
         ) {
-
             Box(modifier = Modifier.fillMaxSize()) {
                 NoDataField(modifier = Modifier.align(alignment = Alignment.Center))
             }
@@ -437,14 +432,12 @@ private fun PresetDropDownMenu(
                     onPresetEvent(ChangePreset(preset.presetName))
                 },
                 modifier = Modifier
-            )
-            {
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
-                )
-                {
+                ) {
                     Text(
                         text = preset.presetName,
                         textAlign = TextAlign.Center,
@@ -453,15 +446,16 @@ private fun PresetDropDownMenu(
                     )
                     // Default shouldn't show the 'x'
                     if (index > 0) {
-                        Icon(modifier = Modifier
-                            .padding(start = 5.dp)
-                            .clickable(
-                                onClick = {
-                                    onPresetEvent(
-                                        ShowDeletePresetDialog(preset)
-                                    )
-                                }
-                            ),
+                        Icon(
+                            modifier = Modifier
+                                .padding(start = 5.dp)
+                                .clickable(
+                                    onClick = {
+                                        onPresetEvent(
+                                            ShowDeletePresetDialog(preset)
+                                        )
+                                    }
+                                ),
                             imageVector = Icons.Default.Close,
                             contentDescription = "Delete icon for ${preset.presetName}",
                             tint = colors.onSurface

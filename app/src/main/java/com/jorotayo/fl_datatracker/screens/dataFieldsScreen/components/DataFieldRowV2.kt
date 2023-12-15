@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -15,23 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowComponents.RowDetails
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.exampleShortField
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewDataFieldRowV2() {
     FL_DatatrackerTheme {
@@ -45,7 +39,6 @@ fun DataFieldRowV2(
     onRowEvent: (RowEvent) -> Unit,
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
-
     val currentRowState = remember {
         mutableStateOf(
             DataFieldRowState(
@@ -63,10 +56,16 @@ fun DataFieldRowV2(
             .padding(horizontal = xSmall, vertical = xxxSmall)
             .background(
                 if (isSystemInDarkTheme()) {
-                    if (isRowEnabled.value) MaterialTheme.colors.surface
-                    else MaterialTheme.colors.primary.copy(0.3f)
-                } else if (isRowEnabled.value) MaterialTheme.colors.surface
-                else MaterialTheme.colors.primary.copy(0.3f)
+                    if (isRowEnabled.value) {
+                        MaterialTheme.colors.surface
+                    } else {
+                        MaterialTheme.colors.primary.copy(0.3f)
+                    }
+                } else if (isRowEnabled.value) {
+                    MaterialTheme.colors.surface
+                } else {
+                    MaterialTheme.colors.primary.copy(0.3f)
+                }
             ),
         shape = RoundedCornerShape(xSmall),
         elevation = xxxSmall,

@@ -104,7 +104,6 @@ fun DataEntryScreen(
     onUiEvent: SharedFlow<DataEntryScreenViewModel.UiEvent>,
     onDataEvent: (DataEvent) -> Unit
 ) {
-
     val scaffoldState = rememberScaffoldState()
 
     val scope = rememberCoroutineScope()
@@ -144,7 +143,7 @@ fun DataEntryScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {//box for ModalBottomSheet
+    Box(modifier = Modifier.fillMaxSize()) { // box for ModalBottomSheet
         Scaffold(
             topBar = {
                 Column(
@@ -350,10 +349,11 @@ fun DataEntryScreen(
 
                         item {
                             // Save Button Footer
-                            TextButton(modifier = Modifier
-                                .padding(small)
-                                .fillMaxWidth()
-                                .clip(shape = RoundedCornerShape(medium)),
+                            TextButton(
+                                modifier = Modifier
+                                    .padding(small)
+                                    .fillMaxWidth()
+                                    .clip(shape = RoundedCornerShape(medium)),
                                 colors = ButtonDefaults.textButtonColors(
                                     backgroundColor = colors.primary,
                                     contentColor = colors.surface
@@ -369,7 +369,7 @@ fun DataEntryScreen(
                                 )
                             }
                         }
-                        //close Box
+                        // close Box
                     }
 
                     DefaultSnackbar(

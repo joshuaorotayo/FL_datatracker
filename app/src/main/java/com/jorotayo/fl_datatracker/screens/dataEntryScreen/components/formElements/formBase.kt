@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
@@ -20,17 +19,18 @@ import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 @Composable
 fun DefaultContent() {
-    Column (modifier = Modifier
-        .fillMaxWidth()
-    ){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Text("Default Empty Heading", color = MaterialTheme.colors.onSurface)
         Text("Default Empty content", color = MaterialTheme.colors.secondary)
     }
-    
 }
+
 @Composable
 fun FormBase(
-    content: @Composable () -> Unit = { DefaultContent()}
+    content: @Composable () -> Unit = { DefaultContent() }
 ) {
     Card(
         modifier = Modifier
@@ -52,12 +52,7 @@ fun FormBase(
     }
 }
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun FormBasePreview() {
     FL_DatatrackerTheme {

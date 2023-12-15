@@ -84,7 +84,6 @@ fun PreviewFormRadioRowV2() {
     }
 }
 
-
 @Composable
 fun formRadioRowV2(
     data: DataRowState,
@@ -94,9 +93,9 @@ fun formRadioRowV2(
 
     val defaultSelected =
         if (data.dataItem.dataValue == "") {
-            floor(options.size.toDouble() / 2) //default value
+            floor(options.size.toDouble() / 2) // default value
         } else {
-            //if previously selected
+            // if previously selected
             when (data.dataItem.dataValue) {
                 options[0] -> {
                     (0).toDouble()
@@ -191,7 +190,7 @@ fun formRadioRowV2(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                //Button Data capture
+                // Button Data capture
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(0.6f),
@@ -231,7 +230,6 @@ fun formRadioRowV2(
                         }
                     }
                 }
-
             }
         }
     }

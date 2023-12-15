@@ -319,8 +319,8 @@ class DataFieldsViewModel @Inject constructor(
                         dataFields = dataFieldUseCases.getDataFieldsByPresetId(currentPreset.presetId),
                     )
                     userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
-                    _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!")) }
-                catch (e: InvalidPresetException) {
+                    _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
+                } catch (e: InvalidPresetException) {
                     _dataFieldScreenState.value = dataFieldScreenState.value.copy(
                         alertDialogState = null,
                         isPresetDropDownMenuExpanded = false,
@@ -368,7 +368,6 @@ class DataFieldsViewModel @Inject constructor(
             alertDialogState = null
         )
     }
-
 
     private fun onDeletePreset() {
         _dataFieldScreenState.value.modifiedPreset?.let { deletePresetActions(it) }

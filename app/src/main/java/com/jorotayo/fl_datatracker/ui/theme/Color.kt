@@ -10,7 +10,7 @@ val lightSurfaceHeadingColour = Color(0xFFB02D21)
 val md_theme_light_primary = Color(color = 0xFFB02D21)
 val md_theme_light_variant = Color(color = 0xFFEF5350)
 val md_theme_onPrimary = Color(color = 0xFFFFFFFF)
-//val md_theme_light_secondary = Color(0xFF380F0B)
+// val md_theme_light_secondary = Color(0xFF380F0B)
 
 val md_theme_light_secondary = Color(color = 0xFF444444)
 val md_theme_light_error = Color(0xFFBA1A1A)

@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowComponents
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -39,13 +38,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
@@ -58,12 +57,7 @@ import com.jorotayo.fl_datatracker.util.exampleShortDataRowState
 import com.jorotayo.fl_datatracker.util.getHeaderColour
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 private fun PreviewRowDetails() {
     val example = remember {
@@ -159,7 +153,6 @@ fun RowDetails(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-
                 Checkbox(
                     modifier = Modifier
                         .fillMaxWidth(0.5f),
@@ -201,7 +194,6 @@ fun RowDetails(
         }
     }
 }
-
 
 @Composable
 fun SelectHintType(
@@ -278,8 +270,8 @@ fun BasicVisibleHint(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            })
-        {
+            }
+        ) {
             Icon(
                 modifier = Modifier,
                 imageVector = Icons.Default.Edit,
@@ -366,8 +358,8 @@ private fun TriStateHintRow(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            })
-        {
+            }
+        ) {
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_tristate_value),
@@ -376,7 +368,6 @@ private fun TriStateHintRow(
         }
     }
 }
-
 
 @Composable
 fun SelectEditType(
@@ -408,7 +399,6 @@ fun SelectEditType(
             }
         }
     }
-
 }
 
 @Composable
@@ -475,7 +465,7 @@ private fun BooleanEditHint(
             .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        //boolean text fields for editable
+        // boolean text fields for editable
         TransparentTextField(
             modifier = Modifier.weight(1f),
             text = firstText.value,
@@ -530,7 +520,7 @@ private fun TriStateEditHint(
             .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        //boolean text fields for editable
+        // boolean text fields for editable
         TransparentTextField(
             modifier = Modifier.weight(1f),
             text = firstText.value,

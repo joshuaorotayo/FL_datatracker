@@ -44,8 +44,10 @@ class DataFieldRepositoryImpl : DataFieldRepository {
     }
 
     override fun getDataFieldsByPresetIdEnabled(presetId: Long): List<DataField> {
-        return dataFieldBox.query(DataField_.isEnabled.equal(true)
-            .and(DataField_.presetId.equal(presetId))).build().find()
+        return dataFieldBox.query(
+            DataField_.isEnabled.equal(true)
+                .and(DataField_.presetId.equal(presetId))
+        ).build().find()
     }
 
     override fun getDataFieldNames(): List<String> {

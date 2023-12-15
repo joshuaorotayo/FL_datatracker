@@ -67,7 +67,6 @@ fun PreviewBasicAddPresetDialog() {
     }
 }
 
-
 @Composable
 fun BasicAddPresetDialog(
     modifier: Modifier,
@@ -173,9 +172,9 @@ fun BasicAddPresetDialog(
                 TextButton(
                     enabled = presetText.text.isNotBlank(),
                     onClick = {
-
                         addPreset(presetText.text)
-                    }) {
+                    }
+                ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(addPresetBtn),

@@ -44,9 +44,11 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import kotlinx.coroutines.launch
 
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(
     showBackground = true,
     name = "Light Mode"
@@ -74,7 +76,6 @@ fun PreviewBasicDeleteRowDialog() {
     }
 }
 
-
 @Composable
 fun BasicDeleteRowDialog(
     modifier: Modifier,
@@ -83,7 +84,6 @@ fun BasicDeleteRowDialog(
     dialogIsVisible: Boolean,
     dataField: DataField,
 ) {
-
     val scope = rememberCoroutineScope()
 
     if (dialogIsVisible) {

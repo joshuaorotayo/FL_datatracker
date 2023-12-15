@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.res.Configuration
 import android.widget.DatePicker
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,6 @@ import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import java.util.Calendar
 import java.util.Date
-
 
 @Preview(
     showBackground = true,
@@ -102,7 +100,10 @@ fun formDateRowV2(
         { _: DatePicker, year: Int, month: Int, mDayOfMonth: Int ->
             mDate.value = formattedDateString(mDayOfMonth, month, year)
             setDataValue(mDate.value)
-        }, mYear, mMonth, mDay
+        },
+        mYear,
+        mMonth,
+        mDay
     )
 
     Column(
@@ -151,8 +152,8 @@ fun formDateRowV2(
             IconButton(
                 onClick = {
                     mDatePickerDialog.show()
-                })
-            {
+                }
+            ) {
                 Icon(
                     modifier = Modifier,
                     imageVector = Icons.Default.EditCalendar,
@@ -173,13 +174,11 @@ fun formDateRowV2(
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1
             )
-
         }
     }
 
     return mDate.value
 }
-
 
 private val days = arrayOf("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat")
 
@@ -191,7 +190,6 @@ private val months = arrayOf(
 )
 
 private fun formattedDateString(day: Int, month: Int, year: Int): String {
-
     val mCalendar = Calendar.getInstance()
 
     val day2 = day % 100

@@ -50,7 +50,6 @@ fun PreviewFormImageDialog() {
 fun FormImageDialog(
     onDismiss: () -> Unit,
 ) {
-
     Dialog(
         onDismissRequest = {
             onDismiss()
@@ -62,7 +61,6 @@ fun FormImageDialog(
                 .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,12 +91,12 @@ fun FormImageDialog(
                         top = Dimen.xxSmall
                     ),
                 horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
+            ) {
                 Button(
                     modifier = Modifier
                         .wrapContentWidth(),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(
                         text = "Camera"
                     )
@@ -113,7 +111,8 @@ fun FormImageDialog(
                 Button(
                     modifier = Modifier
                         .wrapContentWidth(),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(
                         text = "Gallery"
                     )

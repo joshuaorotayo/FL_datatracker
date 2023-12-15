@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -36,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -50,6 +48,7 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchFilters
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
@@ -86,14 +85,17 @@ fun HomeScreen(
                         searchState = state
                     )
                 }
-                AnimatedVisibility(visible = state.isSearchVisible, enter = slideInVertically {
-                    with(density) { -40.dp.roundToPx() }
-                } + expandVertically(
-                    expandFrom = Alignment.Top
-                ) + fadeIn(
-                    initialAlpha = 0.3f
-                ),
-                    exit = slideOutVertically() + shrinkVertically() + fadeOut()) {
+                AnimatedVisibility(
+                    visible = state.isSearchVisible,
+                    enter = slideInVertically {
+                        with(density) { -40.dp.roundToPx() }
+                    } + expandVertically(
+                        expandFrom = Alignment.Top
+                    ) + fadeIn(
+                        initialAlpha = 0.3f
+                    ),
+                    exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                ) {
                     SearchFilters()
                 }
                 AnimatedVisibility(visible = !state.isSearchVisible) {
@@ -122,7 +124,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
             )
-            //...main content
+            // ...main content
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -139,8 +141,7 @@ fun HomeScreen(
                             end = small,
                             start = small
                         )
-                )
-                {
+                ) {
                     Text(
                         text = pluralStringResource(
                             id = R.plurals.items_showing_header,
@@ -221,15 +222,9 @@ fun HomeScreen(
     }
 }
 
-
 @SuppressLint("UnrememberedMutableState")
 @Composable
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 fun HomeScreenPreview() {
     FL_DatatrackerTheme {
         HomeScreen(

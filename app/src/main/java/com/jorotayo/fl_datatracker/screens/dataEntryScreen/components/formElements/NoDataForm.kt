@@ -43,7 +43,7 @@ fun PreviewNoDataForm() {
 fun NoDataForm(
     modifier: Modifier
 ) {
-    //empty Message
+    // empty Message
     Card(
         modifier = modifier
             .padding(small)
@@ -60,7 +60,6 @@ fun NoDataForm(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Icon(
                 modifier = Modifier.size(96.dp),
                 imageVector = Icons.Default.AddBox,

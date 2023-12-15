@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowComponents
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.DropdownMenu
@@ -16,19 +15,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewDataFieldTypeDropDown() {
     FL_DatatrackerTheme {
@@ -49,7 +43,6 @@ fun DataFieldTypeDropDownV2(
     dismissDropdown: () -> Unit,
     rowIndex: Long
 ) {
-
     var expanded = isExpanded
 
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
@@ -65,8 +58,7 @@ fun DataFieldTypeDropDownV2(
             DropdownMenuItem(onClick = {
                 onRowEvent(RowEvent.EditRowType(rowIndex, index))
                 dismissDropdown()
-            })
-            {
+            }) {
                 Text(
                     modifier = Modifier.weight(3f),
                     text = iconText,

@@ -64,7 +64,6 @@ fun PreviewBasicDeletePresetDialog() {
     }
 }
 
-
 @Composable
 fun BasicDeletePresetDialog(
     modifier: Modifier,
@@ -73,7 +72,6 @@ fun BasicDeletePresetDialog(
     scaffold: ScaffoldState,
     preset: Preset,
 ) {
-
     val headerColour =
         if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
@@ -98,7 +96,7 @@ fun BasicDeletePresetDialog(
                     .padding(bottom = small),
                 verticalAlignment = CenterVertically,
                 horizontalArrangement = Center
-            ){
+            ) {
                 Icon(
                     modifier = Modifier
                         .padding(end = xxSmall),

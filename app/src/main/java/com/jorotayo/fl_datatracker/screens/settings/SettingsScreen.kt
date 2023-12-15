@@ -50,7 +50,8 @@ private fun PreviewSettingsScreen() {
         SettingsScreen(
             {},
             {},
-            {})
+            {}
+        )
     }
 }
 
@@ -62,7 +63,6 @@ fun SettingsScreen(
     onDataFieldSettingsClick: () -> Unit,
     onFAQSListClick: () -> Unit
 ) {
-
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(
@@ -125,7 +125,6 @@ fun SettingsScreen(
                                 onSettingSelected = onFAQSListClick
                             )
                         }
-
                     }
                 }
 

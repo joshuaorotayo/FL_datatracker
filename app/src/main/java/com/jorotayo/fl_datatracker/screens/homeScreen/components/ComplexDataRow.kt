@@ -4,7 +4,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -33,9 +38,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 
 @Composable
 @Preview
-
 fun PreviewComplexDataRow() {
-
     ComplexDataRow(
         data = Data(
             dataId = 0,
@@ -62,17 +65,19 @@ fun ComplexDataRow(
     val largestCountField = BoxState().dataItemBox.query(DataItem_.dataId.equal(data.dataId)).and()
         .equal(DataItem_.dataFieldType, 5).build().findFirst()
 
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 24.dp, vertical = Dimen.xxSmall)
-        .clip(shape = RoundedCornerShape(10.dp))
-        .padding(4.dp),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = Dimen.xxSmall)
+            .clip(shape = RoundedCornerShape(10.dp))
+            .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
-    )
-    {
-        Column(modifier = Modifier
-            .weight(1f)) {
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
             Icon(
                 modifier = Modifier,
                 imageVector = Icons.Default.Group,
@@ -88,8 +93,10 @@ fun ComplexDataRow(
                 textAlign = TextAlign.Center
             )
         }
-        Column(modifier = Modifier
-            .weight(7f)) {
+        Column(
+            modifier = Modifier
+                .weight(7f)
+        ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -99,8 +106,9 @@ fun ComplexDataRow(
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center
             )
-            Row(modifier = Modifier
-                .fillMaxWidth(),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
@@ -108,7 +116,7 @@ fun ComplexDataRow(
                         .padding(horizontal = 5.dp)
                         .weight(1f),
                     text = if (dataItemsList.isEmpty()) "" else dataItemsList[0].fieldName + ": ${dataItemsList[0].dataValue}",
-                    //text = "field one",
+                    // text = "field one",
                     color = textColor,
                     style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis,
@@ -119,7 +127,7 @@ fun ComplexDataRow(
                         .padding(horizontal = 5.dp)
                         .weight(1f),
                     text = if (dataItemsList.size > 1) dataItemsList[1].dataValue else "Field 2", // TODO: correct  - data.dataFields[1].fieldName + ": ${data.dataFields[1].dataValue}"
-                    //text = "field two",
+                    // text = "field two",
                     color = textColor,
                     style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis,
@@ -154,12 +162,12 @@ fun ComplexDataRow(
     }
 
     AnimatedVisibility(visible = !last) {
-        Divider(modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.Gray.copy(0.1f))
+        Divider(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Gray.copy(0.1f))
         )
     }
-
 }

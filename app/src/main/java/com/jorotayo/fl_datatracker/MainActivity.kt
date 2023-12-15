@@ -29,8 +29,10 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var splashViewModel: SplashViewModel
+
     @Inject
     lateinit var sharedSettingService: SharedSettingService
+
     @Inject
     lateinit var userPreferenceStore: UserPreferenceStore
 
@@ -44,7 +46,6 @@ class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         var keepSplashOnScreen = true
         val delay = 1000L
 

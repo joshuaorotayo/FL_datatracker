@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.util.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +28,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.large
@@ -64,7 +63,6 @@ data class AlertDialogState(
 fun AlertDialog(
     alertDialogState: AlertDialogState
 ) {
-
     val (fieldText, setText) = remember { mutableStateOf(TextFieldValue("")) }
     val maxChar = 20
 
@@ -152,7 +150,6 @@ fun AlertDialog(
                                 textAlign = TextAlign.Center
                             )
                         }
-
                     },
                     onValueChange = {
                         setText(it.ofMaxLength(maxLength = maxChar))
@@ -171,8 +168,9 @@ fun AlertDialog(
             }
         },
         dismissButton = {
-            if (hasDismissButton(alertDialogState))
+            if (hasDismissButton(alertDialogState)) {
                 DismissBtn(alertDialogState, colors)
+            }
         },
         confirmButton = {
             ConfirmBtn(alertDialogState, colors)
@@ -191,7 +189,7 @@ private fun DismissBtn(
 ) {
     Button(
         buttonState =
-        ButtonState(
+        Buttons(
             enabled = true,
             type = ButtonType.TERTIARY,
             label = alertDialogState.dismissButtonLabel ?: "",
@@ -209,7 +207,7 @@ private fun ConfirmBtn(
 ) {
     Button(
         buttonState =
-        ButtonState(
+        Buttons(
             enabled = true,
             type = ButtonType.TERTIARY,
             label = alertDialogState.confirmButtonLabel,
@@ -228,12 +226,7 @@ private fun hasEditField(alertDialogState: AlertDialogState) =
 
 private fun hasImageIcon(alertDialogState: AlertDialogState) = alertDialogState.imageIcon != null
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun AlertDialogPreview() {
     FL_DatatrackerTheme {

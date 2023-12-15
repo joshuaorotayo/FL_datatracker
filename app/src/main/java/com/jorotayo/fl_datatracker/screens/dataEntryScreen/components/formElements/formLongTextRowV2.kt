@@ -66,7 +66,7 @@ fun formLongTextRowV2(
     data: DataItem,
     setDataValue: (String) -> Unit,
 ): String {
-    //define any local variables
+    // define any local variables
     val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataValue)) }
 
@@ -99,9 +99,11 @@ fun formLongTextRowV2(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .sizeIn(maxHeight = with(LocalDensity.current) {
-                    (lineHeight * 5).toDp()
-                }),
+                .sizeIn(
+                    maxHeight = with(LocalDensity.current) {
+                        (lineHeight * 5).toDp()
+                    }
+                ),
             value = text,
             onValueChange = { newText ->
                 setText(newText.ofMaxLength(maxLength = maxChar))
@@ -126,7 +128,7 @@ fun formLongTextRowV2(
                 }
             }
         )
-        //Max Chars count
+        // Max Chars count
         Text(
             text = "${text.text.length} / $maxChar",
             textAlign = TextAlign.End,

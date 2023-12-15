@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,13 +44,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -61,12 +60,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewDataFieldRow() {
     val currentDataField = DataField(
@@ -125,10 +119,16 @@ fun DataFieldRow(
                 .wrapContentSize()
                 .background(
                     if (isSystemInDarkTheme()) {
-                        if (isRowEnabled.value) MaterialTheme.colors.surface
-                        else MaterialTheme.colors.primary.copy(0.3f)
-                    } else if (isRowEnabled.value) MaterialTheme.colors.surface
-                    else MaterialTheme.colors.primary.copy(0.3f)
+                        if (isRowEnabled.value) {
+                            MaterialTheme.colors.surface
+                        } else {
+                            MaterialTheme.colors.primary.copy(0.3f)
+                        }
+                    } else if (isRowEnabled.value) {
+                        MaterialTheme.colors.surface
+                    } else {
+                        MaterialTheme.colors.primary.copy(0.3f)
+                    }
                 )
         ) {
             AnimatedVisibility(true) {
@@ -226,11 +226,14 @@ fun DataFieldRow(
                     }
                 }
             }
-            AnimatedVisibility((currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && isHintVisible.value && !isEditOptionsVisible.value) {
-
+            AnimatedVisibility(
+                (currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && isHintVisible.value && !isEditOptionsVisible.value
+            ) {
                 VisibleHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(visible = (currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && !isHintVisible.value && isEditOptionsVisible.value) {
+            AnimatedVisibility(
+                visible = (currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && !isHintVisible.value && isEditOptionsVisible.value
+            ) {
                 HiddenHintRow(
                     currentDataField,
                     textColour,
@@ -241,16 +244,22 @@ fun DataFieldRow(
                     rowIndex
                 )
             }
-            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value) {
+            AnimatedVisibility(
+                currentRowState.value.dataField.dataFieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value
+            ) {
                 BooleanHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value) {
+            AnimatedVisibility(
+                currentRowState.value.dataField.dataFieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value
+            ) {
                 TriStateHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
             AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 2 && isEditOptionsVisible.value) {
                 BooleanHintRow(firstText, currentRowState, onRowEvent, secondText)
             }
-            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value) {
+            AnimatedVisibility(
+                currentRowState.value.dataField.dataFieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value
+            ) {
                 TriStateEditHintRow(currentRowState, onRowEvent, firstText, secondText, thirdText)
             }
             AnimatedVisibility(isEditOptionsVisible.value) {
@@ -289,8 +298,7 @@ private fun DataFieldTypeDropDown(
                 isHintVisible.value = false
                 isHintVisible.value = true
 //                currentRowState.value.fieldType = index
-            })
-            {
+            }) {
                 Text(
                     text = s,
                     modifier = Modifier.weight(3f),
@@ -343,8 +351,8 @@ private fun VisibleHintRow(
             onClick = {
                 isHintVisible.value = !isHintVisible.value
                 isEditOptionsVisible.value = !isEditOptionsVisible.value
-            })
-        {
+            }
+        ) {
             Icon(
                 modifier = Modifier,
                 imageVector = Default.Edit,
@@ -429,7 +437,6 @@ private fun BooleanHintRow(
     }
 }
 
-
 @Composable
 private fun HiddenHintRow(
     currentDataField: DataField,
@@ -447,30 +454,43 @@ private fun HiddenHintRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
-        (if (currentDataField.fieldHint?.isBlank() == true) stringResource(R.string.edit_hint_text) else currentDataField.fieldHint)?.let {
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = textColour,
-                    backgroundColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent
-                ),
-                value = hintText,
-                placeholder = {
-                    Text(
-                        text = (if (currentRowState.value.dataField.fieldHint?.isBlank() == true) String.format(
-                            stringResource(
-                                R.string.hint_prompt,
-                                currentRowState.value.dataField.fieldName
-                            )
-                        ) else currentRowState.value.dataField.fieldHint!!),
-                        color = if (hintText.text.isBlank()) textColour else Color.Black,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
+        (
+                if (currentDataField.fieldHint?.isBlank() == true) {
+                    stringResource(
+                        R.string.edit_hint_text
                     )
+                } else {
+                    currentDataField.fieldHint
+                }
+                )?.let {
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = textColour,
+                        backgroundColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
+                    ),
+                    value = hintText,
+                    placeholder = {
+                        Text(
+                            text = (
+                                    if (currentRowState.value.dataField.fieldHint?.isBlank() == true) {
+                                        String.format(
+                                            stringResource(
+                                                R.string.hint_prompt,
+                                                currentRowState.value.dataField.fieldName
+                                            )
+                                        )
+                                    } else {
+                                        currentRowState.value.dataField.fieldHint!!
+                                    }
+                                    ),
+                            color = if (hintText.text.isBlank()) textColour else Color.Black,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
                 },
                 onValueChange =
                 { newText ->
@@ -536,7 +556,7 @@ private fun BooleanHintRow(
             .padding(bottom = xxxSmall),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        //boolean text fields for editable
+        // boolean text fields for editable
         TransparentTextField(
             modifier = Modifier.weight(1f),
             text = firstText.value,
@@ -588,7 +608,7 @@ private fun TriStateEditHintRow(
             .padding(bottom = xxxSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        //boolean text fields for editable
+        // boolean text fields for editable
         TransparentTextField(
             modifier = Modifier.weight(1f),
             text = firstText.value,
