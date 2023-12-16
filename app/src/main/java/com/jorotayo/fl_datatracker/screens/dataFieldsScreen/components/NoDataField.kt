@@ -28,6 +28,7 @@ import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @DefaultDualPreview
 @Composable
@@ -48,14 +49,14 @@ fun NoDataField(
         modifier = modifier
             .padding(small)
             .fillMaxWidth()
+            .background(MaterialTheme.colors.surface)
             .wrapContentHeight(),
         shape = RoundedCornerShape(xSmall),
-        elevation = xSmall
+        elevation = xxSmall
     ) {
         Column(
             modifier = Modifier
                 .wrapContentHeight()
-                .background(MaterialTheme.colors.surface)
                 .padding(xSmall),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
