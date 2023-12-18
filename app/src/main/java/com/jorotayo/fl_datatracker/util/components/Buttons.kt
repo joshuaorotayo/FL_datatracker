@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.util.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -28,11 +26,10 @@ import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
-data class Buttons(
+data class ButtonState(
     val type: ButtonType,
     val label: String? = "",
     val enabled: Boolean = true,
@@ -43,15 +40,13 @@ data class Buttons(
     val iconStartContentDesc: String? = null,
     val iconEnd: ImageVector? = null,
     val iconEndContentDesc: String? = null,
-    val contentPadding: PaddingValues? = null,
     val modifier: Modifier = Modifier,
-    val contentColor: Color = Yellow,
-    val disabledContentColor: Color = Transparent,
-    val backgroundColor: Color = Transparent,
-    val disabledBackgroundColor: Color = Transparent,
-    val borderColor: Color = Transparent,
-    val disabledBorderColor: Color = Transparent,
-    val fontWeight: FontWeight? = FontWeight.SemiBold
+    val contentColor: Color? = Color.Gray,
+    val disabledContentColor: Color? = Transparent,
+    val backgroundColor: Color? = Transparent,
+    val disabledBackgroundColor: Color? = Transparent,
+    val borderColor: Color? = Color.Black,
+    val disabledBorderColor: Color? = Color.Gray
 )
 
 enum class ButtonType {
@@ -63,7 +58,7 @@ enum class ButtonType {
 private const val FULLY_ROUNDED = 100
 
 @Composable
-fun Button(buttonState: Buttons) {
+fun CustomButton(buttonState: ButtonState) {
     when (buttonState.type) {
         ButtonType.PRIMARY -> PrimaryButton(buttonState)
         ButtonType.SECONDARY -> SecondaryButton(buttonState)
@@ -73,9 +68,9 @@ fun Button(buttonState: Buttons) {
 
 @DefaultDualPreview
 @Composable
-fun PreviewButtons() {
+private fun PreviewButtons() {
     FL_DatatrackerTheme {
-        val primaryButtonState = Buttons(
+        val primaryButtonState = ButtonState(
             label = "Test Button",
             onClick = {},
             enabled = true,
@@ -85,10 +80,9 @@ fun PreviewButtons() {
                 .fillMaxWidth(),
             contentColor = colors.primary,
             backgroundColor = colors.background,
-            borderColor = colors.primary,
-            fontWeight = FontWeight.SemiBold
+            borderColor = colors.primary
         )
-        val secondaryButtonState = Buttons(
+        val secondaryButtonState = ButtonState(
             label = "Test Button",
             onClick = {},
             enabled = true,
@@ -98,36 +92,34 @@ fun PreviewButtons() {
                 .fillMaxWidth(),
             contentColor = colors.primary,
             backgroundColor = colors.background,
-            borderColor = colors.primary,
-            fontWeight = FontWeight.SemiBold
+            borderColor = colors.primary
         )
-        val tertiaryButtonState = Buttons(
+        val tertiaryButtonState = ButtonState(
             onClick = {},
             enabled = true,
             type = ButtonType.TERTIARY,
             modifier = Modifier
                 .padding(xxSmall),
             contentColor = colors.primary,
-            fontWeight = FontWeight.SemiBold,
             iconStart = Icons.Filled.SmartButton
         )
         Column(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(primaryButtonState)
-            Button(secondaryButtonState)
-            Button(tertiaryButtonState)
+            CustomButton(primaryButtonState)
+            CustomButton(secondaryButtonState)
+            CustomButton(tertiaryButtonState)
         }
     }
 }
 
 
 /**
- * Button that uses the primary colour
+ * Button that uses the primary colour as an outline and surface as a background
  */
 @Composable
-fun PrimaryButton(buttonState: Buttons) {
+private fun PrimaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
@@ -135,31 +127,32 @@ fun PrimaryButton(buttonState: Buttons) {
         shape = RoundedCornerShape(FULLY_ROUNDED),
         border = BorderStroke(
             one,
-            if (buttonState.enabled) buttonState.borderColor else buttonState.disabledBorderColor
+            if (buttonState.enabled) colors.primary else colors.primary.copy(alpha = 0.5f)
         ),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = buttonState.backgroundColor,
-            disabledBackgroundColor = buttonState.disabledBackgroundColor,
-            contentColor = buttonState.contentColor,
-            disabledContentColor = buttonState.disabledContentColor
+            backgroundColor = colors.primary,
+            contentColor = colors.onSecondary,
+            disabledBackgroundColor = Transparent,
+            disabledContentColor = colors.onSecondary
         ),
         modifier = buttonState.modifier.semantics {
             contentDescription = buttonState.buttonContentDescription ?: buttonState.label ?: ""
-        },
-        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
+        }
     ) {
         Text(
             text = buttonState.label ?: "",
-            fontSize = MaterialTheme.typography.subtitle1.fontSize
+            fontSize = MaterialTheme.typography.subtitle1.fontSize,
+            fontWeight = FontWeight.SemiBold
+            // style = buttonState.textStyle,
         )
     }
 }
 
 /**
- * Button that uses the primary colour as an outline and surface as a background
+ * Button that uses the primary colour
  */
 @Composable
-fun SecondaryButton(buttonState: Buttons) {
+private fun SecondaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
@@ -167,23 +160,19 @@ fun SecondaryButton(buttonState: Buttons) {
         shape = RoundedCornerShape(FULLY_ROUNDED),
         border = BorderStroke(
             one,
-            if (buttonState.enabled) buttonState.borderColor else buttonState.disabledBorderColor
+            if (buttonState.enabled) colors.primary else colors.primary.copy(alpha = 0.5f)
         ),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colors.primary,
-            disabledBackgroundColor = buttonState.disabledBackgroundColor,
-            contentColor = colors.onSecondary,
-            disabledContentColor = colors.onSecondary
+            backgroundColor = Transparent,
+            contentColor = colors.primary,
         ),
         modifier = buttonState.modifier.semantics {
             contentDescription = buttonState.buttonContentDescription ?: buttonState.label ?: ""
-        },
-        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
+        }
     ) {
         Text(
             text = buttonState.label ?: "",
             fontSize = MaterialTheme.typography.subtitle1.fontSize
-            // style = buttonState.textStyle,
         )
     }
 }
@@ -192,7 +181,7 @@ fun SecondaryButton(buttonState: Buttons) {
  * Button that uses the primary on surface colour with no rounding
  */
 @Composable
-fun TertiaryButton(buttonState: Buttons) {
+private fun TertiaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
@@ -206,13 +195,12 @@ fun TertiaryButton(buttonState: Buttons) {
         ),
         modifier = buttonState.modifier.semantics {
             contentDescription = buttonState.buttonContentDescription ?: buttonState.label ?: ""
-        },
-        contentPadding = buttonState.contentPadding ?: PaddingValues(xSmall)
+        }
     ) {
         buttonState.iconStart?.let {
             Icon(
                 imageVector = it,
-                tint = buttonState.contentColor,
+                tint = colors.primary,
                 contentDescription = buttonState.buttonContentDescription
 
             )

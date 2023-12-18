@@ -187,7 +187,7 @@ private fun DismissBtn(
     alertDialogState: AlertDialogState,
     colors: Colors
 ) {
-    Button(
+    CustomButton(
         buttonState =
         Buttons(
             enabled = true,
@@ -205,7 +205,7 @@ private fun ConfirmBtn(
     alertDialogState: AlertDialogState,
     colors: Colors
 ) {
-    Button(
+    CustomButton(
         buttonState =
         Buttons(
             enabled = true,

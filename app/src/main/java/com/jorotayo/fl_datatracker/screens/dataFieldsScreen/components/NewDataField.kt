@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -35,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -53,11 +50,13 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.TransparentTextField
+import com.jorotayo.fl_datatracker.util.components.ButtonState
+import com.jorotayo.fl_datatracker.util.components.ButtonType
+import com.jorotayo.fl_datatracker.util.components.CustomButton
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import com.jorotayo.fl_datatracker.util.returnNewDataField
 
@@ -446,32 +445,27 @@ fun NewDataField(
                     }
                 }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = small),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
+            CustomButton(
+                ButtonState(
                     modifier = Modifier
                         .padding(small)
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(medium)),
+                        .fillMaxWidth(),
+                    type = ButtonType.PRIMARY,
+                    label = "Save Data Field",
+                    enabled = true,
                     onClick = {
                         _newDataField.value = newDataField.value.copy(presetId = currentPresetId)
                         val dataField = returnNewDataField(newDataField.value)
                         onDataFieldEvent(DataFieldEvent.SaveDataField(dataField))
                         _newDataField = mutableStateOf(NewDataFieldState())
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-                ) {
-                    Text(
-                        modifier = Modifier,
-                        text = "Save Data Field",
-                        style = MaterialTheme.typography.body2
-                    )
-                }
-            }
+                    editFieldFunction = {},
+                    buttonContentDescription = "Save the contents of the data field",
+                    contentColor = MaterialTheme.colors.primary,
+                    backgroundColor = MaterialTheme.colors.background,
+                    borderColor = MaterialTheme.colors.primary
+                )
+            )
         }
     }
 }
