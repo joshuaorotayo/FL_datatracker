@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import com.jorotayo.fl_datatracker.screens.settings.DataFieldSettings
 import com.jorotayo.fl_datatracker.screens.settings.DisplaySettings
 import com.jorotayo.fl_datatracker.screens.settings.FAQsList
 import com.jorotayo.fl_datatracker.screens.settings.SettingsScreen
+import com.jorotayo.fl_datatracker.viewModels.SettingsViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.settingsNavGraph(
@@ -45,7 +47,10 @@ fun NavGraphBuilder.settingsNavGraph(
             DataFieldSettings()
         }
         composable(route = SettingScreens.DisplaySettings.route) {
-            DisplaySettings()
+            val settingsViewModel = hiltViewModel<SettingsViewModel>()
+            DisplaySettings(
+                uiState = settingsViewModel.displayUiState.value
+            )
         }
         composable(route = SettingScreens.FAQsList.route) {
             FAQsList()

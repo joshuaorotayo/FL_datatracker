@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataEntryScreen
+ package com.jorotayo.fl_datatracker.screens.dataEntryScreen
 
 import android.content.res.Configuration
 import android.os.Build

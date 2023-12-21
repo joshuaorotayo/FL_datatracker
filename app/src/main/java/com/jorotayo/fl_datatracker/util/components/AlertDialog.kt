@@ -189,7 +189,7 @@ private fun DismissBtn(
 ) {
     CustomButton(
         buttonState =
-        Buttons(
+        ButtonState(
             enabled = true,
             type = ButtonType.TERTIARY,
             label = alertDialogState.dismissButtonLabel ?: "",
@@ -207,7 +207,7 @@ private fun ConfirmBtn(
 ) {
     CustomButton(
         buttonState =
-        Buttons(
+        ButtonState(
             enabled = true,
             type = ButtonType.TERTIARY,
             label = alertDialogState.confirmButtonLabel,
