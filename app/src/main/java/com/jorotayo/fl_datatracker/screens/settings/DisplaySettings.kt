@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,8 +59,8 @@ private fun PreviewDisplaySettings() {
     FL_DatatrackerTheme {
         DisplaySettings(
             uiState = DisplayUiState(
-                isLightShowing = true,
-                isSystemDarkLightEnabled = false
+                isSystemDarkLightEnabled = false,
+                isLightShowing = false
             )
         )
     }
@@ -68,7 +70,8 @@ private fun PreviewDisplaySettings() {
 fun DisplaySettings(
     uiState: DisplayUiState
 ) {
-    var showingLightMode by remember { mutableStateOf(false) }
+    val isLightMode = isSystemInDarkTheme().not()
+    var showingLightMode by remember { mutableStateOf(isLightMode) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -131,12 +134,15 @@ fun DisplaySettings(
                                 Text(text = "Light Mode")
                                 Switch(
                                     checked = showingLightMode,
+                                    enabled = uiState.isSystemDarkLightEnabled.not(),
                                     onCheckedChange = { showingLightMode = !showingLightMode },
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = colors.primary,
-                                        checkedTrackColor = colors.background,
+                                        checkedTrackColor = colors.primary,
                                         uncheckedThumbColor = colors.primary,
-                                        uncheckedTrackColor = colors.surface,
+                                        uncheckedTrackColor = Color.DarkGray,
+                                        checkedTrackAlpha = 0.2f,
+                                        uncheckedTrackAlpha = 0.2f
                                     )
                                 )
                             }
@@ -160,12 +166,13 @@ fun DisplaySettings(
                                 Text(text = "Dark Mode")
                                 Switch(
                                     checked = showingLightMode.not(),
+                                    enabled = uiState.isSystemDarkLightEnabled.not(),
                                     onCheckedChange = { showingLightMode = !showingLightMode },
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = colors.primary,
                                         checkedTrackColor = colors.primary,
                                         uncheckedThumbColor = colors.primary,
-                                        uncheckedTrackColor = colors.background,
+                                        uncheckedTrackColor = Color.DarkGray,
                                         checkedTrackAlpha = 0.2f,
                                         uncheckedTrackAlpha = 0.2f
                                     )
@@ -191,7 +198,7 @@ fun DisplaySettings(
                                 checkedThumbColor = colors.primary,
                                 checkedTrackColor = colors.primary,
                                 uncheckedThumbColor = colors.primary,
-                                uncheckedTrackColor = colors.background,
+                                uncheckedTrackColor = Color.DarkGray,
                                 checkedTrackAlpha = 0.2f,
                                 uncheckedTrackAlpha = 0.2f
                             )
