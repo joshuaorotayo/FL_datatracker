@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
@@ -71,7 +72,7 @@ fun HomeScreen(
     val density = LocalDensity.current
 
     Scaffold(
-        topBar = {
+        /*topBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,7 +106,7 @@ fun HomeScreen(
                     )
                 }
             }
-        },
+        },*/
         scaffoldState = scaffoldState,
         snackbarHost = {
             scaffoldState.snackbarHostState
@@ -116,7 +117,8 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = colors.background)
+                .background(Color(238, 238, 238, 255))
+//                .background(color = colors.background)
         ) {
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,
@@ -131,6 +133,39 @@ fun HomeScreen(
                     .fillMaxHeight()
                     .background(color = colors.background)
             ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(top = medium)
+                ) {
+                    // Top Bar/Search Bar Area
+                    AnimatedVisibility(visible = state.isSearchVisible) {
+                        SearchBar(
+                            onHomeEvent = onHomeEvent,
+                            searchState = state
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = state.isSearchVisible,
+                        enter = slideInVertically {
+                            with(density) { -40.dp.roundToPx() }
+                        } + expandVertically(
+                            expandFrom = Alignment.Top
+                        ) + fadeIn(
+                            initialAlpha = 0.3f
+                        ),
+                        exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                    ) {
+                        SearchFilters()
+                    }
+                    AnimatedVisibility(visible = !state.isSearchVisible) {
+                        TopBar(
+                            toggleSearchBar = { onHomeEvent(HomeScreenEvent.ToggleSearchBar) },
+                            settingsNavigate = { navController.navigate(MainScreens.Settings.route) }
+                        )
+                    }
+                }
                 // Item Count Header
                 Row(
                     modifier = Modifier

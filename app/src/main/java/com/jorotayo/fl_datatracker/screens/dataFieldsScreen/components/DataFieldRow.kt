@@ -108,11 +108,10 @@ fun DataFieldRow(
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(xSmall),
-        shape = RoundedCornerShape(xSmall),
-        elevation = small,
+            .padding(small)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(small),
+        backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
             modifier = Modifier
@@ -491,14 +490,14 @@ private fun HiddenHintRow(
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
-                },
-                onValueChange =
-                { newText ->
-                    setHintText(newText.ofMaxLength(60))
-                    editHintText(RowEvent.EditHintText(rowIndex, newText.text))
-                }
-            )
-        }
+                    },
+                    onValueChange =
+                    { newText ->
+                        setHintText(newText.ofMaxLength(60))
+                        editHintText(RowEvent.EditHintText(rowIndex, newText.text))
+                    }
+                )
+            }
     }
 }
 

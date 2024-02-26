@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Colors
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
@@ -32,12 +32,13 @@ import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
 
@@ -67,6 +68,7 @@ fun AlertDialog(
     val maxChar = 20
 
     AlertDialog(
+        backgroundColor = if (isDarkMode()) colors.background.copy(alpha = 0.2f) else colors.background,
         shape = RoundedCornerShape(medium),
         onDismissRequest = alertDialogState.onDismissRequest,
         title = {
@@ -81,7 +83,7 @@ fun AlertDialog(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(large)
+                            .size(medium)
                             .padding(end = xxSmall),
                         imageVector = icon!!,
                         contentDescription = "Icon for ${alertDialogState.title}",
@@ -99,7 +101,7 @@ fun AlertDialog(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = alertDialogState.title,
-                    style = MaterialTheme.typography.subtitle1,
+                    style = MaterialTheme.typography.h5,
                     textAlign = alertDialogState.titleTextAlign,
                     color = colors.subtitleTextColour
                 )
@@ -169,13 +171,14 @@ fun AlertDialog(
         },
         dismissButton = {
             if (hasDismissButton(alertDialogState)) {
-                DismissBtn(alertDialogState, colors)
+                DismissBtn(alertDialogState)
             }
         },
         confirmButton = {
-            ConfirmBtn(alertDialogState, colors)
+            ConfirmBtn(alertDialogState)
         },
         properties = DialogProperties(
+
             dismissOnBackPress = alertDialogState.dismissible,
             dismissOnClickOutside = alertDialogState.dismissible
         )
@@ -184,38 +187,38 @@ fun AlertDialog(
 
 @Composable
 private fun DismissBtn(
-    alertDialogState: AlertDialogState,
-    colors: Colors
+    alertDialogState: AlertDialogState
 ) {
-    CustomButton(
-        buttonState =
-        ButtonState(
-            enabled = true,
-            type = ButtonType.TERTIARY,
-            label = alertDialogState.dismissButtonLabel ?: "",
-            onClick = alertDialogState.dismissButtonOnClick!!,
-            modifier = Modifier.padding(bottom = xSmall),
-            contentColor = colors.onBackground
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = medium, top = zero, end = medium, bottom = small),
+        shape = RoundedCornerShape(small),
+        onClick = { alertDialogState.dismissButtonOnClick }) {
+        Text(
+            modifier = Modifier,
+            text = alertDialogState.dismissButtonLabel!!,
+            color = colors.onPrimary
         )
-    )
+    }
 }
 
 @Composable
 private fun ConfirmBtn(
-    alertDialogState: AlertDialogState,
-    colors: Colors
+    alertDialogState: AlertDialogState
 ) {
-    CustomButton(
-        buttonState =
-        ButtonState(
-            enabled = true,
-            type = ButtonType.TERTIARY,
-            label = alertDialogState.confirmButtonLabel,
-            onClick = alertDialogState.confirmButtonOnClick,
-            modifier = Modifier.padding(bottom = xSmall),
-            contentColor = colors.primary
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = medium, top = zero, end = medium, bottom = small),
+        shape = RoundedCornerShape(small),
+        onClick = { alertDialogState.confirmButtonOnClick }) {
+        Text(
+            modifier = Modifier,
+            text = alertDialogState.confirmButtonLabel,
+            color = colors.onPrimary
         )
-    )
+    }
 }
 
 private fun hasDismissButton(alertDialogState: AlertDialogState) =

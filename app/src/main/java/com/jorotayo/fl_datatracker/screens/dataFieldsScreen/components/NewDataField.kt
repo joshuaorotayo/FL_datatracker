@@ -49,10 +49,12 @@ import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.components.ButtonState
 import com.jorotayo.fl_datatracker.util.components.ButtonType
@@ -98,11 +100,12 @@ fun NewDataField(
     val focusManager = LocalFocusManager.current
 
     Card(
-        modifier = modifier
-            .wrapContentSize()
-            .padding(xSmall),
-        shape = RoundedCornerShape(xSmall),
-        elevation = xxSmall
+        modifier = Modifier
+            .padding(small)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(small),
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = if (isDarkMode()) xxSmall else zero
     ) {
         Column(
             modifier = Modifier

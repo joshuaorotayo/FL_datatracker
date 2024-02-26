@@ -71,22 +71,6 @@ fun SettingsScreen(
             scaffoldState.snackbarHostState
         },
         topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = large)
-                    .background(colors.background)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(start = small),
-                    text = "Settings",
-                    color = colors.primary,
-                    style = typography.h1,
-                    textAlign = Start
-                )
-            }
         }
     ) { innerPadding ->
         Box(
@@ -99,6 +83,25 @@ fun SettingsScreen(
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
+                item {
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(top = large)
+                            .background(colors.background)
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(start = small),
+                            text = "Settings",
+                            color = colors.primary,
+                            style = typography.h1,
+                            textAlign = Start
+                        )
+                    }
+                }
                 item {
                     Card(
                         modifier = Modifier

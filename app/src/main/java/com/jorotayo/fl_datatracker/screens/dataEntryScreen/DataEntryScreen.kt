@@ -1,4 +1,4 @@
- package com.jorotayo.fl_datatracker.screens.dataEntryScreen
+package com.jorotayo.fl_datatracker.screens.dataEntryScreen
 
 import android.content.res.Configuration
 import android.os.Build
@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
@@ -24,9 +23,9 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -62,10 +60,8 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
-import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -176,8 +172,7 @@ fun DataEntryScreen(
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .background(color = colors.surface),
-                    shape = RoundedCornerShape(xSmall),
-                    elevation = xxxSmall
+                    shape = RoundedCornerShape(small)
                 ) {
                     LazyColumn(
                         state = listState,
@@ -337,19 +332,32 @@ fun DataEntryScreen(
                                     )
                                 }
                             }
-                            if (index < uiState.dataRows.size) {
-                                Divider(
-                                    modifier = Modifier.padding(
-                                        horizontal = xSmall,
-                                        vertical = xxxSmall
-                                    )
-                                )
-                            }
+//                            if (index < uiState.dataRows.size) {
+//                                Divider(
+//                                    modifier = Modifier.padding(
+//                                        horizontal = xSmall,
+//                                        vertical = xxxSmall
+//                                    )
+//                                )
+//                            }
                         }
 
                         item {
                             // Save Button Footer
-                            TextButton(
+                            FilledTonalButton(
+                                modifier = Modifier
+                                    .padding(small)
+                                    .fillMaxWidth(),
+                                onClick = {
+                                    onDataEvent(DataEvent.ValidateInsertDataForm(uiState))
+                                    onDataEvent(DataEvent.FormSubmitted)
+                                }) {
+                                Text(
+                                    text = stringResource(id = R.string.save_data_btn),
+                                    color = colors.onPrimary
+                                )
+                            }
+                            /*TextButton(
                                 modifier = Modifier
                                     .padding(small)
                                     .fillMaxWidth()
@@ -367,7 +375,7 @@ fun DataEntryScreen(
                                     text = stringResource(id = R.string.save_data_btn),
                                     color = colors.onPrimary
                                 )
-                            }
+                            }*/
                         }
                         // close Box
                     }

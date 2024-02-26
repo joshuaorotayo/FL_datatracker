@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,10 +26,10 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Night Mode")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = "Light Mode")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = false, name = "Night Mode")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = false, name = "Light Mode")
 @Composable
 fun PreviewNoDataForm() {
     FL_DatatrackerTheme {
@@ -48,11 +47,10 @@ fun NoDataForm(
     Card(
         modifier = modifier
             .padding(small)
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.surface)
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(xSmall),
-        elevation = xxxSmall
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(small),
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = xxSmall,
     ) {
         Column(
             modifier = Modifier

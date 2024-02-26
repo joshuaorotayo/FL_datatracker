@@ -68,6 +68,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.components.AlertDialog
@@ -217,7 +218,7 @@ fun DataFieldsScreen(
 private fun HeaderRow() {
     Text(
         modifier = Modifier
-            .padding(start = small),
+            .padding(start = regular),
         text = "Data Fields",
         color = colors.primary,
         style = typography.h1,
@@ -336,6 +337,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
         ) {
             Text(
                 modifier = Modifier
+                    .padding(start = regular)
                     .weight(0.4f),
                 text = "Field Name",
                 textAlign = TextAlign.Start,
@@ -344,7 +346,8 @@ private fun ColumnScope.DataFieldColumnHeaders(
             )
             Text(
                 modifier = Modifier
-                    .weight(0.4f),
+                    .padding(start = xxSmall)
+                    .weight(0.3f),
                 text = "Field Type",
                 textAlign = TextAlign.Start,
                 style = typography.body1,
@@ -352,9 +355,9 @@ private fun ColumnScope.DataFieldColumnHeaders(
             )
             Text(
                 modifier = Modifier
-                    .weight(0.2f),
+                    .weight(0.3f),
                 text = "Enabled?",
-                textAlign = TextAlign.Start,
+                textAlign = TextAlign.Center,
                 style = typography.body1,
                 color = colors.subtitleTextColour
             )

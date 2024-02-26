@@ -31,7 +31,7 @@ fun MainNavGraph(
             val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
 
             HomeScreen(
-                state = homeScreenViewModel.uiState,
+                state = homeScreenViewModel.uiState.value,
                 navController = navController,
                 onHomeEvent = homeScreenViewModel::onEvent,
                 onDataEvent = dataEntryScreenViewModel::onDataEvent,
@@ -63,7 +63,7 @@ fun MainNavGraph(
             val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
 
             DataFieldsScreen(
-                uiState = dataFieldsViewModel.uiState,
+                uiState = dataFieldsViewModel.uiState.value,
                 onUiEvent = dataFieldsViewModel.eventFlow,
                 onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
                 onPresetEvent = dataFieldsViewModel::onPresetEvent,

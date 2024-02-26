@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,8 +20,10 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.exampleShortField
 
 @DefaultDualPreview
@@ -50,25 +51,24 @@ fun DataFieldRowV2(
     val isRowEnabled = remember { mutableStateOf(currentDataField.isEnabled) }
 
     Card(
+
         modifier = Modifier
+            .padding(Dimen.small)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(horizontal = xSmall, vertical = xxxSmall)
-            .background(
-                if (isSystemInDarkTheme()) {
-                    if (isRowEnabled.value) {
-                        MaterialTheme.colors.surface
-                    } else {
-                        MaterialTheme.colors.primary.copy(0.3f)
-                    }
-                } else if (isRowEnabled.value) {
-                    MaterialTheme.colors.surface
-                } else {
-                    MaterialTheme.colors.primary.copy(0.3f)
-                }
-            ),
-        shape = RoundedCornerShape(xSmall),
-        elevation = xxxSmall,
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(Dimen.small),
+        backgroundColor = if (isSystemInDarkTheme()) {
+            if (isRowEnabled.value) {
+                MaterialTheme.colors.surface
+            } else {
+                MaterialTheme.colors.primary.copy(0.3f)
+            }
+        } else if (isRowEnabled.value) {
+            MaterialTheme.colors.surface
+        } else {
+            MaterialTheme.colors.primary.copy(0.3f)
+        },
+        elevation = if (isDarkMode()) xxxSmall else zero,
     ) {
         Column(
             modifier = Modifier

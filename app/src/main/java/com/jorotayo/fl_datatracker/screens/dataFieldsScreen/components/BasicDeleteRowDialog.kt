@@ -3,22 +3,24 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement.Center
-import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberScaffoldState
@@ -42,7 +44,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import kotlinx.coroutines.launch
 
 @Preview(
     showBackground = true,
@@ -93,7 +94,7 @@ fun BasicDeleteRowDialog(
                 .defaultMinSize(minWidth = 280.dp)
                 .wrapContentHeight(),
             shape = RoundedCornerShape(medium),
-            elevation = xSmall
+            elevation = xxSmall
         ) {
             Column(
                 modifier
@@ -105,12 +106,12 @@ fun BasicDeleteRowDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = small),
-
                     verticalAlignment = CenterVertically,
                     horizontalArrangement = Center
                 ) {
                     Icon(
                         modifier = Modifier
+                            .size(medium)
                             .padding(end = xxSmall),
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(id = row_delete_dialog_icon),
@@ -122,7 +123,7 @@ fun BasicDeleteRowDialog(
                         text = String.format(stringResource(delete_datafield_header), dataField.fieldName),
                         textAlign = TextAlign.Center,
                         style = typography.h5,
-                        color = colors.onPrimary
+                        color = colors.onBackground
                     )
                 }
 
@@ -135,36 +136,28 @@ fun BasicDeleteRowDialog(
                     color = colors.onSurface
                 )
 
-                Row(
-                    Modifier
+                Button(
+                    modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = End
-                ) {
-                    TextButton(onClick = {
-//                        hideDeleteRowDialog(ShowDeleteRowDialog)
-                    }) {
-                        Text(
-                            modifier = Modifier.padding(end = xxSmall),
-                            text = "Cancel",
-                            color = colors.primary
-                        )
-                    }
-                    TextButton(onClick = {
-//                        hideDeleteRowDialog(ShowDeleteRowDialog)
-                        scope.launch {
-                            scaffold.snackbarHostState.showSnackbar(
-                                message = "Deleted DataField: ${dataField.fieldName}",
-                                actionLabel = "Restore?"
-                            )
-                        }
-                        confirmDelete(dataField)
-                    }) {
-                        Text(
-                            modifier = Modifier,
-                            text = "Delete",
-                            color = colors.onPrimary
-                        )
-                    }
+                    shape = RoundedCornerShape(small),
+                    onClick = { /*TODO*/ }) {
+                    Text(
+                        modifier = Modifier,
+                        text = "Cancel",
+                        color = colors.onPrimary
+                    )
+                }
+                Spacer(modifier = Modifier.height(xSmall))
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(small),
+                    onClick = { /*TODO*/ }) {
+                    Text(
+                        modifier = Modifier,
+                        text = "Delete DataField",
+                        color = colors.onPrimary
+                    )
                 }
             }
         }

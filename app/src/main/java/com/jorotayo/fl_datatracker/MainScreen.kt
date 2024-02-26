@@ -75,7 +75,7 @@ fun BottomBar(navController: NavHostController) {
 //            color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
 //        )
         BottomNavigation(
-            backgroundColor = colors.background,
+            backgroundColor = colors.surface,
             elevation = zero
         ) {
             mainScreens.forEach { screen ->
@@ -135,7 +135,7 @@ fun RowScope.AnimatedBottomNavItem(
     val itemSelected =
         currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
 
-    val scale = if (itemSelected) 1.3f else 1f
+    val scale = 1f
 
     val animatedScale: Float by animateFloatAsState(
         targetValue = scale,
@@ -146,7 +146,7 @@ fun RowScope.AnimatedBottomNavItem(
         label = "Nav Bar Icon size animation"
     )
     val animatedVisibleColor by animateColorAsState(
-        targetValue = colors.secondary,
+        targetValue = colors.secondary.copy(0.4f),
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
@@ -221,7 +221,7 @@ fun RowScope.ChipBottomNavItem(
             )
         },
         selected = itemSelected,
-        unselectedContentColor = colors.background,
+        unselectedContentColor = colors.surface.copy(01f),
         selectedContentColor = colors.primary,
         onClick = {
             navController.navigate(mainScreens.route) {

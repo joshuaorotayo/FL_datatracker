@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
@@ -48,6 +48,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
@@ -83,21 +84,20 @@ fun RowDetails(
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
     val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
     val isHintVisible = remember { mutableStateOf(true) }
-    val isEditOptionsVisible = remember { mutableStateOf(false) }
+    val isEditOptionsVisible = remember { mutableStateOf(true) }
 
     Column(
-        modifier = Modifier
+        modifier = Modifier.padding(xSmall)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(xSmall),
+                .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 modifier = Modifier
-                    .wrapContentSize()
+                    .size(small + xxSmall)
                     .padding(end = xxSmall),
                 imageVector = Icons.Default.Edit,
                 tint = MaterialTheme.colors.primary,
@@ -105,10 +105,10 @@ fun RowDetails(
             )
             Text(
                 modifier = Modifier
-                    .weight(0.30f),
+                    .weight(0.25f),
                 text = rowData.value.dataField.fieldName,
                 color = MaterialTheme.colors.subtitleTextColour,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Ellipsis
             )
 
@@ -124,7 +124,8 @@ fun RowDetails(
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = xxxSmall),
+                        .size(small + xxxSmall)
+                        .padding(end = xxSmall),
                     imageVector = icons[rowData.value.dataField.dataFieldType],
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
                     tint = MaterialTheme.colors.primary
@@ -133,7 +134,7 @@ fun RowDetails(
                     modifier = Modifier,
                     text = items[rowData.value.dataField.dataFieldType],
                     color = MaterialTheme.colors.subtitleTextColour,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.body1
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
@@ -155,6 +156,7 @@ fun RowDetails(
             ) {
                 Checkbox(
                     modifier = Modifier
+                        .size(small)
                         .fillMaxWidth(0.5f),
                     checked = isRowEnabled.value,
                     enabled = true,
@@ -249,20 +251,20 @@ fun BasicVisibleHint(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = zero),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
+            modifier = Modifier.padding(start = small),
             text = "Hint: ",
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.subtitleTextColour,
             style = MaterialTheme.typography.body1
         )
         Text(
             text = "$fieldHint",
             color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1.0f))
         IconButton(
@@ -298,15 +300,16 @@ private fun BooleanHintRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.padding(start = small),
             text = stringResource(R.string.bool_placeholder),
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.subtitleTextColour,
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Text(
-            text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}",
+            text = " ${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}",
             color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
@@ -335,22 +338,21 @@ private fun TriStateHintRow(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = zero),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.padding(end = xxSmall),
+            modifier = Modifier.padding(start = small, end = xxSmall),
             text = stringResource(R.string.tristate_placeholder),
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.subtitleTextColour,
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Text(
-            text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
+            text = " ${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
             color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
@@ -433,7 +435,7 @@ fun BasicEditHint(
                     text = fieldHint!!,
                     color = if (hintText.text.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Normal
                 )
             },
             onValueChange = { newText ->
@@ -589,8 +591,7 @@ private fun HideEditRow(
                 }
             )
             .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(bottom = xxSmall),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -599,7 +600,7 @@ private fun HideEditRow(
                 .padding(end = xxSmall),
             text = stringResource(R.string.hideEditRowText),
             color = MaterialTheme.colors.primary.copy(alpha = 0.7f),
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Icon(
             imageVector = Icons.Default.ArrowUpward,
