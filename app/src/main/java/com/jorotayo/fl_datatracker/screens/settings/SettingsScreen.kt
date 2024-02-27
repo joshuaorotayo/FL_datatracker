@@ -28,10 +28,10 @@ import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormBase
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview(
@@ -105,12 +105,11 @@ fun SettingsScreen(
                 item {
                     Card(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(xSmall)
-                            .background(colors.background),
-                        shape = RoundedCornerShape(xSmall),
-                        elevation = xxxSmall
+                            .padding(small)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(small),
+                        backgroundColor = colors.surface,
+                        elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
                     ) {
                         Column {
                             SettingRow(

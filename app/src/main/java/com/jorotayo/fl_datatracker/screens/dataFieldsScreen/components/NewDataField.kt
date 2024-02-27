@@ -67,7 +67,6 @@ import com.jorotayo.fl_datatracker.util.returnNewDataField
 fun PreviewNewDataField() {
     FL_DatatrackerTheme {
         NewDataField(
-            modifier = Modifier,
             currentPresetId = 0L,
             onDataFieldEvent = {}
         )
@@ -76,7 +75,6 @@ fun PreviewNewDataField() {
 
 @Composable
 fun NewDataField(
-    modifier: Modifier,
     currentPresetId: Long,
     onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
@@ -151,7 +149,6 @@ fun NewDataField(
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = MaterialTheme.colors.surface,
                     backgroundColor = Color.Transparent,
                     textColor = MaterialTheme.colors.subtitleTextColour
                 ),
@@ -304,7 +301,6 @@ fun NewDataField(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight(),
-                        textStyle = MaterialTheme.typography.body2,
                         value = hintText,
                         onValueChange = { hintText ->
                             setHintText(hintText.ofMaxLength(maxLength = maxHintChar))
@@ -312,7 +308,6 @@ fun NewDataField(
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             unfocusedIndicatorColor = Color.Transparent,
-                            focusedIndicatorColor = MaterialTheme.colors.surface,
                             backgroundColor = Color.Transparent,
                             textColor = MaterialTheme.colors.subtitleTextColour
                         ),

@@ -14,7 +14,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Warning
@@ -35,7 +34,9 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @DefaultDualPreview
@@ -62,7 +63,7 @@ fun formShortTextRowV2(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
+    if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
     val focusManager = LocalFocusManager.current
@@ -80,16 +81,19 @@ fun formShortTextRowV2(
         ) {
             Text(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(bottom = xxSmall),
                 text = data.dataItem.fieldName,
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colors.onSurface,
+                style = MaterialTheme.typography.body1
             )
 
             AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(bottom = xSmall),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -119,7 +123,7 @@ fun formShortTextRowV2(
                             stringResource(id = R.string.edit_short_text),
                             data.dataItem.fieldName
                         ),
-                        tint = textColour
+                        tint = MaterialTheme.colors.primary
                     )
                 },
                 value = text,
@@ -128,19 +132,11 @@ fun formShortTextRowV2(
                     setText(newText.ofMaxLength(maxLength = maxChar))
                     setDataValue(text.text)
                 },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    textColor = MaterialTheme.colors.onSurface
-                ),
                 placeholder = {
                     Text(
                         modifier = Modifier.padding(0.dp),
                         text = (if (data.dataItem.fieldDescription?.isBlank() == true) "Short Text Row Hint..." else data.dataItem.fieldDescription)!!,
-                        color = textColour,
+                        color = MaterialTheme.colors.subtitleTextColour,
                         textAlign = TextAlign.Center
                     )
                 },
@@ -156,12 +152,13 @@ fun formShortTextRowV2(
             )
             // Max Chars count
             Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = xxSmall),
                 text = "${text.text.length} / $maxChar",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.caption,
                 color = Color.Gray,
-                modifier = Modifier
-                    .fillMaxWidth()
             )
         }
     }

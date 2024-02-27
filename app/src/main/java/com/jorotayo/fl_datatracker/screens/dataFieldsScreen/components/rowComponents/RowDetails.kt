@@ -83,7 +83,7 @@ fun RowDetails(
     var expanded by remember { mutableStateOf(false) }
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
     val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
-    val isHintVisible = remember { mutableStateOf(true) }
+    val isHintVisible = remember { mutableStateOf(false) }
     val isEditOptionsVisible = remember { mutableStateOf(true) }
 
     Column(
@@ -124,7 +124,7 @@ fun RowDetails(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(small + xxxSmall)
+                        .size(small + xxSmall)
                         .padding(end = xxSmall),
                     imageVector = icons[rowData.value.dataField.dataFieldType],
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
@@ -161,7 +161,7 @@ fun RowDetails(
                     checked = isRowEnabled.value,
                     enabled = true,
                     onCheckedChange = {
-                        isRowEnabled.value = !isRowEnabled.value
+//                        isRowEnabled.value = !isRowEnabled.value
                         onRowEvent(RowEvent.ToggleRow(rowData.value.dataField.dataFieldId))
                     },
                     colors = CheckboxDefaults.colors(

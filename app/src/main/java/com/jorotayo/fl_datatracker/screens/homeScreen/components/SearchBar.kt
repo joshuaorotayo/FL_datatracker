@@ -1,12 +1,10 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -28,9 +26,11 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @DefaultDualPreview
@@ -61,19 +61,35 @@ fun SearchBar(
     onHomeEvent: (HomeScreenEvent) -> Unit,
     searchState: HomeScreenState
 ) {
-    Card(
+    Row(
         modifier = Modifier
-            .wrapContentSize()
-            .padding(xSmall),
-        shape = RoundedCornerShape(regular),
-        elevation = xSmall
+            .wrapContentHeight()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
+        IconButton(
+            onClick = {
+                // Back arrow to close search View
+                onHomeEvent(HomeScreenEvent.ToggleSearchBar)
+            },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(medium)
+                    .padding(start = xxSmall)
+                    .weight(1f),
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Close Search View",
+                tint = MaterialTheme.colors.primary
+            )
+        }
+        Card(
             modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.surface),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = small, top = xxSmall, end = small, bottom = xxSmall)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(small),
+            backgroundColor = MaterialTheme.colors.surface,
+            elevation = if (isDarkMode()) xxSmall else Dimen.zero
         ) {
             TextField(
                 modifier = Modifier
@@ -102,24 +118,9 @@ fun SearchBar(
                     textColor = Color.Black
                 ),
                 leadingIcon = {
-                    IconButton(
-                        onClick = {
-                            // Back arrow to close search View
-                            onHomeEvent(HomeScreenEvent.ToggleSearchBar)
-                        },
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(medium)
-                                .padding(end = xxSmall)
-                                .weight(1f),
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Close Search View",
-                            tint = MaterialTheme.colors.primary
-                        )
-                    }
                 }
             )
+
         }
     }
 }

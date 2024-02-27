@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -47,10 +49,11 @@ fun NoDataForm(
     Card(
         modifier = modifier
             .padding(small)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .wrapContentHeight(),
         shape = RoundedCornerShape(small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = xxSmall,
+        elevation = if (isDarkMode()) xxSmall else Dimen.zero
     ) {
         Column(
             modifier = Modifier

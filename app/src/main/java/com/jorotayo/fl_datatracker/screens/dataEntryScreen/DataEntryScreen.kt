@@ -1,9 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +23,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -55,13 +53,17 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formRadioRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formShortTextRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formTimeRowV2
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
 import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -69,18 +71,23 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultDualPreview
 @Composable
-fun PreviewDataEntryScreen() {
+fun PreviewPopulatedDataEntryScreen() {
+    FL_DatatrackerTheme {
+        DataEntryScreen(
+            navController = rememberNavController(),
+            uiState = examplePopulatedDataEntry,
+            onUiEvent = MutableSharedFlow(),
+            onDataEvent = {}
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@DefaultDualPreview
+@Composable
+fun PreviewEmptyDataEntryScreen() {
     FL_DatatrackerTheme {
         DataEntryScreen(
             navController = rememberNavController(),
@@ -168,11 +175,11 @@ fun DataEntryScreen(
             ) {
                 Card(
                     modifier = Modifier
-                        .padding(xSmall)
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .background(color = colors.surface),
-                    shape = RoundedCornerShape(small)
+                        .padding(small)
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(small),
+                    backgroundColor = colors.surface,
+                    elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
                 ) {
                     LazyColumn(
                         state = listState,
@@ -344,10 +351,13 @@ fun DataEntryScreen(
 
                         item {
                             // Save Button Footer
-                            FilledTonalButton(
+                            Button(
                                 modifier = Modifier
                                     .padding(small)
                                     .fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = colors.primary
+                                ),
                                 onClick = {
                                     onDataEvent(DataEvent.ValidateInsertDataForm(uiState))
                                     onDataEvent(DataEvent.FormSubmitted)

@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +24,11 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
 @DefaultDualPreview
 @Composable
@@ -49,10 +49,10 @@ fun NoDataField(
         modifier = modifier
             .padding(small)
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface)
             .wrapContentHeight(),
         shape = RoundedCornerShape(xSmall),
-        elevation = xxxSmall
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
     ) {
         Column(
             modifier = Modifier

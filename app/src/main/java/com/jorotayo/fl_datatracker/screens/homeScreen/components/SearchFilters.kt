@@ -26,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
@@ -43,11 +45,11 @@ fun PreviewSearchFilters() {
 fun SearchFilters() {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(xSmall),
-        shape = RoundedCornerShape(xSmall),
-        elevation = xSmall
+            .padding(Dimen.small)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(Dimen.small),
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = if (isDarkMode()) Dimen.xxSmall else zero
     ) {
         Column(
             modifier = Modifier

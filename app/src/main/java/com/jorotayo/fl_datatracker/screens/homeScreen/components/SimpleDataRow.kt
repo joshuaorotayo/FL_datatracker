@@ -18,12 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @DefaultDualPreview
 @Composable
@@ -57,24 +59,26 @@ fun SimpleDataRow(
     ) {
         Text(
             modifier = Modifier
-                .weight(1f),
+                .weight(2f),
             text = data.name,
             color = colors.subtitleTextColour,
-            style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
             modifier = Modifier
                 .weight(1.5f),
             text = data.createdTime,
             color = colors.subtitleTextColour,
-            style = MaterialTheme.typography.subtitle1,
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.body2,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis
         )
         Icon(
             modifier = Modifier
-                .weight(0.5f)
-                .size(medium)
+                .padding(end = xxSmall)
+                .size(small + xxSmall)
                 .clickable(onClick = { editData() }),
             imageVector = Icons.Default.Edit,
             contentDescription = "Edit icon for data ${data.name}",
@@ -82,8 +86,8 @@ fun SimpleDataRow(
         )
         Icon(
             modifier = Modifier
-                .weight(0.5f)
-                .size(medium)
+                .padding(end = xxSmall)
+                .size(small + xxSmall)
                 .clickable(onClick = { }),
             imageVector = Icons.Default.Share,
             contentDescription = "Share icon for data ${data.name}",
@@ -91,8 +95,8 @@ fun SimpleDataRow(
         )
         Icon(
             modifier = Modifier
-                .weight(0.5f)
-                .size(medium)
+                .padding(end = xxSmall)
+                .size(small + xxSmall)
                 .clickable(onClick = { deleteData(data) }),
             imageVector = Icons.Default.Close,
             contentDescription = "Delete icon for data ${data.name}",

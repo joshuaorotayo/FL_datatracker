@@ -183,8 +183,8 @@ fun DataFieldsScreen(
 
                 itemsIndexed(
                     items = fields,
-                    key = { index, item -> item.dataFieldId.toInt() },
-                    itemContent = { index, item ->
+                    key = { _, item -> item.dataFieldId.toInt() },
+                    itemContent = { _, item ->
                         DataFieldRowV2(
                             currentDataField = item,
                             onRowEvent = onRowEvent,
@@ -339,7 +339,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
                 modifier = Modifier
                     .padding(start = regular)
                     .weight(0.4f),
-                text = "Field Name",
+                text = "Name",
                 textAlign = TextAlign.Start,
                 style = typography.body1,
                 color = colors.subtitleTextColour
@@ -348,7 +348,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
                 modifier = Modifier
                     .padding(start = xxSmall)
                     .weight(0.3f),
-                text = "Field Type",
+                text = "Type",
                 textAlign = TextAlign.Start,
                 style = typography.body1,
                 color = colors.subtitleTextColour
@@ -395,14 +395,12 @@ private fun NewDataFieldSection(
         if (state.dataFields.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize()) {
                 NewDataField(
-                    modifier = Modifier.align(alignment = Alignment.Center),
                     currentPresetId = state.currentPreset.presetId,
                     onDataFieldEvent = onDataFieldEvent
                 )
             }
         } else {
             NewDataField(
-                modifier = Modifier,
                 currentPresetId = state.currentPreset.presetId,
                 onDataFieldEvent = onDataFieldEvent
             )
