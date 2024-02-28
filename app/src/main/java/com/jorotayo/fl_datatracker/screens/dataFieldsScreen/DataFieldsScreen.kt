@@ -218,7 +218,7 @@ fun DataFieldsScreen(
 private fun HeaderRow() {
     Text(
         modifier = Modifier
-            .padding(start = regular),
+            .padding(start = small),
         text = "Data Fields",
         color = colors.primary,
         style = typography.h1,

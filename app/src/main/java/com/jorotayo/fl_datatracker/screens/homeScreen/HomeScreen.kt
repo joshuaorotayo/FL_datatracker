@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -49,6 +50,7 @@ import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.MembersPanel
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchFilters
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
@@ -58,7 +60,6 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
@@ -66,6 +67,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.components.AlertDialog
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -91,6 +93,7 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(color = colors.background)
         ) {
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,
@@ -101,9 +104,7 @@ fun HomeScreen(
             // ...main content
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .background(color = colors.background)
+                    .fillMaxSize()
             ) {
                 Column(
                     modifier = Modifier
@@ -162,7 +163,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .padding(innerPadding)
                         .padding(bottom = bottomBarPadding + small)
-                        .fillMaxSize()
+                        .wrapContentSize()
                 ) {
                     Card(
                         modifier = Modifier
@@ -170,7 +171,7 @@ fun HomeScreen(
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(small),
                         backgroundColor = colors.surface,
-                        elevation = if (isDarkMode()) xxSmall else Dimen.zero
+                        elevation = if (isDarkMode()) xxSmall else zero
                     ) {
                         LazyColumn(
                             modifier = Modifier
@@ -178,7 +179,6 @@ fun HomeScreen(
                                     if (expandData) Modifier.fillMaxHeight() else Modifier.wrapContentHeight()
                                 )
                                 .fillMaxWidth()
-                                .background(color = colors.surface)
                         ) {
                             item {
                                 if (state.dataList.size > 5 && !expandData) {
@@ -187,7 +187,7 @@ fun HomeScreen(
                                             .padding(vertical = xxxSmall, horizontal = xSmall)
                                             .wrapContentWidth()
                                             .align(Alignment.CenterEnd),
-                                        color = colors.surface,
+                                        color = colors.background,
                                         shape = RoundedCornerShape(xSmall)
                                     ) {
                                         Text(
@@ -250,15 +250,10 @@ fun HomeScreen(
                                     )
                                 }
                             }
-                        }
 
-                        /*   if (index < state.dataList.size - 1) {
-                               Divider(
-                                   modifier = Modifier
-                                       .padding(xSmall),
-                                   thickness = Dimen.xxxxSmall
-                               )
-                           }*/
+                            item {
+                            }
+                        }
                     }
 
                     state.alertDialogState?.let { AlertDialog(alertDialogState = it) }
@@ -271,6 +266,7 @@ fun HomeScreen(
                         data = state.deletedItem
                     )
                 }
+                MembersPanel(modifier = Modifier.padding(horizontal = small))
             }
         }
     }

@@ -12,14 +12,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -29,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
@@ -78,7 +76,8 @@ fun formLongTextRowV2(
     ) {
         Text(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(bottom = Dimen.xxSmall),
             text = data.fieldName,
             textAlign = TextAlign.Start,
             color = MaterialTheme.colors.subtitleTextColour,
@@ -109,21 +108,13 @@ fun formLongTextRowV2(
                 setText(newText.ofMaxLength(maxLength = maxChar))
                 setDataValue(text.text)
             },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                textColor = MaterialTheme.colors.onSurface
-            ),
             maxLines = 4,
             placeholder = {
                 (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else "Please enter content for field: ${data.fieldName}")?.let {
                     Text(
                         text = it,
-                        color = if (text.text.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
-                        textAlign = TextAlign.Start
+                        color = MaterialTheme.colors.subtitleTextColour,
+                        textAlign = TextAlign.Center
                     )
                 }
             }

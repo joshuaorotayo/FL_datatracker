@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
@@ -134,7 +133,7 @@ fun formShortTextRowV2(
                 },
                 placeholder = {
                     Text(
-                        modifier = Modifier.padding(0.dp),
+                        modifier = Modifier,
                         text = (if (data.dataItem.fieldDescription?.isBlank() == true) "Short Text Row Hint..." else data.dataItem.fieldDescription)!!,
                         color = MaterialTheme.colors.subtitleTextColour,
                         textAlign = TextAlign.Center

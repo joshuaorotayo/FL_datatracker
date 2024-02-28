@@ -20,6 +20,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen.large
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
@@ -41,7 +42,7 @@ fun TopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(xSmall),
+            .padding(small),
         Arrangement.SpaceBetween,
         Alignment.CenterVertically
     ) {

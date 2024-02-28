@@ -420,7 +420,7 @@ fun DataEntryScreen(
 private fun HeaderRow() {
     Row(
         modifier = Modifier
-            .padding(start = xSmall)
+            .padding(start = small)
             .fillMaxWidth(),
         verticalAlignment = CenterVertically
     ) {
