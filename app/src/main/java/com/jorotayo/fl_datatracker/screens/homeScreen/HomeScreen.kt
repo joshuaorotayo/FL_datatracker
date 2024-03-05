@@ -250,9 +250,6 @@ fun HomeScreen(
                                     )
                                 }
                             }
-
-                            item {
-                            }
                         }
                     }
 
@@ -266,7 +263,7 @@ fun HomeScreen(
                         data = state.deletedItem
                     )
                 }
-                MembersPanel(modifier = Modifier.padding(horizontal = small))
+                MembersPanel(modifier = Modifier.padding(horizontal = small), totalCount = 52)
             }
         }
     }

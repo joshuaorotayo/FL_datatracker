@@ -8,6 +8,7 @@ sealed class DataFieldEvent {
     object ExpandPresetDropdown : DataFieldEvent()
     object HidePresetDropdown : DataFieldEvent()
     object RestoreDeletedField : DataFieldEvent()
+    object ToggleMemberForm : DataFieldEvent()
     data class ShowDeleteRowDialog(val value: DataField) : DataFieldEvent()
     data class SaveDataField(val value: DataField) : DataFieldEvent()
     data class DeleteDataField(val value: DataField) : DataFieldEvent()

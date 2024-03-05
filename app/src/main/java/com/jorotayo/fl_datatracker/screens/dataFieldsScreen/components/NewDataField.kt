@@ -417,7 +417,7 @@ fun NewDataField(
                             placeholder = firstText.text.ifBlank { "1st Value" },
                             onValueChange = { firstText ->
                                 setFirstText(TextFieldValue(firstText).ofMaxLength(maxLength = optionsMaxChars))
-                                _newDataField.value.thirdValue = firstText
+                                _newDataField.value.firstValue = firstText
                             }
                         )
                         TransparentTextField(
@@ -427,7 +427,7 @@ fun NewDataField(
                             placeholder = secondText.text.ifBlank { "2nd Value" },
                             onValueChange = { secondText ->
                                 setSecondText(TextFieldValue(secondText).ofMaxLength(maxLength = optionsMaxChars))
-                                _newDataField.value.thirdValue = secondText
+                                _newDataField.value.secondValue = secondText
                             }
                         )
                         TransparentTextField(

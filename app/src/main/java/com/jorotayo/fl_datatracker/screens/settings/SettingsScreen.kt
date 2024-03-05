@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormBase
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -130,9 +129,9 @@ fun SettingsScreen(
                     }
                 }
 
-                item {
-                    FormBase()
-                }
+//                item {
+//                    FormBase()
+//                }
             }
 
             DefaultSnackbar(

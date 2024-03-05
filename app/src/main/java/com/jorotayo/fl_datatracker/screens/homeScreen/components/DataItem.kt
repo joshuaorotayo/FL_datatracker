@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
+import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenViewModel
 
 @Preview(showBackground = true)
 @Composable

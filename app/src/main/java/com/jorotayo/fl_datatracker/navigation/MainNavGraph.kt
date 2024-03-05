@@ -10,11 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
-import com.jorotayo.fl_datatracker.viewModels.DataEntryScreenViewModel
-import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel
-import com.jorotayo.fl_datatracker.viewModels.HomeScreenViewModel
+import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable

@@ -15,10 +15,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.navigation.OnboardingNavGraph
+import com.jorotayo.fl_datatracker.screens.onboarding.OnboardingViewModel
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.SharedSettingService
-import com.jorotayo.fl_datatracker.viewModels.OnboardingViewModel
-import com.jorotayo.fl_datatracker.viewModels.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

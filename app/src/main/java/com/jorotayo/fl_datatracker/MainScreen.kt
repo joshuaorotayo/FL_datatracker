@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
@@ -17,6 +18,7 @@ import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
+import com.jorotayo.fl_datatracker.util.SharedSettingService
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @DefaultDualPreview
@@ -50,8 +53,13 @@ fun BottomBarPreview() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val showNavBar = SharedSettingService.showingDashboardNavBar.observeAsState()
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = {
+            AnimatedVisibility(visible = showNavBar.value == true) {
+                BottomBar(navController = navController)
+            }
+        }
     ) {
         MainNavGraph(navController)
     }

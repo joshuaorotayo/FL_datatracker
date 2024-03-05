@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsViewModel.UiEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRowV2
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NoDataField
@@ -73,7 +74,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.components.AlertDialog
 import com.jorotayo.fl_datatracker.util.exampleDataFieldList
-import com.jorotayo.fl_datatracker.viewModels.DataFieldsViewModel.UiEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

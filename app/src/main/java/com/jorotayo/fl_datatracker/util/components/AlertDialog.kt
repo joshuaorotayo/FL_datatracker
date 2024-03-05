@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.util.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,10 +37,10 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
 
@@ -169,6 +171,7 @@ fun AlertDialog(
                 )
             }
         },
+
         dismissButton = {
             if (hasDismissButton(alertDialogState)) {
                 DismissBtn(alertDialogState)
@@ -189,16 +192,15 @@ fun AlertDialog(
 private fun DismissBtn(
     alertDialogState: AlertDialogState
 ) {
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = medium, top = zero, end = medium, bottom = small),
+    OutlinedButton(
+        border = BorderStroke(one, colors.primary),
+        modifier = Modifier.fillMaxWidth(0.4f),
         shape = RoundedCornerShape(small),
         onClick = { alertDialogState.dismissButtonOnClick }) {
         Text(
             modifier = Modifier,
             text = alertDialogState.dismissButtonLabel!!,
-            color = colors.onPrimary
+            color = colors.onSurface
         )
     }
 }
@@ -208,9 +210,7 @@ private fun ConfirmBtn(
     alertDialogState: AlertDialogState
 ) {
     Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = medium, top = zero, end = medium, bottom = small),
+        modifier = Modifier.fillMaxWidth(0.4f),
         shape = RoundedCornerShape(small),
         onClick = { alertDialogState.confirmButtonOnClick }) {
         Text(
@@ -238,15 +238,19 @@ fun AlertDialogPreview() {
                 "AER stands for Annual Equivalent Rate and illustrates what the " +
                 "interest rate would be if interest was paid and added each year."
         val onDismissRequest = {}
-        val confirmButtonLabel = "Close"
+        val confirmButtonLabel = "Yes"
+        val dismissButtonLabel = "Close"
         val confirmButtonOnClick = {}
+        val dismissButtonOnClick = {}
 
         val state = AlertDialogState(
             title,
             text,
             onDismissRequest,
             confirmButtonLabel,
-            confirmButtonOnClick
+            confirmButtonOnClick,
+            dismissButtonLabel,
+            dismissButtonOnClick
         )
         AlertDialog(state)
     }
