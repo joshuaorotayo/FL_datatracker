@@ -18,7 +18,13 @@ class SharedSettingService @Inject constructor(
         }
     }
 
+
+    fun showDashboardNavBar(show: Boolean) {
+        showingDashboardNavBar.postValue(show)
+    }
+
     companion object {
         var useDeviceDarkModeSettings: MutableLiveData<Boolean> = MutableLiveData(true)
+        val showingDashboardNavBar: MutableLiveData<Boolean> = MutableLiveData(true)
     }
 }

@@ -11,7 +11,7 @@ import com.jorotayo.fl_datatracker.screens.settings.DataFieldSettings
 import com.jorotayo.fl_datatracker.screens.settings.DisplaySettings
 import com.jorotayo.fl_datatracker.screens.settings.FAQsList
 import com.jorotayo.fl_datatracker.screens.settings.SettingsScreen
-import com.jorotayo.fl_datatracker.viewModels.SettingsViewModel
+import com.jorotayo.fl_datatracker.screens.settings.SettingsViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.settingsNavGraph(

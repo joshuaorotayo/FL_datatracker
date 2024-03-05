@@ -8,6 +8,7 @@ data class DataFieldScreenState(
     val dataFields: List<DataField>,
     val presetList: List<Preset>,
     val isAddDataFieldVisible: Boolean = false,
+    val isMemberFormVisible: Boolean = false,
     val maxChar: Int = 30,
     val maxHintChar: Int = 60,
     val deletedDataField: DataField? = null,

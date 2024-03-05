@@ -40,18 +40,18 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 @Composable
 fun PreviewTesting() {
     FL_DatatrackerTheme {
-        MembersPanel(Modifier.padding(horizontal = Dimen.xSmall))
+        MembersPanel(Modifier.padding(horizontal = Dimen.xSmall), totalCount = 200)
     }
 }
 
 @Composable
-fun MembersPanel(modifier: Modifier) {
+fun MembersPanel(modifier: Modifier, totalCount: Int) {
     Box(modifier.wrapContentSize()) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(185.dp)
-                .clip(RoundedCornerShape(small))
+                .clip(RoundedCornerShape(small)), elevation = xxSmall
 //                .background(MaterialTheme.colors.surface)
         ) {
             Column(
@@ -68,11 +68,11 @@ fun MembersPanel(modifier: Modifier) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Content(Modifier.weight(3f), "Members")
+                    Content(Modifier.weight(3f), "Sheep")
                     Spacer(modifier = Modifier.weight(0.5f))
-                    Content(Modifier.weight(3f), "Employees")
+                    Content(Modifier.weight(3f), "Deer")
                     Spacer(modifier = Modifier.weight(0.5f))
-                    Content(Modifier.weight(3f), "Managers")
+                    Content(Modifier.weight(3f), "Goat")
                 }
 
                 Text(
@@ -80,7 +80,7 @@ fun MembersPanel(modifier: Modifier) {
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .padding(start = xxSmall, top = xxSmall),
-                    text = "Some text",
+                    text = "Total Members: $totalCount",
                     textAlign = Start,
                     style = MaterialTheme.typography.h6
                 )

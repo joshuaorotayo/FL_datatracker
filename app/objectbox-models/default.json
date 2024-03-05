@@ -4,33 +4,88 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:8931928973121717892",
-      "lastPropertyId": "5:7954225956802915863",
+      "id": "1:595409826599353418",
+      "lastPropertyId": "2:3331321548874185791",
+      "name": "Bacenta",
+      "properties": [
+        {
+          "id": "1:7142914272425680375",
+          "name": "bacentaID",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3331321548874185791",
+          "name": "bacentaHead",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:2719149524455918558",
+          "name": "bacentaMembers",
+          "targetId": "6:8652577096920619681"
+        }
+      ]
+    },
+    {
+      "id": "2:6112779120820174644",
+      "lastPropertyId": "3:383671467319395533",
+      "name": "Constituency",
+      "properties": [
+        {
+          "id": "1:674647620330904176",
+          "name": "constituencyID",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7411203089436767515",
+          "name": "overseer",
+          "type": 6
+        },
+        {
+          "id": "3:383671467319395533",
+          "name": "constituencyName",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "2:4359744504775371546",
+          "name": "bacentaLeaders",
+          "targetId": "6:8652577096920619681"
+        }
+      ]
+    },
+    {
+      "id": "3:462735484190808776",
+      "lastPropertyId": "5:4397156264425364618",
       "name": "Data",
       "properties": [
         {
-          "id": "1:9084873597496710107",
+          "id": "1:1900518284747735529",
           "name": "dataId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:1332721339278531346",
+          "id": "2:1626607660651080685",
           "name": "dataPresetId",
           "type": 6
         },
         {
-          "id": "3:484757402470958104",
+          "id": "3:6033961315623889221",
           "name": "name",
           "type": 9
         },
         {
-          "id": "4:913425212245286721",
+          "id": "4:8151542951248427964",
           "name": "lastEditedTime",
           "type": 9
         },
         {
-          "id": "5:7954225956802915863",
+          "id": "5:4397156264425364618",
           "name": "createdTime",
           "type": 9
         }
@@ -38,119 +93,119 @@
       "relations": []
     },
     {
-      "id": "2:2000310140271792656",
-      "lastPropertyId": "9:7138614866767382861",
+      "id": "4:8299800936051592944",
+      "lastPropertyId": "9:357742363258178427",
       "name": "DataField",
       "properties": [
         {
-          "id": "1:2741472926326090090",
+          "id": "1:1685083415042298632",
           "name": "dataFieldId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:291804008641010925",
-          "name": "fieldName",
-          "indexId": "1:7341016144904251760",
-          "type": 9,
-          "flags": 34848
-        },
-        {
-          "id": "3:6409091403489937387",
-          "name": "dataFieldType",
-          "type": 5
-        },
-        {
-          "id": "4:3437444190246038062",
+          "id": "2:6567567074468645340",
           "name": "presetId",
           "type": 6
         },
         {
-          "id": "5:2369293007108317097",
+          "id": "3:4909860934497251691",
+          "name": "fieldName",
+          "indexId": "1:3601360811945136242",
+          "type": 9,
+          "flags": 34848
+        },
+        {
+          "id": "4:4355829104357577135",
+          "name": "dataFieldType",
+          "type": 5
+        },
+        {
+          "id": "5:7948038316835141184",
           "name": "first",
           "type": 9
         },
         {
-          "id": "6:3384160566275549035",
+          "id": "6:1097332044309187380",
           "name": "second",
           "type": 9
         },
         {
-          "id": "7:4918401459903849369",
+          "id": "7:8562437530982168808",
           "name": "third",
           "type": 9
         },
         {
-          "id": "8:1387999369088350122",
-          "name": "isEnabled",
-          "type": 1
-        },
-        {
-          "id": "9:7138614866767382861",
+          "id": "8:1808731160492987291",
           "name": "fieldHint",
           "type": 9
+        },
+        {
+          "id": "9:357742363258178427",
+          "name": "isEnabled",
+          "type": 1
         }
       ],
       "relations": []
     },
     {
-      "id": "3:5077944172834774590",
-      "lastPropertyId": "11:665930083408553265",
+      "id": "5:4187320625633655765",
+      "lastPropertyId": "11:3542156206906926312",
       "name": "DataItem",
       "properties": [
         {
-          "id": "1:2321911270904025289",
+          "id": "1:8353368563498557025",
           "name": "dataItemId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:7329481692764499114",
+          "id": "2:630941285231369982",
           "name": "dataId",
           "type": 6
         },
         {
-          "id": "3:7708749996749231016",
+          "id": "3:3605828249273876109",
           "name": "presetId",
           "type": 6
         },
         {
-          "id": "4:137126742858866260",
+          "id": "4:2161501962532829043",
           "name": "fieldName",
           "type": 9
         },
         {
-          "id": "5:6864825174171752431",
+          "id": "5:1892395310937016033",
           "name": "dataFieldType",
           "type": 5
         },
         {
-          "id": "6:8052519044073126082",
+          "id": "6:6569045396757345233",
           "name": "first",
           "type": 9
         },
         {
-          "id": "7:3066767347371795787",
+          "id": "7:8388502704168585680",
           "name": "second",
           "type": 9
         },
         {
-          "id": "8:5684742224655709783",
+          "id": "8:1057867221394246043",
           "name": "third",
           "type": 9
         },
         {
-          "id": "9:9066470433393268526",
+          "id": "9:4195785131391574879",
           "name": "isEnabled",
           "type": 1
         },
         {
-          "id": "10:4107407860021185562",
+          "id": "10:2070102964933476800",
           "name": "fieldDescription",
           "type": 9
         },
         {
-          "id": "11:665930083408553265",
+          "id": "11:3542156206906926312",
           "name": "dataValue",
           "type": 9
         }
@@ -158,20 +213,84 @@
       "relations": []
     },
     {
-      "id": "4:117720991511682456",
-      "lastPropertyId": "2:2640306674887774719",
+      "id": "6:8652577096920619681",
+      "lastPropertyId": "11:339749598535574778",
+      "name": "Member",
+      "properties": [
+        {
+          "id": "1:6851623194801373227",
+          "name": "memberID",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2539952107998872959",
+          "name": "firstName",
+          "type": 9
+        },
+        {
+          "id": "3:3063783002242707246",
+          "name": "lastName",
+          "type": 9
+        },
+        {
+          "id": "4:6813511163706690411",
+          "name": "gender",
+          "type": 5
+        },
+        {
+          "id": "5:815489817181735511",
+          "name": "dob",
+          "type": 9
+        },
+        {
+          "id": "6:474141757375175383",
+          "name": "age",
+          "type": 9
+        },
+        {
+          "id": "7:4334308342476202087",
+          "name": "address",
+          "type": 9
+        },
+        {
+          "id": "8:5456849085490458661",
+          "name": "memberStatus",
+          "type": 5
+        },
+        {
+          "id": "9:5174133409179713263",
+          "name": "sonta",
+          "type": 5
+        },
+        {
+          "id": "10:8243843500405939290",
+          "name": "bacentaLeader",
+          "type": 1
+        },
+        {
+          "id": "11:339749598535574778",
+          "name": "constituencyOverseer",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:9030215751600496218",
+      "lastPropertyId": "2:5750088493673744953",
       "name": "Preset",
       "properties": [
         {
-          "id": "1:1633736121574493071",
+          "id": "1:4163954648839717454",
           "name": "presetId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:2640306674887774719",
+          "id": "2:5750088493673744953",
           "name": "presetName",
-          "indexId": "2:2688455330586126336",
+          "indexId": "2:417708253633038524",
           "type": 9,
           "flags": 2080
         }
@@ -179,12 +298,36 @@
       "relations": []
     },
     {
-      "id": "6:4071416627135483911",
-      "lastPropertyId": "1:344459163148518001",
+      "id": "8:9121477159620382563",
+      "lastPropertyId": "3:419480505711073504",
+      "name": "SontaHead",
+      "properties": [
+        {
+          "id": "1:7712165340027458739",
+          "name": "ministryId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2773692759567108437",
+          "name": "sonta",
+          "type": 5
+        },
+        {
+          "id": "3:419480505711073504",
+          "name": "sontaHead",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:64587145201881339",
+      "lastPropertyId": "1:7878530292041821478",
       "name": "TestRowItem",
       "properties": [
         {
-          "id": "1:344459163148518001",
+          "id": "1:7878530292041821478",
           "name": "testRowId",
           "type": 6,
           "flags": 1
@@ -193,24 +336,15 @@
       "relations": []
     }
   ],
-  "lastEntityId": "6:4071416627135483911",
-  "lastIndexId": "3:4336065889340610287",
-  "lastRelationId": "0:0",
+  "lastEntityId": "9:64587145201881339",
+  "lastIndexId": "2:417708253633038524",
+  "lastRelationId": "2:4359744504775371546",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [
-    4344097748831030760
-  ],
-  "retiredIndexUids": [
-    4336065889340610287
-  ],
-  "retiredPropertyUids": [
-    1245966578697031152,
-    1144358414615645924,
-    774581211635619008,
-    4583051573940024736
-  ],
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }
