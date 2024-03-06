@@ -65,6 +65,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
+import com.jorotayo.fl_datatracker.util.Dimen.iconSize
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -437,7 +438,8 @@ private fun PresetDropDownMenu(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = preset.presetName,
@@ -449,6 +451,7 @@ private fun PresetDropDownMenu(
                     if (index > 0) {
                         Icon(
                             modifier = Modifier
+                                .size(iconSize)
                                 .padding(start = 5.dp)
                                 .clickable(
                                     onClick = {
