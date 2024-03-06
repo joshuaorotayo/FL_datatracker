@@ -85,7 +85,7 @@ class HomeScreenViewModel @Inject constructor(
             alertDialogState = AlertDialogState(
                 title = String.format("Delete Data Item: %s", event.data.name),
                 imageIcon = Icons.Default.Delete,
-                text = "Are you sure you want to delete this Data item?",
+                body = "Are you sure you want to delete this Data item?",
                 onDismissRequest = { dismissAlertDialog() },
                 confirmButtonLabel = "Delete",
                 confirmButtonOnClick = {

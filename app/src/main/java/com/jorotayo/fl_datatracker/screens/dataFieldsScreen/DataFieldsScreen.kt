@@ -72,7 +72,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
-import com.jorotayo.fl_datatracker.util.components.AlertDialog
+import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
 import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -194,7 +194,7 @@ fun DataFieldsScreen(
                 )
             }
 
-            uiState.alertDialogState?.let { AlertDialog(alertDialogState = it) }
+            uiState.alertDialogState?.let { AlertDialogLayout(alertDialogState = it) }
 
             DefaultSnackbar(
                 modifier = Modifier

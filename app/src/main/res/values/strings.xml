@@ -6,7 +6,7 @@
 
     <string name="dataRow_lastEdited"> <b>Last Edited: </b></string>
     <string name="presetShowing">Showing Preset: </string>
-    <string name="enterPresetPlaceholder">Enter a new Preset Name</string>
+    <string name="enterPresetPlaceholder">Enter a new Preset Name: 24</string>
     <string name="addPresetHeader">Add New Preset</string>
     <string name="deletePresetHeader">Delete Preset: %s</string>
     <string name="addPresetBtn">Add Preset</string>

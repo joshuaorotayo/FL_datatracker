@@ -1,7 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +46,10 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScre
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -69,6 +72,9 @@ class DataFieldsViewModel @Inject constructor(
         )
     )
     val uiState: MutableState<DataFieldScreenState> = _uiState
+
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog: StateFlow<Boolean> = _showDialog.asStateFlow()
 
     private var dataField = DataField(dataFieldId = 0, presetId = 0)
 
@@ -140,7 +146,7 @@ class DataFieldsViewModel @Inject constructor(
             alertDialogState = AlertDialogState(
                 title = String.format("Delete DataField: %s", event.value.fieldName),
                 imageIcon = Icons.Default.Delete,
-                text = "Are you sure you want to delete this Data Field?",
+                body = "Are you sure you want to delete this Data Field?",
                 onDismissRequest = { onDismissAlertDialog() },
                 confirmButtonLabel = "Delete",
                 confirmButtonOnClick = {
@@ -271,6 +277,8 @@ class DataFieldsViewModel @Inject constructor(
             is ChangePreset -> onChangePreset(event)
             is EditPresetName -> onEditPresetName(event)
             is DeletePreset -> onDeletePreset()
+            is PresetEvent.AddPreset -> saveNewPreset()
+            is PresetEvent.DismissAlertDialog -> onDismissAlertDialog()
         }
     }
 
@@ -288,21 +296,42 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun onShowAddPresetDialog() {
+        /*  _uiState.value = uiState.value.copy(
+              isPresetDropDownMenuExpanded = false,
+              newPreset = null,
+              alertDialogState = AlertDialogState(
+                  title = "Add New Preset",
+                  imageIcon = Icons.Default.AddBox,
+                  text = "Add a new Preset with the name?",
+                  onDismissRequest = { onDismissAlertDialog() },
+                  confirmButtonLabel = "Add Preset",
+                  confirmButtonOnClick = { saveNewPreset() },
+                  dismissButtonLabel = "Cancel",
+                  editFieldFunction = {
+                      onPresetEvent(EditPresetName(it))
+                  },
+                  dismissButtonOnClick = { onDismissAlertDialog() },
+                  titleTextAlign = TextAlign.Center,
+                  dismissible = true
+              )
+          )*/
         _uiState.value = uiState.value.copy(
             isPresetDropDownMenuExpanded = false,
             newPreset = null,
             alertDialogState = AlertDialogState(
                 title = "Add New Preset",
-                imageIcon = Icons.Default.AddBox,
-                text = "Add a new Preset with the name?",
-                onDismissRequest = { onDismissAlertDialog() },
+                body = "Add a new Preset with the name",
+                onDismissRequest = { onPresetEvent(PresetEvent.DismissAlertDialog) },
                 confirmButtonLabel = "Add Preset",
-                confirmButtonOnClick = { saveNewPreset() },
+                confirmButtonOnClick = {
+                    saveNewPreset()
+                    onPresetEvent(PresetEvent.DismissAlertDialog)
+                },
                 dismissButtonLabel = "Cancel",
                 editFieldFunction = {
                     onPresetEvent(EditPresetName(it))
                 },
-                dismissButtonOnClick = { onDismissAlertDialog() },
+                dismissButtonOnClick = { onPresetEvent(PresetEvent.DismissAlertDialog) },
                 titleTextAlign = TextAlign.Center,
                 dismissible = true
             )
@@ -310,6 +339,7 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun saveNewPreset() {
+        Log.i("Add Preset", "saveNewPreset: Add Preset clicked")
         val newPreset = _uiState.value.newPreset
         viewModelScope.launch {
             if (newPreset == null || newPreset.presetName.isBlank()) {
@@ -352,7 +382,7 @@ class DataFieldsViewModel @Inject constructor(
             modifiedPreset = event.value,
             alertDialogState = AlertDialogState(
                 title = String.format("Delete Preset: %s", event.value.presetName),
-                text = "Are you sure you want to delete this Preset?",
+                body = "Are you sure you want to delete this Preset?",
                 onDismissRequest = { onDismissAlertDialog() },
                 confirmButtonLabel = "Delete",
                 confirmButtonOnClick = {

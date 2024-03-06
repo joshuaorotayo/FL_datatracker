@@ -1,6 +1,8 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -12,16 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +33,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +45,7 @@ import com.jorotayo.fl_datatracker.R.string.enterPresetPlaceholder
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -81,7 +84,7 @@ fun BasicAddPresetDialog(
 
     Card(
         modifier = modifier
-            .padding(small)
+            .padding(xSmall)
             .defaultMinSize(minWidth = 280.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(medium),
@@ -156,30 +159,32 @@ fun BasicAddPresetDialog(
             Row(
                 Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                TextButton(
-                    onClick =
-                    toggleAddPresetDialog
+                OutlinedButton(
+                    border = BorderStroke(Dimen.one, colors.primary),
+                    modifier = Modifier,
+                    shape = RoundedCornerShape(small),
+                    onClick = toggleAddPresetDialog
                 ) {
                     Text(
-                        modifier = Modifier
-                            .padding(end = xxSmall),
+                        modifier = Modifier,
                         text = stringResource(cancelText),
-                        color = colors.primary,
+                        color = colors.onSurface
                     )
                 }
-                TextButton(
-                    enabled = presetText.text.isNotBlank(),
+                Button(
+                    modifier = Modifier,
+                    shape = RoundedCornerShape(small),
                     onClick = {
+                        Log.i("testoing", "BasicAddPresetDialog: addddd")
                         addPreset(presetText.text)
                     }
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(addPresetBtn),
-                        fontWeight = ExtraBold,
-                        color = headerColour
+                        color = colors.onPrimary
                     )
                 }
             }
