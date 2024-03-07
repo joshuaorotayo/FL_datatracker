@@ -104,6 +104,9 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended:1.5.0'
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
+    // Form builder
+    implementation 'com.github.jkuatdsc:form-builder:1.0.7'
+
     // Splash API
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
