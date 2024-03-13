@@ -189,7 +189,7 @@ private val months = arrayOf(
     "July", "August", "September", "October", "November", "December"
 )
 
-private fun formattedDateString(day: Int, month: Int, year: Int): String {
+fun formattedDateString(day: Int, month: Int, year: Int): String {
     val mCalendar = Calendar.getInstance()
 
     val day2 = day % 100

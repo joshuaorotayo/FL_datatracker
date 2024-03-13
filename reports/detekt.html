@@ -142,12 +142,12 @@
     <defs>
         <linearGradient id="paint0_linear" x1="5.222e-07" y1="41.3361" x2="51.982" y2="33.29"
                         gradientUnits="userSpaceOnUse">
-            <stop stop-color="#7942EE"/>
+            <stop offset="1" stop-color="#7942EE"/>
             <stop offset="1" stop-color="#FF4651"/>
         </linearGradient>
         <linearGradient id="paint1_linear" x1="53.0121" y1="51.5465" x2="60.9801" y2="30.2423"
                         gradientUnits="userSpaceOnUse">
-            <stop stop-color="#7942EE"/>
+            <stop offset="1" stop-color="#7942EE"/>
             <stop offset="1" stop-color="#FF4651"/>
         </linearGradient>
     </defs>
@@ -3626,7 +3626,8 @@
         <pre><code><span class="lineno"> 356 </span>            )
 <span class="lineno"> 357 </span>            Text(
 <span class="lineno"> 358 </span>                modifier = Modifier
-<span class="lineno"> 359 </span>                    .weight(<span class="error">0.2f</span>),
+<span class="lineno"> 359 </span>                    .weight(<span
+                    class="error">Dimen.twentyPercent</span>),
 <span class="lineno"> 360 </span>                text = &quot;Enabled?&quot;,
 <span class="lineno"> 361 </span>                textAlign = TextAlign.Start,
 <span class="lineno"> 362 </span>                style = typography.body1,
@@ -3836,7 +3837,8 @@
         <pre><code><span class="lineno"> 155 </span>            }
 <span class="lineno"> 156 </span>            Row(
 <span class="lineno"> 157 </span>                modifier = Modifier
-<span class="lineno"> 158 </span>                    .weight(<span class="error">0.2f</span>),
+<span class="lineno"> 158 </span>                    .weight(<span
+                    class="error">Dimen.twentyPercent</span>),
 <span class="lineno"> 159 </span>                verticalAlignment = Alignment.CenterVertically,
 <span class="lineno"> 160 </span>                horizontalArrangement = Arrangement.SpaceEvenly
 <span class="lineno"> 161 </span>            ) {
@@ -3916,7 +3918,7 @@
         <pre><code><span class="lineno"> 158 </span>            .padding(horizontal = 20.dp)
 <span class="lineno"> 159 </span>            .fillMaxWidth()
 <span class="lineno"> 160 </span>            .height(1.dp)
-<span class="lineno"> 161 </span>            .background(Color.Gray.copy(<span class="error">0.1f</span>))
+<span class="lineno"> 161 </span>            .background(Color.Gray.copy(<span class="error">Dimen.tenPercent</span>))
 <span class="lineno"> 162 </span>        )
 <span class="lineno"> 163 </span>    }
 <span class="lineno"> 164 </span>
@@ -4086,7 +4088,8 @@
         <pre><code><span class="lineno">  40 </span>        Icon(
 <span class="lineno">  41 </span>            modifier = Modifier
 <span class="lineno">  42 </span>                .size(medium)
-<span class="lineno">  43 </span>                .weight(<span class="error">0.2f</span>)
+<span class="lineno">  43 </span>                .weight(<span
+                    class="error">Dimen.twentyPercent</span>)
 <span class="lineno">  44 </span>                .padding(end = xxxSmall),
 <span class="lineno">  45 </span>            imageVector = setting.settingIcon,
 <span class="lineno">  46 </span>            contentDescription = &quot;icon for ${setting.settingDescription}&quot;,

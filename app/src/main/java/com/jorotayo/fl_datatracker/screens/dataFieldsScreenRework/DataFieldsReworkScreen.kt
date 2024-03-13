@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -33,11 +35,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.MinimalShortTextField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalBooleanField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalCountField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalDateField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalListField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalSelectionField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalShortTextField
 import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
@@ -97,6 +105,32 @@ fun DataFieldsReworkScreen(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
+            Column {
+                minimalShortTextField(
+                    rowHeader = "Header for row number: X",
+                    rowHint = "hint for row",
+                    isError = false
+                )
+
+                minimalSelectionField(
+                    rowHeader = "Hello",
+                    isError = false,
+                    state = state,
+                    selectionList = listOf("hi", "hello", "test")
+                )
+
+                minimalDateField(
+                    rowHeader = "Date Header",
+                    rowHint = "Enter a date",
+                    isError = false
+                )
+
+                minimalListField(rowHeader = "Row for list items", isError = false)
+
+                minimalCountField(rowHeader = "Count row", isError = false)
+
+                minimalBooleanField(rowHeader = "Boolean header", isError = false)
+            }
 
             AnimatedVisibility(
                 visible = state.isAddMembersFormShowing,
@@ -106,7 +140,7 @@ fun DataFieldsReworkScreen(
             {
                 Column {
                     for (i in 1..4) {
-                        MinimalShortTextField(
+                        minimalShortTextField(
                             rowHeader = "Header for row number: $i",
                             rowHint = "hint for row $i",
                             isError = false
@@ -148,12 +182,17 @@ private fun HeaderRow() {
 @Composable
 fun AddMembers(onAddMembersClick: () -> Unit) {
     IconButton(
-        onClick =
-        onAddMembersClick
+        modifier = Modifier,
+        onClick = onAddMembersClick
     ) {
         Icon(
-            Icons.Filled.Add, contentDescription = "Add Members Button", tint = colors.primary,
-            modifier = Modifier
+            Icons.Filled.Add,
+            contentDescription = "Add Members Button",
+            tint = colors.primary,
+            modifier = Modifier.background(
+                shape = CircleShape,
+                color = colors.surface.copy(alpha = fiftyPercent)
+            )
         )
     }
 }

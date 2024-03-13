@@ -41,6 +41,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
+import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -166,7 +167,7 @@ private fun DialogBody(alertDialogState: AlertDialogState) {
 @Composable
 fun DialogTextField(alertDialogState: AlertDialogState) {
     val (fieldText, setText) = remember { mutableStateOf(TextFieldValue("")) }
-    val maxChar = 20
+    val maxChar = optionsMaxChars
     TextField(
         modifier = Modifier
             .fillMaxWidth(),

@@ -45,7 +45,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.zero
 fun PreviewMinimalShortTextField() {
     FL_DatatrackerTheme {
         Column {
-            MinimalShortTextField(
+            minimalShortTextField(
                 rowHeader = "this is a sample row",
                 rowHint = "Enter text here",
                 isError = false
@@ -56,15 +56,17 @@ fun PreviewMinimalShortTextField() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MinimalShortTextField(
+fun minimalShortTextField(
     rowHeader: String,
     rowHint: String,
     isError: Boolean
-) {
+): String {
+
     val (text, setText) = remember { mutableStateOf("") }
     var cardElevation by remember { mutableStateOf(xSmall) }
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
+
     Column(modifier = Modifier.wrapContentSize()) {
         Card(
             modifier = Modifier
@@ -132,4 +134,5 @@ fun MinimalShortTextField(
             color = if (text.length < Dimen.shortTextMaxChars) Color.Gray else Color.Red,
         )
     }
+    return text
 }

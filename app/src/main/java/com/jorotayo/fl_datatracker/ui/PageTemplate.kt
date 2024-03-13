@@ -83,7 +83,6 @@ fun PageTemplate() {
                         ) == true
                     ) {
 //                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
-                        // TODO: default snackbar to show on top
                     }
                 }
             )

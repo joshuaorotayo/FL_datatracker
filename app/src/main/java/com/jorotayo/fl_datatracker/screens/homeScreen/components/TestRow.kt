@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 
 @Composable
 fun TestRow(
@@ -32,7 +33,7 @@ fun TestRow(
 
         Text(
             modifier = Modifier
-                .weight(0.5f)
+                .weight(fiftyPercent)
                 .clickable(onClick = deleteRow),
             text = "x",
             color = Color.Black

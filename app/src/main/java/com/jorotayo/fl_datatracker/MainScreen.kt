@@ -80,7 +80,7 @@ fun BottomBar(navController: NavHostController) {
     ) {
 //        Divider(
 //            modifier = Modifier,
-//            color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
+//            color = MaterialTheme.colors.onPrimary.copy(alpha = Dimen.twentyPercent)
 //        )
         BottomNavigation(
             backgroundColor = colors.surface,

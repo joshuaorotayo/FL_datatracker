@@ -18,8 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
+import com.jorotayo.fl_datatracker.util.Dimen.eightyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
+import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
@@ -40,7 +42,7 @@ fun SettingRow(
         Icon(
             modifier = Modifier
                 .size(medium)
-                .weight(0.2f)
+                .weight(twentyPercent)
                 .padding(end = xxxSmall),
             imageVector = setting.settingIcon,
             contentDescription = "icon for ${setting.settingDescription}",
@@ -49,7 +51,7 @@ fun SettingRow(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.8f)
+                .weight(eightyPercent)
         ) {
             Text(
                 text = setting.settingName,

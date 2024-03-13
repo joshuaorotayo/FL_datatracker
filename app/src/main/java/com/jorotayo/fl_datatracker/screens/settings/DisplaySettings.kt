@@ -40,6 +40,7 @@ import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
@@ -141,8 +142,8 @@ fun DisplaySettings(
                                         checkedTrackColor = colors.primary,
                                         uncheckedThumbColor = colors.primary,
                                         uncheckedTrackColor = Color.DarkGray,
-                                        checkedTrackAlpha = 0.2f,
-                                        uncheckedTrackAlpha = 0.2f
+                                        checkedTrackAlpha = twentyPercent,
+                                        uncheckedTrackAlpha = twentyPercent
                                     )
                                 )
                             }
@@ -173,8 +174,8 @@ fun DisplaySettings(
                                         checkedTrackColor = colors.primary,
                                         uncheckedThumbColor = colors.primary,
                                         uncheckedTrackColor = Color.DarkGray,
-                                        checkedTrackAlpha = 0.2f,
-                                        uncheckedTrackAlpha = 0.2f
+                                        checkedTrackAlpha = twentyPercent,
+                                        uncheckedTrackAlpha = twentyPercent
                                     )
                                 )
                             }
@@ -199,8 +200,8 @@ fun DisplaySettings(
                                 checkedTrackColor = colors.primary,
                                 uncheckedThumbColor = colors.primary,
                                 uncheckedTrackColor = Color.DarkGray,
-                                checkedTrackAlpha = 0.2f,
-                                uncheckedTrackAlpha = 0.2f
+                                checkedTrackAlpha = twentyPercent,
+                                uncheckedTrackAlpha = twentyPercent
                             )
                         )
                     }

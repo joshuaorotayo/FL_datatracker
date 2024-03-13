@@ -43,6 +43,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.screens.onboarding.components.OnboardingEvent
 import com.jorotayo.fl_datatracker.screens.onboarding.components.OnboardingScreenData
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -83,7 +84,7 @@ fun OnboardingScreen(
             Box(modifier = Modifier.align(Alignment.BottomCenter)) {
                 Card(
                     modifier = Modifier
-                        .fillMaxHeight(0.5f)
+                        .fillMaxHeight(fiftyPercent)
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter),
                     backgroundColor = if (darkTheme) MaterialTheme.colors.background else MaterialTheme.colors.surface,

@@ -28,4 +28,12 @@ class DataFieldsReworkViewModel @Inject constructor(
             )
         }
     }
+
+    override fun expandDropdown() {
+        _state.update {
+            it.copy(
+                isDropdownExpanded = !state.value.isDropdownExpanded
+            )
+        }
+    }
 }

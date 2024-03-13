@@ -167,7 +167,7 @@ fun ComplexDataRow(
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(Color.Gray.copy(0.1f))
+                .background(Color.Gray.copy(Dimen.tenPercent))
         )
     }
 }

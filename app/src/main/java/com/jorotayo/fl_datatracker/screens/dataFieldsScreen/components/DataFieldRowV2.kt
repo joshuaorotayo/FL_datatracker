@@ -53,6 +53,8 @@ import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.thirtyPercent
+import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
@@ -107,7 +109,7 @@ fun DataFieldRowV2(
         } else if (isRowEnabled.value) {
             MaterialTheme.colors.surface
         } else {
-            MaterialTheme.colors.primary.copy(0.3f)
+            MaterialTheme.colors.primary.copy(thirtyPercent)
         },
         elevation = if (isDarkMode()) xxxSmall else zero,
     ) {
@@ -176,7 +178,7 @@ fun DataFieldRowV2(
                 }
                 Row(
                     modifier = Modifier
-                        .weight(0.2f),
+                        .weight(twentyPercent),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -191,7 +193,8 @@ fun DataFieldRowV2(
                             onRowEvent(RowEvent.ToggleRow(currentDataField.dataFieldId))
                         },
                         colors = CheckboxDefaults.colors(
-                            checkmarkColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary,
+                            checkmarkColor = if (isSystemInDarkTheme())
+                                MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary,
                             uncheckedColor = textColour,
                             checkedColor = textColour,
                         )
@@ -383,7 +386,8 @@ private fun TriStateHintRow(
             style = MaterialTheme.typography.body1
         )
         Text(
-            text = " ${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
+            text = " ${currentDataField.first.uppercase()}/" +
+                    "${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
             color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.body1
         )
@@ -441,7 +445,8 @@ fun BasicEditHint(
     currentRowState: DataFieldRowState,
     onRowEvent: (RowEvent) -> Unit
 ) {
-    val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
+    val (hintText,
+        setHintText) = remember { mutableStateOf(TextFieldValue("")) }
     val fieldHint =
         if (currentRowState.dataField.fieldHint.isNullOrBlank()) "Enter value for" else currentRowState.dataField.fieldHint
     Row(
@@ -466,7 +471,8 @@ fun BasicEditHint(
             placeholder = {
                 Text(
                     text = fieldHint!!,
-                    color = if (hintText.text.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
+                    color = if (hintText.text.isBlank())
+                        MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Normal
                 )
