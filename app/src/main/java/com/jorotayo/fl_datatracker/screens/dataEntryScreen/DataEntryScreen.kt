@@ -53,16 +53,12 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formRadioRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formShortTextRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formTimeRowV2
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
-import com.jorotayo.fl_datatracker.util.Dimen.large
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -70,10 +66,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewPopulatedDataEntryScreen() {
-    FL_DatatrackerTheme {
+    AppTheme {
         DataEntryScreen(
             navController = rememberNavController(),
             uiState = examplePopulatedDataEntry,
@@ -84,10 +80,10 @@ fun PreviewPopulatedDataEntryScreen() {
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewEmptyDataEntryScreen() {
-    FL_DatatrackerTheme {
+    AppTheme {
         DataEntryScreen(
             navController = rememberNavController(),
             uiState = DataEntryScreenState(),
@@ -151,7 +147,7 @@ fun DataEntryScreen(
                 Column(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(top = large)
+                        .padding(top = dimens.large)
                 ) {
                     HeaderRow()
                     if (uiState.dataRows.isNotEmpty()) {
@@ -170,15 +166,15 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(bottom = bottomBarPadding)
+                    .padding(bottom = dimens.bottomBarPadding)
             ) {
                 Card(
                     modifier = Modifier
-                        .padding(small)
+                        .padding(dimens.small)
                         .fillMaxWidth(),
-                    shape = RoundedCornerShape(small),
+                    shape = RoundedCornerShape(dimens.small),
                     backgroundColor = colors.surface,
-                    elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
+                    elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
                 ) {
                     LazyColumn(
                         state = listState,
@@ -202,7 +198,10 @@ fun DataEntryScreen(
                                 )
                                 Divider(
                                     modifier = Modifier
-                                        .padding(horizontal = xSmall, vertical = xSmall)
+                                        .padding(
+                                            horizontal = dimens.xSmall,
+                                            vertical = dimens.xSmall
+                                        )
                                         .fillMaxWidth(),
                                     color = colors.secondary,
                                     thickness = 0.5.dp
@@ -341,8 +340,8 @@ fun DataEntryScreen(
 //                            if (index < uiState.dataRows.size) {
 //                                Divider(
 //                                    modifier = Modifier.padding(
-//                                        horizontal = xSmall,
-//                                        vertical = xxxSmall
+//                                        horizontal = AppTheme.dimens.xSmall,
+//                                        vertical = xxAppTheme.dimens.xSmall
 //                                    )
 //                                )
 //                            }
@@ -352,7 +351,7 @@ fun DataEntryScreen(
                             // Save Button Footer
                             Button(
                                 modifier = Modifier
-                                    .padding(small)
+                                    .padding(dimens.small)
                                     .fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = colors.primary
@@ -419,7 +418,7 @@ fun DataEntryScreen(
 private fun HeaderRow() {
     Row(
         modifier = Modifier
-            .padding(start = small)
+            .padding(start = dimens.small)
             .fillMaxWidth(),
         verticalAlignment = CenterVertically
     ) {
@@ -444,40 +443,37 @@ private fun DataFormHeadings(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = small, top = small),
+                .padding(start = dimens.small, top = dimens.small),
             text = String.format(
                 stringResource(id = R.string.enter_data_header),
                 uiState.presetSetting.presetName
             ),
             color = colors.subtitleTextColour,
-            style = typography.h3,
+            style = AppTheme.typography.titleSmall,
             textAlign = TextAlign.Start
         )
     }
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                start = small,
-                end = small,
-            ),
+            .padding(horizontal = dimens.small),
         text = stringResource(id = R.string.data_entry_form_header),
         color = colors.subtitleTextColour,
-        style = typography.h3,
+        style = AppTheme.typography.titleSmall,
         textAlign = TextAlign.Start
     )
     Text(
         modifier = Modifier.padding(
-            start = small,
-            top = small,
-            bottom = small
+            start = dimens.small,
+            top = dimens.small,
+            bottom = dimens.small
         ),
         text = pluralStringResource(
             id = R.plurals.numberOfDatafields,
             count = uiState.dataRows.size,
             uiState.dataRows.size
         ),
-        style = typography.h3,
+        style = AppTheme.typography.titleSmall,
         color = colors.subtitleTextColour
     )
 }
@@ -487,7 +483,7 @@ private fun NoDataFormSection() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = bottomBarPadding)
+            .padding(bottom = dimens.bottomBarPadding)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             NoDataForm(modifier = Modifier.align(alignment = Center))

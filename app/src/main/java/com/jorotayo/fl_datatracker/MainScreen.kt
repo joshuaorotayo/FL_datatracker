@@ -13,9 +13,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,18 +34,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.util.SharedSettingService
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun BottomBarPreview() {
-    FL_DatatrackerTheme {
+    AppTheme {
         BottomBar(
             navController = rememberNavController()
         )
@@ -83,8 +85,8 @@ fun BottomBar(navController: NavHostController) {
 //            color = MaterialTheme.colors.onPrimary.copy(alpha = Dimen.twentyPercent)
 //        )
         BottomNavigation(
-            backgroundColor = colors.surface,
-            elevation = zero
+            backgroundColor = AppTheme.colors.surface,
+            elevation = dimens.zero
         ) {
             mainScreens.forEach { screen ->
                 AnimatedBottomNavItem(
@@ -109,7 +111,7 @@ fun RowScope.BottomNavItem(
     BottomNavigationItem(
         label = {
             Text(
-                modifier = Modifier.padding(top = xxSmall),
+                modifier = Modifier.padding(top = dimens.xSmall),
                 text = mainScreens.title,
                 style = typography.body2
             )
@@ -121,8 +123,8 @@ fun RowScope.BottomNavItem(
             )
         },
         selected = itemSelected,
-        unselectedContentColor = colors.secondary,
-        selectedContentColor = colors.primary,
+        unselectedContentColor = AppTheme.colors.onSurface,
+        selectedContentColor = AppTheme.colors.onBackground,
         onClick = {
             navController.navigate(mainScreens.route) {
                 popUpTo(navController.graph.findStartDestination().id)
@@ -154,7 +156,7 @@ fun RowScope.AnimatedBottomNavItem(
         label = "Nav Bar Icon size animation"
     )
     val animatedVisibleColor by animateColorAsState(
-        targetValue = colors.secondary.copy(0.4f),
+        targetValue = AppTheme.colors.onSurface.copy(0.4f),
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
@@ -163,7 +165,7 @@ fun RowScope.AnimatedBottomNavItem(
     )
 
     val animatedHiddenColor by animateColorAsState(
-        targetValue = colors.primary,
+        targetValue = AppTheme.colors.onBackground,
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing
@@ -174,10 +176,10 @@ fun RowScope.AnimatedBottomNavItem(
     BottomNavigationItem(
         label = {
             Text(
-                modifier = Modifier.padding(top = xSmall * scale),
+                modifier = Modifier.padding(top = dimens.xSmall * scale),
                 text = mainScreens.title,
-                style = typography.body2,
-                fontSize = typography.body2.fontSize * scale
+                style = AppTheme.typography.bodySmall,
+                fontSize = AppTheme.typography.bodySmall.fontSize * scale
             )
         },
         icon = {

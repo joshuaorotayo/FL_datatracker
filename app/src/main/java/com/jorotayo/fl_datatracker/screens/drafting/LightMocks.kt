@@ -30,14 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxLarge
-import com.jorotayo.fl_datatracker.util.Dimen.xxxLarge
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 
 @Preview(
@@ -47,8 +41,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 )
 @Composable
 fun PreviewFLLScreens() {
-
-    FL_DatatrackerTheme {
+    AppTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,31 +67,35 @@ fun LightColumnUI() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = small, top = xxLarge, end = small)
+            .padding(start = dimens.small, top = dimens.xxLarge, end = dimens.small)
     )
     {
         Surface(
             modifier = Modifier
-                .clip(RoundedCornerShape(small))
+                .clip(RoundedCornerShape(dimens.small))
                 .fillMaxWidth()
                 .height(100.dp),
             color = MaterialTheme.colors.background,
             shape = RoundedCornerShape(
-                xSmall
+                dimens.xSmall
             ),
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(xSmall)
+                    .padding(dimens.xSmall)
             ) {
                 Text(text = "Subheading Example", color = Color.Black, fontSize = 12.sp)
-                Text(modifier = Modifier.padding(top = xxxSmall), text = "100", color = Color.Gray)
+                Text(
+                    modifier = Modifier.padding(top = dimens.xxxSmall),
+                    text = "100",
+                    color = Color.Gray
+                )
             }
         }
         Row(
             modifier = Modifier
-                .padding(xSmall)
+                .padding(dimens.xSmall)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -120,7 +117,7 @@ fun LightColumnUI() {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(small)
+            horizontalArrangement = Arrangement.spacedBy(dimens.small)
         ) {
             for (i in 0..1) {
                 Surface(
@@ -128,7 +125,7 @@ fun LightColumnUI() {
                         .fillMaxWidth()
                         .height(100.dp)
                         .weight(1f),
-                    shape = RoundedCornerShape(small),
+                    shape = RoundedCornerShape(dimens.small),
                     color = Color.White
                 ) {
 
@@ -145,23 +142,23 @@ fun LightRoundedTopBar(modifier: Modifier, textColour: Color) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimen.xLarge)
+            .height(dimens.xLarge)
             .shadow(
-                elevation = xSmall
+                elevation = dimens.xSmall
             ),
         elevation = 4.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(small),
+                .padding(dimens.small),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Page Name",
                 color = textColour,
                 fontSize = 14.sp,
-                modifier = Modifier.padding(end = medium),
+                modifier = Modifier.padding(end = dimens.medium),
             )
             Surface(
                 modifier = Modifier
@@ -175,10 +172,10 @@ fun LightRoundedTopBar(modifier: Modifier, textColour: Color) {
                         color = textColour,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(
-                            start = xSmall,
-                            top = xxxSmall,
-                            bottom = xxxSmall,
-                            end = xxxLarge
+                            start = dimens.xSmall,
+                            top = dimens.xxxSmall,
+                            bottom = dimens.xxxSmall,
+                            end = dimens.xxxLarge
                         ),
                     )
                 }
@@ -193,16 +190,16 @@ fun LightRoundedBottomBar(modifier: Modifier, backColour: Color, textColour: Col
         modifier = modifier
             .fillMaxWidth()
             .shadow(
-                elevation = Dimen.large,
-                shape = RoundedCornerShape(Dimen.regular, Dimen.regular, Dimen.zero, Dimen.zero)
+                elevation = dimens.large,
+                shape = RoundedCornerShape(dimens.regular, dimens.regular, dimens.zero, dimens.zero)
             )
-            .height(Dimen.xLarge),
-        elevation = medium
+            .height(dimens.xLarge),
+        elevation = dimens.medium
     ) {
         Row(
             modifier = Modifier
                 .background(backColour)
-                .padding(small), Arrangement.SpaceAround
+                .padding(dimens.small), Arrangement.SpaceAround
         ) {
             Icon(
                 imageVector = Icons.Default.Menu,

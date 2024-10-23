@@ -26,22 +26,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign.Companion.End
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.eightyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxLarge
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewTesting() {
-    FL_DatatrackerTheme {
-        MembersPanel(Modifier.padding(horizontal = Dimen.xSmall), totalCount = 200)
+    AppTheme {
+        MembersPanel(Modifier.padding(horizontal = dimens.xSmall), totalCount = 200)
     }
 }
 
@@ -52,20 +47,20 @@ fun MembersPanel(modifier: Modifier, totalCount: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(185.dp)
-                .clip(RoundedCornerShape(small)), elevation = xxSmall
+                .clip(RoundedCornerShape(dimens.small)), elevation = dimens.xxSmall
 //                .background(MaterialTheme.colors.surface)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(start = small, top = small, end = small)
+                    .padding(start = dimens.small, top = dimens.small, end = dimens.small)
                     .fillMaxSize()
                     .align(Alignment.TopCenter)
-                    .clip(RoundedCornerShape(small)),
+                    .clip(RoundedCornerShape(dimens.small)),
                 verticalArrangement = Arrangement.Top
             ) {
                 Row(
                     Modifier
-                        .padding(xxxSmall),
+                        .padding(dimens.xxxSmall),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -80,7 +75,7 @@ fun MembersPanel(modifier: Modifier, totalCount: Int) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(start = xxSmall, top = xxSmall),
+                        .padding(start = dimens.xxSmall, top = dimens.xxSmall),
                     text = "Total Members: $totalCount",
                     textAlign = Start,
                     style = MaterialTheme.typography.h6
@@ -97,19 +92,19 @@ fun Content(
 ) {
     Card(
         modifier = modifier
-            .clip(RoundedCornerShape(small))
-            .size(xxxLarge + small),
+            .clip(RoundedCornerShape(dimens.small))
+            .size(dimens.xxxLarge + dimens.small),
         backgroundColor = if (isDarkMode()) MaterialTheme.colors.surface else MaterialTheme.colors.background,
-        elevation = xxSmall
+        elevation = dimens.xxSmall
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(xxSmall),
+                .padding(dimens.xxSmall),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                modifier = Modifier.fillMaxSize(eightyPercent),
+                modifier = Modifier.fillMaxSize(dimens.eightyPercent),
                 imageVector = Icons.Default.Face,
                 contentDescription = "Cardstuff"
             )

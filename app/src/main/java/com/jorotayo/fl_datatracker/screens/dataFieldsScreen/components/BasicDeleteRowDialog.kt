@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -38,12 +39,8 @@ import com.jorotayo.fl_datatracker.R.string.delete_row_body
 import com.jorotayo.fl_datatracker.R.string.row_delete_dialog_icon
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 @Preview(
     showBackground = true,
@@ -56,7 +53,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 )
 @Composable
 fun PreviewBasicDeleteRowDialog() {
-    FL_DatatrackerTheme {
+    AppTheme {
         BasicDeleteRowDialog(
             modifier = Modifier,
             confirmDelete = {},
@@ -90,29 +87,29 @@ fun BasicDeleteRowDialog(
     if (dialogIsVisible) {
         Card(
             modifier = modifier
-                .padding(small)
+                .padding(dimens.small)
                 .defaultMinSize(minWidth = 280.dp)
                 .wrapContentHeight(),
             shape = RoundedCornerShape(medium),
-            elevation = xxSmall
+            elevation = dimens.xxSmall
         ) {
             Column(
                 modifier
                     .background(colors.surface)
-                    .padding(regular),
+                    .padding(dimens.regular),
                 horizontalAlignment = CenterHorizontally
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = small),
+                        .padding(bottom = dimens.small),
                     verticalAlignment = CenterVertically,
                     horizontalArrangement = Center
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(medium)
-                            .padding(end = xxSmall),
+                            .size(dimens.medium)
+                            .padding(end = dimens.xxSmall),
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(id = row_delete_dialog_icon),
                         tint = colors.primary
@@ -139,7 +136,7 @@ fun BasicDeleteRowDialog(
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    shape = RoundedCornerShape(small),
+                    shape = RoundedCornerShape(dimens.small),
                     onClick = { /*TODO*/ }) {
                     Text(
                         modifier = Modifier,
@@ -147,11 +144,11 @@ fun BasicDeleteRowDialog(
                         color = colors.onPrimary
                     )
                 }
-                Spacer(modifier = Modifier.height(xSmall))
+                Spacer(modifier = Modifier.height(dimens.xSmall))
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    shape = RoundedCornerShape(small),
+                    shape = RoundedCornerShape(dimens.small),
                     onClick = { /*TODO*/ }) {
                     Text(
                         modifier = Modifier,

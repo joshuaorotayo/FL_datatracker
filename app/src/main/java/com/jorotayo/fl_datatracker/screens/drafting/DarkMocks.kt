@@ -32,8 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 
 @Preview(
@@ -43,7 +43,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 )
 @Composable
 fun PreviewFLLScreensDark() {
-    FL_DatatrackerTheme {
+    AppTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,28 +68,26 @@ fun DarkColumnUI() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = Dimen.small, top = Dimen.xxLarge, end = Dimen.small)
+            .padding(start = dimens.small, top = dimens.xxLarge, end = dimens.small)
     )
     {
         Surface(
             modifier = Modifier
-                .clip(RoundedCornerShape(Dimen.small))
+                .clip(RoundedCornerShape(dimens.small))
                 .fillMaxWidth()
                 .height(100.dp),
             color = Color.Black,
             elevation = 3.dp,
-            shape = RoundedCornerShape(
-                Dimen.xSmall
-            ),
+            shape = RoundedCornerShape(dimens.xSmall),
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimen.xSmall)
+                    .padding(dimens.xSmall)
             ) {
                 Text(text = "Bacenta data", color = Color.DarkGray)
                 Text(
-                    modifier = Modifier.padding(top = Dimen.xxxSmall),
+                    modifier = Modifier.padding(top = dimens.xxxSmall),
                     text = "100",
                     color = Color.White
                 )
@@ -97,7 +95,7 @@ fun DarkColumnUI() {
         }
         Row(
             modifier = Modifier
-                .padding(Dimen.xSmall)
+                .padding(dimens.xSmall)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -117,12 +115,12 @@ fun CentreScrollerUI(backColourUi: Color, textColourUi: Color) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = Dimen.xxxLarge, bottom = Dimen.medium)
+            .padding(top = dimens.xxxLarge, bottom = dimens.medium)
     ) {
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
-                Dimen.xSmall
+                dimens.xSmall
             )
         ) {
             item {
@@ -132,7 +130,7 @@ fun CentreScrollerUI(backColourUi: Color, textColourUi: Color) {
                         textColour = textColourUi,
                         textContent = "Item number $i"
                     )
-                    Spacer(modifier = Modifier.height(Dimen.xxSmall))
+                    Spacer(modifier = Modifier.height(dimens.xxSmall))
                 }
             }
         }
@@ -144,22 +142,22 @@ fun DarkRoundedTopBar(modifier: Modifier, textColour: Color) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimen.xLarge)
+            .height(dimens.xLarge)
             .shadow(
-                elevation = Dimen.xSmall
+                elevation = dimens.xSmall
             ),
         elevation = 4.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimen.small)
+                .padding(dimens.small)
         ) {
             Text(
                 modifier = Modifier.padding(
-                    end = Dimen.medium,
-                    top = Dimen.xxSmall,
-                    bottom = Dimen.xxSmall
+                    end = dimens.medium,
+                    top = dimens.xxSmall,
+                    bottom = dimens.xxSmall
                 ),
                 text = "Page Name",
                 color = textColour,
@@ -169,14 +167,14 @@ fun DarkRoundedTopBar(modifier: Modifier, textColour: Color) {
                 modifier = Modifier
                     .wrapContentWidth()
                     .clip(
-                        RoundedCornerShape(Dimen.small)
+                        RoundedCornerShape(dimens.small)
                     )
-                    .background(MaterialTheme.colors.surface), elevation = Dimen.xSmall
+                    .background(MaterialTheme.colors.surface), elevation = dimens.xSmall
             ) {
                 Text(
                     modifier = Modifier.padding(
-                        horizontal = Dimen.regular,
-                        vertical = Dimen.xxSmall
+                        horizontal = dimens.regular,
+                        vertical = dimens.xxSmall
                     ),
                     text = "Search Item",
                     color = textColour,
@@ -193,16 +191,16 @@ fun DarkRoundedBottomBar(modifier: Modifier, backColour: Color, textColour: Colo
         modifier = modifier
             .fillMaxWidth()
             .shadow(
-                elevation = Dimen.large,
-                shape = RoundedCornerShape(Dimen.regular, Dimen.regular, Dimen.zero, Dimen.zero)
+                elevation = dimens.large,
+                shape = RoundedCornerShape(dimens.regular, dimens.regular, dimens.zero, dimens.zero)
             )
-            .height(Dimen.xLarge),
-        elevation = Dimen.medium
+            .height(dimens.xLarge),
+        elevation = dimens.medium
     ) {
         Row(
             modifier = Modifier
                 .background(backColour)
-                .padding(Dimen.small), Arrangement.SpaceAround
+                .padding(dimens.small), Arrangement.SpaceAround
         ) {
             Icon(
                 imageVector = Icons.Default.Menu,
@@ -230,10 +228,10 @@ fun ItemExample(backColour: Color, textColour: Color, textContent: String) {
             .fillMaxWidth()
             .wrapContentHeight()
             .background(backColour),
-        elevation = if (backColour == Color.Black) 0.dp else Dimen.xxxxSmall
+        elevation = if (backColour == Color.Black) 0.dp else dimens.xxxxSmall
     ) {
         Text(
-            modifier = Modifier.padding(horizontal = Dimen.regular, vertical = Dimen.xSmall),
+            modifier = Modifier.padding(horizontal = dimens.regular, vertical = dimens.xSmall),
             text = textContent,
             color = textColour
         )

@@ -45,16 +45,13 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.components.ButtonState
 import com.jorotayo.fl_datatracker.util.components.ButtonType
@@ -62,10 +59,10 @@ import com.jorotayo.fl_datatracker.util.components.CustomButton
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import com.jorotayo.fl_datatracker.util.returnNewDataField
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewNewDataField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         NewDataField(
             currentPresetId = 0L,
             onDataFieldEvent = {}
@@ -99,15 +96,15 @@ fun NewDataField(
 
     Card(
         modifier = Modifier
-            .padding(small)
+            .padding(dimens.small)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(small),
+        shape = RoundedCornerShape(dimens.small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) xxSmall else zero
+        elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
     ) {
         Column(
             modifier = Modifier
-                .padding(xxSmall)
+                .padding(dimens.xxSmall)
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
@@ -124,7 +121,7 @@ fun NewDataField(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .fillMaxWidth()
-                    .padding(top = small),
+                    .padding(top = dimens.small),
                 text = "Data Field Name",
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.subtitle1,
@@ -184,7 +181,7 @@ fun NewDataField(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
-                    .padding(top = small)
+                    .padding(top = dimens.small)
                     .fillMaxWidth(),
                 text = stringResource(R.string.select_data_field_type),
                 textAlign = TextAlign.Start,
@@ -202,20 +199,20 @@ fun NewDataField(
             )
             Box(
                 modifier = Modifier
-                    .padding(top = xxSmall)
+                    .padding(top = dimens.xxSmall)
                     .wrapContentSize(Alignment.Center),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = xxSmall)
+                        .padding(vertical = dimens.xxSmall)
                         .clickable(onClick = { expanded = true }),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         modifier = Modifier
-                            .padding(end = xSmall),
+                            .padding(end = dimens.xSmall),
                         text = items[newDataField.value.fieldType],
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.subtitle1,
@@ -280,7 +277,7 @@ fun NewDataField(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = small)
+                            .padding(top = dimens.small)
                             .padding(horizontal = 10.dp),
                         text = "Data Field Hint",
                         textAlign = TextAlign.Start,
@@ -351,7 +348,7 @@ fun NewDataField(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = xxSmall, bottom = 5.dp)
+                            .padding(top = dimens.xxSmall, bottom = 5.dp)
                     ) {
                         Text(
                             text = "Enter in the values for the boolean e.g. Yes and No",
@@ -397,7 +394,7 @@ fun NewDataField(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = xxSmall, bottom = 5.dp)
+                            .padding(top = dimens.xxSmall, bottom = 5.dp)
                     ) {
                         Text(
                             text = "Enter in the values for the Tri-state e.g. No, N/A and Yes",
@@ -446,7 +443,7 @@ fun NewDataField(
             CustomButton(
                 ButtonState(
                     modifier = Modifier
-                        .padding(small)
+                        .padding(dimens.small)
                         .fillMaxWidth(),
                     type = ButtonType.PRIMARY,
                     label = "Save Data Field",

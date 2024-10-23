@@ -33,39 +33,41 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.dsc.form_builder.TextFieldState
+import com.dsc.form_builder.Validators
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formattedDateString
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen.iconSize
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import java.util.Calendar
 import java.util.Date
 
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalDateField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         Column {
-            minimalDateField(
+            MinimalDateField(
                 rowHeader = "this is a sample row",
-                isError = false,
-                rowHint = ""
+                dateFieldState = TextFieldState(
+                    name = "",
+                    initial = "",
+                    transform = null,
+                    validators = listOf(Validators.Required())
+                )
             )
         }
     }
 }
 
 @Composable
-fun minimalDateField(
+fun MinimalDateField(
     rowHeader: String,
-    rowHint: String,
-    isError: Boolean
-): String {
+    dateFieldState: TextFieldState
+) {
 
     // Fetching the Local Context
     val mContext = LocalContext.current
@@ -86,7 +88,7 @@ fun minimalDateField(
     mCalendar.time = Date()
 
     // Declaring a string value to store date in string format
-    val mDate = remember { mutableStateOf("") }
+    val mDate = remember { mutableStateOf(dateFieldState.value) }
 
     // Declaring DatePickerDialog and setting
     // initial values as current values (present year, month and day)
@@ -94,14 +96,13 @@ fun minimalDateField(
         mContext,
         { _: DatePicker, year: Int, month: Int, mDayOfMonth: Int ->
             mDate.value = formattedDateString(mDayOfMonth, month, year)
-
         },
         mYear,
         mMonth,
         mDay
     )
 
-    var cardElevation by remember { mutableStateOf(xSmall) }
+    var cardElevation by remember { mutableStateOf(12.dp) }
     val focusManager = LocalFocusManager.current
 
 
@@ -114,19 +115,19 @@ fun minimalDateField(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(xxSmall)
+                .padding(dimens.xxSmall)
                 .onFocusChanged {
-                    cardElevation = if (it.isFocused) medium else xSmall
+                    cardElevation = if (it.isFocused) 32.dp else 12.dp
                 },
-            shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && (cardElevation == medium)) colors.surface.copy(
+            shape = RoundedCornerShape(dimens.xSmall),
+            backgroundColor = if (!isDarkMode() && (cardElevation == dimens.medium)) colors.surface.copy(
                 alpha = 0.5f
             ) else colors.surface,
-            elevation = if (isDarkMode()) cardElevation else zero
+            elevation = if (isDarkMode()) cardElevation else dimens.zero
         ) {
             Column(
                 modifier = Modifier
-                    .padding(xxSmall)
+                    .padding(dimens.xxSmall)
                     .fillMaxWidth()
                     .clickable(
                         onClick = {
@@ -150,8 +151,8 @@ fun minimalDateField(
 
                     Icon(
                         modifier = Modifier
-                            .size(iconSize)
-                            .padding(end = xxSmall),
+                            .size(dimens.icon)
+                            .padding(end = dimens.xxSmall),
                         imageVector = Icons.Default.EditCalendar,
                         contentDescription = "Select Date from Calendar",
                         tint = colors.primary
@@ -165,11 +166,10 @@ fun minimalDateField(
                         style = typography.body1
                     )
                 }
-                if (isError) {
+                if (dateFieldState.hasError) {
                     Text(text = "Please enter in a value", color = Color.Red)
                 }
             }
         }
     }
-    return mDate.value
 }

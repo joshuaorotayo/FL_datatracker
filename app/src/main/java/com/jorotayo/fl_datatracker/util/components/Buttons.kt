@@ -22,12 +22,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.one
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 data class ButtonState(
     val type: ButtonType,
@@ -66,17 +63,17 @@ fun CustomButton(buttonState: ButtonState) {
     }
 }
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 private fun PreviewButtons() {
-    FL_DatatrackerTheme {
+    AppTheme {
         val primaryButtonState = ButtonState(
             label = "Test Button",
             onClick = {},
             enabled = true,
             type = ButtonType.PRIMARY,
             modifier = Modifier
-                .padding(horizontal = medium, vertical = xxSmall)
+                .padding(horizontal = dimens.medium, vertical = dimens.xxSmall)
                 .fillMaxWidth(),
             contentColor = colors.primary,
             backgroundColor = colors.background,
@@ -88,7 +85,7 @@ private fun PreviewButtons() {
             enabled = true,
             type = ButtonType.SECONDARY,
             modifier = Modifier
-                .padding(horizontal = medium, vertical = xxSmall)
+                .padding(horizontal = dimens.medium, vertical = dimens.xxSmall)
                 .fillMaxWidth(),
             contentColor = colors.primary,
             backgroundColor = colors.background,
@@ -99,7 +96,7 @@ private fun PreviewButtons() {
             enabled = true,
             type = ButtonType.TERTIARY,
             modifier = Modifier
-                .padding(xxSmall),
+                .padding(dimens.xxSmall),
             contentColor = colors.primary,
             iconStart = Icons.Filled.SmartButton
         )
@@ -123,10 +120,10 @@ private fun PrimaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
-        elevation = ButtonDefaults.elevation(zero),
+        elevation = ButtonDefaults.elevation(dimens.zero),
         shape = RoundedCornerShape(FULLY_ROUNDED),
         border = BorderStroke(
-            one,
+            dimens.one,
             if (buttonState.enabled) colors.primary else colors.primary.copy(alpha = 0.5f)
         ),
         colors = ButtonDefaults.buttonColors(
@@ -156,10 +153,10 @@ private fun SecondaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
-        elevation = ButtonDefaults.elevation(zero),
+        elevation = ButtonDefaults.elevation(dimens.zero),
         shape = RoundedCornerShape(FULLY_ROUNDED),
         border = BorderStroke(
-            one,
+            dimens.one,
             if (buttonState.enabled) colors.primary else colors.primary.copy(alpha = 0.5f)
         ),
         colors = ButtonDefaults.buttonColors(
@@ -185,7 +182,7 @@ private fun TertiaryButton(buttonState: ButtonState) {
     Button(
         onClick = buttonState.onClick,
         enabled = buttonState.enabled,
-        elevation = ButtonDefaults.elevation(zero),
+        elevation = ButtonDefaults.elevation(dimens.zero),
         shape = RoundedCornerShape(FULLY_ROUNDED),
         colors = ButtonDefaults.buttonColors(
             disabledContentColor = Transparent,

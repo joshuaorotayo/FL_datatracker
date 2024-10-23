@@ -30,10 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import java.util.Calendar
 import java.util.Date
 
@@ -49,7 +49,7 @@ import java.util.Date
 )
 @Composable
 fun PreviewFormDateRowV2() {
-    FL_DatatrackerTheme {
+    AppTheme {
         formDateRowV2(
             data = DataRowState(
                 DataItem(
@@ -110,7 +110,7 @@ fun formDateRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(small)
+            .padding(dimens.small)
     ) {
         Text(
             modifier = Modifier

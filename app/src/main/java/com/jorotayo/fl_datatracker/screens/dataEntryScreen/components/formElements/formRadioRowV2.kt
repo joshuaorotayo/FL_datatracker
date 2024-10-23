@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -32,18 +33,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import kotlin.math.floor
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Empty Dark Mode")
 @Preview(showBackground = true, name = "Empty Light Mode")
 @Composable
 fun PreviewEmptyFormRadioRowV2() {
-    FL_DatatrackerTheme {
+    AppTheme {
         formRadioRowV2(
             data = DataRowState(
                 DataItem(
@@ -65,7 +64,7 @@ fun PreviewEmptyFormRadioRowV2() {
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewFormRadioRowV2() {
-    FL_DatatrackerTheme {
+    AppTheme {
         formRadioRowV2(
             data = DataRowState(
                 DataItem(
@@ -123,7 +122,7 @@ fun formRadioRowV2(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(small)
+                .padding(dimens.small)
         ) {
             Text(
                 modifier = Modifier
@@ -135,7 +134,7 @@ fun formRadioRowV2(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(xSmall),
+                    .padding(dimens.xSmall),
                 text = "No options provided for ${data.dataItem.fieldName}. Please edit the Data Field and provide values",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1,
@@ -148,7 +147,7 @@ fun formRadioRowV2(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(MaterialTheme.colors.surface)
-                .padding(small)
+                .padding(dimens.small)
         ) {
             Text(
                 modifier = Modifier
@@ -167,7 +166,7 @@ fun formRadioRowV2(
                 ) {
                     Text(
                         modifier = Modifier
-                            .padding(start = small, end = small, top = 5.dp),
+                            .padding(start = dimens.small, end = dimens.small, top = 5.dp),
                         text = stringResource(id = R.string.radio_row_error),
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.caption,
@@ -186,7 +185,7 @@ fun formRadioRowV2(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = xSmall),
+                    .padding(top = dimens.xSmall),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -195,7 +194,7 @@ fun formRadioRowV2(
                     modifier = Modifier
                         .fillMaxWidth(0.6f),
                     shape = RoundedCornerShape(medium),
-                    elevation = xSmall
+                    elevation = dimens.xSmall
                 ) {
                     Row(
                         modifier = Modifier
@@ -222,7 +221,7 @@ fun formRadioRowV2(
                                             }
                                         )
                                         .padding(
-                                            vertical = xSmall,
+                                            vertical = dimens.xSmall,
                                             horizontal = 5.dp,
                                         ),
                                 )

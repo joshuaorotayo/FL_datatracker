@@ -741,7 +741,7 @@
 <span class="lineno">  45 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  46 </span>@Composable
 <span class="lineno">  47 </span>fun <span class="error">BottomBarPreview</span>() {
-<span class="lineno">  48 </span>    FL_DatatrackerTheme {
+<span class="lineno">  48 </span>    AppTheme {
 <span class="lineno">  49 </span>        BottomBar(
 <span class="lineno">  50 </span>            navController = rememberNavController()
 </code></pre>
@@ -821,7 +821,7 @@
 <span class="lineno">  85 </span>)
 <span class="lineno">  86 </span>@Composable
 <span class="lineno">  87 </span>fun <span class="error">PreviewDataEntryScreen</span>() {
-<span class="lineno">  88 </span>    FL_DatatrackerTheme {
+<span class="lineno">  88 </span>    AppTheme {
 <span class="lineno">  89 </span>        DataEntryScreen(
 <span class="lineno">  90 </span>            navController = rememberNavController(),
 </code></pre>
@@ -843,7 +843,7 @@
 <span class="lineno"> 402 </span>private fun <span class="error">HeaderRow</span>() {
 <span class="lineno"> 403 </span>    Row(
 <span class="lineno"> 404 </span>        modifier = Modifier
-<span class="lineno"> 405 </span>            .padding(start = xSmall)
+<span class="lineno"> 405 </span>            .padding(start = AppTheme.dimens.xSmall)
 </code></pre>
       </li>
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/DataEntryScreen.kt:420:13</span><span class="message">Function names should match the pattern: [a-z][a-zA-Z0-9]*</span>
@@ -871,7 +871,7 @@
 <span class="lineno">  20 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  21 </span>@Composable
 <span class="lineno">  22 </span>fun <span class="error">PreviewDataEntryFieldsPreview</span>() {
-<span class="lineno">  23 </span>    FL_DatatrackerTheme {
+<span class="lineno">  23 </span>    AppTheme {
 <span class="lineno">  24 </span>        DataEntryFieldsPreview()
 <span class="lineno">  25 </span>    }
 </code></pre>
@@ -891,7 +891,7 @@
 <span class="lineno">  39 </span>)
 <span class="lineno">  40 </span>@Composable
 <span class="lineno">  41 </span>fun <span class="error">PreviewFormImageDialog</span>() {
-<span class="lineno">  42 </span>    FL_DatatrackerTheme {
+<span class="lineno">  42 </span>    AppTheme {
 <span class="lineno">  43 </span>        FormImageDialog(
 <span class="lineno">  44 </span>            onDismiss = {}
 </code></pre>
@@ -951,7 +951,7 @@
 <span class="lineno">  32 </span>@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  33 </span>@Composable
 <span class="lineno">  34 </span>fun <span class="error">PreviewNoDataForm</span>() {
-<span class="lineno">  35 </span>    FL_DatatrackerTheme {
+<span class="lineno">  35 </span>    AppTheme {
 <span class="lineno">  36 </span>        NoDataForm(
 <span class="lineno">  37 </span>            modifier = Modifier
 </code></pre>
@@ -991,7 +991,7 @@
 <span class="lineno">  60 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  61 </span>@Composable
 <span class="lineno">  62 </span>fun <span class="error">FormBasePreview</span>() {
-<span class="lineno">  63 </span>    FL_DatatrackerTheme {
+<span class="lineno">  63 </span>    AppTheme {
 <span class="lineno">  64 </span>        FormBase()
 <span class="lineno">  65 </span>    }
 </code></pre>
@@ -1001,7 +1001,7 @@
 <span class="lineno">  32 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  33 </span>@Composable
 <span class="lineno">  34 </span>fun <span class="error">PreviewFormComponentTemplateV2</span>() {
-<span class="lineno">  35 </span>    FL_DatatrackerTheme {
+<span class="lineno">  35 </span>    AppTheme {
 <span class="lineno">  36 </span>        formComponentTemplateV2(fieldName = &quot;Form Component Template Example&quot;)
 <span class="lineno">  37 </span>    }
 </code></pre>
@@ -1011,7 +1011,7 @@
 <span class="lineno">  46 </span>@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  47 </span>@Composable
 <span class="lineno">  48 </span>fun <span class="error">PreviewFormCountRowV2</span>() {
-<span class="lineno">  49 </span>    FL_DatatrackerTheme {
+<span class="lineno">  49 </span>    AppTheme {
 <span class="lineno">  50 </span>        formCountRowV2(
 <span class="lineno">  51 </span>            data = DataRowState(
 </code></pre>
@@ -1021,7 +1021,7 @@
 <span class="lineno">  51 </span>)
 <span class="lineno">  52 </span>@Composable
 <span class="lineno">  53 </span>fun <span class="error">PreviewFormDateRowV2</span>() {
-<span class="lineno">  54 </span>    FL_DatatrackerTheme {
+<span class="lineno">  54 </span>    AppTheme {
 <span class="lineno">  55 </span>        formDateRowV2(
 <span class="lineno">  56 </span>            data = DataRowState(
 </code></pre>
@@ -1041,7 +1041,7 @@
 <span class="lineno">  37 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  38 </span>@Composable
 <span class="lineno">  39 </span>fun <span class="error">PreviewFormImageRowV3</span>() {
-<span class="lineno">  40 </span>    FL_DatatrackerTheme {
+<span class="lineno">  40 </span>    AppTheme {
 <span class="lineno">  41 </span>        val modalBottomSheetState =
 <span class="lineno">  42 </span>            rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 </code></pre>
@@ -1051,7 +1051,7 @@
 <span class="lineno">  37 </span>@Preview(showBackground = false, name = &quot;Light Mode&quot;)
 <span class="lineno">  38 </span>@Composable
 <span class="lineno">  39 </span>fun <span class="error">PreviewFormImageRowV4</span>() {
-<span class="lineno">  40 </span>    FL_DatatrackerTheme {
+<span class="lineno">  40 </span>    AppTheme {
 <span class="lineno">  41 </span>        val modalBottomSheetState =
 <span class="lineno">  42 </span>            rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 </code></pre>
@@ -1061,7 +1061,7 @@
 <span class="lineno">  31 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  32 </span>@Composable
 <span class="lineno">  33 </span>fun <span class="error">PreviewFormListRowV4</span>() {
-<span class="lineno">  34 </span>    FL_DatatrackerTheme {
+<span class="lineno">  34 </span>    AppTheme {
 <span class="lineno">  35 </span>        val dataItem = DataRowState(
 <span class="lineno">  36 </span>            DataItem(
 </code></pre>
@@ -1071,7 +1071,7 @@
 <span class="lineno">  46 </span>)
 <span class="lineno">  47 </span>@Composable
 <span class="lineno">  48 </span>fun <span class="error">PreviewFormLongTextRowV2</span>() {
-<span class="lineno">  49 </span>    FL_DatatrackerTheme {
+<span class="lineno">  49 </span>    AppTheme {
 <span class="lineno">  50 </span>        val data = DataItem(
 <span class="lineno">  51 </span>            dataItemId = 0,
 </code></pre>
@@ -1081,7 +1081,7 @@
 <span class="lineno">  43 </span>@Preview(showBackground = true, name = &quot;Empty Light Mode&quot;)
 <span class="lineno">  44 </span>@Composable
 <span class="lineno">  45 </span>fun <span class="error">PreviewEmptyFormRadioRowV2</span>() {
-<span class="lineno">  46 </span>    FL_DatatrackerTheme {
+<span class="lineno">  46 </span>    AppTheme {
 <span class="lineno">  47 </span>        formRadioRowV2(
 <span class="lineno">  48 </span>            data = DataRowState(
 </code></pre>
@@ -1091,7 +1091,7 @@
 <span class="lineno">  65 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  66 </span>@Composable
 <span class="lineno">  67 </span>fun <span class="error">PreviewFormRadioRowV2</span>() {
-<span class="lineno">  68 </span>    FL_DatatrackerTheme {
+<span class="lineno">  68 </span>    AppTheme {
 <span class="lineno">  69 </span>        formRadioRowV2(
 <span class="lineno">  70 </span>            data = DataRowState(
 </code></pre>
@@ -1111,7 +1111,7 @@
 <span class="lineno">  43 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  44 </span>@Composable
 <span class="lineno">  45 </span>fun <span class="error">PreviewFormTimeRowV2</span>() {
-<span class="lineno">  46 </span>    FL_DatatrackerTheme {
+<span class="lineno">  46 </span>    AppTheme {
 <span class="lineno">  47 </span>        formTimeRowV2(
 <span class="lineno">  48 </span>            data = DataRowState(
 </code></pre>
@@ -1121,7 +1121,7 @@
 <span class="lineno">  41 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  42 </span>@Composable
 <span class="lineno">  43 </span>fun <span class="error">PreviewListItem</span>() {
-<span class="lineno">  44 </span>    FL_DatatrackerTheme {
+<span class="lineno">  44 </span>    AppTheme {
 <span class="lineno">  45 </span>        listItem(
 <span class="lineno">  46 </span>            modifier = Modifier,
 </code></pre>
@@ -1133,7 +1133,7 @@
 <span class="lineno">  90 </span>fun <span class="error">DataFieldsScreenPreview</span>() {
 <span class="lineno">  91 </span>    val examplePreset = Preset(presetId = 0L, presetName = &quot;Default&quot;)
 <span class="lineno">  92 </span>
-<span class="lineno">  93 </span>    FL_DatatrackerTheme {
+<span class="lineno">  93 </span>    AppTheme {
 </code></pre>
       </li>
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/DataFieldsScreen.kt:110:5</span><span class="message">Function names should match the pattern: [a-z][a-zA-Z0-9]*</span>
@@ -1221,7 +1221,7 @@
 <span class="lineno">  58 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  59 </span>@Composable
 <span class="lineno">  60 </span>fun <span class="error">PreviewBasicAddPresetDialog</span>() {
-<span class="lineno">  61 </span>    FL_DatatrackerTheme {
+<span class="lineno">  61 </span>    AppTheme {
 <span class="lineno">  62 </span>        BasicAddPresetDialog(
 <span class="lineno">  63 </span>            modifier = Modifier,
 </code></pre>
@@ -1241,7 +1241,7 @@
 <span class="lineno">  53 </span>)
 <span class="lineno">  54 </span>@Composable
 <span class="lineno">  55 </span>fun <span class="error">PreviewBasicDeletePresetDialog</span>() {
-<span class="lineno">  56 </span>    FL_DatatrackerTheme {
+<span class="lineno">  56 </span>    AppTheme {
 <span class="lineno">  57 </span>        BasicDeletePresetDialog(
 <span class="lineno">  58 </span>            modifier = Modifier,
 </code></pre>
@@ -1261,7 +1261,7 @@
 <span class="lineno">  53 </span>)
 <span class="lineno">  54 </span>@Composable
 <span class="lineno">  55 </span>fun <span class="error">PreviewBasicDeleteRowDialog</span>() {
-<span class="lineno">  56 </span>    FL_DatatrackerTheme {
+<span class="lineno">  56 </span>    AppTheme {
 <span class="lineno">  57 </span>        BasicDeleteRowDialog(
 <span class="lineno">  58 </span>            modifier = Modifier,
 </code></pre>
@@ -1381,7 +1381,7 @@
 <span class="lineno">  34 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  35 </span>@Composable
 <span class="lineno">  36 </span>fun <span class="error">PreviewDataFieldRowV2</span>() {
-<span class="lineno">  37 </span>    FL_DatatrackerTheme {
+<span class="lineno">  37 </span>    AppTheme {
 <span class="lineno">  38 </span>        DataFieldRowV2(exampleShortField, onRowEvent = {}, onDataFieldEvent = {})
 <span class="lineno">  39 </span>    }
 </code></pre>
@@ -1401,7 +1401,7 @@
 <span class="lineno">  70 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  71 </span>@Composable
 <span class="lineno">  72 </span>fun <span class="error">PreviewNewDataField</span>() {
-<span class="lineno">  73 </span>    FL_DatatrackerTheme {
+<span class="lineno">  73 </span>    AppTheme {
 <span class="lineno">  74 </span>        NewDataField(
 <span class="lineno">  75 </span>            modifier = Modifier,
 </code></pre>
@@ -1421,7 +1421,7 @@
 <span class="lineno">  38 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  39 </span>@Composable
 <span class="lineno">  40 </span>fun <span class="error">PreviewNoDataField</span>() {
-<span class="lineno">  41 </span>    FL_DatatrackerTheme {
+<span class="lineno">  41 </span>    AppTheme {
 <span class="lineno">  42 </span>        NoDataField(modifier = Modifier)
 <span class="lineno">  43 </span>    }
 </code></pre>
@@ -1441,7 +1441,7 @@
 <span class="lineno">  31 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  32 </span>@Composable
 <span class="lineno">  33 </span>fun <span class="error">PreviewDataFieldTypeDropDown</span>() {
-<span class="lineno">  34 </span>    FL_DatatrackerTheme {
+<span class="lineno">  34 </span>    AppTheme {
 <span class="lineno">  35 </span>        var expanded by remember { mutableStateOf(true) }
 <span class="lineno">  36 </span>        DataFieldTypeDropDownV2(
 </code></pre>
@@ -1581,7 +1581,7 @@
 <span class="lineno"> 231 </span>)
 <span class="lineno"> 232 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno"> 233 </span>fun <span class="error">HomeScreenPreview</span>() {
-<span class="lineno"> 234 </span>    FL_DatatrackerTheme {
+<span class="lineno"> 234 </span>    AppTheme {
 <span class="lineno"> 235 </span>        HomeScreen(
 <span class="lineno"> 236 </span>            navController = rememberNavController(),
 </code></pre>
@@ -1592,7 +1592,7 @@
 <span class="lineno">  49 </span>@Composable
 <span class="lineno">  50 </span>fun <span class="error">PreviewBasicDeleteDataDialog</span>() {
 <span class="lineno">  51 </span>    val mutableValue = remember { mutableStateOf(true) }
-<span class="lineno">  52 </span>    FL_DatatrackerTheme {
+<span class="lineno">  52 </span>    AppTheme {
 <span class="lineno">  53 </span>        BasicDeleteDataDialog(
 </code></pre>
       </li>
@@ -1651,7 +1651,7 @@
 <span class="lineno">  37 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  38 </span>@Composable
 <span class="lineno">  39 </span>fun <span class="error">PreviewDataRow</span>() {
-<span class="lineno">  40 </span>    FL_DatatrackerTheme {
+<span class="lineno">  40 </span>    AppTheme {
 <span class="lineno">  41 </span>        DataRow(
 <span class="lineno">  42 </span>            data = Data(
 </code></pre>
@@ -1671,7 +1671,7 @@
 <span class="lineno">  42 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  43 </span>@Composable
 <span class="lineno">  44 </span>fun <span class="error">PreviewSearchBar</span>() {
-<span class="lineno">  45 </span>    FL_DatatrackerTheme {
+<span class="lineno">  45 </span>    AppTheme {
 <span class="lineno">  46 </span>        SearchBar(
 <span class="lineno">  47 </span>            onHomeEvent = {},
 </code></pre>
@@ -1691,7 +1691,7 @@
 <span class="lineno">  39 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  40 </span>@Composable
 <span class="lineno">  41 </span>fun <span class="error">PreviewSearchFilters</span>() {
-<span class="lineno">  42 </span>    FL_DatatrackerTheme {
+<span class="lineno">  42 </span>    AppTheme {
 <span class="lineno">  43 </span>        SearchFilters()
 <span class="lineno">  44 </span>    }
 </code></pre>
@@ -1721,7 +1721,7 @@
 <span class="lineno">  34 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  35 </span>@Composable
 <span class="lineno">  36 </span>fun <span class="error">PreviewSimpleDataRow</span>() {
-<span class="lineno">  37 </span>    FL_DatatrackerTheme {
+<span class="lineno">  37 </span>    AppTheme {
 <span class="lineno">  38 </span>        SimpleDataRow(
 <span class="lineno">  39 </span>            data = Data(
 </code></pre>
@@ -1761,7 +1761,7 @@
 <span class="lineno">  28 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  29 </span>@Composable
 <span class="lineno">  30 </span>fun <span class="error">PreviewTopBar</span>() {
-<span class="lineno">  31 </span>    FL_DatatrackerTheme {
+<span class="lineno">  31 </span>    AppTheme {
 <span class="lineno">  32 </span>        TopBar(
 <span class="lineno">  33 </span>            toggleSearchBar = {},
 </code></pre>
@@ -1821,7 +1821,7 @@
 <span class="lineno">  32 </span>)
 <span class="lineno">  33 </span>@Composable
 <span class="lineno">  34 </span>fun <span class="error">PreviewDataFieldSettings</span>() {
-<span class="lineno">  35 </span>    FL_DatatrackerTheme {
+<span class="lineno">  35 </span>    AppTheme {
 <span class="lineno">  36 </span>        DataFieldSettings()
 <span class="lineno">  37 </span>    }
 </code></pre>
@@ -1841,7 +1841,7 @@
 <span class="lineno">  32 </span>)
 <span class="lineno">  33 </span>@Composable
 <span class="lineno">  34 </span>private fun <span class="error">PreviewDisplaySettings</span>() {
-<span class="lineno">  35 </span>    FL_DatatrackerTheme {
+<span class="lineno">  35 </span>    AppTheme {
 <span class="lineno">  36 </span>        DisplaySettings()
 <span class="lineno">  37 </span>    }
 </code></pre>
@@ -1861,7 +1861,7 @@
 <span class="lineno">  32 </span>)
 <span class="lineno">  33 </span>@Composable
 <span class="lineno">  34 </span>fun <span class="error">PreviewFAQsList</span>() {
-<span class="lineno">  35 </span>    FL_DatatrackerTheme {
+<span class="lineno">  35 </span>    AppTheme {
 <span class="lineno">  36 </span>        FAQsList()
 <span class="lineno">  37 </span>    }
 </code></pre>
@@ -1901,7 +1901,7 @@
 <span class="lineno">  46 </span>)
 <span class="lineno">  47 </span>@Composable
 <span class="lineno">  48 </span>private fun <span class="error">PreviewSettingsScreen</span>() {
-<span class="lineno">  49 </span>    FL_DatatrackerTheme {
+<span class="lineno">  49 </span>    AppTheme {
 <span class="lineno">  50 </span>        SettingsScreen(
 <span class="lineno">  51 </span>            {},
 </code></pre>
@@ -1932,7 +1932,7 @@
 <span class="lineno">  26 </span>@Composable
 <span class="lineno">  27 </span>fun <span class="error">PreviewPageTemplate</span>() {
 <span class="lineno">  28 </span>
-<span class="lineno">  29 </span>    FL_DatatrackerTheme {
+<span class="lineno">  29 </span>    AppTheme {
 <span class="lineno">  30 </span>        PageTemplate()
 </code></pre>
       </li>
@@ -1961,7 +1961,7 @@
 <span class="lineno">  25 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno">  26 </span>@Composable
 <span class="lineno">  27 </span>fun <span class="error">PreviewTransparentTextField</span>() {
-<span class="lineno">  28 </span>    FL_DatatrackerTheme {
+<span class="lineno">  28 </span>    AppTheme {
 <span class="lineno">  29 </span>        TransparentTextField(text = &quot;&quot;,
 <span class="lineno">  30 </span>            placeholder = &quot;Value&quot;,
 </code></pre>
@@ -2011,7 +2011,7 @@
 <span class="lineno"> 236 </span>@Preview(showBackground = true, name = &quot;Light Mode&quot;)
 <span class="lineno"> 237 </span>@Composable
 <span class="lineno"> 238 </span>fun <span class="error">AlertDialogPreview</span>() {
-<span class="lineno"> 239 </span>    FL_DatatrackerTheme {
+<span class="lineno"> 239 </span>    AppTheme {
 <span class="lineno"> 240 </span>        val title = &quot;Interest rate&quot;
 <span class="lineno"> 241 </span>        val text = &quot;Tax-free - Interest which is paid that is exempt from tax.\n&quot; +
 </code></pre>
@@ -3425,7 +3425,7 @@
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV3.kt:99:35</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
         <pre><code><span class="lineno">  96 </span>                modifier = Modifier
 <span class="lineno">  97 </span>                    .wrapContentHeight()
-<span class="lineno">  98 </span>                    .padding(bottom = Dimen.xxSmall)
+<span class="lineno">  98 </span>                    .padding(bottom = Dimen.xAppTheme.dimens.xSmall)
 <span class="lineno">  99 </span>                    .fillMaxWidth(<span class="error">0.8f</span>)
 <span class="lineno"> 100 </span>            ) {
 <span class="lineno"> 101 </span>                Image(
@@ -3445,7 +3445,7 @@
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV3.kt:145:35</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
         <pre><code><span class="lineno"> 142 </span>                modifier = Modifier
 <span class="lineno"> 143 </span>                    .wrapContentHeight()
-<span class="lineno"> 144 </span>                    .padding(bottom = Dimen.xxSmall)
+<span class="lineno"> 144 </span>                    .padding(bottom = Dimen.xAppTheme.dimens.xSmall)
 <span class="lineno"> 145 </span>                    .fillMaxWidth(<span class="error">0.8f</span>)
 <span class="lineno"> 146 </span>            ) {
 <span class="lineno"> 147 </span>                Button(
@@ -3465,7 +3465,7 @@
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV4.kt:98:35</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
         <pre><code><span class="lineno">  95 </span>                modifier = Modifier
 <span class="lineno">  96 </span>                    .wrapContentHeight()
-<span class="lineno">  97 </span>                    .padding(bottom = Dimen.xxSmall)
+<span class="lineno">  97 </span>                    .padding(bottom = Dimen.xAppTheme.dimens.xSmall)
 <span class="lineno">  98 </span>                    .fillMaxWidth(<span class="error">0.8f</span>)
 <span class="lineno">  99 </span>            ) {
 <span class="lineno"> 100 </span>                Image(
@@ -3485,7 +3485,7 @@
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formImageRowV4.kt:133:35</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
         <pre><code><span class="lineno"> 130 </span>                modifier = Modifier
 <span class="lineno"> 131 </span>                    .wrapContentHeight()
-<span class="lineno"> 132 </span>                    .padding(bottom = Dimen.xxSmall)
+<span class="lineno"> 132 </span>                    .padding(bottom = Dimen.xAppTheme.dimens.xSmall)
 <span class="lineno"> 133 </span>                    .fillMaxWidth(<span class="error">0.8f</span>)
 <span class="lineno"> 134 </span>            ) {
 <span class="lineno"> 135 </span>                Button(
@@ -3558,7 +3558,7 @@
 <span class="lineno"> 196 </span>                    modifier = Modifier
 <span class="lineno"> 197 </span>                        .fillMaxWidth(<span class="error">0.6f</span>),
 <span class="lineno"> 198 </span>                    shape = RoundedCornerShape(medium),
-<span class="lineno"> 199 </span>                    elevation = xSmall
+<span class="lineno"> 199 </span>                    elevation = AppTheme.dimens.xSmall
 <span class="lineno"> 200 </span>                ) {
 </code></pre>
       </li>
@@ -3639,7 +3639,7 @@
 <span class="lineno">  77 </span>    val (presetText, setText) = remember { mutableStateOf(TextFieldValue(&quot;&quot;)) }
 <span class="lineno">  78 </span>    val maxChar = <span class="error">30</span>
 <span class="lineno">  79 </span>
-<span class="lineno">  80 </span>    val headerColour =
+<span class="lineno">  80 </span>    val MaterialTheme.colors.onBackground =
 <span class="lineno">  81 </span>        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 </code></pre>
       </li>
@@ -3759,8 +3759,8 @@
 <span class="lineno">  68 </span>                } else if (isRowEnabled.value) MaterialTheme.colors.surface
 <span class="lineno">  69 </span>                else MaterialTheme.colors.primary.copy(<span class="error">0.3f</span>)
 <span class="lineno">  70 </span>            ),
-<span class="lineno">  71 </span>        shape = RoundedCornerShape(xSmall),
-<span class="lineno">  72 </span>        elevation = xxxSmall,
+<span class="lineno">  71 </span>        shape = RoundedCornerShape(AppTheme.dimens.xSmall),
+<span class="lineno">  72 </span>        elevation = xxAppTheme.dimens.xSmall,
 </code></pre>
       </li>
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataFieldsScreen/components/NewDataField.kt:88:27</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
@@ -4090,7 +4090,7 @@
 <span class="lineno">  42 </span>                .size(medium)
 <span class="lineno">  43 </span>                .weight(<span
                     class="error">Dimen.twentyPercent</span>)
-<span class="lineno">  44 </span>                .padding(end = xxxSmall),
+<span class="lineno">  44 </span>                .padding(end = xxAppTheme.dimens.xSmall),
 <span class="lineno">  45 </span>            imageVector = setting.settingIcon,
 <span class="lineno">  46 </span>            contentDescription = &quot;icon for ${setting.settingDescription}&quot;,
 </code></pre>
@@ -4184,7 +4184,7 @@
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formRadioRowV2.kt:140:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
         <pre><code><span class="lineno"> 137 </span>                modifier = Modifier
 <span class="lineno"> 138 </span>                    .fillMaxWidth()
-<span class="lineno"> 139 </span>                    .padding(xSmall),
+<span class="lineno"> 139 </span>                    .padding(AppTheme.dimens.xSmall),
 <span class="lineno"> 140 </span><span class="error">                text = &quot;No options provided for ${data.dataItem.fieldName}. Please edit the Data Field and provide values&quot;,</span>
 <span class="lineno"> 141 </span>                textAlign = TextAlign.Center,
 <span class="lineno"> 142 </span>                style = MaterialTheme.typography.body1,
@@ -4806,7 +4806,7 @@
 </code></pre>
       </li>
       <li><span class="location">D:/Documents/Creating/Code/FL_Apps/app/src/main/java/com/jorotayo/fl_datatracker/screens/dataEntryScreen/components/formElements/formBase.kt:66:2</span><span class="message">The file D:\Documents\Creating\Code\FL_Apps\app\src\main\java\com\jorotayo\fl_datatracker\screens\dataEntryScreen\components\formElements\formBase.kt is not ending with a new line.</span>
-        <pre><code><span class="lineno">  63 </span>    FL_DatatrackerTheme {
+          <pre><code><span class="lineno">  63 </span>    AppTheme {
 <span class="lineno">  64 </span>        FormBase()
 <span class="lineno">  65 </span>    }
 <span class="lineno">  66 </span>}
@@ -5059,7 +5059,7 @@
 <span class="lineno">  32 </span>)
 <span class="lineno">  33 </span>@Composable
 <span class="lineno">  34 </span>private fun <span class="error">PreviewDisplaySettings</span>() {
-<span class="lineno">  35 </span>    FL_DatatrackerTheme {
+<span class="lineno">  35 </span>    AppTheme {
 <span class="lineno">  36 </span>        DisplaySettings()
 <span class="lineno">  37 </span>    }
 </code></pre>
@@ -5069,7 +5069,7 @@
 <span class="lineno">  46 </span>)
 <span class="lineno">  47 </span>@Composable
 <span class="lineno">  48 </span>private fun <span class="error">PreviewSettingsScreen</span>() {
-<span class="lineno">  49 </span>    FL_DatatrackerTheme {
+<span class="lineno">  49 </span>    AppTheme {
 <span class="lineno">  50 </span>        SettingsScreen(
 <span class="lineno">  51 </span>            {},
 </code></pre>

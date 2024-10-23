@@ -4,7 +4,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -42,15 +42,8 @@ import com.jorotayo.fl_datatracker.R.string.addPresetBtn
 import com.jorotayo.fl_datatracker.R.string.addPresetHeader
 import com.jorotayo.fl_datatracker.R.string.cancelText
 import com.jorotayo.fl_datatracker.R.string.enterPresetPlaceholder
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @Preview(
@@ -61,7 +54,7 @@ import com.jorotayo.fl_datatracker.util.ofMaxLength
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun PreviewBasicAddPresetDialog() {
-    FL_DatatrackerTheme {
+    AppTheme {
         BasicAddPresetDialog(
             modifier = Modifier,
             addPreset = {},
@@ -79,33 +72,30 @@ fun BasicAddPresetDialog(
     val (presetText, setText) = remember { mutableStateOf(TextFieldValue("")) }
     val maxChar = 30
 
-    val headerColour =
-        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
-
     Card(
         modifier = modifier
-            .padding(xSmall)
+            .padding(dimens.xSmall)
             .defaultMinSize(minWidth = 280.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(medium),
-        elevation = xSmall
+        elevation = dimens.xSmall
     ) {
         Column(
             modifier
                 .background(colors.surface)
-                .padding(regular),
+                .padding(dimens.regular),
             horizontalAlignment = CenterHorizontally
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = small),
+                    .padding(bottom = dimens.small),
                 verticalAlignment = CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = xxSmall),
+                        .padding(end = dimens.xxSmall),
                     imageVector = Icons.Default.AddBox,
                     contentDescription = stringResource(id = Add_preset_dialog_icon),
                     tint = colors.primary
@@ -116,7 +106,7 @@ fun BasicAddPresetDialog(
                     text = stringResource(addPresetHeader),
                     textAlign = TextAlign.Center,
                     style = typography.h5,
-                    color = headerColour
+                    color = colors.onBackground
                 )
             }
             TextField(
@@ -162,9 +152,9 @@ fun BasicAddPresetDialog(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 OutlinedButton(
-                    border = BorderStroke(Dimen.one, colors.primary),
+                    border = BorderStroke(dimens.one, colors.primary),
                     modifier = Modifier,
-                    shape = RoundedCornerShape(small),
+                    shape = RoundedCornerShape(dimens.small),
                     onClick = toggleAddPresetDialog
                 ) {
                     Text(
@@ -175,7 +165,7 @@ fun BasicAddPresetDialog(
                 }
                 Button(
                     modifier = Modifier,
-                    shape = RoundedCornerShape(small),
+                    shape = RoundedCornerShape(dimens.small),
                     onClick = {
                         Log.i("testoing", "BasicAddPresetDialog: addddd")
                         addPreset(presetText.text)

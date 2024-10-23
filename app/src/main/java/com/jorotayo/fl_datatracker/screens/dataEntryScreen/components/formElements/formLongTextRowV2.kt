@@ -26,10 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @Preview(
@@ -44,7 +43,7 @@ import com.jorotayo.fl_datatracker.util.ofMaxLength
 )
 @Composable
 fun PreviewFormLongTextRowV2() {
-    FL_DatatrackerTheme {
+    AppTheme {
         val data = DataItem(
             dataItemId = 0,
             presetId = 0,
@@ -72,12 +71,12 @@ fun formLongTextRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(small)
+            .padding(dimens.small)
     ) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Dimen.xxSmall),
+                .padding(bottom = dimens.xSmall),
             text = data.fieldName,
             textAlign = TextAlign.Start,
             color = MaterialTheme.colors.subtitleTextColour,

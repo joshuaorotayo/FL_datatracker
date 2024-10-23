@@ -18,13 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
-import com.jorotayo.fl_datatracker.util.Dimen.eightyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -35,15 +30,15 @@ fun SettingRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xxSmall, vertical = xSmall)
+            .padding(horizontal = dimens.xxSmall, vertical = dimens.xSmall)
             .clickable(onClick = onSettingSelected),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             modifier = Modifier
-                .size(medium)
-                .weight(twentyPercent)
-                .padding(end = xxxSmall),
+                .size(dimens.medium)
+                .weight(dimens.twentyPercent)
+                .padding(end = dimens.xxxSmall),
             imageVector = setting.settingIcon,
             contentDescription = "icon for ${setting.settingDescription}",
             tint = MaterialTheme.colors.primary
@@ -51,19 +46,19 @@ fun SettingRow(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(eightyPercent)
+                .weight(dimens.eightyPercent)
         ) {
             Text(
                 text = setting.settingName,
-                style = MaterialTheme.typography.h3,
+                style = AppTheme.typography.titleSmall,
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface
+                color = AppTheme.colors.onSurface
             )
             Text(
                 text = setting.settingDescription,
-                style = MaterialTheme.typography.body1,
+                style = AppTheme.typography.body,
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.secondary
+                color = AppTheme.colors.onSurface
             )
         }
     }
@@ -73,7 +68,7 @@ fun SettingRow(
 fun SettingDivider() {
     Divider(
         modifier = Modifier
-            .padding(start = regular)
+            .padding(start = dimens.regular)
             .fillMaxWidth(),
         color = MaterialTheme.colors.secondary,
         thickness = 0.5.dp

@@ -17,16 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormComponentTemplateV2() {
-    FL_DatatrackerTheme {
+    AppTheme {
         formComponentTemplateV2(fieldName = "Form Component Template Example")
     }
 }
@@ -39,7 +37,7 @@ fun formComponentTemplateV2(
 
     Column(
         modifier = Modifier
-            .padding(xSmall)
+            .padding(dimens.xSmall)
             .wrapContentSize()
     ) {
         Row(
@@ -49,7 +47,7 @@ fun formComponentTemplateV2(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(vertical = xxSmall, horizontal = small)
+                    .padding(vertical = dimens.xxSmall, horizontal = dimens.small)
                     .fillMaxWidth(),
                 text = fieldName,
                 textAlign = Start,
@@ -70,7 +68,7 @@ fun formComponentTemplateV2(
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .height(xSmall)
+            .height(dimens.xSmall)
     )
 
     return count.value.toString()

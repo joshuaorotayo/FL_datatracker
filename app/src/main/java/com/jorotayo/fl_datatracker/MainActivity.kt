@@ -16,7 +16,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.navigation.OnboardingNavGraph
 import com.jorotayo.fl_datatracker.screens.onboarding.OnboardingViewModel
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
 import com.jorotayo.fl_datatracker.util.SharedSettingService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
         sharedSettingService.initialiseValues()
 
         setContent {
-            FL_DatatrackerTheme {
+            AppTheme {
                 val screen by splashViewModel.startDestination
                 val onboardingViewModel = hiltViewModel<OnboardingViewModel>()
                 if (screen == "onboarding_screen") {

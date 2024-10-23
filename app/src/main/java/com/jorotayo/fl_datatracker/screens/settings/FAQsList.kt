@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.settings
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -14,25 +13,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 fun PreviewFAQsList() {
-    FL_DatatrackerTheme {
+    AppTheme {
         FAQsList()
     }
 }
@@ -43,12 +32,12 @@ fun FAQsList() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(vertical = medium)
+            .padding(vertical = dimens.medium)
             .background(colors.background)
     ) {
         Text(
             modifier = Modifier
-                .padding(start = small),
+                .padding(start = dimens.small),
             text = "FAQs List",
             color = colors.secondary,
             style = typography.h2,

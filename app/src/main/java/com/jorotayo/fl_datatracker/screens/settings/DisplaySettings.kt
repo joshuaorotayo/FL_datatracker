@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.settings
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -34,30 +33,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 private fun PreviewDisplaySettings() {
-    FL_DatatrackerTheme {
+    AppTheme {
         DisplaySettings(
             uiState = DisplayUiState(
                 isSystemDarkLightEnabled = false,
@@ -82,7 +68,7 @@ fun DisplaySettings(
         Column {
             Text(
                 modifier = Modifier
-                    .padding(start = small, top = medium),
+                    .padding(start = dimens.small, top = dimens.medium),
                 text = "Display Settings",
                 style = typography.h2,
                 color = colors.onSurface,
@@ -93,15 +79,15 @@ fun DisplaySettings(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(xSmall)
+                    .padding(dimens.xSmall)
                     .background(colors.background),
-                shape = RoundedCornerShape(xSmall),
-                elevation = xxxSmall
+                shape = RoundedCornerShape(dimens.xSmall),
+                elevation = dimens.xxxSmall
             ) {
                 Column(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(small)
+                        .padding(dimens.small)
                 ) {
                     Text(
                         modifier = Modifier,
@@ -113,8 +99,8 @@ fun DisplaySettings(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = small),
-                        Arrangement.spacedBy(medium)
+                            .padding(top = dimens.small),
+                        Arrangement.spacedBy(dimens.medium)
                     ) {
                         Column(
                             Modifier.weight(1f)
@@ -142,8 +128,8 @@ fun DisplaySettings(
                                         checkedTrackColor = colors.primary,
                                         uncheckedThumbColor = colors.primary,
                                         uncheckedTrackColor = Color.DarkGray,
-                                        checkedTrackAlpha = twentyPercent,
-                                        uncheckedTrackAlpha = twentyPercent
+                                        checkedTrackAlpha = dimens.twentyPercent,
+                                        uncheckedTrackAlpha = dimens.twentyPercent
                                     )
                                 )
                             }
@@ -174,8 +160,8 @@ fun DisplaySettings(
                                         checkedTrackColor = colors.primary,
                                         uncheckedThumbColor = colors.primary,
                                         uncheckedTrackColor = Color.DarkGray,
-                                        checkedTrackAlpha = twentyPercent,
-                                        uncheckedTrackAlpha = twentyPercent
+                                        checkedTrackAlpha = dimens.twentyPercent,
+                                        uncheckedTrackAlpha = dimens.twentyPercent
                                     )
                                 )
                             }
@@ -188,9 +174,9 @@ fun DisplaySettings(
                     ) {
                         Text(
                             modifier = Modifier
-                                .padding(top = small),
+                                .padding(top = dimens.small),
                             text = "Follow System Colours",
-                            style = typography.h3
+                            style = AppTheme.typography.titleSmall
                         )
                         Switch(
                             checked = uiState.isSystemDarkLightEnabled,
@@ -200,8 +186,8 @@ fun DisplaySettings(
                                 checkedTrackColor = colors.primary,
                                 uncheckedThumbColor = colors.primary,
                                 uncheckedTrackColor = Color.DarkGray,
-                                checkedTrackAlpha = twentyPercent,
-                                uncheckedTrackAlpha = twentyPercent
+                                checkedTrackAlpha = dimens.twentyPercent,
+                                uncheckedTrackAlpha = dimens.twentyPercent
                             )
                         )
                     }

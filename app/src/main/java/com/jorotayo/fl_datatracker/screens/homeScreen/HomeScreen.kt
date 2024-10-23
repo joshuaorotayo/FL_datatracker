@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -50,25 +49,39 @@ import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.MembersPanel
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchFilters
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.one
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+@DefaultPreviews
+fun HomeScreenPreview() {
+    AppTheme {
+        HomeScreen(
+            navController = rememberNavController(),
+            onHomeEvent = {},
+            onDataEvent = {},
+            state = HomeScreenState(
+                isSearchVisible = false,
+                text = "",
+                hint = "",
+                isHintVisible = true,
+                isDeleteDialogVisible = mutableStateOf(false),
+                deletedItem = Data(),
+                dataList = emptyList()
+            )
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -110,7 +123,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(top = medium)
+                        .padding(top = dimens.medium)
                 ) {
                     // Top Bar/Search Bar Area
                     AnimatedVisibility(visible = state.isSearchVisible) {
@@ -143,10 +156,10 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            top = small,
-                            bottom = one,
-                            end = small,
-                            start = small
+                            top = dimens.small,
+                            bottom = dimens.one,
+                            end = dimens.small,
+                            start = dimens.small
                         )
                 ) {
                     Text(
@@ -155,23 +168,32 @@ fun HomeScreen(
                             count = state.dataList.size,
                             state.dataList.size
                         ),
-                        style = typography.h3,
+                        style = AppTheme.typography.titleSmall,
                         color = colors.subtitleTextColour
                     )
                 }
+                Text(
+                    text = pluralStringResource(
+                        id = R.plurals.members_showing_header,
+                        count = state.memberList.size,
+                        state.memberList.size
+                    ),
+                    style = AppTheme.typography.titleSmall,
+                    color = colors.subtitleTextColour
+                )
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
-                        .padding(bottom = bottomBarPadding + small)
+                        .padding(bottom = dimens.bottomBarPadding + dimens.small)
                         .wrapContentSize()
                 ) {
                     Card(
                         modifier = Modifier
-                            .padding(small)
+                            .padding(dimens.small)
                             .fillMaxWidth(),
-                        shape = RoundedCornerShape(small),
+                        shape = RoundedCornerShape(dimens.small),
                         backgroundColor = colors.surface,
-                        elevation = if (isDarkMode()) xxSmall else zero
+                        elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
                     ) {
                         LazyColumn(
                             modifier = Modifier
@@ -184,15 +206,18 @@ fun HomeScreen(
                                 if (state.dataList.size > 5 && !expandData) {
                                     Surface(
                                         modifier = Modifier
-                                            .padding(vertical = xxxSmall, horizontal = xSmall)
+                                            .padding(
+                                                vertical = dimens.xxxSmall,
+                                                horizontal = dimens.xSmall
+                                            )
                                             .wrapContentWidth()
                                             .align(Alignment.CenterEnd),
                                         color = colors.background,
-                                        shape = RoundedCornerShape(xSmall)
+                                        shape = RoundedCornerShape(dimens.xSmall)
                                     ) {
                                         Text(
                                             modifier = Modifier
-                                                .padding(top = xxSmall)
+                                                .padding(top = dimens.xxSmall)
                                                 .clickable {
                                                     expandData = !expandData
                                                 },
@@ -205,20 +230,23 @@ fun HomeScreen(
                                 if (state.dataList.size > 5 && expandData) {
                                     Surface(
                                         modifier = Modifier
-                                            .padding(vertical = xxxSmall, horizontal = xSmall)
+                                            .padding(
+                                                vertical = dimens.xxxSmall,
+                                                horizontal = dimens.xSmall
+                                            )
                                             .fillMaxWidth(),
                                         color = colors.surface,
-                                        shape = RoundedCornerShape(xSmall)
+                                        shape = RoundedCornerShape(dimens.xSmall)
                                     ) {
                                         Text(
                                             modifier = Modifier
                                                 .align(Alignment.CenterEnd)
-                                                .padding(top = xxSmall)
+                                                .padding(top = dimens.xxSmall)
                                                 .clickable {
                                                     expandData = !expandData
                                                 },
                                             text = "Minimise Data",
-                                            color = colors.primary
+                                            color = AppTheme.colors.onBackground
                                         )
                                     }
                                 }
@@ -263,30 +291,8 @@ fun HomeScreen(
                         data = state.deletedItem
                     )
                 }
-                MembersPanel(modifier = Modifier.padding(horizontal = small), totalCount = 52)
+//                MembersPanel(modifier = Modifier.padding(horizontal = small), totalCount = 52)
             }
         }
-    }
-}
-
-@SuppressLint("UnrememberedMutableState")
-@Composable
-@DefaultDualPreview
-fun HomeScreenPreview() {
-    FL_DatatrackerTheme {
-        HomeScreen(
-            navController = rememberNavController(),
-            onHomeEvent = {},
-            onDataEvent = {},
-            state = HomeScreenState(
-                isSearchVisible = false,
-                text = "",
-                hint = "",
-                isHintVisible = true,
-                isDeleteDialogVisible = mutableStateOf(false),
-                deletedItem = Data(),
-                dataList = emptyList()
-            )
-        )
     }
 }

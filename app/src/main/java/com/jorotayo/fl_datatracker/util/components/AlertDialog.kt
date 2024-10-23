@@ -36,16 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.one
-import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
 
@@ -84,19 +78,19 @@ fun AlertDialogLayout(
             modifier = Modifier.fillMaxWidth(),
             tonalElevation = 12.dp,
             color = colors.background,
-            shape = RoundedCornerShape(small)
+            shape = RoundedCornerShape(dimens.small)
         ) {
             Column(
-                modifier = Modifier.padding(xSmall),
+                modifier = Modifier.padding(dimens.xSmall),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(regular)
+                verticalArrangement = Arrangement.spacedBy(dimens.regular)
             ) {
                 DialogTitle(alertDialogState)
                 DialogBody(alertDialogState)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(medium)
+                    horizontalArrangement = Arrangement.spacedBy(dimens.medium)
                 ) {
                     DismissBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
                     ConfirmBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
@@ -120,14 +114,14 @@ private fun DialogTitle(alertDialogState: AlertDialogState) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = regular),
+                .padding(top = dimens.regular),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
                 modifier = Modifier
-                    .size(medium)
-                    .padding(end = xxSmall),
+                    .size(dimens.medium)
+                    .padding(end = dimens.xxSmall),
                 imageVector = icon!!,
                 contentDescription = "Icon for ${alertDialogState.title}",
                 tint = colors.primary
@@ -167,7 +161,7 @@ private fun DialogBody(alertDialogState: AlertDialogState) {
 @Composable
 fun DialogTextField(alertDialogState: AlertDialogState) {
     val (fieldText, setText) = remember { mutableStateOf(TextFieldValue("")) }
-    val maxChar = optionsMaxChars
+    val maxChar = 15
     TextField(
         modifier = Modifier
             .fillMaxWidth(),
@@ -183,7 +177,7 @@ fun DialogTextField(alertDialogState: AlertDialogState) {
                     Text(
                         modifier = Modifier
                             .wrapContentHeight()
-                            .padding(end = xxSmall),
+                            .padding(end = dimens.xxSmall),
                         text = alertDialogState.textFieldErrorText!!,
                         style = MaterialTheme.typography.h6,
                         color = colors.primary,
@@ -229,8 +223,8 @@ private fun DismissBtn(
 ) {
     OutlinedButton(
         modifier = modifier,
-        border = BorderStroke(one, colors.primary),
-        shape = RoundedCornerShape(small),
+        border = BorderStroke(dimens.one, colors.primary),
+        shape = RoundedCornerShape(dimens.small),
         onClick = { alertDialogState.dismissButtonOnClick?.let { it() } }) {
         Text(
             modifier = Modifier,
@@ -247,7 +241,7 @@ private fun ConfirmBtn(
 ) {
     Button(
         modifier = modifier,
-        shape = RoundedCornerShape(small),
+        shape = RoundedCornerShape(dimens.small),
         onClick = { alertDialogState.confirmButtonOnClick() }) {
         Text(
             modifier = Modifier,
@@ -265,10 +259,10 @@ private fun hasEditField(alertDialogState: AlertDialogState) =
 
 private fun hasImageIcon(alertDialogState: AlertDialogState) = alertDialogState.imageIcon != null
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun AlertDialogPreview() {
-    FL_DatatrackerTheme {
+    AppTheme {
         val title = "Interest rate"
         val text = "Tax-free - Interest which is paid that is exempt from tax.\n" +
                 "AER stands for Annual Equivalent Rate and illustrates what the " +

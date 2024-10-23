@@ -11,6 +11,7 @@ import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 import com.jorotayo.fl_datatracker.domain.repository.DataItemRepository
 import com.jorotayo.fl_datatracker.domain.repository.DataRepository
+import com.jorotayo.fl_datatracker.domain.repository.MemberRepository
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
@@ -24,6 +25,7 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
     private val dataRepo = DataRepository()
     private val dataItemRepo = DataItemRepository()
+    private val membersRepo = MemberRepository()
 
     sealed class UiEvent {
         object DeleteDataItem : UiEvent()

@@ -3,8 +3,8 @@ package com.jorotayo.fl_datatracker.domain.model
 import io.objectbox.converter.PropertyConverter
 
 enum class Gender(val value: Int, string: String) {
-    MALE(value = 0, string = "Male"),
-    FEMALE(value = 1, string = "Female")
+    MALE(value = 1, string = "Male"),
+    FEMALE(value = 2, string = "Female")
 }
 
 class GenderConverter : PropertyConverter<Gender?, Int> {

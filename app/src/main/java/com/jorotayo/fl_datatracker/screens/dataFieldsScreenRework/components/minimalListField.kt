@@ -27,20 +27,19 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.google.gson.Gson
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.deleteValueAtIndex
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.listItem
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormListRowV4() {
-    FL_DatatrackerTheme {
+    AppTheme {
         minimalListField(rowHeader = "Row for list items", isError = false)
     }
 }
@@ -53,7 +52,7 @@ fun minimalListField(
     val textFields =
         rememberSaveable { mutableStateOf(getDataStringToList("")) }
 
-    var cardElevation by remember { mutableStateOf(xSmall) }
+    var cardElevation by remember { mutableStateOf(12.dp) }
     val number = rememberSaveable { mutableIntStateOf(textFields.value.size) }
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(75F + (itemHeight * number.intValue)) }
@@ -68,15 +67,15 @@ fun minimalListField(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(Dimen.xxSmall)
+                .padding(dimens.xxSmall)
                 .onFocusChanged {
-                    cardElevation = if (it.isFocused) Dimen.medium else xSmall
+                    cardElevation = if (it.isFocused) 32.dp else 12.dp
                 },
-            shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && (cardElevation == Dimen.medium)) MaterialTheme.colors.surface.copy(
+            shape = RoundedCornerShape(dimens.xSmall),
+            backgroundColor = if (!isDarkMode() && (cardElevation == dimens.medium)) MaterialTheme.colors.surface.copy(
                 alpha = 0.5f
             ) else MaterialTheme.colors.surface,
-            elevation = if (isDarkMode()) cardElevation else Dimen.zero
+            elevation = if (isDarkMode()) cardElevation else dimens.zero
         ) {
             Column(
                 modifier = Modifier
@@ -85,7 +84,7 @@ fun minimalListField(
             {
                 LazyColumn(
                     modifier = Modifier
-                        .padding(xSmall)
+                        .padding(dimens.xSmall)
                         .fillMaxWidth()
                         .height(Dp(columnHeight.value))
                 ) {
@@ -106,7 +105,7 @@ fun minimalListField(
                     item {
                         Row(
                             modifier = Modifier
-                                .padding(bottom = xxxSmall)
+                                .padding(bottom = dimens.xxxSmall)
                                 .fillMaxWidth()
                         ) {
                             Text(

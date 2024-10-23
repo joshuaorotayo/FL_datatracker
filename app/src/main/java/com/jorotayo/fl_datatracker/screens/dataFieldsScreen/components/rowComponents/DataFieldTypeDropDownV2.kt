@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataFieldTypeDropDown() {
-    FL_DatatrackerTheme {
+    AppTheme {
         var expanded by remember { mutableStateOf(true) }
         DataFieldTypeDropDownV2(
             isExpanded = expanded,

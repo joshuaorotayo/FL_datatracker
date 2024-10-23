@@ -23,20 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewSearchBar() {
-    FL_DatatrackerTheme {
+    AppTheme {
         SearchBar(
             onHomeEvent = {},
             searchState = HomeScreenState(
@@ -75,8 +71,8 @@ fun SearchBar(
         ) {
             Icon(
                 modifier = Modifier
-                    .size(medium)
-                    .padding(start = xxSmall)
+                    .size(dimens.medium)
+                    .padding(start = dimens.xxSmall)
                     .weight(1f),
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Close Search View",
@@ -85,17 +81,22 @@ fun SearchBar(
         }
         Card(
             modifier = Modifier
-                .padding(start = small, top = xxSmall, end = small, bottom = xxSmall)
+                .padding(
+                    start = dimens.small,
+                    top = dimens.xxSmall,
+                    end = dimens.small,
+                    bottom = dimens.xxSmall
+                )
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(small),
+            shape = RoundedCornerShape(dimens.small),
             backgroundColor = MaterialTheme.colors.surface,
-            elevation = if (isDarkMode()) xxSmall else Dimen.zero
+            elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
         ) {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .clip(shape = RoundedCornerShape(regular)),
+                    .clip(shape = RoundedCornerShape(dimens.regular)),
                 textStyle = typography.h2,
                 value = searchState.text,
                 maxLines = 1,

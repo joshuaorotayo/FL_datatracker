@@ -5,7 +5,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
-import com.jorotayo.fl_datatracker.ui.theme.md_theme_light_primary
+import com.jorotayo.fl_datatracker.ui.theme.white
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -26,7 +26,7 @@ fun getCurrentDateTime(): Date {
 }
 
 fun getHeaderColour(isDark: Boolean): Color {
-    return if (isDark) Color.Gray else md_theme_light_primary
+    return if (isDark) Color.Gray else white
 }
 
 fun TextFieldValue.ofMaxLength(maxLength: Int): TextFieldValue {

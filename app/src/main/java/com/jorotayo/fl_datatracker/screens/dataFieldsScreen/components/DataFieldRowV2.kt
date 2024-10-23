@@ -47,27 +47,20 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowCompon
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.thirtyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.exampleShortField
-import com.jorotayo.fl_datatracker.util.getHeaderColour
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataFieldRowV2() {
-    FL_DatatrackerTheme {
+    AppTheme {
         DataFieldRowV2(exampleShortField, onRowEvent = {}, onDataFieldEvent = {})
     }
 }
@@ -96,10 +89,10 @@ fun DataFieldRowV2(
 
     Card(
         modifier = Modifier
-            .padding(horizontal = small, vertical = xxxSmall)
+            .padding(horizontal = dimens.small, vertical = dimens.xxxSmall)
             .fillMaxWidth()
             .wrapContentHeight(),
-        shape = RoundedCornerShape(small),
+        shape = RoundedCornerShape(dimens.small),
         backgroundColor = if (isSystemInDarkTheme()) {
             if (isRowEnabled.value) {
                 MaterialTheme.colors.surface
@@ -109,13 +102,13 @@ fun DataFieldRowV2(
         } else if (isRowEnabled.value) {
             MaterialTheme.colors.surface
         } else {
-            MaterialTheme.colors.primary.copy(thirtyPercent)
+            MaterialTheme.colors.primary.copy(dimens.thirtyPercent)
         },
-        elevation = if (isDarkMode()) xxxSmall else zero,
+        elevation = if (isDarkMode()) dimens.xxxSmall else dimens.zero,
     ) {
 
         Column(
-            modifier = Modifier.padding(xSmall)
+            modifier = Modifier.padding(dimens.xSmall)
         ) {
             Row(
                 modifier = Modifier
@@ -125,8 +118,8 @@ fun DataFieldRowV2(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(small + xxSmall)
-                        .padding(end = xxSmall),
+                        .size(dimens.small + dimens.xxSmall)
+                        .padding(end = dimens.xxSmall),
                     imageVector = Icons.Default.Edit,
                     tint = MaterialTheme.colors.primary,
                     contentDescription = "Edit Field Name icon"
@@ -152,8 +145,8 @@ fun DataFieldRowV2(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(small + xxSmall)
-                            .padding(end = xxSmall),
+                            .size(dimens.small + dimens.xxSmall)
+                            .padding(end = dimens.xxSmall),
                         imageVector = icons[currentDataField.dataFieldType],
                         contentDescription = stringResource(R.string.dataField_type_dropdown),
                         tint = MaterialTheme.colors.primary
@@ -178,13 +171,13 @@ fun DataFieldRowV2(
                 }
                 Row(
                     modifier = Modifier
-                        .weight(twentyPercent),
+                        .weight(dimens.twentyPercent),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Checkbox(
                         modifier = Modifier
-                            .size(small)
+                            .size(dimens.small)
                             .fillMaxWidth(0.5f),
                         checked = isRowEnabled.value,
                         enabled = true,
@@ -291,7 +284,7 @@ fun BasicVisibleHint(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            modifier = Modifier.padding(start = small),
+            modifier = Modifier.padding(start = dimens.small),
             text = "Hint: ",
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.subtitleTextColour,
@@ -326,17 +319,16 @@ private fun BooleanHintRow(
     isHintVisible: MutableState<Boolean>,
     isEditOptionsVisible: MutableState<Boolean>
 ) {
-    val textColour = getHeaderColour(isSystemInDarkTheme())
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = zero),
+            .padding(horizontal = dimens.xSmall, vertical = dimens.zero),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.padding(start = small),
+            modifier = Modifier.padding(start = dimens.small),
             text = stringResource(R.string.bool_placeholder),
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.subtitleTextColour,
@@ -358,7 +350,7 @@ private fun BooleanHintRow(
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_bool_value),
-                tint = textColour,
+                tint = AppTheme.colors.onBackground,
             )
         }
     }
@@ -370,7 +362,6 @@ private fun TriStateHintRow(
     isHintVisible: MutableState<Boolean>,
     isEditOptionsVisible: MutableState<Boolean>
 ) {
-    val textColour = getHeaderColour(isSystemInDarkTheme())
 
     Row(
         modifier = Modifier
@@ -379,7 +370,7 @@ private fun TriStateHintRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.padding(start = small, end = xxSmall),
+            modifier = Modifier.padding(start = dimens.small, end = dimens.xxSmall),
             text = stringResource(R.string.tristate_placeholder),
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.subtitleTextColour,
@@ -402,7 +393,7 @@ private fun TriStateHintRow(
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_tristate_value),
-                tint = textColour,
+                tint = AppTheme.colors.onBackground,
             )
         }
     }
@@ -453,7 +444,7 @@ fun BasicEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(bottom = xxxSmall),
+            .padding(bottom = dimens.xxxSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -503,7 +494,12 @@ private fun BooleanEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
+            .padding(
+                start = dimens.xSmall,
+                top = dimens.zero,
+                end = dimens.xSmall,
+                bottom = dimens.xSmall
+            ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         // boolean text fields for editable
@@ -558,7 +554,12 @@ private fun TriStateEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
+            .padding(
+                start = dimens.xSmall,
+                top = dimens.zero,
+                end = dimens.xSmall,
+                bottom = dimens.xSmall
+            ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         // boolean text fields for editable
@@ -636,7 +637,7 @@ private fun HideEditRow(
     ) {
         Text(
             modifier = Modifier
-                .padding(end = xxSmall),
+                .padding(end = dimens.xxSmall),
             text = stringResource(R.string.hideEditRowText),
             color = MaterialTheme.colors.primary.copy(alpha = 0.7f),
             style = MaterialTheme.typography.body1

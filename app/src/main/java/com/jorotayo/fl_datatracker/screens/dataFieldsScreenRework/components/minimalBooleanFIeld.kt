@@ -21,15 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalBooleanField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         minimalBooleanField(rowHeader = "Minimal Boolean Field", isError = false)
     }
 }
@@ -40,7 +41,7 @@ fun minimalBooleanField(
     isError: Boolean,
 ): String {
 
-    var cardElevation by remember { mutableStateOf(Dimen.xSmall) }
+    var cardElevation by remember { mutableStateOf(12.dp) }
     var checked by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
@@ -53,20 +54,20 @@ fun minimalBooleanField(
             modifier = Modifier
                 .fillMaxWidth(0.5f)
                 .wrapContentHeight()
-                .padding(Dimen.xxSmall)
+                .padding(dimens.xxSmall)
                 .onFocusChanged {
                     cardElevation =
-                        if (it.isFocused) Dimen.medium else Dimen.xSmall
+                        if (it.isFocused) 32.dp else 12.dp
                 },
-            shape = RoundedCornerShape(Dimen.xSmall),
-            backgroundColor = if (!isDarkMode() && cardElevation == Dimen.medium) MaterialTheme.colors.surface.copy(
+            shape = RoundedCornerShape(dimens.xSmall),
+            backgroundColor = if (!isDarkMode() && cardElevation == dimens.medium) MaterialTheme.colors.surface.copy(
                 alpha = 0.5f
             ) else MaterialTheme.colors.surface,
-            elevation = if (isDarkMode()) cardElevation else Dimen.zero
+            elevation = if (isDarkMode()) cardElevation else dimens.zero
         ) {
             Column(
                 modifier = Modifier
-                    .padding(Dimen.xxSmall),
+                    .padding(dimens.xxSmall),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(

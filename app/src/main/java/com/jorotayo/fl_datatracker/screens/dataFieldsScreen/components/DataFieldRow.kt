@@ -50,17 +50,13 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataFieldRow() {
     val currentDataField = DataField(
@@ -74,7 +70,7 @@ fun PreviewDataFieldRow() {
         isEnabled = true,
         fieldHint = "Example Hint"
     )
-    FL_DatatrackerTheme {
+    AppTheme {
         DataFieldRow(
             currentDataField = currentDataField,
             onRowEvent = {},
@@ -108,9 +104,9 @@ fun DataFieldRow(
 
     Card(
         modifier = Modifier
-            .padding(small)
+            .padding(dimens.small)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(small),
+        shape = RoundedCornerShape(dimens.small),
         backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
@@ -134,7 +130,7 @@ fun DataFieldRow(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = xSmall)
+                        .padding(horizontal = dimens.xSmall)
                         .wrapContentHeight(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -197,7 +193,7 @@ fun DataFieldRow(
                     )
                     Checkbox(
                         modifier = Modifier
-                            .padding(end = small)
+                            .padding(end = dimens.small)
                             .weight(2f),
                         checked = isRowEnabled.value,
                         enabled = true,
@@ -332,7 +328,7 @@ private fun VisibleHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = small, end = xxxSmall),
+            .padding(start = dimens.small, end = dimens.xxxSmall),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -375,12 +371,12 @@ private fun HideEditRow(
                 isEditOptionsVisible.value = !isEditOptionsVisible.value
             })
             .fillMaxWidth()
-            .padding(vertical = xxSmall),
+            .padding(vertical = dimens.xxSmall),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             modifier = Modifier
-                .padding(end = xxSmall),
+                .padding(end = dimens.xxSmall),
             text = stringResource(R.string.hideEditRowText),
             color = textColour.copy(alpha = 0.5f)
         )
@@ -403,7 +399,7 @@ private fun BooleanHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xSmall),
+            .padding(horizontal = dimens.xSmall),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -449,7 +445,7 @@ private fun HiddenHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = xxxSmall),
+            .padding(bottom = dimens.xxxSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -511,7 +507,7 @@ private fun TriStateHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = xSmall),
+            .padding(vertical = dimens.xSmall),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -552,7 +548,7 @@ private fun BooleanHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = xxxSmall),
+            .padding(bottom = dimens.xxxSmall),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         // boolean text fields for editable
@@ -562,7 +558,7 @@ private fun BooleanHintRow(
             label = "1st Value",
             placeholder = firstText.value.ifBlank { currentRowState.value.dataField.first },
             onValueChange = {
-                if (it.length <= optionsMaxChars) {
+                if (it.length <= 15) {
                     onRowEvent(
                         RowEvent.EditFirstValue(
                             currentRowState.value.dataField.dataFieldId,
@@ -579,7 +575,7 @@ private fun BooleanHintRow(
             label = "2nd Value",
             placeholder = secondText.value.ifBlank { currentRowState.value.dataField.second },
             onValueChange = {
-                if (it.length <= optionsMaxChars) {
+                if (it.length <= 15) {
                     onRowEvent(
                         RowEvent.EditSecondValue(
                             currentRowState.value.dataField.dataFieldId,
@@ -604,7 +600,7 @@ private fun TriStateEditHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = xxxSmall),
+            .padding(bottom = dimens.xxxSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         // boolean text fields for editable
@@ -614,7 +610,7 @@ private fun TriStateEditHintRow(
             label = "1st Value",
             placeholder = firstText.value.ifBlank { currentRowState.value.dataField.first },
             onValueChange = {
-                if (it.length <= optionsMaxChars) {
+                if (it.length <= 15) {
                     onRowEvent(
                         RowEvent.EditFirstValue(
                             currentRowState.value.dataField.dataFieldId,
@@ -631,7 +627,7 @@ private fun TriStateEditHintRow(
             label = "2nd Value",
             placeholder = secondText.value.ifBlank { currentRowState.value.dataField.second },
             onValueChange = {
-                if (it.length <= optionsMaxChars) {
+                if (it.length <= 15) {
                     onRowEvent(
                         RowEvent.EditSecondValue(
                             currentRowState.value.dataField.dataFieldId,
@@ -648,7 +644,7 @@ private fun TriStateEditHintRow(
             label = "3rd Value",
             placeholder = thirdText.value.ifBlank { currentRowState.value.dataField.third },
             onValueChange = {
-                if (it.length <= optionsMaxChars) {
+                if (it.length <= 15) {
                     onRowEvent(
                         RowEvent.EditThirdValue(
                             currentRowState.value.dataField.dataFieldId,

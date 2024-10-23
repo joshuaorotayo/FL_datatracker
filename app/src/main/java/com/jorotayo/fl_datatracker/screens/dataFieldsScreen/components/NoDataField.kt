@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,19 +20,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewNoDataField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         NoDataField(modifier = Modifier)
     }
 }
@@ -42,22 +37,20 @@ fun PreviewNoDataField() {
 fun NoDataField(
     modifier: Modifier
 ) {
-    val textColour =
-        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
     // empty Message
     Card(
         modifier = modifier
-            .padding(small)
+            .padding(dimens.small)
             .fillMaxWidth()
             .wrapContentHeight(),
-        shape = RoundedCornerShape(xSmall),
+        shape = RoundedCornerShape(dimens.xSmall),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
+        elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
     ) {
         Column(
             modifier = Modifier
                 .wrapContentHeight()
-                .padding(xSmall),
+                .padding(dimens.xSmall),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -73,7 +66,7 @@ fun NoDataField(
                 text = stringResource(id = R.string.no_data_fields_header),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h1,
-                color = textColour
+                color = MaterialTheme.colors.onBackground
             )
             Text(
                 modifier = Modifier

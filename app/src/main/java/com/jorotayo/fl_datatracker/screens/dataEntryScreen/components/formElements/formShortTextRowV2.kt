@@ -31,14 +31,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormShortTextRowV2() {
     val dataItem = DataRowState(
@@ -52,7 +51,7 @@ fun PreviewFormShortTextRowV2() {
         hasError = false,
         errorMsg = ""
     )
-    FL_DatatrackerTheme {
+    AppTheme {
         formShortTextRowV2(data = dataItem, setDataValue = {})
     }
 }
@@ -74,14 +73,14 @@ fun formShortTextRowV2(
     ) {
         Column(
             modifier = Modifier
-                .padding(xSmall)
+                .padding(dimens.xSmall)
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = xxSmall),
+                    .padding(bottom = dimens.xSmall),
                 text = data.dataItem.fieldName,
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colors.onSurface,
@@ -92,7 +91,7 @@ fun formShortTextRowV2(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = xSmall),
+                        .padding(bottom = dimens.xSmall),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -153,7 +152,7 @@ fun formShortTextRowV2(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = xxSmall),
+                    .padding(top = dimens.xSmall),
                 text = "${text.text.length} / $maxChar",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.caption,

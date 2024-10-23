@@ -24,18 +24,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewSearchFilters() {
-    FL_DatatrackerTheme {
+    AppTheme {
         SearchFilters()
     }
 }
@@ -45,21 +43,21 @@ fun PreviewSearchFilters() {
 fun SearchFilters() {
     Card(
         modifier = Modifier
-            .padding(Dimen.small)
+            .padding(dimens.small)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(Dimen.small),
+        shape = RoundedCornerShape(dimens.small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) Dimen.xxSmall else zero
+        elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(xSmall)
+                .padding(dimens.xSmall)
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Icon(
-                    modifier = Modifier.padding(end = xSmall),
+                    modifier = Modifier.padding(end = dimens.xSmall),
                     imageVector = Icons.Default.ManageSearch,
                     tint = MaterialTheme.colors.primary,
                     contentDescription = "Icon for search filters",
@@ -74,7 +72,7 @@ fun SearchFilters() {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = xSmall)
+                    .padding(vertical = dimens.xSmall)
             ) {
                 for (filter in filterList()) {
                     SearchFilter(filter = filter)
@@ -92,7 +90,7 @@ fun SearchFilter(
     val enabled = remember { mutableStateOf(false) }
 
     ElevatedFilterChip(
-        modifier = Modifier.padding(end = xSmall),
+        modifier = Modifier.padding(end = dimens.xSmall),
         selected = enabled.value,
         onClick = { enabled.value = !enabled.value },
         label = { Text(text = filter.filterName) },
@@ -112,8 +110,8 @@ fun SearchFilter(
             labelColor = MaterialTheme.colors.subtitleTextColour,
         ),
         elevation = FilterChipDefaults.elevatedFilterChipElevation(
-            elevation = zero,
-            pressedElevation = xSmall
+            elevation = dimens.zero,
+            pressedElevation = dimens.xSmall
         )
     )
 }

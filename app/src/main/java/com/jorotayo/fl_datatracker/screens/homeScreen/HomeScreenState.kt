@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.domain.model.Member
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
 
 data class HomeScreenState(
@@ -14,5 +15,6 @@ data class HomeScreenState(
     val isDeleteDialogVisible: MutableState<Boolean> = mutableStateOf(false),
     val dataList: List<Data> = ObjectBox.boxStore().boxFor(Data::class.java).all,
     val deletedItem: Data = Data(0, 0, "test", "yesterday", "today"),
-    val alertDialogState: AlertDialogState? = null
+    val alertDialogState: AlertDialogState? = null,
+    val memberList: List<Member> = ObjectBox.boxStore().boxFor(Member::class.java).all,
 )

@@ -17,4 +17,4 @@ import androidx.compose.ui.tooling.preview.Preview
     apiLevel = Build.VERSION_CODES.R
 )
 
-annotation class DefaultDualPreview
+annotation class DefaultPreviews

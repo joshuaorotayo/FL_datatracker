@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,29 +28,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 import kotlinx.coroutines.launch
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 fun PreviewBasicDeleteDataDialog() {
     val mutableValue = remember { mutableStateOf(true) }
-    FL_DatatrackerTheme {
+    AppTheme {
         BasicDeleteDataDialog(
             modifier = Modifier,
             confirmDelete = {},
@@ -80,26 +69,26 @@ fun BasicDeleteDataDialog(
     if (state.value) {
         Card(
             modifier = modifier
-                .padding(small)
+                .padding(dimens.small)
                 .defaultMinSize(minWidth = 280.dp)
                 .wrapContentHeight(),
-            shape = RoundedCornerShape(regular),
-            elevation = xxSmall
+            shape = RoundedCornerShape(dimens.regular),
+            elevation = dimens.xxSmall
         ) {
             Column(
                 modifier
                     .background(MaterialTheme.colors.surface)
-                    .padding(small),
+                    .padding(dimens.small),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = small)
+                        .padding(bottom = dimens.small)
                 ) {
                     Icon(
                         modifier = Modifier
-                            .padding(horizontal = small),
+                            .padding(horizontal = dimens.small),
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(id = R.string.delete_data_dialog),
                         tint = MaterialTheme.colors.primary
@@ -115,7 +104,7 @@ fun BasicDeleteDataDialog(
 
                 Text(
                     modifier = Modifier
-                        .padding(bottom = small),
+                        .padding(bottom = dimens.small),
                     text = stringResource(id = R.string.delete_data_body),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.body1,
@@ -123,7 +112,7 @@ fun BasicDeleteDataDialog(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(bottom = small),
+                        .padding(bottom = dimens.small),
                     text = data.name,
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.onSurface

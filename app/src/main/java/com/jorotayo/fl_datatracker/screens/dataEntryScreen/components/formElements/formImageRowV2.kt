@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -8,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,16 +34,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true, name = "Light Mode")
+@DefaultPreviews
 @Composable
 fun PreviewFormImageRowV2() {
     val dataRow = DataRowState(
@@ -59,7 +54,7 @@ fun PreviewFormImageRowV2() {
         hasError = false,
         errorMsg = ""
     )
-    FL_DatatrackerTheme {
+    AppTheme {
         formImageRowV2(data = dataRow)
     }
 }
@@ -72,8 +67,6 @@ fun formImageRowV2(
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
     val imageChanged = remember { mutableStateOf(false) }
     val currentImage = remember { mutableStateOf(Icons.Default.Headphones) }
-    val headerColour =
-        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -92,7 +85,7 @@ fun formImageRowV2(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = Dimen.small)
+            .padding(horizontal = dimens.small)
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(shape = RoundedCornerShape(10.dp)),
@@ -100,17 +93,17 @@ fun formImageRowV2(
     ) {
         Text(
             modifier = Modifier
-                .padding(start = Dimen.small, end = Dimen.small, top = Dimen.xxSmall)
+                .padding(start = dimens.small, end = dimens.small, top = dimens.xSmall)
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = headerColour,
+            color = MaterialTheme.colors.onBackground,
         )
         AnimatedVisibility(visible = !imageChanged.value) {
             Image(
                 modifier = Modifier
                     .size(160.dp)
-                    .padding(bottom = Dimen.xxSmall),
+                    .padding(bottom = dimens.xSmall),
                 imageVector = Icons.Default.Image,
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.background),
                 contentDescription = "Select Image Placeholder"
@@ -120,7 +113,7 @@ fun formImageRowV2(
             Image(
                 modifier = Modifier
                     .size(160.dp)
-                    .padding(bottom = Dimen.xxSmall),
+                    .padding(bottom = dimens.xSmall),
                 imageVector = currentImage.value,
                 colorFilter = ColorFilter.tint(color = MaterialTheme.colors.primary),
                 contentDescription = "Select Image Placeholder"
@@ -128,7 +121,7 @@ fun formImageRowV2(
         }
 
         Button(
-            modifier = Modifier.padding(horizontal = Dimen.small),
+            modifier = Modifier.padding(horizontal = dimens.small),
             onClick = {
                 launcher.launch("camera/*")
             }

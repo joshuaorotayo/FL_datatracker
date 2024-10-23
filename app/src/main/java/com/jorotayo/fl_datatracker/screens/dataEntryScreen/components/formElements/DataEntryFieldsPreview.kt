@@ -7,14 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataEntryFieldsPreview() {
-    FL_DatatrackerTheme {
+    AppTheme {
         DataEntryFieldsPreview()
     }
 }
@@ -24,8 +24,8 @@ fun DataEntryFieldsPreview() {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(xSmall),
-        elevation = xSmall
+            .padding(dimens.xSmall),
+        elevation = dimens.xSmall
     ) {
         val dataRowStateEx = DataRowState(
             DataItem(

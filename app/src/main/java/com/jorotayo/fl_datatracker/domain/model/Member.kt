@@ -15,7 +15,10 @@ data class Member(
     var gender: Gender = Gender.MALE,
     var dob: String = "",
     var age: String = "",
-    var address: String = "",
+    var addressLine1: String = "",
+    var addressLine2: String = "",
+    var town: String = "",
+    var postcode: String = "",
     @Convert(converter = MemberStatusConverter::class, dbType = Int::class)
     var memberStatus: MemberStatus,
     @Convert(converter = SontaConverter::class, dbType = Int::class)

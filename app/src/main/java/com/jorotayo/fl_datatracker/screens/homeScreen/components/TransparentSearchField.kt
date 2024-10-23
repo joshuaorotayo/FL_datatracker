@@ -11,7 +11,7 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import com.jorotayo.fl_datatracker.util.Dimen.ninetyPercent
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 @Composable
 fun TransparentSearchField(
@@ -31,7 +31,7 @@ fun TransparentSearchField(
         singleLine = singleLine,
         textStyle = textStyle,
         modifier = Modifier
-            .fillMaxWidth(ninetyPercent)
+            .fillMaxWidth(dimens.ninetyPercent)
             .onFocusChanged {
                 onFocusChange(it)
             },

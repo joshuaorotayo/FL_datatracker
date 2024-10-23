@@ -6,16 +6,14 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jorotayo.fl_datatracker.util.SharedSettingService
 
-private val lightColours = lightColors(
+/*private val lightColours = lightColors(
     primary = md_theme_light_primary,
     onPrimary = md_theme_onPrimary,
     secondary = md_theme_light_secondary,
@@ -26,9 +24,9 @@ private val lightColours = lightColors(
     onBackground = md_theme_light_onBackground,
     surface = md_theme_light_surface,
     onSurface = md_theme_light_onSurface
-)
+)*/
 
-private val darkColours = darkColors(
+/*private val darkColours = darkColors(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_onPrimary,
     secondary = md_theme_dark_secondary,
@@ -37,14 +35,14 @@ private val darkColours = darkColors(
     onError = md_theme_white,
     background = md_theme_dark_background,
     onBackground = md_theme_white,
-    surface = md_theme_dark_background, // elevation xxxSmall
+    surface = md_theme_dark_background, // elevation xxAppTheme.dimens.xSmall
     onSurface = md_theme_white,
-)
+)*/
 
 val Colors.highLightColours: Color
-    get() = if (isLight) Color.White else md_theme_light_primary
+    get() = if (isLight) Color.White else Color.Black
 val Colors.headingTextColour: Color
-    get() = if (isLight) md_theme_light_primary else md_theme_dark_primary
+    get() = if (isLight) black else white
 
 val Colors.subtitleTextColour: Color
     get() = if (isLight) Color.Black else Color.White
@@ -53,18 +51,16 @@ val Colors.bodyTextColour: Color
     get() = Color(color = 0xFF888888)
 
 @Composable
-fun FL_DatatrackerTheme(
-    content:
-    @Composable()
-        () -> Unit
+fun AppTheme(
+    content: @Composable () -> Unit
 ) {
-    val useDevicedarkModeSettings = SharedSettingService.useDeviceDarkModeSettings.observeAsState()
+    val useDeviceDarkModeSettings = SharedSettingService.useDeviceDarkModeSettings.observeAsState()
 
     val darkMode = isDarkMode()
 
     AppCompatDelegate.setDefaultNightMode(
         when {
-            useDevicedarkModeSettings.value!! -> MODE_NIGHT_FOLLOW_SYSTEM
+            useDeviceDarkModeSettings.value!! -> MODE_NIGHT_FOLLOW_SYSTEM
             darkMode -> MODE_NIGHT_YES
             else -> MODE_NIGHT_NO
         }
@@ -78,15 +74,31 @@ fun FL_DatatrackerTheme(
 
     val systemUiController = rememberSystemUiController()
 
-    systemUiController.setNavigationBarColor(colors.surface)
+    systemUiController.setNavigationBarColor(colors.background)
     systemUiController.setStatusBarColor(colors.background)
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalAppColors provides colors,
+        LocalAppTypography provides extendedTypography,
+        LocalAppDimensions provides extendedDimensions
+    ) {
+        androidx.compose.material3.MaterialTheme(
+            content = content
+        )
+    }
+
+}
+
+object AppTheme {
+    val colors: AppColors
+        @Composable
+        get() = LocalAppColors.current
+    val typography: AppTypography
+        @Composable
+        get() = LocalAppTypography.current
+    val dimens: AppDimensions
+        @Composable
+        get() = LocalAppDimensions.current
 }
 
 @Composable

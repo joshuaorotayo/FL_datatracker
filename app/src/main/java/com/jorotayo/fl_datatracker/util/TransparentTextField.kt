@@ -13,14 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewTransparentTextField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         TransparentTextField(
             text = "",
             placeholder = "Value",
@@ -44,7 +42,7 @@ fun TransparentTextField(
 
     Box(
         modifier = modifier
-            .padding(xxSmall)
+            .padding(AppTheme.dimens.xxSmall)
     ) {
         OutlinedTextField(
             value = text,

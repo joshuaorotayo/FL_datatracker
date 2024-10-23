@@ -33,26 +33,31 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.dsc.form_builder.SelectState
+import com.dsc.form_builder.Validators
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.DataFieldsReworkState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalSelectionField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         Column {
             minimalSelectionField(
                 rowHeader = "this is a sample row",
-                isError = false,
                 state = DataFieldsReworkState(),
-                selectionList = listOf("hi", "hello", "test")
+                selectionState = SelectState(
+                    name = "gender",
+                    initial = mutableListOf("Male, Female"),
+                    validators = listOf(
+                        Validators.Required()
+                    )
+                ),
             )
         }
     }
@@ -61,15 +66,13 @@ fun PreviewMinimalSelectionField() {
 @Composable
 fun minimalSelectionField(
     rowHeader: String,
-    isError: Boolean,
-    state: DataFieldsReworkState,
-    selectionList: List<String>
+    selectionState: SelectState,
+    state: DataFieldsReworkState
 ): String {
 
     var expanded by remember { mutableStateOf(state.isDropdownExpanded) }
-    var cardElevation by remember { mutableStateOf(xSmall) }
+    var cardElevation by remember { mutableStateOf(12.dp) }
     val focusManager = LocalFocusManager.current
-    var isExpanded by remember { mutableStateOf(state.isDropdownExpanded) }
     var selectedItem by remember { mutableStateOf("") }
 
     Column(
@@ -81,15 +84,15 @@ fun minimalSelectionField(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(xxSmall)
+                .padding(dimens.xxSmall)
                 .onFocusChanged {
-                    cardElevation = if (it.isFocused || state.isDropdownExpanded) medium else xSmall
+                    cardElevation = if (it.isFocused || state.isDropdownExpanded) 32.dp else 12.dp
                 },
-            shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && cardElevation == medium) colors.surface.copy(
+            shape = RoundedCornerShape(dimens.xSmall),
+            backgroundColor = if (!isDarkMode() && cardElevation == dimens.medium) colors.surface.copy(
                 alpha = 0.5f
             ) else colors.surface,
-            elevation = if (isDarkMode()) cardElevation else zero
+            elevation = if (isDarkMode()) cardElevation else dimens.zero
         ) {
             Column(
                 modifier = Modifier.wrapContentWidth()
@@ -105,7 +108,7 @@ fun minimalSelectionField(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(xxSmall)
+                            .padding(dimens.xxSmall)
                             .fillMaxWidth(0.9f)
                     ) {
                         Text(
@@ -115,20 +118,20 @@ fun minimalSelectionField(
                         )
                         Text(
                             modifier = Modifier,
-                            text = selectedItem.ifBlank { "Please select an option" },
+                            text = selectionState.name.ifEmpty { "Please select an option" },
                             style = typography.body1,
                             color = if (selectedItem.isBlank()) DarkGray else colors.onSurface
                         )
                     }
                     Column(
                         modifier = Modifier
-                            .padding(vertical = xxSmall)
+                            .padding(vertical = dimens.xxSmall)
                             .fillMaxWidth()
                     ) {
 
                         Icon(
                             modifier = Modifier
-                                .size(medium),
+                                .size(dimens.medium),
                             imageVector = Icons.Default.ArrowDropDown,
                             tint = DarkGray,
                             contentDescription = "Dropdown arrow"
@@ -143,7 +146,7 @@ fun minimalSelectionField(
                             modifier = Modifier
                                 .wrapContentWidth()
                         ) {
-                            selectionList.forEachIndexed { index, item ->
+                            selectionState.initial.forEachIndexed { index, item ->
                                 DropdownMenuItem(
                                     onClick = {
                                         selectedItem = item
@@ -164,18 +167,10 @@ fun minimalSelectionField(
                     }
                 }
             }
-            if (isError) {
+            if (selectionState.hasError) {
                 Text(text = "Please enter in a value", color = Color.Red)
             }
         }
     }
     return selectedItem
-}
-
-@Composable
-fun SelectionDropDown(
-    items: List<String>,
-    expandDropdown: (String?) -> Unit
-) {
-
 }

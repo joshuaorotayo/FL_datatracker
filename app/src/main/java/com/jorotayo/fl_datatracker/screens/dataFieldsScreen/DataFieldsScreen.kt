@@ -60,19 +60,10 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.C
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
-import com.jorotayo.fl_datatracker.util.Dimen.iconSize
-import com.jorotayo.fl_datatracker.util.Dimen.large
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
 import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import kotlinx.coroutines.CoroutineScope
@@ -81,12 +72,12 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun DataFieldsScreenPreview() {
     val examplePreset = Preset(presetId = 0L, presetName = "Default")
 
-    FL_DatatrackerTheme {
+    AppTheme {
         DataFieldsScreen(
             uiState = DataFieldScreenState(
                 presetList = listOf(examplePreset),
@@ -141,9 +132,10 @@ fun DataFieldsScreen(
         topBar = {
             Column(
                 modifier = Modifier
+                    .background(AppTheme.colors.background)
                     .wrapContentHeight()
                     .fillMaxWidth()
-                    .padding(top = large)
+                    .padding(top = dimens.large)
             ) {
                 HeaderRow()
                 PresetSelection(
@@ -170,12 +162,12 @@ fun DataFieldsScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(colors.background)
+                .background(AppTheme.colors.background)
         ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = xSmall, bottom = bottomBarPadding),
+                    .padding(top = dimens.xSmall, bottom = dimens.bottomBarPadding),
                 state = listState
             ) {
                 item {
@@ -219,10 +211,10 @@ fun DataFieldsScreen(
 private fun HeaderRow() {
     Text(
         modifier = Modifier
-            .padding(start = small),
+            .padding(start = dimens.small),
         text = "Data Fields",
-        color = colors.primary,
-        style = typography.h1,
+        color = AppTheme.colors.onBackground,
+        style = AppTheme.typography.titleLarge,
         textAlign = TextAlign.Start
     )
 }
@@ -237,16 +229,16 @@ private fun AddEditRow(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = small, vertical = zero),
+            .padding(horizontal = dimens.small, vertical = dimens.zero),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.add_edit_fields_label),
-            style = typography.h3,
+            style = AppTheme.typography.titleSmall,
             textAlign = TextAlign.Start,
-            color = colors.subtitleTextColour,
+            color = AppTheme.colors.onSurface,
         )
         IconButton(
             modifier = Modifier,
@@ -259,10 +251,10 @@ private fun AddEditRow(
         ) {
             Icon(
                 modifier = Modifier
-                    .size(regular),
+                    .size(dimens.regular),
                 imageVector = Icons.Default.AddBox,
                 contentDescription = stringResource(id = R.string.add_field_description),
-                tint = colors.primary
+                tint = AppTheme.colors.onBackground
             )
         }
     }
@@ -280,20 +272,20 @@ private fun PresetSelection(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = small, vertical = zero),
+            .padding(horizontal = dimens.small, vertical = dimens.zero),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.presetShowing),
-            style = typography.h3,
+            style = AppTheme.typography.titleSmall,
             textAlign = TextAlign.Start,
-            color = colors.subtitleTextColour,
+            color = AppTheme.colors.onSurface,
         )
         Row(
             modifier = Modifier
                 .wrapContentSize()
-                .padding(horizontal = xxxSmall)
+                .padding(horizontal = dimens.xxSmall)
                 .clickable(onClick = { onDataFieldEvent(DataFieldEvent.ExpandPresetDropdown) })
                 .clip(shape = RoundedCornerShape(10.dp))
                 .padding(5.dp),
@@ -303,14 +295,14 @@ private fun PresetSelection(
             Text(
                 modifier = Modifier.padding(horizontal = 5.dp),
                 text = currentPreset.presetName,
-                color = colors.primary,
-                style = typography.h3,
+                color = AppTheme.colors.onBackground,
+                style = AppTheme.typography.titleSmall,
                 textAlign = TextAlign.Center
             )
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Drop down arrow for Preset Dropdown",
-                tint = colors.primary.copy(alpha = 0.5f)
+                tint = AppTheme.colors.onBackground.copy(alpha = 0.5f)
             )
             if (state.isPresetDropDownMenuExpanded) {
                 PresetDropDownMenu(
@@ -332,27 +324,27 @@ private fun ColumnScope.DataFieldColumnHeaders(
         Row(
             modifier = Modifier
                 .wrapContentHeight()
-                .padding(horizontal = small),
+                .padding(horizontal = dimens.small),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
-                    .padding(start = regular)
+                    .padding(start = dimens.regular)
                     .weight(0.4f),
                 text = "Name",
                 textAlign = TextAlign.Start,
                 style = typography.body1,
-                color = colors.subtitleTextColour
+                color = AppTheme.colors.onSurface
             )
             Text(
                 modifier = Modifier
-                    .padding(start = xxSmall)
+                    .padding(start = dimens.xxSmall)
                     .weight(0.3f),
                 text = "Type",
                 textAlign = TextAlign.Start,
                 style = typography.body1,
-                color = colors.subtitleTextColour
+                color = AppTheme.colors.onSurface
             )
             Text(
                 modifier = Modifier
@@ -360,7 +352,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
                 text = "Enabled?",
                 textAlign = TextAlign.Center,
                 style = typography.body1,
-                color = colors.subtitleTextColour
+                color = AppTheme.colors.onSurface
             )
         }
     }
@@ -375,7 +367,7 @@ private fun NoDataFieldSection(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = bottomBarPadding)
+                .padding(bottom = dimens.bottomBarPadding)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 NoDataField(modifier = Modifier.align(alignment = Alignment.Center))
@@ -444,14 +436,14 @@ private fun PresetDropDownMenu(
                     Text(
                         text = preset.presetName,
                         textAlign = TextAlign.Center,
-                        color = colors.onSurface,
+                        color = AppTheme.colors.onSurface,
                         overflow = TextOverflow.Ellipsis
                     )
                     // Default shouldn't show the 'x'
                     if (index > 0) {
                         Icon(
                             modifier = Modifier
-                                .size(iconSize)
+                                .size(dimens.icon)
                                 .padding(start = 5.dp)
                                 .clickable(
                                     onClick = {

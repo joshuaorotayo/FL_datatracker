@@ -17,15 +17,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import com.google.gson.Gson
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormListRowV4() {
-    FL_DatatrackerTheme {
+    AppTheme {
         val dataItem = DataRowState(
             DataItem(
                 presetId = 0,
@@ -59,7 +58,7 @@ fun formListRowV4(
 
     LazyColumn(
         modifier = Modifier
-            .padding(xSmall)
+            .padding(dimens.xSmall)
             .fillMaxWidth()
             .height(Dp(columnHeight.value))
     ) {
@@ -80,7 +79,7 @@ fun formListRowV4(
         item {
             Row(
                 modifier = Modifier
-                    .padding(bottom = xxxSmall)
+                    .padding(bottom = dimens.xSmall)
                     .fillMaxWidth()
             ) {
                 Text(

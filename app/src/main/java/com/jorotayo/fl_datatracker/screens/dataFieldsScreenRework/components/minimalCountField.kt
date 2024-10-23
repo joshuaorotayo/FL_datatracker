@@ -41,16 +41,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalCountField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         minimalCountField(
             rowHeader = "Minimal Count Datafield",
             isError = false
@@ -66,7 +65,7 @@ fun minimalCountField(
     val count = remember { mutableIntStateOf(0) }
     val unChanged = remember { mutableStateOf(true) }
 
-    var cardElevation by remember { mutableStateOf(xSmall) }
+    var cardElevation by remember { mutableStateOf(12.dp) }
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -74,19 +73,19 @@ fun minimalCountField(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(Dimen.xxSmall)
+            .padding(dimens.xxSmall)
             .onFocusChanged {
-                cardElevation = if (it.isFocused) Dimen.medium else xSmall
+                cardElevation = if (it.isFocused) 32.dp else 12.dp
             },
-        shape = RoundedCornerShape(xSmall),
-        backgroundColor = if (!isDarkMode() && (cardElevation == Dimen.medium)) colors.surface.copy(
+        shape = RoundedCornerShape(dimens.xSmall),
+        backgroundColor = if (!isDarkMode() && (cardElevation == dimens.medium)) colors.surface.copy(
             alpha = 0.5f
         ) else colors.surface,
-        elevation = if (isDarkMode()) cardElevation else Dimen.zero
+        elevation = if (isDarkMode()) cardElevation else dimens.zero
     ) {
         Column(
             modifier = Modifier
-                .padding(Dimen.xxSmall)
+                .padding(dimens.xxSmall)
                 .fillMaxWidth()
         ) {
 
@@ -106,8 +105,8 @@ fun minimalCountField(
                     Text(
                         modifier = Modifier
                             .padding(
-                                start = Dimen.small,
-                                end = Dimen.small,
+                                start = dimens.small,
+                                end = dimens.small,
                                 top = 5.dp
                             ),
                         text = stringResource(id = R.string.count_row_error),

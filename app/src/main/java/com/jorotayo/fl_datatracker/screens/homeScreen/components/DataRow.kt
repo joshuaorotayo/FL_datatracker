@@ -22,15 +22,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.domain.model.Data
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataRow() {
-    FL_DatatrackerTheme {
+    AppTheme {
         DataRow(
             data = Data(
                 dataId = 0,
@@ -51,12 +50,12 @@ fun DataRow(
 ) {
     Card(
         modifier = Modifier.run {
-            padding(horizontal = Dimen.small, vertical = Dimen.xxSmall)
+            padding(horizontal = dimens.small, vertical = dimens.xSmall)
                 .fillMaxWidth()
                 .background(colors.surface)
         },
-        shape = RoundedCornerShape(xSmall),
-        elevation = Dimen.small,
+        shape = RoundedCornerShape(dimens.xSmall),
+        elevation = dimens.small,
     ) {
         Row(
             modifier = Modifier

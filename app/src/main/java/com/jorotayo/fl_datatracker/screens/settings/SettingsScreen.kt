@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.settings
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -23,29 +22,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.large
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 private fun PreviewSettingsScreen() {
-    FL_DatatrackerTheme {
+    AppTheme {
         SettingsScreen(
             {},
             {},
@@ -88,12 +76,12 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(top = large)
+                            .padding(top = dimens.large)
                             .background(colors.background)
                     ) {
                         Text(
                             modifier = Modifier
-                                .padding(start = small),
+                                .padding(start = dimens.small),
                             text = "Settings",
                             color = colors.primary,
                             style = typography.h1,
@@ -104,11 +92,11 @@ fun SettingsScreen(
                 item {
                     Card(
                         modifier = Modifier
-                            .padding(small)
+                            .padding(dimens.small)
                             .fillMaxWidth(),
-                        shape = RoundedCornerShape(small),
+                        shape = RoundedCornerShape(dimens.small),
                         backgroundColor = colors.surface,
-                        elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
+                        elevation = if (isDarkMode()) dimens.xxSmall else dimens.zero
                     ) {
                         Column {
                             SettingRow(

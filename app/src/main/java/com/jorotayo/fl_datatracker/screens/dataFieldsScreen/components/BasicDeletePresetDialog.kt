@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
@@ -32,14 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.regular
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import kotlinx.coroutines.launch
 
 @Preview(
@@ -53,7 +47,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun PreviewBasicDeletePresetDialog() {
-    FL_DatatrackerTheme {
+    AppTheme {
         BasicDeletePresetDialog(
             modifier = Modifier,
             confirmDelete = {},
@@ -72,34 +66,32 @@ fun BasicDeletePresetDialog(
     scaffold: ScaffoldState,
     preset: Preset,
 ) {
-    val headerColour =
-        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
     val scope = rememberCoroutineScope()
     Card(
         modifier = modifier
-            .padding(small)
+            .padding(dimens.small)
             .defaultMinSize(minWidth = 280.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(medium),
-        elevation = xSmall
+        elevation = dimens.xSmall
     ) {
         Column(
             modifier
                 .background(MaterialTheme.colors.surface)
-                .padding(regular),
+                .padding(dimens.regular),
             horizontalAlignment = CenterHorizontally
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = small),
+                    .padding(bottom = dimens.small),
                 verticalAlignment = CenterVertically,
                 horizontalArrangement = Center
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = xxSmall),
+                        .padding(end = dimens.xxSmall),
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(id = R.string.preset_dialog_icon),
                     tint = MaterialTheme.colors.primary
@@ -112,13 +104,13 @@ fun BasicDeletePresetDialog(
                         preset.presetName
                     ),
                     style = MaterialTheme.typography.h5,
-                    color = headerColour
+                    color = MaterialTheme.colors.onBackground
                 )
             }
 
             Text(
                 modifier = Modifier
-                    .padding(bottom = small),
+                    .padding(bottom = dimens.small),
                 text = stringResource(id = R.string.confirm_delete_preset),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h6,
@@ -142,7 +134,7 @@ fun BasicDeletePresetDialog(
                 }) {
                     Text(
                         modifier = Modifier
-                            .padding(end = xxSmall),
+                            .padding(end = dimens.xxSmall),
                         text = stringResource(id = R.string.cancelText),
                         color = MaterialTheme.colors.primary
                     )
@@ -159,7 +151,7 @@ fun BasicDeletePresetDialog(
                     Text(
                         modifier = Modifier,
                         text = stringResource(id = R.string.deleteText),
-                        color = headerColour
+                        color = MaterialTheme.colors.onBackground
                     )
                 }
             }

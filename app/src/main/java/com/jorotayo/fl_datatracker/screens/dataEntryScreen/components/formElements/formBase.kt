@@ -6,18 +6,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 @Composable
 fun DefaultContent() {
@@ -36,27 +31,27 @@ fun FormBase(
 ) {
     Card(
         modifier = Modifier
-            .padding(small)
+            .padding(AppTheme.dimens.small)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(small),
+        shape = RoundedCornerShape(AppTheme.dimens.small),
         backgroundColor = colors.surface,
-        elevation = if (isDarkMode()) Dimen.xxSmall else zero
+        elevation = if (isDarkMode()) AppTheme.dimens.xSmall else AppTheme.dimens.zero
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(xSmall)
+                .padding(AppTheme.dimens.xSmall)
         ) {
             content()
         }
     }
 }
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun FormBasePreview() {
-    FL_DatatrackerTheme {
+    AppTheme {
         FormBase()
     }
 }

@@ -21,19 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataFieldRowV2
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 import com.jorotayo.fl_datatracker.util.exampleBooleanField
 import com.jorotayo.fl_datatracker.util.exampleShortField
 
-@Preview
+@DefaultPreviews
 @Composable
 fun PreviewPageTemplate() {
-    FL_DatatrackerTheme {
+    AppTheme {
         PageTemplate()
     }
 }
@@ -53,12 +52,12 @@ fun PageTemplate() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = medium)
+                    .padding(top = dimens.medium)
                     .background(colors.background)
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(start = small),
+                        .padding(start = dimens.small),
                     text = "Page Heading",
                     color = colors.primary,
                     style = typography.h4.also { FontWeight.SemiBold },

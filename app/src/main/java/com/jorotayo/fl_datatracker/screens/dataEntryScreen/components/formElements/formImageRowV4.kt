@@ -38,9 +38,8 @@ import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
 @OptIn(ExperimentalMaterialApi::class)
 @Preview(
@@ -51,7 +50,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 @Preview(showBackground = false, name = "Light Mode")
 @Composable
 fun PreviewFormImageRowV4() {
-    FL_DatatrackerTheme {
+    AppTheme {
         val modalBottomSheetState =
             rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val dataItem = DataRowState(
@@ -87,14 +86,14 @@ fun formImageRowV4(
 
     Column(
         modifier = Modifier
-            .padding(xSmall)
+            .padding(dimens.xSmall)
             .fillMaxWidth()
             .wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier
-                .padding(start = Dimen.small, end = Dimen.small, top = Dimen.xxSmall)
+                .padding(start = dimens.small, end = dimens.small, top = dimens.xSmall)
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
@@ -106,13 +105,13 @@ fun formImageRowV4(
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
-                    .padding(bottom = Dimen.xxSmall)
+                    .padding(bottom = dimens.xSmall)
                     .fillMaxWidth(0.8f)
             ) {
                 Image(
                     modifier = Modifier
                         .size(160.dp)
-                        .padding(bottom = Dimen.xxSmall)
+                        .padding(bottom = dimens.xSmall)
                         .align(Alignment.CenterHorizontally),
                     imageVector = Icons.Default.Image,
                     colorFilter = ColorFilter.tint(color = MaterialTheme.colors.onSurface),
@@ -139,8 +138,8 @@ fun formImageRowV4(
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
-                    .padding(bottom = Dimen.xxSmall)
-                    .fillMaxWidth(0.8f)
+                    .padding(bottom = dimens.xSmall)
+                    .fillMaxWidth(dimens.eightyPercent)
             ) {
                 Button(
                     modifier = Modifier
@@ -158,7 +157,7 @@ fun formImageRowV4(
                 Image(
                     modifier = Modifier
                         .size(160.dp)
-                        .padding(bottom = Dimen.xxSmall)
+                        .padding(bottom = dimens.xSmall)
                         .align(Alignment.CenterHorizontally),
                     painter = rememberAsyncImagePainter(
                         ImageRequest

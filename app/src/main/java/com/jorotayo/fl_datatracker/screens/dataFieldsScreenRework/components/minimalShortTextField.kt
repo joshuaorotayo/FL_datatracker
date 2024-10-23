@@ -30,25 +30,29 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import androidx.compose.ui.unit.dp
+import com.dsc.form_builder.TextFieldState
+import com.dsc.form_builder.Validators
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalShortTextField() {
-    FL_DatatrackerTheme {
+    AppTheme {
         Column {
             minimalShortTextField(
-                rowHeader = "this is a sample row",
-                rowHint = "Enter text here",
-                isError = false
+                rowHeader = "Header text for textfield",
+                rowHint = "Please enter text for row",
+                textFieldState = TextFieldState(
+                    name = "",
+                    initial = "",
+                    transform = null,
+                    validators = listOf(Validators.Required())
+                )
             )
         }
     }
@@ -59,11 +63,11 @@ fun PreviewMinimalShortTextField() {
 fun minimalShortTextField(
     rowHeader: String,
     rowHint: String,
-    isError: Boolean
+    textFieldState: TextFieldState
 ): String {
 
-    val (text, setText) = remember { mutableStateOf("") }
-    var cardElevation by remember { mutableStateOf(xSmall) }
+    val (text, setText) = remember { mutableStateOf(textFieldState.initial) }
+    var cardElevation by remember { mutableStateOf(12.dp) }
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -72,17 +76,22 @@ fun minimalShortTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(start = xxSmall, top = xxSmall, bottom = zero, end = xxSmall)
+                .padding(
+                    start = dimens.xxSmall,
+                    top = dimens.xSmall,
+                    bottom = dimens.zero,
+                    end = dimens.xxSmall
+                )
                 .onFocusChanged {
-                    cardElevation = if (it.isFocused) medium else xSmall
+                    cardElevation = if (it.isFocused) 32.dp else 12.dp
                 },
-            shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && (cardElevation == medium)) colors.surface.copy(
+            shape = RoundedCornerShape(dimens.xSmall),
+            backgroundColor = if (!isDarkMode() && (cardElevation == dimens.medium)) colors.surface.copy(
                 alpha = 0.5f
             ) else colors.surface,
-            elevation = if (isDarkMode()) cardElevation else zero
+            elevation = if (isDarkMode()) cardElevation else dimens.zero
         ) {
-            Column(modifier = Modifier.padding(xxSmall)) {
+            Column(modifier = Modifier.padding(dimens.xxSmall)) {
                 Text(
                     text = rowHeader,
                     style = typography.body1,
@@ -91,12 +100,12 @@ fun minimalShortTextField(
 
                 BasicTextField(
                     modifier = Modifier
-                        .padding(end = medium)
+                        .padding(end = dimens.medium)
                         .fillMaxWidth(),
                     value = text,
                     textStyle = TextStyle(color = colors.onSurface),
                     onValueChange = { editedText ->
-                        if (editedText.length <= Dimen.shortTextMaxChars) {
+                        if (editedText.length <= 15) {
                             setText(editedText)
                         }
                     },
@@ -115,11 +124,11 @@ fun minimalShortTextField(
                             visualTransformation = VisualTransformation.None,
                             interactionSource = interactionSource,
                             placeholder = { Text(text = rowHint, color = DarkGray) },
-                            contentPadding = PaddingValues(zero)
+                            contentPadding = PaddingValues(dimens.zero)
                         )
                     }
                 )
-                if (isError) {
+                if (textFieldState.hasError) {
                     Text(text = "Please enter in a value", color = Color.Red)
                 }
             }
@@ -127,11 +136,11 @@ fun minimalShortTextField(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = xSmall),
-            text = "${text.length} / ${Dimen.shortTextMaxChars}",
+                .padding(end = dimens.xSmall),
+            text = "${text.length} / ${15}",
             textAlign = TextAlign.End,
             style = typography.caption,
-            color = if (text.length < Dimen.shortTextMaxChars) Color.Gray else Color.Red,
+            color = if (text.length < 15) Color.Gray else Color.Red,
         )
     }
     return text

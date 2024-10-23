@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,14 +30,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormNameHeader() {
     val testData = DataEntryScreenState(
@@ -49,7 +45,7 @@ fun PreviewFormNameHeader() {
         formSubmitted = false
     )
 
-    FL_DatatrackerTheme {
+    AppTheme {
         FormNameHeader(
             setName = { },
             data = testData
@@ -65,20 +61,27 @@ fun FormNameHeader(
     val focusManager = LocalFocusManager.current
     val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
 
-    val headerColour =
-        if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = xSmall, top = xSmall, end = xSmall, bottom = xSmall)
+            .padding(
+                start = dimens.xSmall,
+                top = dimens.xSmall,
+                end = dimens.xSmall,
+                bottom = dimens.xSmall
+            )
     ) {
         AnimatedVisibility(visible = data.nameError || (data.dataName.isBlank() && data.formSubmitted)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = xSmall, end = xSmall, top = xxSmall, bottom = 0.dp),
+                    .padding(
+                        start = dimens.xSmall,
+                        end = dimens.xSmall,
+                        top = dimens.xSmall,
+                        bottom = 0.dp
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -109,7 +112,7 @@ fun FormNameHeader(
                 placeholder = {
                     Text(
                         text = "Please enter a meeting or Service Name...",
-                        color = headerColour,
+                        color = MaterialTheme.colors.onBackground,
                         textAlign = TextAlign.Start
                     )
                 },
@@ -124,7 +127,7 @@ fun FormNameHeader(
                     unfocusedIndicatorColor = Color.Transparent,
                     errorIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    textColor = headerColour
+                    textColor = MaterialTheme.colors.onBackground,
                 ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next

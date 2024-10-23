@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,22 +18,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = false, name = "Night Mode")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = false, name = "Light Mode")
+@DefaultPreviews
 @Composable
 fun PreviewNoDataForm() {
-    FL_DatatrackerTheme {
+    AppTheme {
         NoDataForm(
             modifier = Modifier
         )
@@ -48,17 +43,17 @@ fun NoDataForm(
     // empty Message
     Card(
         modifier = modifier
-            .padding(small)
+            .padding(dimens.small)
             .fillMaxWidth()
             .wrapContentHeight(),
-        shape = RoundedCornerShape(small),
+        shape = RoundedCornerShape(dimens.small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) xxSmall else Dimen.zero
+        elevation = if (isDarkMode()) dimens.xSmall else dimens.zero
     ) {
         Column(
             modifier = Modifier
                 .wrapContentHeight()
-                .padding(xSmall),
+                .padding(dimens.xSmall),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

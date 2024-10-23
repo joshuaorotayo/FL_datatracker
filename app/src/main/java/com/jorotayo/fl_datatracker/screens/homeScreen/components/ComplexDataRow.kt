@@ -27,17 +27,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.DataItem_
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 import com.jorotayo.fl_datatracker.util.BoxState
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.DefaultPreviews
 
 @Composable
-@Preview
+@DefaultPreviews
 fun PreviewComplexDataRow() {
     ComplexDataRow(
         data = Data(
@@ -68,7 +68,7 @@ fun ComplexDataRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = Dimen.xxSmall)
+            .padding(horizontal = 24.dp, vertical = dimens.xxSmall)
             .clip(shape = RoundedCornerShape(10.dp))
             .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -167,7 +167,7 @@ fun ComplexDataRow(
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(Color.Gray.copy(Dimen.tenPercent))
+                .background(Color.Gray.copy(dimens.tenPercent))
         )
     }
 }

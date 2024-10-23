@@ -21,15 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme
+import com.jorotayo.fl_datatracker.ui.theme.AppTheme.dimens
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewTemplateScreen() {
-    FL_DatatrackerTheme {
+    AppTheme {
         TemplateScreen(
             state = TemplateState(), viewModel = templatePreview
         )
@@ -62,7 +62,7 @@ fun TemplateScreen(
             modifier = Modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
-                .padding(top = Dimen.large)
+                .padding(top = dimens.large)
         ) {
             HeaderRow()
         }
@@ -76,7 +76,7 @@ fun TemplateScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = Dimen.xSmall, bottom = Dimen.bottomBarPadding),
+                    .padding(top = dimens.xSmall, bottom = dimens.bottomBarPadding),
             ) {
 
             }
@@ -103,7 +103,7 @@ fun TemplateScreen(
 @Composable
 private fun HeaderRow() {
     Text(
-        modifier = Modifier.padding(start = Dimen.small),
+        modifier = Modifier.padding(start = dimens.small),
         text = "Template page",
         color = MaterialTheme.colors.primary,
         style = MaterialTheme.typography.h1,
