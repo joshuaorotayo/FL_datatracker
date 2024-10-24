@@ -13,14 +13,21 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -30,15 +37,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen.one
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.SharedSettingService
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun BottomBarPreview() {
     FL_DatatrackerTheme {
@@ -83,8 +92,11 @@ fun BottomBar(navController: NavHostController) {
 //            color = MaterialTheme.colors.onPrimary.copy(alpha = Dimen.twentyPercent)
 //        )
         BottomNavigation(
+            modifier = Modifier
+                .padding(xxSmall)
+                .clip(RoundedCornerShape(small)),
             backgroundColor = colors.surface,
-            elevation = zero
+            elevation = if (isDarkMode()) one else xxSmall
         ) {
             mainScreens.forEach { screen ->
                 AnimatedBottomNavItem(
@@ -154,7 +166,8 @@ fun RowScope.AnimatedBottomNavItem(
         label = "Nav Bar Icon size animation"
     )
     val animatedVisibleColor by animateColorAsState(
-        targetValue = colors.secondary.copy(0.4f),
+//        targetValue = colors.secondary.copy(0.4f),
+        targetValue = if (isDarkMode()) Color.White.copy(0.3f) else Color.Black.copy(0.3f),
         animationSpec = TweenSpec(
             durationMillis = 1000,
             easing = FastOutSlowInEasing

@@ -17,13 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormComponentTemplateV2() {
     FL_DatatrackerTheme {

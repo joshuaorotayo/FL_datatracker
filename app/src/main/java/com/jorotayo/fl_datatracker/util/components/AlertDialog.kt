@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.medium
@@ -48,6 +48,33 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
+
+@DefaultPreviews
+@Composable
+fun AlertDialogPreview() {
+    FL_DatatrackerTheme {
+        val title = "Interest rate"
+        val text = "Tax-free - Interest which is paid that is exempt from tax.\n" +
+                "AER stands for Annual Equivalent Rate and illustrates what the " +
+                "interest rate would be if interest was paid and added each year."
+        val onDismissRequest = {}
+        val confirmButtonLabel = "Yes"
+        val dismissButtonLabel = "Close"
+        val confirmButtonOnClick = {}
+        val dismissButtonOnClick = {}
+
+        val state = AlertDialogState(
+            title,
+            text,
+            onDismissRequest,
+            confirmButtonLabel,
+            confirmButtonOnClick,
+            dismissButtonLabel,
+            dismissButtonOnClick
+        )
+        AlertDialogLayout(state)
+    }
+}
 
 data class AlertDialogState(
     var title: String,
@@ -265,29 +292,3 @@ private fun hasEditField(alertDialogState: AlertDialogState) =
 
 private fun hasImageIcon(alertDialogState: AlertDialogState) = alertDialogState.imageIcon != null
 
-@DefaultDualPreview
-@Composable
-fun AlertDialogPreview() {
-    FL_DatatrackerTheme {
-        val title = "Interest rate"
-        val text = "Tax-free - Interest which is paid that is exempt from tax.\n" +
-                "AER stands for Annual Equivalent Rate and illustrates what the " +
-                "interest rate would be if interest was paid and added each year."
-        val onDismissRequest = {}
-        val confirmButtonLabel = "Yes"
-        val dismissButtonLabel = "Close"
-        val confirmButtonOnClick = {}
-        val dismissButtonOnClick = {}
-
-        val state = AlertDialogState(
-            title,
-            text,
-            onDismissRequest,
-            confirmButtonLabel,
-            confirmButtonOnClick,
-            dismissButtonLabel,
-            dismissButtonOnClick
-        )
-        AlertDialogLayout(state)
-    }
-}

@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.DataFieldsReworkState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen.medium
@@ -43,7 +43,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalSelectionField() {
     FL_DatatrackerTheme {

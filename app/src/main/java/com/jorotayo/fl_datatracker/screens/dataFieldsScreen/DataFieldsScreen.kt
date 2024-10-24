@@ -60,7 +60,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.C
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
@@ -81,7 +81,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun DataFieldsScreenPreview() {
     val examplePreset = Preset(presetId = 0L, presetName = "Default")

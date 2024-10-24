@@ -23,17 +23,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.regular
+import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewSearchBar() {
     FL_DatatrackerTheme {
@@ -85,25 +85,25 @@ fun SearchBar(
         }
         Card(
             modifier = Modifier
-                .padding(start = small, top = xxSmall, end = small, bottom = xxSmall)
+                .padding(xSmall)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(small),
             backgroundColor = MaterialTheme.colors.surface,
-            elevation = if (isDarkMode()) xxSmall else Dimen.zero
+            elevation = if (isDarkMode()) one else xxSmall
         ) {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .clip(shape = RoundedCornerShape(regular)),
-                textStyle = typography.h2,
+                    .clip(shape = RoundedCornerShape(xSmall)),
+                textStyle = typography.h3,
                 value = searchState.text,
                 maxLines = 1,
                 placeholder = {
                     Text(
                         modifier = Modifier,
                         text = searchState.hint,
-                        style = typography.h2,
+                        style = typography.h3,
                         color = MaterialTheme.colors.headingTextColour
                     )
                 },

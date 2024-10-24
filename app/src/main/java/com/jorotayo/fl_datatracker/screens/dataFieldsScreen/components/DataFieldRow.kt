@@ -50,7 +50,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -60,7 +60,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataFieldRow() {
     val currentDataField = DataField(

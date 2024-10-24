@@ -47,7 +47,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowCompon
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -64,7 +64,7 @@ import com.jorotayo.fl_datatracker.util.exampleShortField
 import com.jorotayo.fl_datatracker.util.getHeaderColour
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataFieldRowV2() {
     FL_DatatrackerTheme {

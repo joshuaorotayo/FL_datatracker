@@ -21,12 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalBooleanField() {
     FL_DatatrackerTheme {

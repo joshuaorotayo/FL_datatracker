@@ -41,7 +41,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.min
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalListField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalSelectionField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.components.minimalShortTextField
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
@@ -49,7 +49,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewDataFieldsScreenRework() {
     FL_DatatrackerTheme {

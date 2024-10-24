@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -30,7 +30,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewNoDataField() {
     FL_DatatrackerTheme {
@@ -52,7 +52,7 @@ fun NoDataField(
             .wrapContentHeight(),
         shape = RoundedCornerShape(xSmall),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
+        elevation = if (isDarkMode()) Dimen.one else Dimen.xxSmall
     ) {
         Column(
             modifier = Modifier

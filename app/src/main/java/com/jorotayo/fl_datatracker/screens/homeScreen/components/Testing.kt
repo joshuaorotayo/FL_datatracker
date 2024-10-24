@@ -26,7 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign.Companion.End
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
@@ -37,7 +37,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxLarge
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewTesting() {
     FL_DatatrackerTheme {
@@ -52,8 +52,8 @@ fun MembersPanel(modifier: Modifier, totalCount: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(185.dp)
-                .clip(RoundedCornerShape(small)), elevation = xxSmall
-//                .background(MaterialTheme.colors.surface)
+                .clip(RoundedCornerShape(small)),
+            elevation = if (isDarkMode()) Dimen.one else xxSmall
         ) {
             Column(
                 modifier = Modifier

@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
@@ -53,7 +52,7 @@ fun FormBase(
     }
 }
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun FormBasePreview() {
     FL_DatatrackerTheme {

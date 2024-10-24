@@ -37,12 +37,12 @@ import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
 
 @OptIn(ExperimentalMaterialApi::class)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormImageRowV3() {
     FL_DatatrackerTheme {

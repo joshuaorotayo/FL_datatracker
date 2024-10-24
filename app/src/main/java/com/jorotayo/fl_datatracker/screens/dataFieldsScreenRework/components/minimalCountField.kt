@@ -41,13 +41,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalCountField() {
     FL_DatatrackerTheme {

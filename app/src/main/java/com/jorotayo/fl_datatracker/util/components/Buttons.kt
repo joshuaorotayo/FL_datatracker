@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
@@ -66,7 +66,7 @@ fun CustomButton(buttonState: ButtonState) {
     }
 }
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 private fun PreviewButtons() {
     FL_DatatrackerTheme {

@@ -28,7 +28,6 @@ import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = false, name = "Night Mode")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = false, name = "Light Mode")
@@ -53,7 +52,7 @@ fun NoDataForm(
             .wrapContentHeight(),
         shape = RoundedCornerShape(small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) xxSmall else Dimen.zero
+        elevation = if (isDarkMode()) Dimen.one else Dimen.xxSmall
     ) {
         Column(
             modifier = Modifier

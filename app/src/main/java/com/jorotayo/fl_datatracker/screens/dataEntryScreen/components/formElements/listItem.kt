@@ -27,12 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.util.Dimen
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewListItem() {
     FL_DatatrackerTheme {

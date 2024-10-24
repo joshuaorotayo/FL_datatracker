@@ -53,7 +53,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formRadioRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formShortTextRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formTimeRowV2
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -70,7 +70,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewPopulatedDataEntryScreen() {
     FL_DatatrackerTheme {
@@ -84,7 +84,7 @@ fun PreviewPopulatedDataEntryScreen() {
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewEmptyDataEntryScreen() {
     FL_DatatrackerTheme {

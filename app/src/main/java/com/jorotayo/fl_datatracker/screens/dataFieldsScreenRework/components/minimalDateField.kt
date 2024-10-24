@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formattedDateString
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen.iconSize
@@ -46,7 +46,7 @@ import java.util.Calendar
 import java.util.Date
 
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalDateField() {
     FL_DatatrackerTheme {

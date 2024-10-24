@@ -30,7 +30,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
@@ -40,7 +40,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewMinimalShortTextField() {
     FL_DatatrackerTheme {

@@ -58,13 +58,13 @@ fun FL_DatatrackerTheme(
     @Composable()
         () -> Unit
 ) {
-    val useDevicedarkModeSettings = SharedSettingService.useDeviceDarkModeSettings.observeAsState()
+    val useDeviceDarkModeSettings = SharedSettingService.useDeviceDarkModeSettings.observeAsState()
 
     val darkMode = isDarkMode()
 
     AppCompatDelegate.setDefaultNightMode(
         when {
-            useDevicedarkModeSettings.value!! -> MODE_NIGHT_FOLLOW_SYSTEM
+            useDeviceDarkModeSettings.value!! -> MODE_NIGHT_FOLLOW_SYSTEM
             darkMode -> MODE_NIGHT_YES
             else -> MODE_NIGHT_NO
         }
@@ -78,7 +78,7 @@ fun FL_DatatrackerTheme(
 
     val systemUiController = rememberSystemUiController()
 
-    systemUiController.setNavigationBarColor(colors.surface)
+    systemUiController.setNavigationBarColor(colors.background)
     systemUiController.setStatusBarColor(colors.background)
 
     MaterialTheme(

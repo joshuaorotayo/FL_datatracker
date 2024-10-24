@@ -30,14 +30,14 @@ import androidx.compose.ui.unit.Dp
 import com.google.gson.Gson
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.deleteValueAtIndex
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.listItem
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormListRowV4() {
     FL_DatatrackerTheme {

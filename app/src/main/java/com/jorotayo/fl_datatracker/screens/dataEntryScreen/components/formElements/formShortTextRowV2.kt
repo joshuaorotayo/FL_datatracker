@@ -31,14 +31,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewFormShortTextRowV2() {
     val dataItem = DataRowState(

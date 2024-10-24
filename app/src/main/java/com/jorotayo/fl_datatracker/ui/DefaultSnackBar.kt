@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun SnackBarPreview() {
     FL_DatatrackerTheme {

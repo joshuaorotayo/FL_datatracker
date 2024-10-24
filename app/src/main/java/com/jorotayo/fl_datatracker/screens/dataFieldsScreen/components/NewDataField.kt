@@ -45,16 +45,16 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.components.ButtonState
 import com.jorotayo.fl_datatracker.util.components.ButtonType
@@ -62,7 +62,7 @@ import com.jorotayo.fl_datatracker.util.components.CustomButton
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import com.jorotayo.fl_datatracker.util.returnNewDataField
 
-@DefaultDualPreview
+@DefaultPreviews
 @Composable
 fun PreviewNewDataField() {
     FL_DatatrackerTheme {
@@ -103,7 +103,7 @@ fun NewDataField(
             .fillMaxWidth(),
         shape = RoundedCornerShape(small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) xxSmall else zero
+        elevation = if (isDarkMode()) one else xxSmall
     ) {
         Column(
             modifier = Modifier

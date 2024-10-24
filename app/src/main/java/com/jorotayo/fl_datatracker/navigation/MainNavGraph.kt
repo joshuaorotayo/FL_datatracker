@@ -11,7 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreenViewModel
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.DataFieldsReworkView
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenViewModel
 
@@ -57,24 +58,24 @@ fun MainNavGraph(
                 onDataEvent = dataEntryScreenViewModel::onDataEvent
             )
         }
-//        composable(
-//            route = MainScreens.DataFieldsMainScreens.route
-//        ) {
-//            val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
-//
-//            DataFieldsScreen(
-//                uiState = dataFieldsViewModel.uiState.value,
-//                onUiEvent = dataFieldsViewModel.eventFlow,
-//                onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
-//                onPresetEvent = dataFieldsViewModel::onPresetEvent,
-//                onRowEvent = dataFieldsViewModel::onRowEvent
-//            )
-//        }
         composable(
             route = MainScreens.DataFieldsMainScreens.route
         ) {
+            val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
 
-            DataFieldsReworkView()
+            DataFieldsScreen(
+                uiState = dataFieldsViewModel.uiState.value,
+                onUiEvent = dataFieldsViewModel.eventFlow,
+                onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
+                onPresetEvent = dataFieldsViewModel::onPresetEvent,
+                onRowEvent = dataFieldsViewModel::onRowEvent
+            )
         }
+        /*  composable(
+              route = MainScreens.DataFieldsMainScreens.route
+          ) {
+
+              DataFieldsReworkView()
+          }*/
     }
 }

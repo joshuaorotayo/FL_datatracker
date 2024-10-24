@@ -108,7 +108,7 @@ fun SettingsScreen(
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(small),
                         backgroundColor = colors.surface,
-                        elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
+                        elevation = if (isDarkMode()) Dimen.one else Dimen.xxSmall
                     ) {
                         Column {
                             SettingRow(

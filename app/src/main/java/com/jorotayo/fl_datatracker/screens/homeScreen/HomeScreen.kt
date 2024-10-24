@@ -55,7 +55,7 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchFilters
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
-import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -271,7 +271,7 @@ fun HomeScreen(
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-@DefaultDualPreview
+@DefaultPreviews
 fun HomeScreenPreview() {
     FL_DatatrackerTheme {
         HomeScreen(
@@ -279,7 +279,7 @@ fun HomeScreenPreview() {
             onHomeEvent = {},
             onDataEvent = {},
             state = HomeScreenState(
-                isSearchVisible = false,
+                isSearchVisible = true,
                 text = "",
                 hint = "",
                 isHintVisible = true,
