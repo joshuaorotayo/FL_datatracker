@@ -152,15 +152,15 @@ fun formImageRowV2(
             }
         }
 
-    /*    val launcher: ActivityResultLauncher<Intent> =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                if (result.getResultCode() === RESULT_OK) {
-                    val uri: Uri = result.getData()?.getData()!!
-                    // Use the uri to load the image
-                } else if (result.getResultCode() === ImagePicker.RESULT_ERROR) {
-                    // Use ImagePicker.Companion.getError(result.getData()) to show an error
-                }
-            }*/
+        /*    val launcher: ActivityResultLauncher<Intent> =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                    if (result.getResultCode() === RESULT_OK) {
+                        val uri: Uri = result.getData()?.getData()!!
+                        // Use the uri to load the image
+                    } else if (result.getResultCode() === ImagePicker.RESULT_ERROR) {
+                        // Use ImagePicker.Companion.getError(result.getData()) to show an error
+                    }
+                }*/
     }
 
     Spacer(

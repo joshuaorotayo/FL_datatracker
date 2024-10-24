@@ -56,7 +56,7 @@ import com.jorotayo.fl_datatracker.util.ofMaxLength
 @Preview(
     showBackground = true,
     uiMode = UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
+    name = "Dark Mode",
 )
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
@@ -65,7 +65,7 @@ fun PreviewBasicAddPresetDialog() {
         BasicAddPresetDialog(
             modifier = Modifier,
             addPreset = {},
-            toggleAddPresetDialog = {}
+            toggleAddPresetDialog = {},
         )
     }
 }
@@ -74,7 +74,7 @@ fun PreviewBasicAddPresetDialog() {
 fun BasicAddPresetDialog(
     modifier: Modifier,
     addPreset: (String) -> Unit,
-    toggleAddPresetDialog: () -> Unit
+    toggleAddPresetDialog: () -> Unit,
 ) {
     val (presetText, setText) = remember { mutableStateOf(TextFieldValue("")) }
     val maxChar = 30
@@ -83,94 +83,102 @@ fun BasicAddPresetDialog(
         if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
     Card(
-        modifier = modifier
+        modifier =
+        modifier
             .padding(xSmall)
             .defaultMinSize(minWidth = 280.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(medium),
-        elevation = xSmall
+        elevation = xSmall,
     ) {
         Column(
             modifier
                 .background(colors.surface)
                 .padding(regular),
-            horizontalAlignment = CenterHorizontally
+            horizontalAlignment = CenterHorizontally,
         ) {
             Row(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(bottom = small),
                 verticalAlignment = CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
             ) {
                 Icon(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .padding(end = xxSmall),
                     imageVector = Icons.Default.AddBox,
                     contentDescription = stringResource(id = Add_preset_dialog_icon),
-                    tint = colors.primary
+                    tint = colors.primary,
                 )
                 Text(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .wrapContentWidth(),
                     text = stringResource(addPresetHeader),
                     textAlign = TextAlign.Center,
                     style = typography.h5,
-                    color = headerColour
+                    color = headerColour,
                 )
             }
             TextField(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth(),
                 textStyle = typography.h6,
                 value = presetText,
                 maxLines = 1,
                 placeholder = {
                     Text(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .wrapContentHeight(),
                         text = stringResource(enterPresetPlaceholder),
                         style = typography.h6,
                         color = colors.onSurface,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 },
                 onValueChange = {
                     setText(it.ofMaxLength(maxLength = maxChar))
                 },
-                colors = textFieldColors(
+                colors =
+                textFieldColors(
                     backgroundColor = colors.surface,
                     focusedIndicatorColor = Transparent,
                     unfocusedIndicatorColor = Transparent,
                     disabledIndicatorColor = Transparent,
-                    textColor = colors.onSurface
-                )
+                    textColor = colors.onSurface,
+                ),
             )
             Text(
                 text = "${presetText.text.length} / $maxChar",
                 textAlign = TextAlign.End,
                 style = typography.caption,
                 color = colors.onSurface,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
-                    .background(Transparent)
+                    .background(Transparent),
             )
             Row(
                 Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
                 OutlinedButton(
                     border = BorderStroke(Dimen.one, colors.primary),
                     modifier = Modifier,
                     shape = RoundedCornerShape(small),
-                    onClick = toggleAddPresetDialog
+                    onClick = toggleAddPresetDialog,
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(cancelText),
-                        color = colors.onSurface
+                        color = colors.onSurface,
                     )
                 }
                 Button(
@@ -179,12 +187,12 @@ fun BasicAddPresetDialog(
                     onClick = {
                         Log.i("testoing", "BasicAddPresetDialog: addddd")
                         addPreset(presetText.text)
-                    }
+                    },
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(addPresetBtn),
-                        color = colors.onPrimary
+                        color = colors.onPrimary,
                     )
                 }
             }

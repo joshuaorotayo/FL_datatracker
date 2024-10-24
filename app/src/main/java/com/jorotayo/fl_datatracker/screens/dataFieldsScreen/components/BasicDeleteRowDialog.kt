@@ -120,7 +120,10 @@ fun BasicDeleteRowDialog(
                     Text(
                         modifier = Modifier
                             .wrapContentWidth(),
-                        text = String.format(stringResource(delete_datafield_header), dataField.fieldName),
+                        text = String.format(
+                            stringResource(delete_datafield_header),
+                            dataField.fieldName
+                        ),
                         textAlign = TextAlign.Center,
                         style = typography.h5,
                         color = colors.onBackground
