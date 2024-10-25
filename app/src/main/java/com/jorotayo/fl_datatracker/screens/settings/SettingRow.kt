@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.eightyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
@@ -25,6 +28,18 @@ import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@DefaultPreviews
+@Composable
+fun SettingRowPreview() {
+    FL_DatatrackerTheme {
+        SettingRow(
+            setting = SettingScreens.DisplaySettings,
+            onSettingSelected = { }
+        )
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -76,6 +91,6 @@ fun SettingDivider() {
             .padding(start = regular)
             .fillMaxWidth(),
         color = MaterialTheme.colors.secondary,
-        thickness = 0.5.dp
+        thickness = Dimen.fortyPercent.dp
     )
 }

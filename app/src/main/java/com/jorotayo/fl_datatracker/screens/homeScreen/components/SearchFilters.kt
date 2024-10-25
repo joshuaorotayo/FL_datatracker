@@ -39,7 +39,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 @DefaultPreviews
 @Composable
-fun PreviewSearchFilters() {
+private fun PreviewSearchFilters() {
     FL_DatatrackerTheme {
         SearchFilters()
     }
@@ -49,24 +49,27 @@ fun PreviewSearchFilters() {
 @Composable
 fun SearchFilters() {
     Card(
-        modifier = Modifier
-            .padding(horizontal = small, vertical = xxxSmall)
+        modifier =
+        Modifier
+            .padding(horizontal = xSmall, vertical = xxxSmall)
             .fillMaxWidth(),
         shape = RoundedCornerShape(small),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = if (isDarkMode()) one else xxSmall
+        elevation = if (isDarkMode()) one else xxSmall,
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(horizontal = xSmall, vertical = xxxSmall)
+                .padding(horizontal = xSmall, vertical = xxxSmall),
         ) {
             Row(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(top = xxSmall),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     modifier = Modifier.padding(start = xSmall, end = xxxSmall),
@@ -78,13 +81,14 @@ fun SearchFilters() {
                     text = "Enable and disable search filters",
                     style = MaterialTheme.typography.subtitle1,
                     color = MaterialTheme.colors.subtitleTextColour,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
                 )
             }
             FlowRow(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
-                    .padding(top = xxxSmall)
+                    .padding(top = xxxSmall),
             ) {
                 for (filter in filterList()) {
                     SearchFilter(filter = filter)
@@ -96,9 +100,7 @@ fun SearchFilters() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchFilter(
-    filter: Filters
-) {
+fun SearchFilter(filter: Filters) {
     val enabled = remember { mutableStateOf(false) }
 
     ElevatedFilterChip(
@@ -111,39 +113,41 @@ fun SearchFilter(
                 Icon(
                     imageVector = Icons.Default.Check,
                     tint = MaterialTheme.colors.onPrimary,
-                    contentDescription = "Checked filter for ${filter.filterName}"
+                    contentDescription = "Checked filter for ${filter.filterName}",
                 )
             }
         },
-        colors = FilterChipDefaults.filterChipColors(
+        colors =
+        FilterChipDefaults.filterChipColors(
             selectedContainerColor = MaterialTheme.colors.primary.copy(alpha = 0.9f),
             selectedLabelColor = Color.White,
             containerColor = MaterialTheme.colors.primary.copy(alpha = 0.25f),
             labelColor = MaterialTheme.colors.subtitleTextColour,
         ),
-        elevation = FilterChipDefaults.elevatedFilterChipElevation(
+        elevation =
+        FilterChipDefaults.elevatedFilterChipElevation(
             elevation = zero,
-            pressedElevation = xSmall
-        )
+            pressedElevation = xSmall,
+        ),
     )
 }
 
 fun filterList(): List<Filters> {
     val filterList = mutableListOf<Filters>()
     filterList.add(
-        Filters("Field Name")
+        Filters("Field Name"),
     )
     filterList.add(
-        Filters("Field Value")
+        Filters("Field Value"),
     )
     filterList.add(
-        Filters("Data value")
+        Filters("Data value"),
     )
     filterList.add(
-        Filters("Meeting Name")
+        Filters("Meeting Name"),
     )
     filterList.add(
-        Filters("DataFieldName")
+        Filters("DataFieldName"),
     )
     return filterList
 }

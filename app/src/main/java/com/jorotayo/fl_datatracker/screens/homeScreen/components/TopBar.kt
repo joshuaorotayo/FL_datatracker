@@ -32,7 +32,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @DefaultPreviews
 @Composable
-fun PreviewTopBar() {
+private fun PreviewTopBar() {
     FL_DatatrackerTheme {
         TopBar(
             toggleSearchBar = {},
@@ -41,50 +41,53 @@ fun PreviewTopBar() {
 }
 
 @Composable
-fun TopBar(
-    toggleSearchBar: () -> Unit,
-) {
+fun TopBar(toggleSearchBar: () -> Unit) {
     val isSearchExpanded by remember { mutableStateOf(false) }
     Column {
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(small),
             Arrangement.SpaceBetween,
-            Alignment.CenterVertically
+            Alignment.CenterVertically,
         ) {
             AnimatedVisibility(!isSearchExpanded) {
                 Text(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .wrapContentWidth()
                         .padding(end = large),
                     text = "FL DataTracker",
                     color = MaterialTheme.colors.primary,
                     style = typography.h1,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
                 )
             }
             androidx.compose.material.Surface(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(xSmall),
                 color = MaterialTheme.colors.surface,
-                elevation = if (isDarkMode()) one else xxSmall
+                elevation = if (isDarkMode()) one else xxSmall,
             ) {
                 Row(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .padding(start = xxSmall),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text = "Search", color = MaterialTheme.colors.onSurface)
                     SimpleIconButton(
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .size(xSmall + xxSmall),
                         icon = Icons.Default.Search,
                         tint = MaterialTheme.colors.primary,
                         contentDescription = "Search Icon to toggle Search Bar and search for Data",
-                        onClick = toggleSearchBar
+                        onClick = toggleSearchBar,
                     )
                 }
             }

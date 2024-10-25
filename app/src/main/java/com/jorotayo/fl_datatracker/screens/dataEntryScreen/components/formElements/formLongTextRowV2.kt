@@ -110,7 +110,8 @@ fun formLongTextRowV2(
             },
             maxLines = 4,
             placeholder = {
-                (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else "Please enter content for field: ${data.fieldName}")?.let {
+                (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else
+                    "Please enter content for field: ${data.fieldName}")?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colors.subtitleTextColour,

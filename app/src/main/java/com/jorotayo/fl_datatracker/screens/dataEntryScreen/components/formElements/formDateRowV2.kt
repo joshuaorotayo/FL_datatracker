@@ -170,7 +170,8 @@ fun formDateRowV2(
                     )
                     .fillMaxWidth(),
                 text = mDate.value.ifBlank { "DDnd Month, Year" },
-                color = if (mDate.value.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
+                color = if (mDate.value.isBlank())
+                    MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1
             )

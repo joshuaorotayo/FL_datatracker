@@ -35,23 +35,25 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @DefaultPreviews
 @Composable
-fun PreviewSearchBar() {
+private fun PreviewSearchBar() {
     FL_DatatrackerTheme {
         SearchBar(
             onHomeEvent = {},
-            searchState = HomeScreenState(
+            searchState =
+            HomeScreenState(
                 isHintVisible = true,
                 hint = "Search...",
                 text = "",
                 isSearchVisible = false,
                 dataList = listOf(),
-                deletedItem = Data(
+                deletedItem =
+                Data(
                     dataId = 0,
                     createdTime = "Yesterday",
                     lastEditedTime = "Today",
-                    name = "Simple Service Test"
-                )
-            )
+                    name = "Simple Service Test",
+                ),
+            ),
         )
     }
 }
@@ -59,10 +61,11 @@ fun PreviewSearchBar() {
 @Composable
 fun SearchBar(
     onHomeEvent: (HomeScreenEvent) -> Unit,
-    searchState: HomeScreenState
+    searchState: HomeScreenState,
 ) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .wrapContentHeight()
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -74,25 +77,28 @@ fun SearchBar(
             },
         ) {
             Icon(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .size(medium)
                     .padding(start = xxSmall)
                     .weight(1f),
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Close Search View",
-                tint = MaterialTheme.colors.primary
+                tint = MaterialTheme.colors.primary,
             )
         }
         Card(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .padding(xSmall)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(small),
             backgroundColor = MaterialTheme.colors.surface,
-            elevation = if (isDarkMode()) one else xxSmall
+            elevation = if (isDarkMode()) one else xxSmall,
         ) {
             TextField(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .clip(shape = RoundedCornerShape(xSmall)),
@@ -104,23 +110,23 @@ fun SearchBar(
                         modifier = Modifier,
                         text = searchState.hint,
                         style = typography.h3,
-                        color = MaterialTheme.colors.headingTextColour
+                        color = MaterialTheme.colors.headingTextColour,
                     )
                 },
                 onValueChange = {
                     onHomeEvent(HomeScreenEvent.SearchItemEntered(it))
                 },
-                colors = TextFieldDefaults.textFieldColors(
+                colors =
+                TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    textColor = Color.Black
+                    textColor = Color.Black,
                 ),
                 leadingIcon = {
-                }
+                },
             )
-
         }
     }
 }

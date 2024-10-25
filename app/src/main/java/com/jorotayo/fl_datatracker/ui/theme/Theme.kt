@@ -43,6 +43,7 @@ private val darkColours = darkColors(
 
 val Colors.highLightColours: Color
     get() = if (isLight) Color.White else md_theme_light_primary
+
 val Colors.headingTextColour: Color
     get() = if (isLight) md_theme_light_primary else md_theme_dark_primary
 

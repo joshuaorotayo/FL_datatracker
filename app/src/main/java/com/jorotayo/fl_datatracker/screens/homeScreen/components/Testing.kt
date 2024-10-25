@@ -69,11 +69,11 @@ fun MembersPanel(modifier: Modifier, totalCount: Int) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Content(Modifier.weight(3f), "Sheep")
+                    Content(Modifier.weight(xxxSmall.value), "Sheep")
                     Spacer(modifier = Modifier.weight(0.5f))
-                    Content(Modifier.weight(3f), "Deer")
+                    Content(Modifier.weight(xxxSmall.value), "Deer")
                     Spacer(modifier = Modifier.weight(0.5f))
-                    Content(Modifier.weight(3f), "Goat")
+                    Content(Modifier.weight(xxxSmall.value), "Goat")
                 }
 
                 Text(

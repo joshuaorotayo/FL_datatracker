@@ -136,7 +136,8 @@ fun formRadioRowV2(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(xSmall),
-                text = "No options provided for ${data.dataItem.fieldName}. Please edit the Data Field and provide values",
+                text = "No options provided for ${data.dataItem.fieldName}. " +
+                        "Please edit the Data Field and provide values",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.primary,
