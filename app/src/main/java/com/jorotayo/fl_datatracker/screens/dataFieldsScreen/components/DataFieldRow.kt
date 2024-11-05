@@ -48,6 +48,11 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.BOOLEAN
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.IMAGE
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LONG_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
@@ -66,7 +71,7 @@ fun PreviewDataFieldRow() {
     val currentDataField = DataField(
         dataFieldId = 0,
         fieldName = "",
-        dataFieldType = 0,
+        dataFieldType = SHORT_TEXT,
         presetId = 0,
         first = "1st Value",
         second = "2nd Value",
@@ -175,7 +180,7 @@ fun DataFieldRow(
                     ) {
                         Text(
                             modifier = Modifier,
-                            text = items[currentDataField.dataFieldType],
+                            text = items[currentDataField.dataFieldType.value],
                             color = textColour,
                             textAlign = TextAlign.Center
                         )
@@ -226,12 +231,12 @@ fun DataFieldRow(
                 }
             }
             AnimatedVisibility(
-                (currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && isHintVisible.value && !isEditOptionsVisible.value
+                (currentRowState.value.dataField.dataFieldType <= LONG_TEXT || currentRowState.value.dataField.dataFieldType >= IMAGE) && isHintVisible.value && !isEditOptionsVisible.value
             ) {
                 VisibleHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
             AnimatedVisibility(
-                visible = (currentRowState.value.dataField.dataFieldType <= 1 || currentRowState.value.dataField.dataFieldType >= 7) && !isHintVisible.value && isEditOptionsVisible.value
+                visible = (currentRowState.value.dataField.dataFieldType <= LONG_TEXT || currentRowState.value.dataField.dataFieldType >= IMAGE) && !isHintVisible.value && isEditOptionsVisible.value
             ) {
                 HiddenHintRow(
                     currentDataField,
@@ -244,20 +249,20 @@ fun DataFieldRow(
                 )
             }
             AnimatedVisibility(
-                currentRowState.value.dataField.dataFieldType == 2 && isHintVisible.value && !isEditOptionsVisible.value
+                currentRowState.value.dataField.dataFieldType == BOOLEAN && isHintVisible.value && !isEditOptionsVisible.value
             ) {
                 BooleanHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
             AnimatedVisibility(
-                currentRowState.value.dataField.dataFieldType == 6 && isHintVisible.value && !isEditOptionsVisible.value
+                currentRowState.value.dataField.dataFieldType == TRISTATE && isHintVisible.value && !isEditOptionsVisible.value
             ) {
                 TriStateHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == 2 && isEditOptionsVisible.value) {
+            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == BOOLEAN && isEditOptionsVisible.value) {
                 BooleanHintRow(firstText, currentRowState, onRowEvent, secondText)
             }
             AnimatedVisibility(
-                currentRowState.value.dataField.dataFieldType == 6 && isEditOptionsVisible.value && !isHintVisible.value
+                currentRowState.value.dataField.dataFieldType == TRISTATE && isEditOptionsVisible.value && !isHintVisible.value
             ) {
                 TriStateEditHintRow(currentRowState, onRowEvent, firstText, secondText, thirdText)
             }

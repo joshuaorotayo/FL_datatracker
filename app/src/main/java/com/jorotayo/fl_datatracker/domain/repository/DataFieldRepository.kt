@@ -4,6 +4,7 @@ import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.*
 import io.objectbox.Box
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.kotlin.toFlow
@@ -68,13 +69,13 @@ class DataFieldRepository @Inject constructor() {
             msg = "Data Field Name '${dataField.fieldName}' already in use, please enter a new name"
         }
 
-        if (dataField.dataFieldType == 2) {
+        if (dataField.dataFieldType == BOOLEAN) {
             if (dataField.first.isBlank() || dataField.second.isBlank()) {
                 isError = true
                 msg = "Please Enter values for both fields"
             }
         }
-        if (dataField.dataFieldType == 6) {
+        if (dataField.dataFieldType == TRISTATE) {
             if (dataField.first.isBlank() || dataField.second.isBlank() || dataField.third.isBlank()) {
                 isError = true
                 msg = "Please Enter a value for all 3 Fields"

@@ -47,7 +47,7 @@ class DataRepository {
             if (dr.dataItem.dataValue.isBlank()) {
                 dr.hasError = true
                 noErrors = false
-                when (dr.dataItem.dataFieldType) {
+                when (dr.dataItem.dataFieldType.value) {
                     0 -> {
                         dr.errorMsg = "Please enter a value for ${dr.dataItem.fieldName}. "
                     }

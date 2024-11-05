@@ -29,17 +29,17 @@ fun DataEntryFieldsPreview() {
     ) {
         val dataRowStateEx = DataRowState(
             DataItem(
-                0,
-                0,
-                0,
-                "Preview",
-                dataFieldType = DataFieldType.BOOLEAN.ordinal,
-                "",
-                "",
-                "",
-                true,
-                "",
-                "0",
+                dataItemId = 0,
+                dataId = 0,
+                presetId = 0,
+                fieldName = "Preview",
+                dataFieldType = DataFieldType.BOOLEAN,
+                first = "",
+                second = "",
+                third = "",
+                isEnabled = true,
+                fieldDescription = "",
+                dataValue = "0",
             )
         )
 

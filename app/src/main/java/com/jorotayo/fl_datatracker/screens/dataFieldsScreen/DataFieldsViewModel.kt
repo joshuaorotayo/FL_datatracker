@@ -15,6 +15,7 @@ import com.jorotayo.fl_datatracker.domain.model.InvalidPresetException
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.repository.DataFieldRepository
 import com.jorotayo.fl_datatracker.domain.repository.PresetRepository
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys.CURRENT_PRESET
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
@@ -243,7 +244,7 @@ class DataFieldsViewModel @Inject constructor(
     private fun onEditRowType(event: EditRowType) {
         dataField =
             uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
-        dataField.dataFieldType = event.value
+        dataField.dataFieldType = DataFieldType.getByValue(event.value)
     }
 
     private fun onEditIsEnabled(event: EditIsEnabled) {

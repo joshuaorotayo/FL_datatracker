@@ -43,6 +43,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.BOOLEAN
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LIST
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LONG_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowComponents.DataFieldTypeDropDownV2
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
@@ -154,13 +159,13 @@ fun DataFieldRowV2(
                         modifier = Modifier
                             .size(small + xxSmall)
                             .padding(end = xxSmall),
-                        imageVector = icons[currentDataField.dataFieldType],
+                        imageVector = icons[currentDataField.dataFieldType.value],
                         contentDescription = stringResource(R.string.dataField_type_dropdown),
                         tint = MaterialTheme.colors.primary
                     )
                     Text(
                         modifier = Modifier,
-                        text = items[currentDataField.dataFieldType],
+                        text = items[currentDataField.dataFieldType.value],
                         color = MaterialTheme.colors.subtitleTextColour,
                         style = MaterialTheme.typography.body1
                     )
@@ -241,7 +246,7 @@ fun SelectHintType(
     isEditOptionsVisible: MutableState<Boolean>
 ) {
     when (rowData.dataField.dataFieldType) {
-        DataFieldType.SHORT_TEXT.ordinal -> {
+        SHORT_TEXT -> {
             BasicVisibleHint(
                 rowData.dataField.fieldHint,
                 textColour,
@@ -250,7 +255,7 @@ fun SelectHintType(
             )
         }
 
-        DataFieldType.LONG_TEXT.ordinal -> {
+        LONG_TEXT -> {
             BasicVisibleHint(
                 rowData.dataField.fieldHint,
                 textColour,
@@ -259,7 +264,7 @@ fun SelectHintType(
             )
         }
 
-        DataFieldType.LIST.ordinal -> {
+        LIST -> {
             BasicVisibleHint(
                 rowData.dataField.fieldHint,
                 textColour,
@@ -268,12 +273,16 @@ fun SelectHintType(
             )
         }
 
-        DataFieldType.BOOLEAN.ordinal -> {
+        BOOLEAN -> {
             BooleanHintRow(rowData.dataField, isHintVisible, isEditOptionsVisible)
         }
 
-        DataFieldType.TRISTATE.ordinal -> {
+        TRISTATE -> {
             TriStateHintRow(rowData.dataField, isHintVisible, isEditOptionsVisible)
+        }
+
+        else -> {
+            //do nothing
         }
     }
 }
@@ -417,24 +426,28 @@ fun SelectEditType(
         modifier = Modifier.wrapContentHeight()
     ) {
         when (rowData.dataField.dataFieldType) {
-            DataFieldType.SHORT_TEXT.ordinal -> {
+            SHORT_TEXT -> {
                 BasicEditHint(rowData, onRowEvent)
             }
 
-            DataFieldType.LONG_TEXT.ordinal -> {
+            LONG_TEXT -> {
                 BasicEditHint(rowData, onRowEvent)
             }
 
-            DataFieldType.LIST.ordinal -> {
+            LIST -> {
                 BasicEditHint(rowData, onRowEvent)
             }
 
-            DataFieldType.BOOLEAN.ordinal -> {
+            BOOLEAN -> {
                 BooleanEditHint(rowData, onRowEvent)
             }
 
-            DataFieldType.TRISTATE.ordinal -> {
+            TRISTATE -> {
                 TriStateEditHint(rowData, onRowEvent)
+            }
+
+            else -> {
+
             }
         }
     }

@@ -40,6 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.BOOLEAN
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.COUNT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.DATE
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.IMAGE
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LIST
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LONG_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TIME
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormNameHeader
@@ -63,6 +72,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -178,7 +188,7 @@ fun DataEntryScreen(
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(small),
                     backgroundColor = colors.surface,
-                    elevation = if (isDarkMode()) Dimen.xxSmall else Dimen.zero
+                    elevation = if (isDarkMode()) Dimen.xxSmall else zero
                 ) {
                     LazyColumn(
                         state = listState,
@@ -202,7 +212,7 @@ fun DataEntryScreen(
                                 )
                                 Divider(
                                     modifier = Modifier
-                                        .padding(horizontal = xSmall, vertical = xSmall)
+                                        .padding(horizontal = xSmall, vertical = zero)
                                         .fillMaxWidth(),
                                     color = colors.secondary,
                                     thickness = 0.5.dp
@@ -212,7 +222,7 @@ fun DataEntryScreen(
 
                         itemsIndexed(items = uiState.dataRows) { index, data ->
                             when (data.dataItem.dataFieldType) {
-                                0 -> {
+                                SHORT_TEXT -> {
                                     data.dataItem.dataValue = formShortTextRowV2(
                                         data = data,
                                         setDataValue = {
@@ -226,7 +236,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                1 -> {
+                                LONG_TEXT -> {
                                     data.dataItem.dataValue = formLongTextRowV2(
                                         data = data.dataItem,
                                         setDataValue = {
@@ -240,7 +250,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                2 -> {
+                                BOOLEAN -> {
                                     data.dataItem.dataValue = formRadioRowV2(
                                         data = data,
                                         setDataValue = {
@@ -254,7 +264,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                3 -> {
+                                DATE -> {
                                     data.dataItem.dataValue = formDateRowV2(
                                         data = data,
                                         setDataValue = {
@@ -268,7 +278,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                4 -> {
+                                TIME -> {
                                     data.dataItem.dataValue = formTimeRowV2(
                                         data = data,
                                         setDataValue = {
@@ -282,7 +292,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                5 -> {
+                                COUNT -> {
                                     data.dataItem.dataValue = formCountRowV2(
                                         data = data,
                                         setDataValue = {
@@ -296,7 +306,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                6 -> {
+                                TRISTATE -> {
                                     data.dataItem.dataValue = formRadioRowV2(
                                         data = data,
                                         setDataValue = {
@@ -310,7 +320,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                7 -> {
+                                IMAGE -> {
                                     data.dataItem.dataValue = formImageRowV4(
                                         data = data,
                                         onClick = {
@@ -324,7 +334,7 @@ fun DataEntryScreen(
                                     )
                                 }
 
-                                8 -> {
+                                LIST -> {
                                     data.dataItem.dataValue = formListRowV4(
                                         data = data,
                                         setDataValue = {

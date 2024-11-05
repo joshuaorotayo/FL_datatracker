@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.NewDataFieldState
 import com.jorotayo.fl_datatracker.ui.theme.md_theme_light_primary
 import java.text.SimpleDateFormat
@@ -54,7 +55,7 @@ fun returnNewDataField(newDataFieldState: NewDataFieldState): DataField {
         dataFieldId = newDataFieldState.dataFieldId,
         presetId = newDataFieldState.presetId,
         fieldName = newDataFieldState.fieldName,
-        dataFieldType = newDataFieldState.fieldType,
+        dataFieldType = DataFieldType.getByValue(newDataFieldState.fieldType),
         first = newDataFieldState.firstValue,
         second = newDataFieldState.secondValue,
         third = newDataFieldState.thirdValue,

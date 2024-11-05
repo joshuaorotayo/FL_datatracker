@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Column
@@ -31,13 +30,13 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R.string.delete_datafield_header
 import com.jorotayo.fl_datatracker.R.string.delete_row_body
 import com.jorotayo.fl_datatracker.R.string.row_delete_dialog_icon
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.regular
@@ -45,15 +44,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 fun PreviewBasicDeleteRowDialog() {
     FL_DatatrackerTheme {
@@ -65,7 +56,7 @@ fun PreviewBasicDeleteRowDialog() {
             dataField = DataField(
                 dataFieldId = 0,
                 fieldName = "Test Field",
-                dataFieldType = DataFieldType.SHORT_TEXT.ordinal,
+                dataFieldType = DataFieldType.SHORT_TEXT,
                 presetId = 0,
                 first = "",
                 second = "",

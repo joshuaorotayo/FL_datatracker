@@ -37,6 +37,7 @@ import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 
 @DefaultPreviews
 @Composable
@@ -72,7 +73,7 @@ fun FormNameHeader(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = xSmall, top = xSmall, end = xSmall, bottom = xSmall)
+            .padding(start = xxSmall, top = xSmall, end = xxSmall, bottom = zero)
     ) {
         AnimatedVisibility(visible = data.nameError || (data.dataName.isBlank() && data.formSubmitted)) {
             Row(

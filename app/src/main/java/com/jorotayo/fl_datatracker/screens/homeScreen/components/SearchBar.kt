@@ -25,7 +25,6 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.headingTextColour
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
@@ -66,8 +65,9 @@ fun SearchBar(
     Row(
         modifier =
         Modifier
+            .fillMaxWidth()
             .wrapContentHeight()
-            .fillMaxWidth(),
+            .padding(top = xSmall),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
@@ -80,7 +80,7 @@ fun SearchBar(
                 modifier =
                 Modifier
                     .size(medium)
-                    .padding(start = xxSmall)
+                    .padding(start = small)
                     .weight(1f),
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Close Search View",
@@ -110,7 +110,7 @@ fun SearchBar(
                         modifier = Modifier,
                         text = searchState.hint,
                         style = typography.h3,
-                        color = MaterialTheme.colors.headingTextColour,
+                        color = MaterialTheme.colors.onSurface,
                     )
                 },
                 onValueChange = {
@@ -122,7 +122,7 @@ fun SearchBar(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    textColor = Color.Black,
+                    textColor = MaterialTheme.colors.onSurface,
                 ),
                 leadingIcon = {
                 },

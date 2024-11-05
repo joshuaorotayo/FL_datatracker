@@ -3,6 +3,15 @@ package com.jorotayo.fl_datatracker.util
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.Preset
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.BOOLEAN
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.COUNT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.DATE
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.IMAGE
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LIST
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LONG_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TIME
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
@@ -10,7 +19,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowS
 val exampleShortField = DataField(
     dataFieldId = 0,
     fieldName = "Short Field",
-    dataFieldType = 0,
+    dataFieldType = SHORT_TEXT,
     presetId = 0,
     first = "0",
     second = "2",
@@ -22,7 +31,7 @@ val exampleShortField = DataField(
 val exampleLongField = DataField(
     dataFieldId = 1,
     fieldName = "Long Field",
-    dataFieldType = 1,
+    dataFieldType = LONG_TEXT,
     presetId = 0,
     first = "0",
     second = "2",
@@ -33,8 +42,8 @@ val exampleLongField = DataField(
 
 val exampleBooleanField = DataField(
     dataFieldId = 2,
-    fieldName = "Long Field",
-    dataFieldType = 2,
+    fieldName = "Boolean Field",
+    dataFieldType = BOOLEAN,
     presetId = 0,
     first = "0",
     second = "2",
@@ -46,7 +55,7 @@ val exampleBooleanField = DataField(
 val exampleDateField = DataField(
     dataFieldId = 3,
     fieldName = "Date Field",
-    dataFieldType = 3,
+    dataFieldType = DATE,
     presetId = 0,
     first = "0",
     second = "2",
@@ -58,7 +67,7 @@ val exampleDateField = DataField(
 val exampleTimeField = DataField(
     dataFieldId = 4,
     fieldName = "Time Field",
-    dataFieldType = 4,
+    dataFieldType = TIME,
     presetId = 0,
     first = "0",
     second = "2",
@@ -70,7 +79,7 @@ val exampleTimeField = DataField(
 val exampleCountField = DataField(
     dataFieldId = 5,
     fieldName = "Count Field",
-    dataFieldType = 5,
+    dataFieldType = COUNT,
     presetId = 0,
     first = "0",
     second = "2",
@@ -82,7 +91,7 @@ val exampleCountField = DataField(
 val exampleTristateField = DataField(
     dataFieldId = 6,
     fieldName = "Tristate Field",
-    dataFieldType = 6,
+    dataFieldType = TRISTATE,
     presetId = 0,
     first = "0",
     second = "2",
@@ -91,22 +100,10 @@ val exampleTristateField = DataField(
     fieldHint = ""
 )
 
-private val dataField = DataField(
+private val exampleImageField = DataField(
     dataFieldId = 7,
     fieldName = "Image Field",
-    dataFieldType = 7,
-    presetId = 0,
-    first = "0",
-    second = "2",
-    third = "4",
-    isEnabled = true,
-    fieldHint = ""
-)
-
-val exampleImageField = DataField(
-    dataFieldId = 7,
-    fieldName = "Image Field",
-    dataFieldType = 7,
+    dataFieldType = IMAGE,
     presetId = 0,
     first = "0",
     second = "2",
@@ -118,7 +115,7 @@ val exampleImageField = DataField(
 val exampleListField = DataField(
     dataFieldId = 8,
     fieldName = "List Field",
-    dataFieldType = 8,
+    dataFieldType = LIST,
     presetId = 0,
     first = "0",
     second = "2",
@@ -150,7 +147,7 @@ val shortData: DataRowState = DataRowState(
         dataId = 0,
         presetId = 0,
         fieldName = "Short",
-        dataFieldType = 0,
+        dataFieldType = SHORT_TEXT,
         first = "",
         second = "",
         third = "",
@@ -166,7 +163,7 @@ val LongData: DataRowState = DataRowState(
         dataId = 1,
         presetId = 0,
         fieldName = "Long Data",
-        dataFieldType = 1,
+        dataFieldType = LONG_TEXT,
         first = "",
         second = "",
         third = "",
@@ -182,7 +179,7 @@ val two_options: DataRowState = DataRowState(
         dataId = 2,
         presetId = 0,
         fieldName = "Two Options",
-        dataFieldType = 2,
+        dataFieldType = BOOLEAN,
         first = "Yes",
         second = "No",
         third = "",
@@ -198,7 +195,7 @@ val date: DataRowState = DataRowState(
         dataId = 3,
         presetId = 0,
         fieldName = "Date",
-        dataFieldType = 3,
+        dataFieldType = DATE,
         first = "",
         second = "",
         third = "",
@@ -214,7 +211,7 @@ val timeData: DataRowState = DataRowState(
         dataId = 4,
         presetId = 0,
         fieldName = "Time",
-        dataFieldType = 4,
+        dataFieldType = TIME,
         first = "",
         second = "",
         third = "",
@@ -230,7 +227,7 @@ val count: DataRowState = DataRowState(
         dataId = 5,
         presetId = 0,
         fieldName = "Count",
-        dataFieldType = 5,
+        dataFieldType = COUNT,
         first = "",
         second = "",
         third = "",
@@ -246,7 +243,7 @@ val three_options: DataRowState = DataRowState(
         dataId = 6,
         presetId = 0,
         fieldName = "Three",
-        dataFieldType = 6,
+        dataFieldType = TRISTATE,
         first = "1",
         second = "2",
         third = "3",
@@ -262,7 +259,7 @@ val imageData: DataRowState = DataRowState(
         dataId = 7,
         presetId = 0,
         fieldName = "Deanne",
-        dataFieldType = 7,
+        dataFieldType = IMAGE,
         first = "",
         second = "",
         third = "",
@@ -278,7 +275,7 @@ val listData: DataRowState = DataRowState(
         dataId = 8,
         presetId = 0,
         fieldName = "List",
-        dataFieldType = 8,
+        dataFieldType = LIST,
         first = "",
         second = "",
         third = "",
