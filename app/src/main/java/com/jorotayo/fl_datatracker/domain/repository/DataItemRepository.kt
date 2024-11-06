@@ -1,40 +1,24 @@
 package com.jorotayo.fl_datatracker.domain.repository
 
-import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataItem
-import com.jorotayo.fl_datatracker.domain.model.DataItem_
-import io.objectbox.Box
-import javax.inject.Inject
 
-class DataItemRepository @Inject constructor() {
-    private val dataItemBox: Box<DataItem> = ObjectBox.boxStore().boxFor(DataItem::class.java)
+interface DataItemRepository {
 
-    fun getDataItemList(): List<DataItem> =
-        dataItemBox.all
+    fun addDataItem(dataItem: DataItem): Long
 
-    fun getDataItemListByDataAndPresetId(dataId: Long, presetId: Long): List<DataItem> =
-        dataItemBox.query(
-            DataItem_.dataId.equal(dataId).and(DataItem_.presetId.equal(presetId))
-        ).build().find()
+    fun removeDataItem(dataItem: DataItem): Boolean
 
-    fun getDataItemById(dataItemId: Long): DataItem =
-        dataItemBox.get(dataItemId)
+    fun updateDataItem(dataItem: DataItem): Long
 
-    fun getDataItemsListByDataId(dataId: Long): List<DataItem> =
-        dataItemBox.query(DataItem_.dataId.equal(dataId)).build().find()
+    fun getDataItemList(): List<DataItem>
 
-    fun getDataItemsByPresetId(dataPresetId: Long): List<DataItem> =
-        dataItemBox.query(DataItem_.presetId.equal(dataPresetId)).build().find()
+    fun getDataItemListByDataAndPresetId(dataId: Long, presetId: Long): List<DataItem>
 
-    fun getDataItemsEnabledByPresetId(dataPresetId: Long): List<DataItem> =
-        dataItemBox.query(DataItem_.presetId.equal(dataPresetId)).build().find()
+    fun getDataItemById(dataItemId: Long): DataItem
 
-    fun addDataItem(dataItem: DataItem) =
-        dataItemBox.put(dataItem)
+    fun getDataItemsListByDataId(dataId: Long): List<DataItem>
 
-    fun removeDataItem(dataItem: DataItem) =
-        dataItemBox.remove(dataItem)
+    fun getDataItemsByPresetId(dataPresetId: Long): List<DataItem>
 
-    fun updateDataItem(dataItem: DataItem) =
-        dataItemBox.put(dataItem)
+    fun getDataItemsEnabledByPresetId(dataPresetId: Long): List<DataItem>
 }

@@ -13,8 +13,7 @@ import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
 import com.jorotayo.fl_datatracker.domain.model.InvalidPresetException
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.domain.repository.DataFieldRepository
-import com.jorotayo.fl_datatracker.domain.repository.PresetRepository
+import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys.CURRENT_PRESET
@@ -56,20 +55,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DataFieldsViewModel @Inject constructor(
-    private val dataFieldRepo: DataFieldRepository,
-    private val presetRepo: PresetRepository,
+    private val repository: AppRepository,
     private val userPreferenceStore: UserPreferenceStore
 ) : ViewModel() {
 
     private val currentPresetName: MutableState<String> =
         mutableStateOf(userPreferenceStore.getString(CURRENT_PRESET) ?: "Default")
-    private var currentPreset = presetRepo.getPresetByPresetName(currentPresetName.value)
+    private var currentPreset = repository.getPresetByPresetName(currentPresetName.value)
 
     private var _uiState = mutableStateOf(
         DataFieldScreenState(
-            presetList = presetRepo.getPresetList(),
+            presetList = repository.getPresetList(),
             currentPreset = currentPreset,
-            dataFields = dataFieldRepo.getDataFieldsByPresetId(currentPreset.presetId),
+            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
         )
     )
     val uiState: MutableState<DataFieldScreenState> = _uiState
@@ -97,9 +95,9 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun onInitScreen() {
-        val presetList = presetRepo.getPresetList()
+        val presetList = repository.getPresetList()
         if (presetList.isEmpty()) {
-            presetRepo.addPreset(
+            repository.addPreset(
                 Preset(
                     presetId = 0,
                     presetName = "Default"
@@ -111,13 +109,13 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun onDeleteDataField(event: DeleteDataField) {
-        dataFieldRepo.deleteDataField(event.value)
+        repository.deleteDataField(event.value)
         updateDataFields()
     }
 
     private fun onRestoreDataField() {
         if (uiState.value.deletedDataField != null) {
-            dataFieldRepo.addDataField(uiState.value.deletedDataField!!)
+            repository.addDataField(uiState.value.deletedDataField!!)
             updateDataFields()
         }
     }
@@ -125,7 +123,7 @@ class DataFieldsViewModel @Inject constructor(
     private fun onSaveDataField(event: SaveDataField) {
         viewModelScope.launch {
             try {
-                dataFieldRepo.addDataField(event.value)
+                repository.addDataField(event.value)
                 _eventFlow.emit(SaveDataField("Data Field Saved: ${event.value.fieldName}"))
                 _uiState.value = uiState.value.copy(
                     isAddDataFieldVisible = !uiState.value.isAddDataFieldVisible
@@ -151,7 +149,7 @@ class DataFieldsViewModel @Inject constructor(
                 onDismissRequest = { onDismissAlertDialog() },
                 confirmButtonLabel = "Delete",
                 confirmButtonOnClick = {
-                    dataFieldRepo.deleteDataField(_uiState.value.currentDataField!!)
+                    repository.deleteDataField(_uiState.value.currentDataField!!)
                     updateDataFields()
                     onDismissAlertDialog()
                 },
@@ -194,13 +192,13 @@ class DataFieldsViewModel @Inject constructor(
 
     private fun updateDataFields() {
         _uiState.value = uiState.value.copy(
-            dataFields = dataFieldRepo.getDataFieldsByPresetId(currentPreset.presetId)
+            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
         )
     }
 
     private fun updatePresetList() {
         _uiState.value = uiState.value.copy(
-            presetList = presetRepo.getPresetList()
+            presetList = repository.getPresetList()
         )
     }
 
@@ -217,9 +215,9 @@ class DataFieldsViewModel @Inject constructor(
         }
         ObjectBox.boxStore().boxFor(DataField::class.java).put(dataField)
 
-        dataFieldRepo.updateDataField(dataField)
+        repository.updateDataField(dataField)
         _uiState.value = uiState.value.copy(
-            dataFields = dataFieldRepo.getDataFieldsByPresetId(currentPreset.presetId)
+            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
         )
     }
 
@@ -351,16 +349,16 @@ class DataFieldsViewModel @Inject constructor(
                 )
             } else {
                 try {
-                    presetRepo.addPreset(newPreset)
-                    val presets = presetRepo.getPresetList()
-                    val currentPreset = presetRepo.getPresetByPresetName(newPreset.presetName)
+                    repository.addPreset(newPreset)
+                    val presets = repository.getPresetList()
+                    val currentPreset = repository.getPresetByPresetName(newPreset.presetName)
                     _uiState.value = uiState.value.copy(
                         alertDialogState = null,
                         isPresetDropDownMenuExpanded = false,
                         isAddDataFieldVisible = false,
                         presetList = presets,
                         currentPreset = newPreset,
-                        dataFields = dataFieldRepo.getDataFieldsByPresetId(currentPreset.presetId),
+                        dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
                     )
                     userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
                     _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
@@ -398,16 +396,16 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun onChangePreset(event: ChangePreset) {
-        val newPreset = presetRepo.getPresetByPresetName(event.value)
+        val newPreset = repository.getPresetByPresetName(event.value)
 
         userPreferenceStore.setString(Pair(CURRENT_PRESET, event.value))
 
         currentPreset = newPreset
         _uiState.value = uiState.value.copy(
-            dataFields = dataFieldRepo.getDataFieldsByPresetId(newPreset.presetId),
+            dataFields = repository.getDataFieldsByPresetId(newPreset.presetId),
             isPresetDropDownMenuExpanded = false,
             isAddDataFieldVisible = false,
-            presetList = presetRepo.getPresetList(),
+            presetList = repository.getPresetList(),
             currentPreset = newPreset,
             alertDialogState = null
         )
@@ -418,17 +416,17 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun deletePresetActions(preset: Preset) {
-        val removeDataFields = dataFieldRepo.getDataFieldsByPresetId(preset.presetId)
+        val removeDataFields = repository.getDataFieldsByPresetId(preset.presetId)
 
-        dataFieldRepo.deleteDataFields(removeDataFields)
+        repository.deleteDataFields(removeDataFields)
 
-        presetRepo.deletePreset(preset)
+        repository.deletePreset(preset)
 
-        val newPreset = presetRepo.getPresetByPresetName("Default")
+        val newPreset = repository.getPresetByPresetName("Default")
         currentPreset = newPreset
         _uiState.value = uiState.value.copy(
-            dataFields = dataFieldRepo.getDataFieldsByPresetId(newPreset.presetId),
-            presetList = presetRepo.getPresetList(),
+            dataFields = repository.getDataFieldsByPresetId(newPreset.presetId),
+            presetList = repository.getPresetList(),
             currentPreset = newPreset,
             isAddDataFieldVisible = false,
             isPresetDropDownMenuExpanded = false,

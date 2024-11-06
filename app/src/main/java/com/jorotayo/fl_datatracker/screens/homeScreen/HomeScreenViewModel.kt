@@ -9,8 +9,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModel
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.TestRowItem
-import com.jorotayo.fl_datatracker.domain.repository.DataItemRepository
-import com.jorotayo.fl_datatracker.domain.repository.DataRepository
+import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
@@ -21,10 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
+    private val repository: AppRepository
 ) : ViewModel() {
-    private val dataRepo = DataRepository()
-    private val dataItemRepo = DataItemRepository()
-
     sealed class UiEvent {
         object DeleteDataItem : UiEvent()
     }
@@ -116,18 +113,18 @@ class HomeScreenViewModel @Inject constructor(
 
         // refresh the data list
         val data = uiState.value.deletedItem
-        val removeDataItems = dataItemRepo.getDataItemListByDataAndPresetId(
+        val removeDataItems = repository.getDataItemListByDataAndPresetId(
             data.dataId,
             data.dataPresetId
         )
         for (item in removeDataItems) {
-            dataItemRepo.removeDataItem(item)
+            repository.removeDataItem(item)
         }
 
-        dataRepo.deleteData(data)
+        repository.deleteData(data)
 
         _uiState.value = uiState.value.copy(
-            dataList = dataRepo.getData()
+            dataList = repository.getData()
         )
     }
 

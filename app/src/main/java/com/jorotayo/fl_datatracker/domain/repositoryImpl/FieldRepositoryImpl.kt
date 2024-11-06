@@ -1,63 +1,67 @@
-package com.jorotayo.fl_datatracker.domain.repository
+package com.jorotayo.fl_datatracker.domain.repositoryImpl
 
 import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataField_
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataFieldException
-import com.jorotayo.fl_datatracker.domain.util.DataFieldType.*
+import com.jorotayo.fl_datatracker.domain.repository.FieldRepository
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.BOOLEAN
+import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import io.objectbox.Box
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.kotlin.toFlow
 import io.objectbox.query.Query
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import javax.inject.Inject
 
-class DataFieldRepository @Inject constructor() {
+class FieldRepositoryImpl @Inject constructor() : FieldRepository {
     private val dataFieldBox: Box<DataField> = ObjectBox.boxStore().boxFor(DataField::class.java)
     private val dataFieldQuery: Query<DataField> =
         dataFieldBox.query(DataField_.isEnabled.equal(true)).build()
 
-    fun getSubscribedDataFields(): Flow<MutableList<DataField>> =
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getSubscribedDataFields(): Flow<MutableList<DataField>> =
         dataFieldQuery.subscribe().on(AndroidScheduler.mainThread()).toFlow()
 
-    fun getDataFieldsFlow(): Flow<DataField> =
+    override fun getDataFieldsFlow(): Flow<DataField> =
         dataFieldBox.all.asFlow()
 
-    fun getDataFields(): List<DataField> =
+    override fun getDataFields(): List<DataField> =
         dataFieldBox.all
 
-    fun getDataFieldById(dataFieldId: Long): DataField =
+    override fun getDataFieldById(dataFieldId: Long): DataField =
         dataFieldBox.get(dataFieldId)
 
-    fun getDataFieldsByPresetId(presetId: Long): List<DataField> =
+    override fun getDataFieldsByPresetId(presetId: Long): List<DataField> =
         dataFieldBox.query(DataField_.presetId.equal(presetId)).build().find()
 
-    fun getDataFieldsByPresetIdEnabled(presetId: Long): List<DataField> =
+    override fun getDataFieldsByPresetIdEnabled(presetId: Long): List<DataField> =
         dataFieldBox.query(
             DataField_.isEnabled.equal(true).and(DataField_.presetId.equal(presetId))
         ).build().find()
 
-    fun getDataFieldsByEnabled(): List<DataField> =
+    override fun getDataFieldsByEnabled(): List<DataField> =
         dataFieldBox.query(DataField_.isEnabled.equal(true)).build().find()
 
-    fun getDataFieldNames(): List<String> =
+    override fun getDataFieldNames(): List<String> =
         dataFieldBox.query().build().property(DataField_.fieldName).findStrings().asList()
 
-    fun insertDataField(dataField: DataField): Long =
+    override fun insertDataField(dataField: DataField): Long =
         dataFieldBox.put(dataField)
 
-    fun deleteDataField(dataField: DataField) =
+    override fun deleteDataField(dataField: DataField) =
         dataFieldBox.remove(dataField)
 
-    fun deleteDataFields(dataFields: List<DataField>) =
+    override fun deleteDataFields(dataFields: List<DataField>) =
         dataFieldBox.remove(dataFields)
 
-    fun updateDataField(dataField: DataField) =
+    override fun updateDataField(dataField: DataField) =
         dataFieldBox.put(dataField)
 
     @Throws(InvalidDataFieldException::class)
-    fun addDataField(dataField: DataField) {
+    override fun addDataField(dataField: DataField) {
         var isError = false
         var msg = ""
 

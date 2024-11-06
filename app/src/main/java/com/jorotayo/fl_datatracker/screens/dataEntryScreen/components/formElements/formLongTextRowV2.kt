@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -30,6 +31,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @Preview(
@@ -122,12 +124,13 @@ fun formLongTextRowV2(
         )
         // Max Chars count
         Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = xxxSmall),
             text = "${text.text.length} / $maxChar",
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.caption,
-            color = MaterialTheme.colors.subtitleTextColour,
-            modifier = Modifier
-                .fillMaxWidth()
+            color = Color.Gray
         )
     }
 

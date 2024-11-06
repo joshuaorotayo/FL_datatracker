@@ -12,10 +12,7 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.domain.model.InvalidDataException
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.domain.repository.DataFieldRepository
-import com.jorotayo.fl_datatracker.domain.repository.DataItemRepository
-import com.jorotayo.fl_datatracker.domain.repository.DataRepository
-import com.jorotayo.fl_datatracker.domain.repository.PresetRepository
+import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
@@ -32,17 +29,13 @@ import javax.inject.Inject
 class DataEntryScreenViewModel @Inject constructor(
     userPreferenceStore: UserPreferenceStore,
     savedStateHandle: SavedStateHandle,
+    private val repository: AppRepository
 ) : ViewModel() {
-
-    private val dataFieldRepo = DataFieldRepository()
-    private val dataRepo = DataRepository()
-    private val dataItemRepo = DataItemRepository()
-    private val presetRepo = PresetRepository()
 
     private val settingPreset =
         userPreferenceStore.getString(SettingsKeys.CURRENT_PRESET) ?: "Default"
     private val presetSetting =
-        presetRepo.getPresetByPresetName(settingPreset)
+        repository.getPresetByPresetName(settingPreset)
 
     private val dataId = savedStateHandle.get<Int>("dataId") ?: -1
 
@@ -67,9 +60,9 @@ class DataEntryScreenViewModel @Inject constructor(
     private fun onValidateInsertDataForm(event: DataEvent.ValidateInsertDataForm) {
         viewModelScope.launch {
             try {
-                val fieldNames = dataFieldRepo.getDataFields().map { it.fieldName }
+                val fieldNames = repository.getDataFields().map { it.fieldName }
                 val dataFormResults =
-                    dataRepo.validateInsertDataForm(
+                    repository.validateInsertDataForm(
                         fieldNames = fieldNames,
                         dataForm = event.dataEntryScreenState
                     )
@@ -157,22 +150,22 @@ class DataEntryScreenViewModel @Inject constructor(
             lastEditedTime = dateInString
         )
         saveDataItems(
-            dataId = dataRepo.addData(newData),
+            dataId = repository.addData(newData),
             formData = dataForm
         )
     }
 
     private fun updateDataForm(dataForm: DataEntryScreenState) {
-        val currentData = dataRepo.getDataByDataId(uiState.value.currentDataId)
+        val currentData = repository.getDataByDataId(uiState.value.currentDataId)
 
-        dataRepo.deleteDataById(uiState.value.currentDataId)
+        repository.deleteDataById(uiState.value.currentDataId)
 
-        val removeDataItems = dataItemRepo.getDataItemListByDataAndPresetId(
+        val removeDataItems = repository.getDataItemListByDataAndPresetId(
             currentData.dataId,
             currentData.dataPresetId
         )
         for (item in removeDataItems) {
-            dataItemRepo.removeDataItem(item)
+            repository.removeDataItem(item)
         }
 
         Log.i(TAG, "updateDataForm: ${currentData.dataId}")
@@ -185,7 +178,7 @@ class DataEntryScreenViewModel @Inject constructor(
             lastEditedTime = getCurrentDateTime().toString("HH:mm - dd/MM/yyyy ")
         )
         saveDataItems(
-            dataId = dataRepo.addData(newData),
+            dataId = repository.addData(newData),
             formData = dataForm
         )
     }
@@ -208,7 +201,7 @@ class DataEntryScreenViewModel @Inject constructor(
                 fieldDescription = item.dataItem.fieldDescription,
                 dataValue = item.dataItem.dataValue,
             )
-            dataItemRepo.addDataItem(newDataItem)
+            repository.addDataItem(newDataItem)
         }
     }
 
@@ -219,7 +212,7 @@ class DataEntryScreenViewModel @Inject constructor(
             // check for the current preset
 
             val datafields =
-                dataFieldRepo.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)
+                repository.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)
 
             val list: MutableList<DataRowState> = ArrayList()
             datafields.forEach { dataField ->
@@ -249,8 +242,8 @@ class DataEntryScreenViewModel @Inject constructor(
                 presetSetting = presetSetting
             )
         } else {
-            val currentData = dataRepo.getDataByDataId(longID)
-            val currentDataItems = dataItemRepo.getDataItemsListByDataId(
+            val currentData = repository.getDataByDataId(longID)
+            val currentDataItems = repository.getDataItemsListByDataId(
                 currentData.dataId
             )
 

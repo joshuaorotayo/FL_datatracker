@@ -1,7 +1,7 @@
 package com.jorotayo.fl_datatracker.screens.drafting.pageTemplate
 
 import androidx.lifecycle.ViewModel
-import com.jorotayo.fl_datatracker.domain.repository.DataFieldRepository
+import com.jorotayo.fl_datatracker.domain.repository.FieldRepository
 import com.jorotayo.fl_datatracker.util.SharedSettingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TemplateViewModel @Inject constructor(
-    private val dataFieldRepo: DataFieldRepository,
+    private val dataFieldRepo: FieldRepository,
     private val sharedSettingService: SharedSettingService
 ) : ViewModel(), TemplateInterface {
     private val _state = MutableStateFlow(TemplateState())

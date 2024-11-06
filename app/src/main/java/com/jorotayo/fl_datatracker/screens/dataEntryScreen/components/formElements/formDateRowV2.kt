@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.app.DatePickerDialog
-import android.content.res.Configuration
 import android.widget.DatePicker
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -27,9 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
@@ -37,16 +37,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 import java.util.Calendar
 import java.util.Date
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 fun PreviewFormDateRowV2() {
     FL_DatatrackerTheme {
@@ -146,7 +137,7 @@ fun formDateRowV2(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
@@ -168,7 +159,7 @@ fun formDateRowV2(
                             mDatePickerDialog.show()
                         }
                     )
-                    .fillMaxWidth(),
+                    .wrapContentWidth(),
                 text = mDate.value.ifBlank { "DDnd Month, Year" },
                 color = if (mDate.value.isBlank())
                     MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,

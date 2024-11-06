@@ -31,6 +31,8 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import java.util.Calendar
 
@@ -137,7 +139,7 @@ fun formTimeRowV2(
                     modifier = Modifier,
                     imageVector = Icons.Default.Timer,
                     contentDescription = "Select Time from Clock",
-                    tint = textColour
+                    tint = MaterialTheme.colors.primary
                 )
             }
             Text(
@@ -149,7 +151,8 @@ fun formTimeRowV2(
                     )
                     .wrapContentWidth(),
                 text = mTime.value.ifBlank { "HH:MM" },
-                color = if (mTime.value.isBlank()) textColour else MaterialTheme.colors.onSurface,
+                color = if (mTime.value.isBlank())
+                    MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1
             )

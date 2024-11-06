@@ -1,57 +1,20 @@
 package com.jorotayo.fl_datatracker.domain.repository
 
-import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.InvalidPresetException
 import com.jorotayo.fl_datatracker.domain.model.Preset
-import com.jorotayo.fl_datatracker.domain.model.Preset_
-import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
-import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
-import io.objectbox.Box
-import javax.inject.Inject
 
-class PresetRepository @Inject constructor() {
-    @Inject
-    lateinit var userPreferenceStore: UserPreferenceStore
-
-    private val presetBox: Box<Preset> = ObjectBox.boxStore().boxFor(Preset::class.java)
+interface PresetRepository {
 
     @Throws(InvalidPresetException::class)
-    fun addPreset(preset: Preset) {
-        val results =
-            presetBox.query(Preset_.presetName.equal(preset.presetName)).build().find()
+    fun addPreset(preset: Preset)
 
-        if (results.size != 0) {
-            throw InvalidPresetException("Preset name: (${preset.presetName}) already exists")
-        } else {
-            presetBox.put(preset)
-        }
-    }
+    fun deletePreset(preset: Preset): Boolean
 
-    fun getPresetList(): List<Preset> =
-        presetBox.all
+    fun getPresetList(): List<Preset>
 
-    fun getPresetById(presetId: Long): Preset =
-        presetBox.get(presetId)
+    fun getPresetById(presetId: Long): Preset
 
-    fun getPresetByPresetName(presetName: String): Preset =
-        presetBox.query(Preset_.presetName.equal(presetName)).build().findFirst() ?: Preset(
-            presetId = 0,
-            presetName = "Default"
-        )
+    fun getPresetByPresetName(presetName: String): Preset
 
-    fun deletePreset(preset: Preset) =
-        presetBox.remove(preset)
-
-    fun getCurrentPresetFromSettings(): Preset {
-        var presetResult = getPresetList()[0]
-        val currentPresetName =
-            userPreferenceStore.getString(SettingsKeys.CURRENT_PRESET) ?: "Default"
-        for (preset: Preset in presetBox.all) {
-            if (preset.presetName == currentPresetName) {
-                presetResult = preset
-            }
-        }
-        return presetResult
-    }
-
+    fun getCurrentPresetFromSettings(): Preset
 }

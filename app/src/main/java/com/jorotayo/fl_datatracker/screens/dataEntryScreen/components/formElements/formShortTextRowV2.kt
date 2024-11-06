@@ -36,6 +36,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
 @DefaultPreviews
@@ -153,7 +154,7 @@ fun formShortTextRowV2(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = xxSmall),
+                    .padding(top = xxxSmall),
                 text = "${text.text.length} / $maxChar",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.caption,
