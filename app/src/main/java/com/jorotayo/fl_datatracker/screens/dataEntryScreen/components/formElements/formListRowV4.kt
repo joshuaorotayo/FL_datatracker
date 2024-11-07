@@ -88,7 +88,7 @@ fun formListRowV4(
                         .fillMaxWidth(),
                     text = "Empty values will be removed on save",
                     textAlign = TextAlign.Start,
-                    color = Color.DarkGray,
+                    color = Color.Gray,
                     style = MaterialTheme.typography.caption
                 )
             }

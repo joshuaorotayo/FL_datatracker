@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -41,7 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.jorotayo.fl_datatracker.BuildConfig
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -160,12 +160,16 @@ fun checkAndRequestCameraPermission(
 
 fun getTmpFileUri(context: Context): Uri {
     val tmpFile =
-        File.createTempFile("tmp_image_file", ".png", context.cacheDir.absoluteFile).apply {
+        File.createTempFile(
+            "tmp_image_file",
+            ".png",
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        ).apply {
             createNewFile()
             deleteOnExit()
         }
 
-    return FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
+    return FileProvider.getUriForFile(context, "${context.packageName}.provider", tmpFile)
 }
 
 @Composable

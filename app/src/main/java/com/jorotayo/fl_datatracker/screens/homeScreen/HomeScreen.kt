@@ -50,7 +50,6 @@ import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
-import com.jorotayo.fl_datatracker.screens.homeScreen.components.MembersPanel
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchBar
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SearchFilters
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.SimpleDataRow
@@ -263,7 +262,7 @@ fun HomeScreen(
                         data = state.deletedItem
                     )
                 }
-                MembersPanel(modifier = Modifier.padding(horizontal = small), totalCount = 52)
+//                MembersPanel(modifier = Modifier.padding(horizontal = small), totalCount = 52)
             }
         }
     }

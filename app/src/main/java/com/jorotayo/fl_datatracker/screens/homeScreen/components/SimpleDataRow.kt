@@ -62,16 +62,17 @@ fun SimpleDataRow(
                 .weight(2f),
             text = data.name,
             color = colors.subtitleTextColour,
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.button,
+            textAlign = TextAlign.Start,
             overflow = TextOverflow.Ellipsis
         )
         Text(
             modifier = Modifier
-                .weight(1.5f),
+                .weight(1.5f)
+                .padding(end = small),
             text = data.createdTime,
             color = colors.subtitleTextColour,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis
         )

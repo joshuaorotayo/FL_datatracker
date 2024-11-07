@@ -18,6 +18,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -52,7 +53,6 @@ import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.navigation.MainScreens
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormNameHeader
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ImageBottomActionSheet
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formCountRowV2
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.formDateRowV2
@@ -79,6 +79,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @DefaultPreviews
 @Composable
@@ -86,6 +87,7 @@ fun PreviewPopulatedDataEntryScreen() {
     FL_DatatrackerTheme {
         DataEntryScreen(
             navController = rememberNavController(),
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             uiState = examplePopulatedDataEntry,
             onUiEvent = MutableSharedFlow(),
             onDataEvent = {}
@@ -93,6 +95,7 @@ fun PreviewPopulatedDataEntryScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @DefaultPreviews
 @Composable
@@ -100,6 +103,7 @@ fun PreviewEmptyDataEntryScreen() {
     FL_DatatrackerTheme {
         DataEntryScreen(
             navController = rememberNavController(),
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             uiState = DataEntryScreenState(),
             onUiEvent = MutableSharedFlow(),
             onDataEvent = {}
@@ -112,6 +116,7 @@ fun PreviewEmptyDataEntryScreen() {
 @Composable
 fun DataEntryScreen(
     navController: NavController,
+    sheetState: ModalBottomSheetState,
     uiState: DataEntryScreenState,
     onUiEvent: SharedFlow<DataEntryScreenViewModel.UiEvent>,
     onDataEvent: (DataEvent) -> Unit
@@ -121,10 +126,6 @@ fun DataEntryScreen(
     val scope = rememberCoroutineScope()
 
     val onTakeImage = remember { mutableStateOf(true) }
-
-    val modalBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
-    )
 
     val listState = rememberLazyListState()
 
@@ -326,9 +327,10 @@ fun DataEntryScreen(
                                         onClick = {
                                             onDataEvent(DataEvent.UpdateImageIndex(index))
                                         },
-                                        showBottomSheet = {
+                                        sheetState = sheetState,
+                                        function = {
                                             scope.launch {
-                                                modalBottomSheetState.show()
+                                                sheetState.show()
                                             }
                                         }
                                     )
@@ -348,14 +350,6 @@ fun DataEntryScreen(
                                     )
                                 }
                             }
-//                            if (index < uiState.dataRows.size) {
-//                                Divider(
-//                                    modifier = Modifier.padding(
-//                                        horizontal = xSmall,
-//                                        vertical = xxxSmall
-//                                    )
-//                                )
-//                            }
                         }
 
                         item {
@@ -410,18 +404,18 @@ fun DataEntryScreen(
                 }
             }
         }
-        ImageBottomActionSheet(
-            state = modalBottomSheetState,
-            scope = scope,
-            onTakeImage = {
-                onTakeImage.value
-            },
-            setDataValue = {
-                onDataEvent(
-                    DataEvent.SetDataValue(value = it, rowIndex = uiState.currentImageIndex)
-                )
-            }
-        )
+        /*  ImageBottomActionSheet(
+              state = sheetState,
+              scope = scope,
+              onTakeImage = {
+                  onTakeImage.value
+              },
+              setDataValue = {
+                  onDataEvent(
+                      DataEvent.SetDataValue(value = it, rowIndex = uiState.currentImageIndex)
+                  )
+              }
+          )*/
     }
 }
 

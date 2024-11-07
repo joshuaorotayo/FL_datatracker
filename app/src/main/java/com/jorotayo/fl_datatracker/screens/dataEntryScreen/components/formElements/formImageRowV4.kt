@@ -2,7 +2,6 @@
 
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -23,37 +22,31 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
-@Preview(
-    showBackground = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = false, name = "Light Mode")
+@DefaultPreviews
 @Composable
 fun PreviewFormImageRowV4() {
     FL_DatatrackerTheme {
-        val modalBottomSheetState =
-            rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+
         val dataItem = DataRowState(
             DataItem(
                 presetId = 0,
@@ -68,19 +61,21 @@ fun PreviewFormImageRowV4() {
         formImageRowV4(
             data = dataItem,
             onClick = {},
-            showBottomSheet =
-            { modalBottomSheetState.isVisible }
+            sheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            function = { }
         )
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun formImageRowV4(
     data: DataRowState,
+    sheetState: ModalBottomSheetState,
     onClick: () -> Unit,
-    showBottomSheet: (ModalBottomSheetState) -> Unit,
+    function: () -> Unit,
 ): String {
+    val scope = rememberCoroutineScope()
+
     val imageUri = remember {
         mutableStateOf(data.dataItem.dataValue.toUri())
     }
@@ -124,7 +119,9 @@ fun formImageRowV4(
                         .align(Alignment.CenterHorizontally),
                     onClick =
                     {
-                        showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
+                        scope.launch {
+                            sheetState.show()
+                        }
                         onClick()
                     },
                 ) {
@@ -174,9 +171,9 @@ fun formImageRowV4(
                         .wrapContentHeight()
                         .align(Alignment.CenterHorizontally),
                     onClick = {
-                        ModalBottomSheetState(ModalBottomSheetValue.Expanded)
+                        /*ModalBottomSheetState(ModalBottomSheetValue.Expanded)
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
-                        onClick()
+                        onClick()*/
                     },
                 ) {
                     Text(

@@ -124,6 +124,7 @@ fun DataFieldRowV2(
         ) {
             Row(
                 modifier = Modifier
+                    .padding(start = small)
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 verticalAlignment = Alignment.CenterVertically
@@ -148,12 +149,14 @@ fun DataFieldRowV2(
                 Row(
                     modifier = Modifier
                         .weight(0.35f)
+                        .padding(end = xxSmall)
                         .clickable(
                             onClick = {
                                 expanded = true
                             }
                         ),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
                 ) {
                     Icon(
                         modifier = Modifier

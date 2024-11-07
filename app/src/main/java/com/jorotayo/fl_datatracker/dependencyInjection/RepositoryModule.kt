@@ -38,13 +38,6 @@ object RepositoryModule {
         return DataRepositoryImpl()
     }
 
-    /*
-        @Provides
-        @Singleton fun provideMemberRepository(): MemberRepository {
-            return MemberRepositoryImpl()
-        }
-    */
-
     @Provides
     @Singleton
     fun providePresetRepository(): PresetRepository {

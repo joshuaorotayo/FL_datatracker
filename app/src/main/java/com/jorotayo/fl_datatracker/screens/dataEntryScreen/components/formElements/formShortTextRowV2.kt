@@ -14,6 +14,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Warning
@@ -149,6 +150,11 @@ fun formShortTextRowV2(
                         focusManager.moveFocus(FocusDirection.Down)
                     }
                 ),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = MaterialTheme.colors.primary
+                )
             )
             // Max Chars count
             Text(

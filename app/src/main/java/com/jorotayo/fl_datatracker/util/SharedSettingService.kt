@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.util
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
@@ -24,7 +25,9 @@ class SharedSettingService @Inject constructor(
     }
 
     companion object {
-        var useDeviceDarkModeSettings: MutableLiveData<Boolean> = MutableLiveData(true)
+        val useDeviceDarkModeSettings: MutableLiveData<Boolean> = MutableLiveData(true)
         val showingDashboardNavBar: MutableLiveData<Boolean> = MutableLiveData(true)
+        val bottomSheetExpanded: MutableLiveData<Boolean> = MutableLiveData(false)
+        val bottomSheetContent: @Composable() () -> Unit = { }
     }
 }

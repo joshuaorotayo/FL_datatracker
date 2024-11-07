@@ -16,14 +16,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -37,6 +43,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.MainScreens
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ImageBottomActionSheet
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -57,21 +64,50 @@ fun BottomBarPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
+    val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val showNavBar = SharedSettingService.showingDashboardNavBar.observeAsState()
-    Scaffold(
-        bottomBar = {
-            AnimatedVisibility(visible = showNavBar.value == true) {
-                BottomBar(navController = navController)
-            }
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
+
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetBackgroundColor = colors.background,
+        sheetContent = {
+            ImageBottomActionSheet(
+                state = sheetState,
+                scope = scope,
+                onTakeImage = {
+
+                },
+                setDataValue = {
+
+                }
+            )
         }
     ) {
-        MainNavGraph(navController)
+        Scaffold(
+            bottomBar = {
+                AnimatedVisibility(visible = showNavBar.value == true) {
+                    BottomBar(navController = navController)
+                }
+            }
+        ) {
+            MainNavGraph(navController, sheetState)
+        }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterialApi::class)
+private fun getModalState(value: Boolean?): ModalBottomSheetState {
+    val result = if (value == true) ModalBottomSheetValue.Expanded else ModalBottomSheetValue.Hidden
+    return rememberModalBottomSheetState(initialValue = result)
 }
 
 @Composable
@@ -86,10 +122,6 @@ fun BottomBar(navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-//        Divider(
-//            modifier = Modifier,
-//            color = MaterialTheme.colors.onPrimary.copy(alpha = Dimen.twentyPercent)
-//        )
         BottomNavigation(
             modifier = Modifier
                 .padding(xxSmall)
@@ -159,7 +191,7 @@ fun RowScope.AnimatedBottomNavItem(
     val animatedScale: Float by animateFloatAsState(
         targetValue = scale,
         animationSpec = TweenSpec(
-            durationMillis = 1000,
+            durationMillis = 700,
             easing = FastOutSlowInEasing
         ),
         label = "Nav Bar Icon size animation"
@@ -168,7 +200,7 @@ fun RowScope.AnimatedBottomNavItem(
 //        targetValue = colors.secondary.copy(0.4f),
         targetValue = if (isDarkMode()) Color.White.copy(0.3f) else Color.Black.copy(0.3f),
         animationSpec = TweenSpec(
-            durationMillis = 1000,
+            durationMillis = 700,
             easing = FastOutSlowInEasing
         ),
         label = "Nav Bar visible color animation"
@@ -177,7 +209,7 @@ fun RowScope.AnimatedBottomNavItem(
     val animatedHiddenColor by animateColorAsState(
         targetValue = colors.primary,
         animationSpec = TweenSpec(
-            durationMillis = 1000,
+            durationMillis = 700,
             easing = FastOutSlowInEasing
         ),
         label = "Nav Bar color animation"
@@ -188,7 +220,7 @@ fun RowScope.AnimatedBottomNavItem(
             Text(
                 modifier = Modifier.padding(top = xSmall * scale),
                 text = mainScreens.title,
-                style = typography.body2,
+                style = typography.body1,
                 fontSize = typography.body2.fontSize * scale
             )
         },

@@ -2,6 +2,8 @@ package com.jorotayo.fl_datatracker.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -16,10 +18,12 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
+    sheetState: ModalBottomSheetState
 ) {
 
     NavHost(
@@ -53,6 +57,7 @@ fun MainNavGraph(
             val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
             DataEntryScreen(
                 navController = navController,
+                sheetState = sheetState,
                 uiState = dataEntryScreenViewModel.uiState.value,
                 onUiEvent = dataEntryScreenViewModel.eventFlow,
                 onDataEvent = dataEntryScreenViewModel::onDataEvent
