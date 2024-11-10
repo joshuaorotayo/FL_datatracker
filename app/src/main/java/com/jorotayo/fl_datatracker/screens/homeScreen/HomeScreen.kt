@@ -66,7 +66,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
-import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -170,7 +169,7 @@ fun HomeScreen(
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(small),
                         backgroundColor = colors.surface,
-                        elevation = if (isDarkMode()) xxSmall else zero
+                        elevation = if (isDarkMode()) one else xxSmall
                     ) {
                         LazyColumn(
                             modifier = Modifier
@@ -262,7 +261,6 @@ fun HomeScreen(
                         data = state.deletedItem
                     )
                 }
-//                MembersPanel(modifier = Modifier.padding(horizontal = small), totalCount = 52)
             }
         }
     }

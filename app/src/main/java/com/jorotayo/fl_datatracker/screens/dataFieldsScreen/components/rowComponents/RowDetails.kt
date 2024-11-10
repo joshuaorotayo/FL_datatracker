@@ -180,7 +180,7 @@ fun RowDetails(
                     modifier = Modifier
                         .fillMaxWidth(0.5f),
                     onClick = {
-                        onDataFieldEvent(DataFieldEvent.ShowDeleteRowDialog(rowData.value.dataField))
+                        onDataFieldEvent(DataFieldEvent.ShowDeleteDataFieldDialog(rowData.value.dataField))
                     }
                 ) {
                     Icon(

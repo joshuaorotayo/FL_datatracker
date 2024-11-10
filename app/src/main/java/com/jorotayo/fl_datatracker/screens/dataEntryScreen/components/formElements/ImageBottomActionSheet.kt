@@ -13,6 +13,7 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Text
@@ -112,7 +114,7 @@ fun ImageBottomActionSheet(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        sheetBackgroundColor = MaterialTheme.colors.background,
+        sheetBackgroundColor = colors.background,
         sheetContent = {
             Column {
                 BottomActionOptions { isCamera ->
@@ -177,7 +179,9 @@ fun BottomActionOptions(
     onTakeImage: (Boolean) -> Unit,
 ) {
     Column(
-        modifier = Modifier.wrapContentHeight(),
+        modifier = Modifier
+            .wrapContentHeight()
+            .background(colors.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -189,7 +193,7 @@ fun BottomActionOptions(
             Text(
                 modifier = Modifier,
                 text = stringResource(id = R.string.image_selection_dialog_msg),
-                color = MaterialTheme.colors.onSurface
+                color = colors.onSurface
             )
             Row(
                 modifier = Modifier
@@ -211,7 +215,7 @@ fun BottomActionOptions(
                         modifier = Modifier.padding(start = 4.dp),
                         imageVector = Icons.Default.Camera,
                         contentDescription = stringResource(id = R.string.image_camera),
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = colors.onPrimary
                     )
                 }
 
@@ -229,7 +233,7 @@ fun BottomActionOptions(
                         modifier = Modifier.padding(start = 4.dp),
                         imageVector = Icons.Default.ImageSearch,
                         contentDescription = stringResource(R.string.image_gallery_select),
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = colors.onPrimary
                     )
                 }
             }

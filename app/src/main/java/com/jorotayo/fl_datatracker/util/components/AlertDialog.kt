@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.util.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,10 +18,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +29,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
@@ -44,7 +39,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 import kotlinx.coroutines.CoroutineScope
@@ -89,55 +83,72 @@ data class AlertDialogState(
     var editField: Boolean? = false,
     var editFieldFunction: ((String) -> Unit?)? = null,
     var editFieldHint: String? = null,
+    var textFieldError: Boolean = false,
     var textFieldErrorText: String? = null,
     var imageIcon: ImageVector? = null,
     var scope: CoroutineScope? = null
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertDialogLayout(
     alertDialogState: AlertDialogState
 ) {
-    AlertDialog(
+    androidx.compose.material.AlertDialog(
         modifier = Modifier,
+        shape = RoundedCornerShape(small),
         onDismissRequest = { alertDialogState.onDismissRequest },
         properties = DialogProperties(
-            dismissOnBackPress = alertDialogState.dismissible,
-            dismissOnClickOutside = alertDialogState.dismissible
-        )
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            tonalElevation = 12.dp,
-            color = colors.background,
-            shape = RoundedCornerShape(small)
-        ) {
-            Column(
-                modifier = Modifier.padding(xSmall),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(regular)
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        ),
+        title = {
+            DialogTitle(alertDialogState)
+        },
+        text = {
+            DialogBody(alertDialogState)
+        },
+        buttons = {
+            Row(
+                modifier = Modifier
+                    .padding(
+                        horizontal = small,
+                        vertical = xxSmall
+                    )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(regular)
             ) {
-                DialogTitle(alertDialogState)
-                DialogBody(alertDialogState)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(medium)
-                ) {
-                    DismissBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
-                    ConfirmBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
-                }
-
+                DismissBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
+                ConfirmBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
             }
+        },
 
-        }
-        /*   ,properties = DialogProperties(
-
-           dismissOnBackPress = alertDialogState.dismissible,
-           dismissOnClickOutside = alertDialogState.dismissible
-           )*/
-    }
+        )
+    /* {
+         Surface(
+             modifier = Modifier.fillMaxWidth(),
+             color = colors.surface,
+             shape = RoundedCornerShape(small),
+             shadowElevation = small
+         ) {
+             Column(
+                 modifier = Modifier.padding(xSmall),
+                 horizontalAlignment = Alignment.CenterHorizontally,
+                 verticalArrangement = Arrangement.spacedBy(regular)
+             ) {
+                 DialogTitle(alertDialogState)
+                 DialogBody(alertDialogState)
+                 Row(
+                     modifier = Modifier.fillMaxWidth(),
+                     verticalAlignment = Alignment.CenterVertically,
+                     horizontalArrangement = Arrangement.spacedBy(medium)
+                 ) {
+                     DismissBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
+                     ConfirmBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
+                 }
+             }
+         }
+     }*/
 }
 
 @Composable
@@ -202,7 +213,7 @@ fun DialogTextField(alertDialogState: AlertDialogState) {
         value = fieldText,
         maxLines = 1,
         placeholder = {
-            if (alertDialogState.textFieldErrorText != null) {
+            if (alertDialogState.textFieldError) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

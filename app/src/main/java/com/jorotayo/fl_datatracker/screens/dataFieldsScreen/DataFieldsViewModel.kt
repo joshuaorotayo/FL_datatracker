@@ -1,11 +1,8 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen
 
 import android.util.Log
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.ObjectBox
@@ -15,22 +12,28 @@ import com.jorotayo.fl_datatracker.domain.model.InvalidPresetException
 import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
-import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys.CURRENT_PRESET
+import com.jorotayo.fl_datatracker.domain.util.SettingsKeys.SHOW_DASHBOARD_NAV_BAR
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsViewModel.UiEvent.*
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DeleteDataField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ConfirmDeleteDataField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DismissDeleteDataFieldDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DismissPresetDropdown
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ExpandPresetDropdown
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.HidePresetDropdown
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.InitScreen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.RestoreDeletedField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.SaveDataField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ShowDeleteRowDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ShowDeleteDataFieldDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ToggleAddNewDataField
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ToggleMemberForm
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ChangePreset
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DeletePreset
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DismissAddPresetDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DismissDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.EditPresetName
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.SaveNewPreset
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowAddPresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
@@ -43,11 +46,9 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.Edit
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.EditThirdValue
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent.ToggleRow
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
-import com.jorotayo.fl_datatracker.util.components.AlertDialogState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -63,33 +64,42 @@ class DataFieldsViewModel @Inject constructor(
         mutableStateOf(userPreferenceStore.getString(CURRENT_PRESET) ?: "Default")
     private var currentPreset = repository.getPresetByPresetName(currentPresetName.value)
 
-    private var _uiState = mutableStateOf(
+    /*
+        private var _uiState = mutableStateOf(
+            DataFieldScreenState(
+                presetList = repository.getPresetList(),
+                currentPreset = currentPreset,
+                dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
+            )
+        )
+        val uiState: MutableState<DataFieldScreenState> = _uiState
+    */
+
+    private val _state = MutableStateFlow(
         DataFieldScreenState(
             presetList = repository.getPresetList(),
             currentPreset = currentPreset,
             dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
         )
     )
-    val uiState: MutableState<DataFieldScreenState> = _uiState
-
-    private val _showDialog = MutableStateFlow(false)
-    val showDialog: StateFlow<Boolean> = _showDialog.asStateFlow()
-
-    private var dataField = DataField(dataFieldId = 0, presetId = 0)
+    val state = _state.asStateFlow()
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    private var dataField = DataField(dataFieldId = 0, presetId = 0)
+
     fun onDataFieldEvent(event: DataFieldEvent) {
         when (event) {
-            DataFieldEvent.InitScreen -> onInitScreen()
-            RestoreDeletedField -> onRestoreDataField()
-            ExpandPresetDropdown -> onExpandPresetDropdown()
-            HidePresetDropdown -> onHidePresetDropdown()
-            ToggleAddNewDataField -> onToggleAddNewDataField()
-            DataFieldEvent.ToggleMemberForm -> onToggleMemberForm()
-            is DeleteDataField -> onDeleteDataField(event)
-            is ShowDeleteRowDialog -> onShowDeleteRowDialog(event)
+            is InitScreen -> onInitScreen()
+            is RestoreDeletedField -> onRestoreDataField()
+            is ExpandPresetDropdown -> onExpandPresetDropdown()
+            is DismissPresetDropdown -> onDismissPresetDropdown()
+            is ToggleAddNewDataField -> onToggleAddNewDataField()
+            is ToggleMemberForm -> onToggleMemberForm()
+            is DismissDeleteDataFieldDialog -> onDismissDeleteDataFieldDialog()
+            is ConfirmDeleteDataField -> onConfirmDeleteDataField()
+            is ShowDeleteDataFieldDialog -> onShowDeleteDataFieldDialog(event)
             is SaveDataField -> onSaveDataField(event)
         }
     }
@@ -106,16 +116,38 @@ class DataFieldsViewModel @Inject constructor(
 
             userPreferenceStore.setString(Pair(CURRENT_PRESET, "Default"))
         }
+
+        _state.value = state.value.copy(
+            presetList = repository.getPresetList(),
+            currentPreset = currentPreset,
+            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
+        )
     }
 
-    private fun onDeleteDataField(event: DeleteDataField) {
-        repository.deleteDataField(event.value)
+    private fun onDismissDeleteDataFieldDialog() {
+        _state.value = state.value.copy(
+            showDeleteDataFieldDialog = false
+        )
+    }
+
+    private fun onShowDeleteDataFieldDialog(event: ShowDeleteDataFieldDialog) {
+        _state.value = state.value.copy(
+            showDeleteDataFieldDialog = true,
+            currentDataField = event.value
+        )
+    }
+
+    private fun onConfirmDeleteDataField() {
+        _state.value = state.value.copy(
+            showDeleteDataFieldDialog = false
+        )
+        state.value.currentDataField?.let { repository.deleteDataField(it) }
         updateDataFields()
     }
 
     private fun onRestoreDataField() {
-        if (uiState.value.deletedDataField != null) {
-            repository.addDataField(uiState.value.deletedDataField!!)
+        if (state.value.deletedDataField != null) {
+            repository.addDataField(state.value.deletedDataField!!)
             updateDataFields()
         }
     }
@@ -125,8 +157,8 @@ class DataFieldsViewModel @Inject constructor(
             try {
                 repository.addDataField(event.value)
                 _eventFlow.emit(SaveDataField("Data Field Saved: ${event.value.fieldName}"))
-                _uiState.value = uiState.value.copy(
-                    isAddDataFieldVisible = !uiState.value.isAddDataFieldVisible
+                _state.value = state.value.copy(
+                    isAddDataFieldVisible = !state.value.isAddDataFieldVisible
                 )
                 updateDataFields()
             } catch (e: InvalidDataFieldException) {
@@ -139,65 +171,43 @@ class DataFieldsViewModel @Inject constructor(
         }
     }
 
-    private fun onShowDeleteRowDialog(event: ShowDeleteRowDialog) {
-        _uiState.value = uiState.value.copy(
-            currentDataField = event.value,
-            alertDialogState = AlertDialogState(
-                title = String.format("Delete DataField: %s", event.value.fieldName),
-                imageIcon = Icons.Default.Delete,
-                body = "Are you sure you want to delete this Data Field?",
-                onDismissRequest = { onDismissAlertDialog() },
-                confirmButtonLabel = "Delete",
-                confirmButtonOnClick = {
-                    repository.deleteDataField(_uiState.value.currentDataField!!)
-                    updateDataFields()
-                    onDismissAlertDialog()
-                },
-                dismissButtonLabel = "Cancel",
-                dismissButtonOnClick = { onDismissAlertDialog() },
-                titleTextAlign = TextAlign.Center,
-                dismissible = true
-            )
-        )
-    }
-
     private fun onExpandPresetDropdown() {
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             isPresetDropDownMenuExpanded = true
         )
     }
 
-    private fun onHidePresetDropdown() {
-        _uiState.value = uiState.value.copy(
+    private fun onDismissPresetDropdown() {
+        _state.value = state.value.copy(
             isPresetDropDownMenuExpanded = false
         )
     }
 
     private fun onToggleAddNewDataField() {
-        _uiState.value = uiState.value.copy(
-            isAddDataFieldVisible = !uiState.value.isAddDataFieldVisible
+        _state.value = state.value.copy(
+            isAddDataFieldVisible = !state.value.isAddDataFieldVisible
         )
     }
 
     private fun onToggleMemberForm() {
-        if (!uiState.value.isMemberFormVisible) {
-            userPreferenceStore.setBoolean(Pair(SettingsKeys.SHOW_DASHBOARD_NAV_BAR, true))
+        if (!state.value.isMemberFormVisible) {
+            userPreferenceStore.setBoolean(Pair(SHOW_DASHBOARD_NAV_BAR, true))
         } else {
-            userPreferenceStore.setBoolean(Pair(SettingsKeys.SHOW_DASHBOARD_NAV_BAR, false))
+            userPreferenceStore.setBoolean(Pair(SHOW_DASHBOARD_NAV_BAR, false))
         }
-        _uiState.value = uiState.value.copy(
-            isMemberFormVisible = !uiState.value.isMemberFormVisible
+        _state.value = state.value.copy(
+            isMemberFormVisible = !state.value.isMemberFormVisible
         )
     }
 
     private fun updateDataFields() {
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
         )
     }
 
     private fun updatePresetList() {
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             presetList = repository.getPresetList()
         )
     }
@@ -216,56 +226,56 @@ class DataFieldsViewModel @Inject constructor(
         ObjectBox.boxStore().boxFor(DataField::class.java).put(dataField)
 
         repository.updateDataField(dataField)
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
         )
     }
 
     private fun onRowToggle(event: ToggleRow) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.isEnabled = !dataField.isEnabled
     }
 
     private fun onEditFieldName(event: EditFieldName) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.fieldName = event.value
     }
 
     private fun onEditHintText(event: EditHintText) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.fieldHint = event.value
     }
 
     private fun onEditRowType(event: EditRowType) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.dataFieldType = DataFieldType.getByValue(event.value)
     }
 
     private fun onEditIsEnabled(event: EditIsEnabled) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.isEnabled = !dataField.isEnabled
     }
 
     private fun onEditFirstValue(event: EditFirstValue) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.first = event.value
     }
 
     private fun onEditSecondValue(event: EditSecondValue) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.second = event.value
     }
 
     private fun onEditThirdValue(event: EditThirdValue) {
         dataField =
-            uiState.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
+            state.value.dataFields.first { dataField -> dataField.dataFieldId == event.index }
         dataField.third = event.value
     }
 
@@ -273,87 +283,51 @@ class DataFieldsViewModel @Inject constructor(
         when (event) {
             is ShowAddPresetDialog -> onShowAddPresetDialog()
             is ShowDeletePresetDialog -> onShowDeletePresetDialog(event)
+            is DismissDeletePresetDialog -> onDismissDeletePresetDialog()
             is ChangePreset -> onChangePreset(event)
             is EditPresetName -> onEditPresetName(event)
             is DeletePreset -> onDeletePreset()
-            is PresetEvent.AddPreset -> saveNewPreset()
-            is PresetEvent.DismissAlertDialog -> onDismissAlertDialog()
+            is SaveNewPreset -> onSaveNewPreset()
+            is DismissAddPresetDialog -> onDismissAddPresetDialog()
         }
     }
 
-    private fun onDismissAlertDialog() {
-        _uiState.value = uiState.value.copy(
-            alertDialogState = null
+    private fun onDismissAddPresetDialog() {
+        _state.value = state.value.copy(
+            showAddPresetDialog = false
         )
     }
 
     private fun onEditPresetName(event: EditPresetName) {
         val newPreset = Preset(0, event.value)
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             newPreset = newPreset
         )
     }
 
     private fun onShowAddPresetDialog() {
-        /*  _uiState.value = uiState.value.copy(
-              isPresetDropDownMenuExpanded = false,
-              newPreset = null,
-              alertDialogState = AlertDialogState(
-                  title = "Add New Preset",
-                  imageIcon = Icons.Default.AddBox,
-                  text = "Add a new Preset with the name?",
-                  onDismissRequest = { onDismissAlertDialog() },
-                  confirmButtonLabel = "Add Preset",
-                  confirmButtonOnClick = { saveNewPreset() },
-                  dismissButtonLabel = "Cancel",
-                  editFieldFunction = {
-                      onPresetEvent(EditPresetName(it))
-                  },
-                  dismissButtonOnClick = { onDismissAlertDialog() },
-                  titleTextAlign = TextAlign.Center,
-                  dismissible = true
-              )
-          )*/
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             isPresetDropDownMenuExpanded = false,
             newPreset = null,
-            alertDialogState = AlertDialogState(
-                title = "Add New Preset",
-                body = "Add a new Preset with the name",
-                onDismissRequest = { onPresetEvent(PresetEvent.DismissAlertDialog) },
-                confirmButtonLabel = "Add Preset",
-                confirmButtonOnClick = {
-                    saveNewPreset()
-                    onPresetEvent(PresetEvent.DismissAlertDialog)
-                },
-                dismissButtonLabel = "Cancel",
-                editFieldFunction = {
-                    onPresetEvent(EditPresetName(it))
-                },
-                dismissButtonOnClick = { onPresetEvent(PresetEvent.DismissAlertDialog) },
-                titleTextAlign = TextAlign.Center,
-                dismissible = true
-            )
+            showAddPresetDialog = true
         )
     }
 
-    private fun saveNewPreset() {
+    private fun onSaveNewPreset() {
         Log.i("Add Preset", "saveNewPreset: Add Preset clicked")
-        val newPreset = _uiState.value.newPreset
+        val newPreset = _state.value.newPreset
         viewModelScope.launch {
             if (newPreset == null || newPreset.presetName.isBlank()) {
-                _uiState.value = uiState.value.copy(
-                    alertDialogState = _uiState.value.alertDialogState?.copy(
-                        textFieldErrorText = "Enter Preset Name!"
-                    )
+                _state.value = state.value.copy(
+                    textFieldError = true
                 )
             } else {
                 try {
                     repository.addPreset(newPreset)
                     val presets = repository.getPresetList()
                     val currentPreset = repository.getPresetByPresetName(newPreset.presetName)
-                    _uiState.value = uiState.value.copy(
-                        alertDialogState = null,
+                    _state.value = state.value.copy(
+                        showAddPresetDialog = false,
                         isPresetDropDownMenuExpanded = false,
                         isAddDataFieldVisible = false,
                         presetList = presets,
@@ -363,8 +337,8 @@ class DataFieldsViewModel @Inject constructor(
                     userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
                     _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
                 } catch (e: InvalidPresetException) {
-                    _uiState.value = uiState.value.copy(
-                        alertDialogState = null,
+                    _state.value = state.value.copy(
+                        showAddPresetDialog = false,
                         isPresetDropDownMenuExpanded = false,
                         isAddDataFieldVisible = false
                     )
@@ -377,21 +351,16 @@ class DataFieldsViewModel @Inject constructor(
     }
 
     private fun onShowDeletePresetDialog(event: ShowDeletePresetDialog) {
-        _uiState.value = uiState.value.copy(
-            modifiedPreset = event.value,
-            alertDialogState = AlertDialogState(
-                title = String.format("Delete Preset: %s", event.value.presetName),
-                body = "Are you sure you want to delete this Preset?",
-                onDismissRequest = { onDismissAlertDialog() },
-                confirmButtonLabel = "Delete",
-                confirmButtonOnClick = {
-                    onDeletePreset()
-                },
-                dismissButtonLabel = "Cancel",
-                dismissButtonOnClick = { onDismissAlertDialog() },
-                titleTextAlign = TextAlign.Center,
-                dismissible = true
-            )
+        _state.value = state.value.copy(
+            showDeletePresetDialog = true,
+            isPresetDropDownMenuExpanded = false,
+            modifiedPreset = event.value
+        )
+    }
+
+    private fun onDismissDeletePresetDialog() {
+        _state.value = state.value.copy(
+            showDeletePresetDialog = false
         )
     }
 
@@ -401,18 +370,17 @@ class DataFieldsViewModel @Inject constructor(
         userPreferenceStore.setString(Pair(CURRENT_PRESET, event.value))
 
         currentPreset = newPreset
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             dataFields = repository.getDataFieldsByPresetId(newPreset.presetId),
             isPresetDropDownMenuExpanded = false,
             isAddDataFieldVisible = false,
             presetList = repository.getPresetList(),
-            currentPreset = newPreset,
-            alertDialogState = null
+            currentPreset = newPreset
         )
     }
 
     private fun onDeletePreset() {
-        _uiState.value.modifiedPreset?.let { deletePresetActions(it) }
+        _state.value.modifiedPreset?.let { deletePresetActions(it) }
     }
 
     private fun deletePresetActions(preset: Preset) {
@@ -424,13 +392,12 @@ class DataFieldsViewModel @Inject constructor(
 
         val newPreset = repository.getPresetByPresetName("Default")
         currentPreset = newPreset
-        _uiState.value = uiState.value.copy(
+        _state.value = state.value.copy(
             dataFields = repository.getDataFieldsByPresetId(newPreset.presetId),
             presetList = repository.getPresetList(),
             currentPreset = newPreset,
             isAddDataFieldVisible = false,
             isPresetDropDownMenuExpanded = false,
-            alertDialogState = null
         )
     }
 

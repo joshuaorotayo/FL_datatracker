@@ -69,7 +69,6 @@ fun MainNavGraph(
             val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
 
             DataFieldsScreen(
-                uiState = dataFieldsViewModel.uiState.value,
                 onUiEvent = dataFieldsViewModel.eventFlow,
                 onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
                 onPresetEvent = dataFieldsViewModel::onPresetEvent,

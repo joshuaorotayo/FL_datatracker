@@ -23,9 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen.large
-import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -70,7 +68,6 @@ fun TopBar(toggleSearchBar: () -> Unit) {
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(xSmall),
                 color = MaterialTheme.colors.surface,
-                elevation = if (isDarkMode()) one else xxSmall,
             ) {
                 Row(
                     modifier =

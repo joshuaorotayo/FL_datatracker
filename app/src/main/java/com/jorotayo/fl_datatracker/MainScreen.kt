@@ -8,19 +8,17 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
@@ -31,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -47,8 +44,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen.one
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.SharedSettingService
@@ -75,32 +71,25 @@ fun MainScreen() {
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
 
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        sheetBackgroundColor = colors.background,
-        sheetContent = {
-            ImageBottomActionSheet(
-                state = sheetState,
-                scope = scope,
-                onTakeImage = {
-
-                },
-                setDataValue = {
-
-                }
-            )
+    Scaffold(
+        bottomBar = {
+            AnimatedVisibility(visible = showNavBar.value == true) {
+                BottomBar(navController = navController)
+            }
         }
     ) {
-        Scaffold(
-            bottomBar = {
-                AnimatedVisibility(visible = showNavBar.value == true) {
-                    BottomBar(navController = navController)
-                }
-            }
-        ) {
-            MainNavGraph(navController, sheetState)
-        }
+        MainNavGraph(navController, sheetState)
     }
+    ImageBottomActionSheet(
+        state = sheetState,
+        scope = scope,
+        onTakeImage = {
+
+        },
+        setDataValue = {
+
+        }
+    )
 }
 
 @Composable
@@ -119,23 +108,20 @@ fun BottomBar(navController: NavHostController) {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    Column(
-        modifier = Modifier.fillMaxWidth()
+
+    BottomNavigation(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = xxSmall),
+        backgroundColor = colors.background,
+        elevation = Dimen.zero
     ) {
-        BottomNavigation(
-            modifier = Modifier
-                .padding(xxSmall)
-                .clip(RoundedCornerShape(small)),
-            backgroundColor = colors.surface,
-            elevation = if (isDarkMode()) one else xxSmall
-        ) {
-            mainScreens.forEach { screen ->
-                AnimatedBottomNavItem(
-                    mainScreens = screen,
-                    currentDestination = currentDestination,
-                    navController = navController
-                )
-            }
+        mainScreens.forEach { screen ->
+            AnimatedBottomNavItem(
+                mainScreens = screen,
+                currentDestination = currentDestination,
+                navController = navController
+            )
         }
     }
 }
@@ -152,9 +138,9 @@ fun RowScope.BottomNavItem(
     BottomNavigationItem(
         label = {
             Text(
-                modifier = Modifier.padding(top = xxSmall),
+                modifier = Modifier.padding(top = xSmall),
                 text = mainScreens.title,
-                style = typography.body2
+                style = typography.body1
             )
         },
         icon = {
@@ -197,7 +183,6 @@ fun RowScope.AnimatedBottomNavItem(
         label = "Nav Bar Icon size animation"
     )
     val animatedVisibleColor by animateColorAsState(
-//        targetValue = colors.secondary.copy(0.4f),
         targetValue = if (isDarkMode()) Color.White.copy(0.3f) else Color.Black.copy(0.3f),
         animationSpec = TweenSpec(
             durationMillis = 700,
@@ -221,7 +206,7 @@ fun RowScope.AnimatedBottomNavItem(
                 modifier = Modifier.padding(top = xSmall * scale),
                 text = mainScreens.title,
                 style = typography.body1,
-                fontSize = typography.body2.fontSize * scale
+                fontSize = typography.body1.fontSize * scale
             )
         },
         icon = {
@@ -240,7 +225,7 @@ fun RowScope.AnimatedBottomNavItem(
                 launchSingleTop = true
             }
         },
-        modifier = Modifier.height(80.dp)
+        modifier = Modifier.wrapContentHeight()
     )
 }
 

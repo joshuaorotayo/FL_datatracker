@@ -65,13 +65,12 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -181,15 +180,14 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(bottom = bottomBarPadding)
+                    .padding(bottom = bottomBarPadding + xxSmall)
             ) {
                 Card(
                     modifier = Modifier
                         .padding(small)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(small),
-                    backgroundColor = colors.surface,
-                    elevation = if (isDarkMode()) Dimen.xxSmall else zero
+                    backgroundColor = colors.surface
                 ) {
                     LazyColumn(
                         state = listState,
@@ -370,27 +368,7 @@ fun DataEntryScreen(
                                     color = colors.onPrimary
                                 )
                             }
-                            /*TextButton(
-                                modifier = Modifier
-                                    .padding(small)
-                                    .fillMaxWidth()
-                                    .clip(shape = RoundedCornerShape(medium)),
-                                colors = ButtonDefaults.textButtonColors(
-                                    backgroundColor = colors.primary,
-                                    contentColor = colors.surface
-                                ),
-                                onClick = {
-                                    onDataEvent(DataEvent.ValidateInsertDataForm(uiState))
-                                    onDataEvent(DataEvent.FormSubmitted)
-                                }
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.save_data_btn),
-                                    color = colors.onPrimary
-                                )
-                            }*/
                         }
-                        // close Box
                     }
 
                     DefaultSnackbar(
@@ -404,18 +382,6 @@ fun DataEntryScreen(
                 }
             }
         }
-        /*  ImageBottomActionSheet(
-              state = sheetState,
-              scope = scope,
-              onTakeImage = {
-                  onTakeImage.value
-              },
-              setDataValue = {
-                  onDataEvent(
-                      DataEvent.SetDataValue(value = it, rowIndex = uiState.currentImageIndex)
-                  )
-              }
-          )*/
     }
 }
 

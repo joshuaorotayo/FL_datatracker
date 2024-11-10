@@ -50,12 +50,12 @@ import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowComponents.DataFieldTypeDropDownV2
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ShowDeleteDataFieldDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.thirtyPercent
@@ -115,8 +115,7 @@ fun DataFieldRowV2(
             MaterialTheme.colors.surface
         } else {
             MaterialTheme.colors.primary.copy(thirtyPercent)
-        },
-        elevation = if (isDarkMode()) xxxSmall else zero,
+        }
     ) {
 
         Column(
@@ -211,7 +210,7 @@ fun DataFieldRowV2(
                         modifier = Modifier
                             .fillMaxWidth(0.5f),
                         onClick = {
-                            onDataFieldEvent(DataFieldEvent.ShowDeleteRowDialog(currentDataField))
+                            onDataFieldEvent(ShowDeleteDataFieldDialog(currentDataField))
                         }
                     ) {
                         Icon(

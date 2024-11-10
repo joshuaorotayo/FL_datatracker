@@ -34,9 +34,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.Preset
@@ -53,10 +58,16 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NewDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.NoDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.HidePresetDropdown
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DismissDeleteDataFieldDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DismissPresetDropdown
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.RestoreDeletedField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ChangePreset
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DeletePreset
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DismissAddPresetDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.DismissDeletePresetDialog
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.EditPresetName
+import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.SaveNewPreset
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.PresetEvent.ShowDeletePresetDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldScreenState
@@ -74,7 +85,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
-import com.jorotayo.fl_datatracker.util.exampleDataFieldList
+import com.jorotayo.fl_datatracker.util.components.AlertDialogState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -88,11 +99,12 @@ fun DataFieldsScreenPreview() {
 
     FL_DatatrackerTheme {
         DataFieldsScreen(
-            uiState = DataFieldScreenState(
-                presetList = listOf(examplePreset),
-                dataFields = exampleDataFieldList,
-                currentPreset = examplePreset
-            ),
+//            uiState = DataFieldScreenState(
+//                showAddPresetDialog = true,
+//                presetList = listOf(examplePreset),
+//                dataFields = exampleDataFieldList,
+//                currentPreset = examplePreset
+//            ),
             onUiEvent = MutableSharedFlow(),
             onRowEvent = {},
             onDataFieldEvent = {},
@@ -104,7 +116,6 @@ fun DataFieldsScreenPreview() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DataFieldsScreen(
-    uiState: DataFieldScreenState,
     onUiEvent: SharedFlow<UiEvent>,
     onRowEvent: (RowEvent) -> Unit,
     onPresetEvent: (PresetEvent) -> Unit,
@@ -112,11 +123,13 @@ fun DataFieldsScreen(
 ) {
     onDataFieldEvent(DataFieldEvent.InitScreen)
 
+    val viewModel = hiltViewModel<DataFieldsViewModel>()
+    val uiState by viewModel.state.collectAsState(DataFieldScreenState())
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val fields = uiState.dataFields
     val presets = uiState.presetList
-    val currentPreset = uiState.currentPreset
     val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = true) {
@@ -148,7 +161,6 @@ fun DataFieldsScreen(
                 HeaderRow()
                 PresetSelection(
                     onDataFieldEvent,
-                    currentPreset,
                     uiState,
                     onPresetEvent,
                     presets
@@ -175,7 +187,7 @@ fun DataFieldsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = xSmall, bottom = bottomBarPadding),
+                    .padding(top = xSmall, bottom = bottomBarPadding + small),
                 state = listState
             ) {
                 item {
@@ -195,7 +207,11 @@ fun DataFieldsScreen(
                 )
             }
 
-            uiState.alertDialogState?.let { AlertDialogLayout(alertDialogState = it) }
+            AddPresetDialog(uiState, onPresetEvent)
+            DeletePresetDialog(uiState, onPresetEvent)
+            DeleteDataFieldDialog(uiState, onDataFieldEvent)
+
+//            uiState.alertDialogState?.let { AlertDialogLayout(alertDialogState = it) }
 
             DefaultSnackbar(
                 modifier = Modifier
@@ -271,7 +287,6 @@ private fun AddEditRow(
 @Composable
 private fun PresetSelection(
     onDataFieldEvent: (DataFieldEvent) -> Unit,
-    currentPreset: Preset,
     state: DataFieldScreenState,
     onPresetEvent: (PresetEvent) -> Unit,
     presets: List<Preset>
@@ -302,7 +317,7 @@ private fun PresetSelection(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 5.dp),
-                text = currentPreset.presetName,
+                text = state.currentPreset?.presetName ?: "",
                 color = colors.primary,
                 style = typography.h3,
                 textAlign = TextAlign.Center
@@ -314,9 +329,10 @@ private fun PresetSelection(
             )
             if (state.isPresetDropDownMenuExpanded) {
                 PresetDropDownMenu(
-                    onDataFieldEvent = { onDataFieldEvent(HidePresetDropdown) },
+                    onDataFieldEvent = { onDataFieldEvent(DismissPresetDropdown) },
                     onPresetEvent = onPresetEvent,
                     presets = presets,
+                    state = state
                 )
             }
         }
@@ -396,13 +412,13 @@ private fun NewDataFieldSection(
         if (state.dataFields.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize()) {
                 NewDataField(
-                    currentPresetId = state.currentPreset.presetId,
+                    currentPresetId = state.currentPreset!!.presetId,
                     onDataFieldEvent = onDataFieldEvent
                 )
             }
         } else {
             NewDataField(
-                currentPresetId = state.currentPreset.presetId,
+                currentPresetId = state.currentPreset!!.presetId,
                 onDataFieldEvent = onDataFieldEvent
             )
         }
@@ -418,13 +434,14 @@ fun scrollUp(scope: CoroutineScope, listState: LazyListState) {
 
 @Composable
 private fun PresetDropDownMenu(
+    state: DataFieldScreenState,
     onDataFieldEvent: (DataFieldEvent) -> Unit,
     presets: List<Preset>,
     onPresetEvent: (PresetEvent) -> Unit,
 ) {
     DropdownMenu(
-        expanded = true,
-        onDismissRequest = { onDataFieldEvent(HidePresetDropdown) },
+        expanded = state.isPresetDropDownMenuExpanded,
+        onDismissRequest = { onDataFieldEvent(DismissPresetDropdown) },
         modifier = Modifier
             .wrapContentWidth()
     ) {
@@ -478,5 +495,87 @@ private fun PresetDropDownMenu(
                 color = colors.onSurface
             )
         }
+    }
+}
+
+@Composable
+fun AddPresetDialog(
+    state: DataFieldScreenState,
+    onPresetEvent: (PresetEvent) -> Unit
+) {
+    if (state.showAddPresetDialog) {
+        AlertDialogLayout(
+            alertDialogState =
+            AlertDialogState(
+                title = "Add New Preset",
+                body = "Add a new Preset with the name",
+                onDismissRequest = { onPresetEvent(DismissAddPresetDialog) },
+                confirmButtonLabel = "Add Preset",
+                confirmButtonOnClick = {
+                    onPresetEvent(SaveNewPreset)
+                },
+                dismissButtonLabel = "Cancel",
+                editFieldFunction = {
+                    onPresetEvent(EditPresetName(it))
+                },
+                dismissButtonOnClick = { onPresetEvent(DismissAddPresetDialog) },
+                titleTextAlign = TextAlign.Center,
+                dismissible = true,
+                textFieldError = state.textFieldError,
+                textFieldErrorText = "Enter Preset Name!"
+            )
+        )
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeletePresetDialog(
+    state: DataFieldScreenState,
+    onPresetEvent: (PresetEvent) -> Unit
+) {
+    if (state.showDeletePresetDialog) {
+        AlertDialogLayout(
+            alertDialogState = AlertDialogState(
+                title = String.format("Delete Preset: %s", state.modifiedPreset?.presetName),
+                body = "Are you sure you want to delete this Preset?",
+                onDismissRequest = { onPresetEvent(DismissDeletePresetDialog) },
+                confirmButtonLabel = "Delete",
+                confirmButtonOnClick = {
+                    onPresetEvent(DeletePreset)
+                },
+                dismissButtonLabel = "Cancel",
+                dismissButtonOnClick = { onPresetEvent(DismissDeletePresetDialog) },
+                titleTextAlign = TextAlign.Center,
+                dismissible = true
+            )
+        )
+    }
+}
+
+@Composable
+fun DeleteDataFieldDialog(
+    state: DataFieldScreenState,
+    onDataFieldEvent: (DataFieldEvent) -> Unit
+) {
+    if (state.showDeleteDataFieldDialog) {
+        AlertDialogLayout(
+            AlertDialogState(
+                title = String.format("Delete DataField: %s", state.currentDataField!!.fieldName),
+                imageIcon = Icons.Default.Delete,
+                body = "Are you sure you want to delete this Data Field?",
+                onDismissRequest = { onDataFieldEvent(DismissDeleteDataFieldDialog) },
+                confirmButtonLabel = "Delete",
+                confirmButtonOnClick = {
+                    onDataFieldEvent(DataFieldEvent.ConfirmDeleteDataField)
+                },
+                dismissButtonLabel = "Cancel",
+                dismissButtonOnClick = { onDataFieldEvent(DismissDeleteDataFieldDialog) },
+                titleTextAlign = TextAlign.Center,
+                dismissible = true
+            )
+
+        )
     }
 }
