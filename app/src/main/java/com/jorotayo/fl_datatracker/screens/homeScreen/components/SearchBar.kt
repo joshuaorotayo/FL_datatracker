@@ -25,12 +25,9 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen.medium
-import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
 @DefaultPreviews
 @Composable
@@ -93,8 +90,7 @@ fun SearchBar(
                 .padding(xSmall)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(small),
-            backgroundColor = MaterialTheme.colors.surface,
-            elevation = if (isDarkMode()) one else xxSmall,
+            backgroundColor = MaterialTheme.colors.surface
         ) {
             TextField(
                 modifier =

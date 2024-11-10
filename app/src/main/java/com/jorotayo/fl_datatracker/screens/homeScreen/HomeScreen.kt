@@ -57,7 +57,6 @@ import com.jorotayo.fl_datatracker.screens.homeScreen.components.TopBar
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.medium
@@ -168,8 +167,7 @@ fun HomeScreen(
                             .padding(small)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(small),
-                        backgroundColor = colors.surface,
-                        elevation = if (isDarkMode()) one else xxSmall
+                        backgroundColor = colors.surface
                     ) {
                         LazyColumn(
                             modifier = Modifier
