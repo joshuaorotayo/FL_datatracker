@@ -131,7 +131,7 @@ fun DataItem(
                 verticalArrangement = Arrangement.Center
             ) {
                 IconButton(onClick = {
-                    viewModel.onEvent(HomeScreenEvent.EditDataItem)
+                    viewModel.onHomeEvent(HomeScreenEvent.EditDataItem)
                 }) {
                     Icon(
                         modifier = Modifier

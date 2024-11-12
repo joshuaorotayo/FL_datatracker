@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.screens.homeScreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.style.TextAlign
@@ -11,11 +10,22 @@ import com.jorotayo.fl_datatracker.ObjectBox
 import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.DeleteDataItem
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.EditDataItem
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.NavigateToDataEntry
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.ResetSearchBar
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.SearchFocusChanged
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.SearchItemEntered
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.ToggleDeleteDataDialog
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.ToggleSearchBar
+import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent.UpdateData
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.TestState
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,8 +36,8 @@ class HomeScreenViewModel @Inject constructor(
         object DeleteDataItem : UiEvent()
     }
 
-    private var _uiState = mutableStateOf(HomeScreenState())
-    val uiState: MutableState<HomeScreenState> = _uiState
+    private val _uiState = MutableStateFlow(HomeScreenState())
+    val uiState = _uiState.asStateFlow()
 
     private var _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -35,17 +45,17 @@ class HomeScreenViewModel @Inject constructor(
     private val _testRowItemBox = mutableStateOf(TestState())
     private val testRowItemBox: State<TestState> = _testRowItemBox
 
-    fun onEvent(event: HomeScreenEvent) {
+    fun onHomeEvent(event: HomeScreenEvent) {
         when (event) {
-            is HomeScreenEvent.ResetSearchBar -> onResetSearchBar()
-            is HomeScreenEvent.SearchItemEntered -> onSearchItemEntered(event)
-            is HomeScreenEvent.ToggleSearchBar -> onToggleSearchBar()
-            is HomeScreenEvent.SearchFocusChanged -> onSearchFocusChanged(event)
-            is HomeScreenEvent.EditDataItem -> onEditDataItem()
-            is HomeScreenEvent.ToggleDeleteDataDialog -> onToggleDeleteDataDialog(event)
-            is HomeScreenEvent.DeleteDataItem -> onDeleteDataItem()
-            is HomeScreenEvent.UpdateData -> onUpdateData(event)
-            is HomeScreenEvent.NavigateToDataEntry -> onNavigateToDataEntry()
+            is ResetSearchBar -> onResetSearchBar()
+            is SearchItemEntered -> onSearchItemEntered(event)
+            is ToggleSearchBar -> onToggleSearchBar()
+            is SearchFocusChanged -> onSearchFocusChanged(event)
+            is EditDataItem -> onEditDataItem()
+            is ToggleDeleteDataDialog -> onToggleDeleteDataDialog(event)
+            is DeleteDataItem -> onDeleteDataItem()
+            is UpdateData -> onUpdateData(event)
+            is NavigateToDataEntry -> onNavigateToDataEntry()
         }
     }
 
@@ -55,7 +65,7 @@ class HomeScreenViewModel @Inject constructor(
         )
     }
 
-    private fun onSearchItemEntered(event: HomeScreenEvent.SearchItemEntered) {
+    private fun onSearchItemEntered(event: SearchItemEntered) {
         _uiState.value = uiState.value.copy(
             text = event.searchItem
         )
@@ -67,7 +77,7 @@ class HomeScreenViewModel @Inject constructor(
         )
     }
 
-    private fun onSearchFocusChanged(event: HomeScreenEvent.SearchFocusChanged) {
+    private fun onSearchFocusChanged(event: SearchFocusChanged) {
         _uiState.value = uiState.value.copy(
             isHintVisible = !event.focusState.isFocused
         )
@@ -76,7 +86,7 @@ class HomeScreenViewModel @Inject constructor(
     private fun onEditDataItem() {
     }
 
-    private fun onToggleDeleteDataDialog(event: HomeScreenEvent.ToggleDeleteDataDialog) {
+    private fun onToggleDeleteDataDialog(event: ToggleDeleteDataDialog) {
         _uiState.value = uiState.value.copy(
             deletedItem = event.data,
             alertDialogState = AlertDialogState(
@@ -128,7 +138,7 @@ class HomeScreenViewModel @Inject constructor(
         )
     }
 
-    private fun onUpdateData(event: HomeScreenEvent.UpdateData) {
+    private fun onUpdateData(event: UpdateData) {
         val newBox = ObjectBox.boxStore().boxFor(TestRowItem::class.java)
         if (event.operation == "put") {
             newBox.put(event.testRowItem)

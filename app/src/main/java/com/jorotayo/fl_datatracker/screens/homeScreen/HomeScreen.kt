@@ -33,6 +33,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,11 +43,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.navigation.MainScreens
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.BasicDeleteDataDialog
 import com.jorotayo.fl_datatracker.screens.homeScreen.components.HomeScreenEvent
@@ -58,7 +61,6 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -67,13 +69,54 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
 
-@OptIn(ExperimentalMaterialApi::class)
+@SuppressLint("UnrememberedMutableState")
+@Composable
+@DefaultPreviews
+fun HomeScreenPreview() {
+    FL_DatatrackerTheme {
+        HomeScreenView(
+            navController = rememberNavController(),
+            state = HomeScreenState(
+                isSearchVisible = true,
+                text = "",
+                hint = "Search",
+                isHintVisible = true,
+                isDeleteDialogVisible = mutableStateOf(false),
+                deletedItem = Data(),
+                dataList = emptyList()
+            ),
+            onHomeEvent = {},
+            onDataEvent = {}
+        )
+    }
+}
+
 @Composable
 fun HomeScreen(
+    navController: NavController
+) {
+    val viewModel = hiltViewModel<HomeScreenViewModel>()
+    val uiState by viewModel.uiState.collectAsState(initial = HomeScreenState())
+
+    val dataViewModel = hiltViewModel<DataEntryScreenViewModel>()
+    val onDataEvent = dataViewModel::onDataEvent
+    val onHomeEvent = viewModel::onHomeEvent
+
+    HomeScreenView(
+        navController = navController,
+        state = uiState,
+        onHomeEvent = onHomeEvent,
+        onDataEvent = onDataEvent
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun HomeScreenView(
+    navController: NavController,
     state: HomeScreenState,
     onHomeEvent: (HomeScreenEvent) -> Unit,
-    onDataEvent: (DataEvent) -> Unit,
-    navController: NavController,
+    onDataEvent: (DataEvent) -> Unit
 ) {
     val scaffoldState = rememberScaffoldState()
 
@@ -159,7 +202,6 @@ fun HomeScreen(
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
-                        .padding(bottom = bottomBarPadding + small)
                         .wrapContentSize()
                 ) {
                     Card(
@@ -261,27 +303,5 @@ fun HomeScreen(
                 }
             }
         }
-    }
-}
-
-@SuppressLint("UnrememberedMutableState")
-@Composable
-@DefaultPreviews
-fun HomeScreenPreview() {
-    FL_DatatrackerTheme {
-        HomeScreen(
-            navController = rememberNavController(),
-            onHomeEvent = {},
-            onDataEvent = {},
-            state = HomeScreenState(
-                isSearchVisible = true,
-                text = "",
-                hint = "",
-                isHintVisible = true,
-                isDeleteDialogVisible = mutableStateOf(false),
-                deletedItem = Data(),
-                dataList = emptyList()
-            )
-        )
     }
 }

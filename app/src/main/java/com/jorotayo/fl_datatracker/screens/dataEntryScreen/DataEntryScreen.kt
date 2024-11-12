@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
@@ -28,6 +30,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,8 +42,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.BOOLEAN
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.COUNT
@@ -70,11 +74,8 @@ import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -84,12 +85,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun PreviewPopulatedDataEntryScreen() {
     FL_DatatrackerTheme {
-        DataEntryScreen(
-            navController = rememberNavController(),
-            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+        DataEntryScreenView(
+            scaffoldState = rememberScaffoldState(),
             uiState = examplePopulatedDataEntry,
-            onUiEvent = MutableSharedFlow(),
-            onDataEvent = {}
+            onDataEvent = {},
+            listState = rememberLazyListState(),
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         )
     }
 }
@@ -100,29 +101,30 @@ fun PreviewPopulatedDataEntryScreen() {
 @Composable
 fun PreviewEmptyDataEntryScreen() {
     FL_DatatrackerTheme {
-        DataEntryScreen(
-            navController = rememberNavController(),
-            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+        DataEntryScreenView(
+            scaffoldState = rememberScaffoldState(),
             uiState = DataEntryScreenState(),
-            onUiEvent = MutableSharedFlow(),
-            onDataEvent = {}
+            onDataEvent = {},
+            listState = rememberLazyListState(),
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         )
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun DataEntryScreen(
     navController: NavController,
-    sheetState: ModalBottomSheetState,
-    uiState: DataEntryScreenState,
-    onUiEvent: SharedFlow<DataEntryScreenViewModel.UiEvent>,
-    onDataEvent: (DataEvent) -> Unit
+    sheetState: ModalBottomSheetState
 ) {
-    val scaffoldState = rememberScaffoldState()
+    val viewModel = hiltViewModel<DataEntryScreenViewModel>()
+    val state by viewModel.uiState.collectAsState(DataEntryScreenState())
 
-    val scope = rememberCoroutineScope()
+    val onUiEvent = viewModel.eventFlow
+    val onDataEvent = viewModel::onDataEvent
+
+    val scaffoldState = rememberScaffoldState()
 
     val onTakeImage = remember { mutableStateOf(true) }
 
@@ -155,6 +157,26 @@ fun DataEntryScreen(
         }
     }
 
+    DataEntryScreenView(
+        scaffoldState = scaffoldState,
+        uiState = state,
+        onDataEvent = onDataEvent,
+        listState = listState,
+        sheetState = sheetState
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DataEntryScreenView(
+    scaffoldState: ScaffoldState,
+    sheetState: ModalBottomSheetState,
+    uiState: DataEntryScreenState,
+    onDataEvent: (DataEvent) -> Unit,
+    listState: LazyListState,
+) {
+    val scope = rememberCoroutineScope()
+
     Box(modifier = Modifier.fillMaxSize()) { // box for ModalBottomSheet
         Scaffold(
             topBar = {
@@ -180,7 +202,6 @@ fun DataEntryScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(bottom = bottomBarPadding + xxSmall)
             ) {
                 Card(
                     modifier = Modifier

@@ -6,14 +6,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -53,55 +54,60 @@ fun SimpleDataRow(
     Row(
         modifier = Modifier
             .padding(xSmall)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .wrapContentHeight(),
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically
     ) {
         Text(
             modifier = Modifier
-                .weight(2f),
+                .weight(1f),
             text = data.name,
             color = colors.subtitleTextColour,
-            style = MaterialTheme.typography.button,
-            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.h2,
+            textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis
         )
+
         Text(
             modifier = Modifier
-                .weight(1.5f)
-                .padding(end = small),
+                .weight(1f),
             text = data.createdTime,
             color = colors.subtitleTextColour,
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis
         )
-        Icon(
+        Row(
             modifier = Modifier
-                .padding(end = xxSmall)
-                .size(small + xxSmall)
-                .clickable(onClick = { editData() }),
-            imageVector = Icons.Default.Edit,
-            contentDescription = "Edit icon for data ${data.name}",
-            tint = colors.primary
-        )
-        Icon(
-            modifier = Modifier
-                .padding(end = xxSmall)
-                .size(small + xxSmall)
-                .clickable(onClick = { }),
-            imageVector = Icons.Default.Share,
-            contentDescription = "Share icon for data ${data.name}",
-            tint = colors.primary
-        )
-        Icon(
-            modifier = Modifier
-                .padding(end = xxSmall)
-                .size(small + xxSmall)
-                .clickable(onClick = { deleteData(data) }),
-            imageVector = Icons.Default.Close,
-            contentDescription = "Delete icon for data ${data.name}",
-            tint = colors.primary
-        )
+                .weight(1f),
+            horizontalArrangement = SpaceEvenly
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(small + xxSmall)
+                    .clickable(onClick = { editData() }),
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit icon for data ${data.name}",
+                tint = colors.primary
+            )
+            Icon(
+                modifier = Modifier
+                    .size(small + xxSmall)
+                    .clickable(onClick = { }),
+                imageVector = Icons.Default.Share,
+                contentDescription = "Share icon for data ${data.name}",
+                tint = colors.primary
+            )
+            Icon(
+                modifier = Modifier
+                    .size(small + xxSmall)
+                    .clickable(onClick = { deleteData(data) }),
+                imageVector = Icons.Default.Close,
+                contentDescription = "Delete icon for data ${data.name}",
+                tint = colors.primary
+            )
+        }
+
     }
 }

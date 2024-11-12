@@ -59,7 +59,6 @@ import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.thirtyPercent
-import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
@@ -126,36 +125,40 @@ fun DataFieldRowV2(
                     .padding(start = small)
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    modifier = Modifier
-                        .size(small + xxSmall)
-                        .padding(end = xxSmall),
-                    imageVector = Icons.Default.Edit,
-                    tint = MaterialTheme.colors.primary,
-                    contentDescription = "Edit Field Name icon"
-                )
-                Text(
-                    modifier = Modifier
-                        .weight(0.25f),
-                    text = currentDataField.fieldName,
-                    color = MaterialTheme.colors.subtitleTextColour,
-                    style = MaterialTheme.typography.body1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    modifier = Modifier.weight(1.5f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(small + xxSmall)
+                            .padding(end = xxSmall),
+                        imageVector = Icons.Default.Edit,
+                        tint = MaterialTheme.colors.primary,
+                        contentDescription = "Edit Field Name icon"
+                    )
+                    Text(
+                        modifier = Modifier,
+                        text = currentDataField.fieldName,
+                        color = MaterialTheme.colors.subtitleTextColour,
+                        style = MaterialTheme.typography.body1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
 
                 Row(
                     modifier = Modifier
-                        .weight(0.35f)
-                        .padding(end = xxSmall)
+                        .weight(2f)
                         .clickable(
                             onClick = {
                                 expanded = true
                             }
                         ),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         modifier = Modifier
@@ -185,14 +188,13 @@ fun DataFieldRowV2(
                 }
                 Row(
                     modifier = Modifier
-                        .weight(twentyPercent),
+                        .weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Checkbox(
                         modifier = Modifier
-                            .size(small)
-                            .fillMaxWidth(0.5f),
+                            .size(small),
                         checked = isRowEnabled.value,
                         enabled = true,
                         onCheckedChange = {
@@ -207,8 +209,7 @@ fun DataFieldRowV2(
                         )
                     )
                     IconButton(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f),
+                        modifier = Modifier,
                         onClick = {
                             onDataFieldEvent(ShowDeleteDataFieldDialog(currentDataField))
                         }

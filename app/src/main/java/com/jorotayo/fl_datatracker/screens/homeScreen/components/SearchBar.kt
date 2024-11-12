@@ -25,7 +25,7 @@ import com.jorotayo.fl_datatracker.domain.model.Data
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 
@@ -76,9 +76,8 @@ fun SearchBar(
             Icon(
                 modifier =
                 Modifier
-                    .size(medium)
-                    .padding(start = small)
-                    .weight(1f),
+                    .size(Dimen.large)
+                    .padding(start = small),
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Close Search View",
                 tint = MaterialTheme.colors.primary,
@@ -87,8 +86,8 @@ fun SearchBar(
         Card(
             modifier =
             Modifier
-                .padding(xSmall)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(xSmall),
             shape = RoundedCornerShape(small),
             backgroundColor = MaterialTheme.colors.surface
         ) {
@@ -105,7 +104,7 @@ fun SearchBar(
                     Text(
                         modifier = Modifier,
                         text = searchState.hint,
-                        style = typography.h3,
+                        style = typography.h2,
                         color = MaterialTheme.colors.onSurface,
                     )
                 },

@@ -5,18 +5,14 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreen
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEntryScreenViewModel
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsScreen
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.DataFieldsViewModel
 import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreen
-import com.jorotayo.fl_datatracker.screens.homeScreen.HomeScreenViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -32,15 +28,7 @@ fun MainNavGraph(
         startDestination = "home_screen"
     ) {
         composable(route = MainScreens.HomeMainScreens.route) {
-            val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
-            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
-
-            HomeScreen(
-                state = homeScreenViewModel.uiState.value,
-                navController = navController,
-                onHomeEvent = homeScreenViewModel::onEvent,
-                onDataEvent = dataEntryScreenViewModel::onDataEvent,
-            )
+            HomeScreen(navController = navController)
         }
         settingsNavGraph(navController)
         composable(
@@ -54,26 +42,15 @@ fun MainNavGraph(
                 },
             )
         ) {
-            val dataEntryScreenViewModel = hiltViewModel<DataEntryScreenViewModel>()
             DataEntryScreen(
                 navController = navController,
-                sheetState = sheetState,
-                uiState = dataEntryScreenViewModel.uiState.value,
-                onUiEvent = dataEntryScreenViewModel.eventFlow,
-                onDataEvent = dataEntryScreenViewModel::onDataEvent
+                sheetState = sheetState
             )
         }
         composable(
             route = MainScreens.DataFieldsMainScreens.route
         ) {
-            val dataFieldsViewModel = hiltViewModel<DataFieldsViewModel>()
-
-            DataFieldsScreen(
-                onUiEvent = dataFieldsViewModel.eventFlow,
-                onDataFieldEvent = dataFieldsViewModel::onDataFieldEvent,
-                onPresetEvent = dataFieldsViewModel::onPresetEvent,
-                onRowEvent = dataFieldsViewModel::onRowEvent
-            )
+            DataFieldsScreen()
         }
         /*  composable(
               route = MainScreens.DataFieldsMainScreens.route

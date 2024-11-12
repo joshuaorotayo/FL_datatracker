@@ -2,9 +2,7 @@ package com.jorotayo.fl_datatracker.screens.dataEntryScreen
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.neverEqualPolicy
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,13 +13,22 @@ import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.FormSubmitted
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.SetDataValue
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.SetName
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.UpdateDataId
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.UpdateImageIndex
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.UpdateUiState
+import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.ValidateInsertDataForm
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
 import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,25 +46,25 @@ class DataEntryScreenViewModel @Inject constructor(
 
     private val dataId = savedStateHandle.get<Int>("dataId") ?: -1
 
-    private var _uiState = mutableStateOf(initData(presetSetting, dataId), neverEqualPolicy())
-    val uiState: MutableState<DataEntryScreenState> = _uiState
+    private val _uiState = MutableStateFlow(initData(presetSetting, dataId))
+    val uiState = _uiState.asStateFlow()
 
     private var _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onDataEvent(event: DataEvent) {
         when (event) {
-            is DataEvent.ValidateInsertDataForm -> onValidateInsertDataForm(event)
-            is DataEvent.SetName -> onSetName(event)
-            is DataEvent.SetDataValue -> onSetDataValue(event)
-            is DataEvent.UpdateUiState -> onUpdateUiState(event)
-            is DataEvent.UpdateImageIndex -> onUpdateImageIndex(event)
-            is DataEvent.UpdateDataId -> onUpdateDataID(event)
-            is DataEvent.FormSubmitted -> onFormSubmitted()
+            is ValidateInsertDataForm -> onValidateInsertDataForm(event)
+            is SetName -> onSetName(event)
+            is SetDataValue -> onSetDataValue(event)
+            is UpdateUiState -> onUpdateUiState(event)
+            is UpdateImageIndex -> onUpdateImageIndex(event)
+            is UpdateDataId -> onUpdateDataID(event)
+            is FormSubmitted -> onFormSubmitted()
         }
     }
 
-    private fun onValidateInsertDataForm(event: DataEvent.ValidateInsertDataForm) {
+    private fun onValidateInsertDataForm(event: ValidateInsertDataForm) {
         viewModelScope.launch {
             try {
                 val fieldNames = repository.getDataFields().map { it.fieldName }
@@ -102,31 +109,31 @@ class DataEntryScreenViewModel @Inject constructor(
         }
     }
 
-    private fun onSetName(event: DataEvent.SetName) {
+    private fun onSetName(event: SetName) {
         _uiState.value = uiState.value.copy(
             dataName = event.value
         )
     }
 
-    private fun onSetDataValue(event: DataEvent.SetDataValue) {
+    private fun onSetDataValue(event: SetDataValue) {
         uiState.value.dataRows[event.rowIndex].dataItem =
             _uiState.value.dataRows[event.rowIndex].dataItem.copy(
                 dataValue = event.value
             )
     }
 
-    private fun onUpdateUiState(event: DataEvent.UpdateUiState) {
+    private fun onUpdateUiState(event: UpdateUiState) {
         val newUiState = event.value
         _uiState.value = newUiState
     }
 
-    private fun onUpdateDataID(event: DataEvent.UpdateDataId) {
+    private fun onUpdateDataID(event: UpdateDataId) {
         _uiState.value = uiState.value.copy(
             currentDataId = event.value
         )
     }
 
-    private fun onUpdateImageIndex(event: DataEvent.UpdateImageIndex) {
+    private fun onUpdateImageIndex(event: UpdateImageIndex) {
         _uiState.value = uiState.value.copy(
             currentImageIndex = event.value
         )

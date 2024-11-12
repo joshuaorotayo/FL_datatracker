@@ -8,7 +8,9 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -45,6 +47,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.SharedSettingService
@@ -70,7 +73,6 @@ fun MainScreen() {
     val showNavBar = SharedSettingService.showingDashboardNavBar.observeAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-
     Scaffold(
         bottomBar = {
             AnimatedVisibility(visible = showNavBar.value == true) {
@@ -78,7 +80,14 @@ fun MainScreen() {
             }
         }
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(bottom = Dimen.bottomBarPadding + xSmall)
+        ) {
         MainNavGraph(navController, sheetState)
+        }
     }
     ImageBottomActionSheet(
         state = sheetState,
@@ -203,7 +212,7 @@ fun RowScope.AnimatedBottomNavItem(
     BottomNavigationItem(
         label = {
             Text(
-                modifier = Modifier.padding(top = xSmall * scale),
+                modifier = Modifier.padding(top = small),
                 text = mainScreens.title,
                 style = typography.body1,
                 fontSize = typography.body1.fontSize * scale

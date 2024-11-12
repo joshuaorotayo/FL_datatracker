@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -29,6 +31,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
@@ -86,9 +89,8 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.components.AlertDialogLayout
 import com.jorotayo.fl_datatracker.util.components.AlertDialogState
+import com.jorotayo.fl_datatracker.util.exampleDataFieldList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -98,39 +100,34 @@ fun DataFieldsScreenPreview() {
     val examplePreset = Preset(presetId = 0L, presetName = "Default")
 
     FL_DatatrackerTheme {
-        DataFieldsScreen(
-//            uiState = DataFieldScreenState(
-//                showAddPresetDialog = true,
-//                presetList = listOf(examplePreset),
-//                dataFields = exampleDataFieldList,
-//                currentPreset = examplePreset
-//            ),
-            onUiEvent = MutableSharedFlow(),
+        DataFieldsScreenView(
+            uiState = DataFieldScreenState(
+                showAddPresetDialog = false,
+                presetList = listOf(examplePreset),
+                dataFields = exampleDataFieldList,
+                currentPreset = examplePreset
+            ),
             onRowEvent = {},
             onDataFieldEvent = {},
-            onPresetEvent = {}
+            onPresetEvent = {},
+            scaffoldState = rememberScaffoldState()
         )
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DataFieldsScreen(
-    onUiEvent: SharedFlow<UiEvent>,
-    onRowEvent: (RowEvent) -> Unit,
-    onPresetEvent: (PresetEvent) -> Unit,
-    onDataFieldEvent: (DataFieldEvent) -> Unit
-) {
-    onDataFieldEvent(DataFieldEvent.InitScreen)
+fun DataFieldsScreen() {
 
     val viewModel = hiltViewModel<DataFieldsViewModel>()
     val uiState by viewModel.state.collectAsState(DataFieldScreenState())
 
+    viewModel.onDataFieldEvent(DataFieldEvent.InitScreen)
+    val onUiEvent = viewModel.eventFlow
+    val onDataFieldEvent = viewModel::onDataFieldEvent
+    val onPresetEvent = viewModel::onPresetEvent
+    val onRowEvent = viewModel::onRowEvent
+
     val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
-    val fields = uiState.dataFields
-    val presets = uiState.presetList
-    val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = true) {
         onUiEvent.collectLatest { event ->
@@ -149,6 +146,30 @@ fun DataFieldsScreen(
             }
         }
     }
+
+    DataFieldsScreenView(
+        scaffoldState = scaffoldState,
+        uiState = uiState,
+        onDataFieldEvent = onDataFieldEvent,
+        onPresetEvent = onPresetEvent,
+        onRowEvent = onRowEvent
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DataFieldsScreenView(
+    scaffoldState: ScaffoldState,
+    uiState: DataFieldScreenState,
+    onDataFieldEvent: (DataFieldEvent) -> Unit,
+    onPresetEvent: (PresetEvent) -> Unit,
+    onRowEvent: (RowEvent) -> Unit
+) {
+
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val fields = uiState.dataFields
+    val presets = uiState.presetList
 
     Scaffold(
         topBar = {
@@ -186,8 +207,7 @@ fun DataFieldsScreen(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = xSmall, bottom = bottomBarPadding + small),
+                    .fillMaxSize(),
                 state = listState
             ) {
                 item {
@@ -281,6 +301,9 @@ private fun AddEditRow(
                 tint = colors.primary
             )
         }
+        Spacer(modifier = Modifier
+            .height(xSmall)
+            .fillMaxWidth())
     }
 }
 
@@ -355,7 +378,7 @@ private fun ColumnScope.DataFieldColumnHeaders(
             Text(
                 modifier = Modifier
                     .padding(start = regular)
-                    .weight(0.4f),
+                    .weight(1.5f),
                 text = "Name",
                 textAlign = TextAlign.Start,
                 style = typography.body1,
@@ -364,20 +387,23 @@ private fun ColumnScope.DataFieldColumnHeaders(
             Text(
                 modifier = Modifier
                     .padding(start = xxSmall)
-                    .weight(0.3f),
+                    .weight(2f),
                 text = "Type",
-                textAlign = TextAlign.Start,
-                style = typography.body1,
-                color = colors.subtitleTextColour
-            )
-            Text(
-                modifier = Modifier
-                    .weight(0.3f),
-                text = "Enabled?",
                 textAlign = TextAlign.Center,
                 style = typography.body1,
                 color = colors.subtitleTextColour
             )
+//            Text(
+//                modifier = Modifier
+//                    .weight(1f),
+//                text = "Enabled?",
+//                textAlign = TextAlign.Center,
+//                style = typography.body1,
+//                color = colors.subtitleTextColour
+//            )
+            Spacer(modifier = Modifier
+                .weight(2f)
+                .height(xSmall))
         }
     }
 }

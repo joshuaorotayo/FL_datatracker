@@ -76,7 +76,11 @@ fun TopBar(toggleSearchBar: () -> Unit) {
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(text = "Search", color = MaterialTheme.colors.onSurface)
+                    Text(
+                        text = "Search",
+                        style = typography.h2,
+                        color = MaterialTheme.colors.onSurface
+                    )
                     SimpleIconButton(
                         modifier =
                         Modifier
