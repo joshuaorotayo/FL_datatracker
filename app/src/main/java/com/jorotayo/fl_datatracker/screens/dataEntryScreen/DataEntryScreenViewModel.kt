@@ -13,20 +13,23 @@ import com.jorotayo.fl_datatracker.domain.model.Preset
 import com.jorotayo.fl_datatracker.domain.repository.AppRepository
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
+import com.jorotayo.fl_datatracker.screens.UiState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.FormSubmitted
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.SetDataValue
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.SetName
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.UpdateDataId
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.UpdateImageIndex
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.UpdateUiState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.DataEvent.ValidateInsertDataForm
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
 import com.jorotayo.fl_datatracker.util.getCurrentDateTime
 import com.jorotayo.fl_datatracker.util.toString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -46,18 +49,23 @@ class DataEntryScreenViewModel @Inject constructor(
 
     private val dataId = savedStateHandle.get<Int>("dataId") ?: -1
 
-    private val _uiState = MutableStateFlow(initData(presetSetting, dataId))
-    val uiState = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<DataEntryScreenState>>(UiState.Empty)
+    val uiState: StateFlow<UiState<DataEntryScreenState>> = _uiState.asStateFlow()
+
+    private var currentState = DataEntryScreenState()
 
     private var _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    init {
+        initData(presetSetting, dataId)
+    }
 
     fun onDataEvent(event: DataEvent) {
         when (event) {
             is ValidateInsertDataForm -> onValidateInsertDataForm(event)
             is SetName -> onSetName(event)
             is SetDataValue -> onSetDataValue(event)
-            is UpdateUiState -> onUpdateUiState(event)
             is UpdateImageIndex -> onUpdateImageIndex(event)
             is UpdateDataId -> onUpdateDataID(event)
             is FormSubmitted -> onFormSubmitted()
@@ -87,11 +95,11 @@ class DataEntryScreenViewModel @Inject constructor(
                         )
                     )
 
-                    _uiState.value = newUiState.value
+                    currentState = newUiState.value
 
                     throw InvalidDataException("Data Form could not be saved. Please check fields")
                 } else {
-                    if (uiState.value.currentDataId == (-1).toLong()) {
+                    if (currentState.currentDataId == (-1).toLong()) {
                         saveDataForm(dataFormResults.second)
                         _eventFlow.emit(UiEvent.SaveDataForm)
                     } else {
@@ -110,39 +118,57 @@ class DataEntryScreenViewModel @Inject constructor(
     }
 
     private fun onSetName(event: SetName) {
-        _uiState.value = uiState.value.copy(
+        currentState = currentState.copy(
             dataName = event.value
         )
+        _uiState.value = UiState.Success(currentState)
     }
 
     private fun onSetDataValue(event: SetDataValue) {
-        uiState.value.dataRows[event.rowIndex].dataItem =
-            _uiState.value.dataRows[event.rowIndex].dataItem.copy(
+        /* uiState.value.dataRows[event.rowIndex].dataItem =
+             _uiState.value.dataRows[event.rowIndex].dataItem.copy(
+                 dataValue = event.value
+             )
+
+         currentState.dataRows[event.rowIndex].dataItem = currentState.dataRows[event.rowIndex].dataItem.copy(
+             dataValue = event.value)
+
+         currentState = currentState.copy(
+             dataRows = currentState.dataRows
+         )
+ */
+        var currentRows = currentState.dataRows.toMutableList()
+        Log.e(TAG, "onSetDataValue: ${currentRows.size}")
+        val updatedDataRows = currentState.dataRows.toMutableList().apply {
+            this[event.rowIndex].dataItem = this[event.rowIndex].dataItem.copy(
                 dataValue = event.value
             )
-    }
+        }
 
-    private fun onUpdateUiState(event: UpdateUiState) {
-        val newUiState = event.value
-        _uiState.value = newUiState
+        currentState = currentState.copy(dataRows = updatedDataRows)
+
+        _uiState.value = UiState.Success(currentState)
     }
 
     private fun onUpdateDataID(event: UpdateDataId) {
-        _uiState.value = uiState.value.copy(
+        currentState = currentState.copy(
             currentDataId = event.value
         )
+        _uiState.value = UiState.Success(currentState)
     }
 
     private fun onUpdateImageIndex(event: UpdateImageIndex) {
-        _uiState.value = uiState.value.copy(
+        currentState = currentState.copy(
             currentImageIndex = event.value
         )
+        _uiState.value = UiState.Success(currentState)
     }
 
     private fun onFormSubmitted() {
-        _uiState.value = uiState.value.copy(
+        currentState = currentState.copy(
             formSubmitted = true
         )
+        _uiState.value = UiState.Success(currentState)
     }
 
     private fun saveDataForm(dataForm: DataEntryScreenState) {
@@ -163,9 +189,9 @@ class DataEntryScreenViewModel @Inject constructor(
     }
 
     private fun updateDataForm(dataForm: DataEntryScreenState) {
-        val currentData = repository.getDataByDataId(uiState.value.currentDataId)
+        val currentData = repository.getDataByDataId(currentState.currentDataId)
 
-        repository.deleteDataById(uiState.value.currentDataId)
+        repository.deleteDataById(currentState.currentDataId)
 
         val removeDataItems = repository.getDataItemListByDataAndPresetId(
             currentData.dataId,
@@ -178,7 +204,7 @@ class DataEntryScreenViewModel @Inject constructor(
         Log.i(TAG, "updateDataForm: ${currentData.dataId}")
 
         val newData = Data(
-            dataId = uiState.value.currentDataId,
+            dataId = currentState.currentDataId,
             name = dataForm.dataName,
             dataPresetId = currentData.dataPresetId,
             createdTime = currentData.createdTime,
@@ -212,66 +238,73 @@ class DataEntryScreenViewModel @Inject constructor(
         }
     }
 
-    private fun initData(presetSetting: Preset, dataId: Int): DataEntryScreenState {
-        val longID = dataId.toLong()
-        if (this.dataId == -1) {
-            // If creating a new record of data to save
-            // check for the current preset
+    private fun initData(presetSetting: Preset, dataId: Int) {
+        _uiState.value = UiState.Loading
 
+        viewModelScope.launch(Dispatchers.IO) {
+            val longID = dataId.toLong()
             val datafields =
                 repository.getDataFieldsByPresetIdEnabled(presetId = presetSetting.presetId)
 
-            val list: MutableList<DataRowState> = ArrayList()
-            datafields.forEach { dataField ->
-                list += DataRowState(
-                    DataItem(
-                        dataId = longID,
-                        presetId = this.presetSetting.presetId,
-                        fieldName = dataField.fieldName,
-                        dataFieldType = dataField.dataFieldType,
-                        first = dataField.first,
-                        second = dataField.second,
-                        third = dataField.third,
-                        isEnabled = dataField.isEnabled,
-                        fieldDescription = dataField.fieldHint,
-                        dataValue = ""
+            if (datafields.isEmpty()) {
+                //if preset has no datafields
+
+                _uiState.value = UiState.Empty
+            } else if (dataId == -1) {
+                // If creating a new record of data to save
+                // check for the current preset
+
+
+                //if preset has some datafields
+                val list: MutableList<DataRowState> = ArrayList()
+                datafields.forEach { dataField ->
+                    list += DataRowState(
+                        DataItem(
+                            dataId = longID,
+                            presetId = presetSetting.presetId,
+                            fieldName = dataField.fieldName,
+                            dataFieldType = dataField.dataFieldType,
+                            first = dataField.first,
+                            second = dataField.second,
+                            third = dataField.third,
+                            isEnabled = dataField.isEnabled,
+                            fieldDescription = dataField.fieldHint,
+                            dataValue = ""
+                        )
                     )
+                }
+
+                val newDataFieldScreenState =
+                    DataEntryScreenState(dataRows = list, presetSetting = presetSetting)
+
+                delay(5 * 1000L)
+                _uiState.value = UiState.Success(newDataFieldScreenState)
+                currentState = newDataFieldScreenState
+            } else {
+                val currentData = repository.getDataByDataId(longID)
+                val currentDataItems = repository.getDataItemsListByDataId(
+                    currentData.dataId
                 )
-            }
 
-            return DataEntryScreenState(
-                dataName = "",
-                dataRows = list,
-                nameError = false,
-                nameErrorMsg = "",
-                formSubmitted = false,
-                currentImageIndex = 0,
-                presetSetting = presetSetting
-            )
-        } else {
-            val currentData = repository.getDataByDataId(longID)
-            val currentDataItems = repository.getDataItemsListByDataId(
-                currentData.dataId
-            )
+                Log.i(TAG, "currentData   " + currentDataItems.size)
+                val list: MutableList<DataRowState> = ArrayList()
+                Log.i(TAG, "original   " + list.size)
+                currentDataItems.forEach { item ->
+                    list += DataRowState(
+                        item
+                    )
+                }
 
-            Log.i(TAG, "currentData   " + currentDataItems.size)
-            val list: MutableList<DataRowState> = ArrayList()
-            Log.i(TAG, "original   " + list.size)
-            currentDataItems.forEach { item ->
-                list += DataRowState(
-                    item
+                val newDataFieldScreenState = DataEntryScreenState(
+                    dataName = currentData.name,
+                    dataRows = list,
+                    presetSetting = presetSetting
                 )
-            }
 
-            return DataEntryScreenState(
-                dataName = currentData.name,
-                dataRows = list,
-                nameError = false,
-                nameErrorMsg = "",
-                formSubmitted = false,
-                currentImageIndex = 0,
-                presetSetting = presetSetting
-            )
+                delay(5 * 1000L)
+                _uiState.value = UiState.Success(newDataFieldScreenState)
+                currentState = newDataFieldScreenState
+            }
         }
     }
 

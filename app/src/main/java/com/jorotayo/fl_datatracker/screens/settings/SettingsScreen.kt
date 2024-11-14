@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.settings
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -20,11 +19,22 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DataFieldSettings
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DisplaySettings
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.FAQsList
+import com.jorotayo.fl_datatracker.screens.settings.SettingsViewModel.SettingNavigation
+import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
@@ -33,23 +43,12 @@ import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 private fun PreviewSettingsScreen() {
     FL_DatatrackerTheme {
         SettingsScreen(
-            {},
-            {},
-            {}
+            navController = rememberNavController()
         )
     }
 }
@@ -58,11 +57,41 @@ private fun PreviewSettingsScreen() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreen(
-    onDisplaySettingsClick: () -> Unit,
-    onDataFieldSettingsClick: () -> Unit,
-    onFAQSListClick: () -> Unit
+    navController: NavController
 ) {
+    val viewModel = hiltViewModel<SettingsViewModel>()
+    val uiState by viewModel.uiState.collectAsState(DisplayUiState())
+
     val scaffoldState = rememberScaffoldState()
+
+    val onSettingEvent = viewModel::onSettingEvent
+
+    LaunchedEffect(key1 = true) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                SettingNavigation.DataFieldSettings -> {
+                    navController.navigate(SettingScreens.DataFieldSettings.route) {
+                        popUpTo("settings_screen")
+                        launchSingleTop = true
+                    }
+                }
+
+                SettingNavigation.DisplaySettings -> {
+                    navController.navigate(SettingScreens.DisplaySettings.route) {
+                        popUpTo("settings_screen")
+                        launchSingleTop = true
+                    }
+                }
+
+                SettingNavigation.FAQsList -> {
+                    navController.navigate(SettingScreens.FAQsList.route) {
+                        popUpTo("settings_screen")
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -113,25 +142,21 @@ fun SettingsScreen(
                         Column {
                             SettingRow(
                                 setting = SettingScreens.DisplaySettings,
-                                onSettingSelected = onDisplaySettingsClick
+                                onSettingSelected = { onSettingEvent(DisplaySettings) }
                             )
                             SettingDivider()
                             SettingRow(
                                 setting = SettingScreens.DataFieldSettings,
-                                onSettingSelected = onDataFieldSettingsClick
+                                onSettingSelected = { onSettingEvent(DataFieldSettings) }
                             )
                             SettingDivider()
                             SettingRow(
                                 setting = SettingScreens.FAQsList,
-                                onSettingSelected = onFAQSListClick
+                                onSettingSelected = { onSettingEvent(FAQsList) }
                             )
                         }
                     }
                 }
-
-//                item {
-//                    FormBase()
-//                }
             }
 
             DefaultSnackbar(
@@ -152,4 +177,9 @@ fun SettingsScreen(
             )
         }
     }
+}
+
+@Composable
+fun SettingsScreenView(modifier: Modifier = Modifier) {
+
 }

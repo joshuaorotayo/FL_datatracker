@@ -28,6 +28,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,6 +56,7 @@ import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TIME
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
 import com.jorotayo.fl_datatracker.navigation.MainScreens
+import com.jorotayo.fl_datatracker.screens.UiState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.FormNameHeader
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.NoDataForm
@@ -70,7 +72,6 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
-import com.jorotayo.fl_datatracker.util.Dimen.bottomBarPadding
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -78,6 +79,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -103,13 +105,14 @@ fun PreviewEmptyDataEntryScreen() {
     FL_DatatrackerTheme {
         DataEntryScreenView(
             scaffoldState = rememberScaffoldState(),
-            uiState = DataEntryScreenState(),
+            uiState = UiState.Success(DataEntryScreenState()),
             onDataEvent = {},
             listState = rememberLazyListState(),
             sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
         )
     }
 }
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -119,7 +122,7 @@ fun DataEntryScreen(
     sheetState: ModalBottomSheetState
 ) {
     val viewModel = hiltViewModel<DataEntryScreenViewModel>()
-    val state by viewModel.uiState.collectAsState(DataEntryScreenState())
+    val state by viewModel.uiState.collectAsState()
 
     val onUiEvent = viewModel.eventFlow
     val onDataEvent = viewModel::onDataEvent
@@ -171,223 +174,244 @@ fun DataEntryScreen(
 fun DataEntryScreenView(
     scaffoldState: ScaffoldState,
     sheetState: ModalBottomSheetState,
-    uiState: DataEntryScreenState,
+    uiState: UiState<DataEntryScreenState>,
     onDataEvent: (DataEvent) -> Unit,
     listState: LazyListState,
 ) {
     val scope = rememberCoroutineScope()
+    Scaffold(
+        scaffoldState = scaffoldState,
+        snackbarHost = {
+            scaffoldState.snackbarHostState
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            //ui Content
+            when (uiState) {
 
-    Box(modifier = Modifier.fillMaxSize()) { // box for ModalBottomSheet
-        Scaffold(
-            topBar = {
-                Column(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .padding(top = large)
-                ) {
-                    HeaderRow()
-                    if (uiState.dataRows.isNotEmpty()) {
-                        DataFormHeadings(uiState)
-                    } else {
+                UiState.Loading -> {
+
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Center),
+                        color = colors.onPrimary
+                    )
+                }
+
+                UiState.Empty -> {
+                    Column(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .padding(top = large)
+                    ) {
+                        HeaderRow()
                         NoDataFormSection()
                     }
                 }
-            },
-            scaffoldState = scaffoldState,
-            snackbarHost = {
-                scaffoldState.snackbarHostState
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            ) {
-                Card(
-                    modifier = Modifier
-                        .padding(small)
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(small),
-                    backgroundColor = colors.surface
-                ) {
-                    LazyColumn(
-                        state = listState,
+
+                is UiState.Success -> {
+                    val data = uiState.data.dataRows
+
+                    Column(
                         modifier = Modifier
                             .wrapContentHeight()
-                            .fillMaxWidth()
+                            .padding(top = large)
                     ) {
-                        item {
-                            // Contents of data entry form
-                            Column(
+                        HeaderRow()
+                        DataFormHeadings(uiState.data)
+
+
+                        Card(
+                            modifier = Modifier
+                                .padding(small)
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(small),
+                            backgroundColor = colors.surface
+                        ) {
+                            LazyColumn(
+                                state = listState,
                                 modifier = Modifier
-                                    .fillMaxWidth()
                                     .wrapContentHeight()
+                                    .fillMaxWidth()
                             ) {
-                                FormNameHeader(
-                                    setName = {
-                                        onDataEvent(DataEvent.SetName(value = it))
-                                        onDataEvent(DataEvent.FormSubmitted)
-                                    },
-                                    data = uiState
-                                )
-                                Divider(
-                                    modifier = Modifier
-                                        .padding(horizontal = xSmall, vertical = zero)
-                                        .fillMaxWidth(),
-                                    color = colors.secondary,
-                                    thickness = 0.5.dp
-                                )
-                            }
-                        }
-
-                        itemsIndexed(items = uiState.dataRows) { index, data ->
-                            when (data.dataItem.dataFieldType) {
-                                SHORT_TEXT -> {
-                                    data.dataItem.dataValue = formShortTextRowV2(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
-                                            )
-                                        }
-                                    )
+                                item {
+                                    // Contents of data entry form
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .wrapContentHeight()
+                                    ) {
+                                        FormNameHeader(
+                                            setName = {
+                                                onDataEvent(DataEvent.SetName(value = it))
+                                                onDataEvent(DataEvent.FormSubmitted)
+                                            },
+                                            data = uiState.data
+                                        )
+                                        Divider(
+                                            modifier = Modifier
+                                                .padding(horizontal = xSmall, vertical = zero)
+                                                .fillMaxWidth(),
+                                            color = colors.secondary,
+                                            thickness = 0.5.dp
+                                        )
+                                    }
                                 }
 
-                                LONG_TEXT -> {
-                                    data.dataItem.dataValue = formLongTextRowV2(
-                                        data = data.dataItem,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
+                                itemsIndexed(items = data) { index, data ->
+                                    when (data.dataItem.dataFieldType) {
+                                        SHORT_TEXT -> {
+                                            data.dataItem.dataValue = formShortTextRowV2(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
-                                }
 
-                                BOOLEAN -> {
-                                    data.dataItem.dataValue = formRadioRowV2(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
+                                        LONG_TEXT -> {
+                                            data.dataItem.dataValue = formLongTextRowV2(
+                                                data = data.dataItem,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
-                                }
 
-                                DATE -> {
-                                    data.dataItem.dataValue = formDateRowV2(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
+                                        BOOLEAN -> {
+                                            data.dataItem.dataValue = formRadioRowV2(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
-                                }
 
-                                TIME -> {
-                                    data.dataItem.dataValue = formTimeRowV2(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
+                                        DATE -> {
+                                            data.dataItem.dataValue = formDateRowV2(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
-                                }
 
-                                COUNT -> {
-                                    data.dataItem.dataValue = formCountRowV2(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
+                                        TIME -> {
+                                            data.dataItem.dataValue = formTimeRowV2(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
-                                }
 
-                                TRISTATE -> {
-                                    data.dataItem.dataValue = formRadioRowV2(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
+                                        COUNT -> {
+                                            data.dataItem.dataValue = formCountRowV2(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
+
+                                        TRISTATE -> {
+                                            data.dataItem.dataValue = formRadioRowV2(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        }
+
+                                        IMAGE -> {
+                                            data.dataItem.dataValue = formImageRowV4(
+                                                data = data,
+                                                onClick = {
+                                                    onDataEvent(DataEvent.UpdateImageIndex(index))
+                                                },
+                                                sheetState = sheetState,
+                                                function = {
+                                                    scope.launch {
+                                                        sheetState.show()
+                                                    }
+                                                }
+                                            )
+                                        }
+
+                                        LIST -> {
+                                            data.dataItem.dataValue = formListRowV4(
+                                                data = data,
+                                                setDataValue = {
+                                                    onDataEvent(
+                                                        DataEvent.SetDataValue(
+                                                            value = it,
+                                                            rowIndex = index
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    }
                                 }
 
-                                IMAGE -> {
-                                    data.dataItem.dataValue = formImageRowV4(
-                                        data = data,
+                                item {
+                                    // Save Button Footer
+                                    Button(
+                                        modifier = Modifier
+                                            .padding(small)
+                                            .fillMaxWidth(),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = colors.primary
+                                        ),
                                         onClick = {
-                                            onDataEvent(DataEvent.UpdateImageIndex(index))
-                                        },
-                                        sheetState = sheetState,
-                                        function = {
-                                            scope.launch {
-                                                sheetState.show()
-                                            }
-                                        }
-                                    )
+                                            onDataEvent(DataEvent.ValidateInsertDataForm(uiState.data))
+                                            onDataEvent(DataEvent.FormSubmitted)
+                                        }) {
+                                        Text(
+                                            text = stringResource(id = R.string.save_data_btn),
+                                            color = colors.onPrimary
+                                        )
+                                    }
                                 }
-
-                                LIST -> {
-                                    data.dataItem.dataValue = formListRowV4(
-                                        data = data,
-                                        setDataValue = {
-                                            onDataEvent(
-                                                DataEvent.SetDataValue(
-                                                    value = it,
-                                                    rowIndex = index
-                                                )
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-                        item {
-                            // Save Button Footer
-                            Button(
-                                modifier = Modifier
-                                    .padding(small)
-                                    .fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = colors.primary
-                                ),
-                                onClick = {
-                                    onDataEvent(DataEvent.ValidateInsertDataForm(uiState))
-                                    onDataEvent(DataEvent.FormSubmitted)
-                                }) {
-                                Text(
-                                    text = stringResource(id = R.string.save_data_btn),
-                                    color = colors.onPrimary
-                                )
                             }
                         }
                     }
@@ -401,10 +425,14 @@ fun DataEntryScreenView(
                             .align(Center)
                     )
                 }
+
+                UiState.Idle -> TODO()
+                UiState.Error -> TODO()
             }
         }
     }
 }
+
 
 @Composable
 private fun HeaderRow() {
@@ -478,7 +506,6 @@ private fun NoDataFormSection() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = bottomBarPadding)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             NoDataForm(modifier = Modifier.align(alignment = Center))

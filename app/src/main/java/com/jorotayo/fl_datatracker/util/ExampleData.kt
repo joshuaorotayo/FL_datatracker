@@ -12,6 +12,7 @@ import com.jorotayo.fl_datatracker.domain.util.DataFieldType.LONG_TEXT
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.SHORT_TEXT
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TIME
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType.TRISTATE
+import com.jorotayo.fl_datatracker.screens.UiState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataEntryScreenState
 import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.DataRowState
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
@@ -286,6 +287,7 @@ val listData: DataRowState = DataRowState(
 )
 
 val examplePopulatedDataEntry =
+    UiState.Success(
     DataEntryScreenState(
         dataRows = mutableListOf(
             shortData, LongData, two_options, date, timeData, count, three_options, imageData,
@@ -301,4 +303,5 @@ val examplePopulatedDataEntry =
             presetId = 0,
             presetName = "Default"
         )
+    )
     )
