@@ -1,8 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.rowComponents
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -11,8 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
@@ -40,28 +38,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataField
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
+import com.jorotayo.fl_datatracker.util.Dimen.zero
 import com.jorotayo.fl_datatracker.util.TransparentTextField
 import com.jorotayo.fl_datatracker.util.exampleShortDataRowState
 import com.jorotayo.fl_datatracker.util.getHeaderColour
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 private fun PreviewRowDetails() {
     val example = remember {
@@ -86,29 +83,21 @@ fun RowDetails(
     var expanded by remember { mutableStateOf(false) }
     val items = DataFieldType.values().map { dataFieldType -> dataFieldType.type }
     val icons = DataFieldType.values().map { dataFieldImage -> dataFieldImage.image }
-    val isHintVisible = remember { mutableStateOf(true) }
-    val isEditOptionsVisible = remember { mutableStateOf(false) }
+    val isHintVisible = remember { mutableStateOf(false) }
+    val isEditOptionsVisible = remember { mutableStateOf(true) }
 
     Column(
-        modifier = Modifier
-            .background(
-                if (isSystemInDarkTheme()) {
-                    if (isRowEnabled.value) MaterialTheme.colors.surface
-                    else MaterialTheme.colors.primary.copy(0.3f)
-                } else if (isRowEnabled.value) MaterialTheme.colors.surface
-                else MaterialTheme.colors.primary.copy(0.3f)
-            )
+        modifier = Modifier.padding(xSmall)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(xSmall),
+                .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 modifier = Modifier
-                    .wrapContentSize()
+                    .size(small + xxSmall)
                     .padding(end = xxSmall),
                 imageVector = Icons.Default.Edit,
                 tint = MaterialTheme.colors.primary,
@@ -116,10 +105,10 @@ fun RowDetails(
             )
             Text(
                 modifier = Modifier
-                    .weight(0.30f),
+                    .weight(0.25f),
                 text = rowData.value.dataField.fieldName,
-                color = MaterialTheme.colors.onSurface,
-                style = MaterialTheme.typography.body2,
+                color = MaterialTheme.colors.subtitleTextColour,
+                style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Ellipsis
             )
 
@@ -135,7 +124,8 @@ fun RowDetails(
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = xSmall),
+                        .size(small + xxSmall)
+                        .padding(end = xxSmall),
                     imageVector = icons[rowData.value.dataField.dataFieldType],
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
                     tint = MaterialTheme.colors.primary
@@ -143,13 +133,13 @@ fun RowDetails(
                 Text(
                     modifier = Modifier,
                     text = items[rowData.value.dataField.dataFieldType],
-                    color = MaterialTheme.colors.onSurface,
-                    style = MaterialTheme.typography.body2
+                    color = MaterialTheme.colors.subtitleTextColour,
+                    style = MaterialTheme.typography.body1
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = stringResource(R.string.dataField_type_dropdown),
-                    tint = MaterialTheme.colors.onSurface
+                    tint = MaterialTheme.colors.subtitleTextColour
                 )
                 DataFieldTypeDropDownV2(
                     isExpanded = expanded,
@@ -164,14 +154,14 @@ fun RowDetails(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-
                 Checkbox(
                     modifier = Modifier
+                        .size(small)
                         .fillMaxWidth(0.5f),
                     checked = isRowEnabled.value,
                     enabled = true,
                     onCheckedChange = {
-                        isRowEnabled.value = !isRowEnabled.value
+//                        isRowEnabled.value = !isRowEnabled.value
                         onRowEvent(RowEvent.ToggleRow(rowData.value.dataField.dataFieldId))
                     },
                     colors = CheckboxDefaults.colors(
@@ -199,14 +189,13 @@ fun RowDetails(
             SelectHintType(rowData.value, textColour, isHintVisible, isEditOptionsVisible)
         }
         AnimatedVisibility(visible = !isHintVisible.value && isEditOptionsVisible.value) {
-            SelectEditType(rowData.value, onRowEvent, textColour)
+            SelectEditType(rowData.value, onRowEvent)
         }
         AnimatedVisibility(visible = !isHintVisible.value && isEditOptionsVisible.value) {
             HideEditRow(isHintVisible, isEditOptionsVisible)
         }
     }
 }
-
 
 @Composable
 fun SelectHintType(
@@ -259,24 +248,23 @@ fun BasicVisibleHint(
     textColour: Color,
     isHintVisible: MutableState<Boolean>,
     isEditOptionsVisible: MutableState<Boolean>
-//    onDataFieldEvent: (DataFieldEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = Dimen.zero),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
+            modifier = Modifier.padding(start = small),
             text = "Hint: ",
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colors.subtitleTextColour,
+            style = MaterialTheme.typography.body1
         )
         Text(
             text = "$fieldHint",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1.0f))
         IconButton(
@@ -284,8 +272,8 @@ fun BasicVisibleHint(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            })
-        {
+            }
+        ) {
             Icon(
                 modifier = Modifier,
                 imageVector = Icons.Default.Edit,
@@ -307,20 +295,21 @@ private fun BooleanHintRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = Dimen.zero),
+            .padding(horizontal = xSmall, vertical = zero),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.padding(start = small),
             text = stringResource(R.string.bool_placeholder),
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colors.subtitleTextColour,
+            style = MaterialTheme.typography.body1
         )
         Text(
-            text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            text = " ${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}",
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
@@ -349,21 +338,21 @@ private fun TriStateHintRow(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = xSmall, vertical = Dimen.zero),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.padding(start = small, end = xxSmall),
             text = stringResource(R.string.tristate_placeholder),
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colors.subtitleTextColour,
+            style = MaterialTheme.typography.body1
         )
         Text(
-            text = "${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.body2
+            text = " ${currentDataField.first.uppercase()}/${currentDataField.second.uppercase()}/${currentDataField.third.uppercase()}",
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
@@ -371,8 +360,8 @@ private fun TriStateHintRow(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            })
-        {
+            }
+        ) {
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_tristate_value),
@@ -382,29 +371,25 @@ private fun TriStateHintRow(
     }
 }
 
-
 @Composable
 fun SelectEditType(
     rowData: DataFieldRowState,
-    onRowEvent: (RowEvent) -> Unit,
-    textColour: Color
+    onRowEvent: (RowEvent) -> Unit
 ) {
-
     Column(
         modifier = Modifier.wrapContentHeight()
     ) {
-
         when (rowData.dataField.dataFieldType) {
             DataFieldType.SHORT_TEXT.ordinal -> {
-                BasicEditHint(rowData, onRowEvent, textColour)
+                BasicEditHint(rowData, onRowEvent)
             }
 
             DataFieldType.LONG_TEXT.ordinal -> {
-                BasicEditHint(rowData, onRowEvent, textColour)
+                BasicEditHint(rowData, onRowEvent)
             }
 
             DataFieldType.LIST.ordinal -> {
-                BasicEditHint(rowData, onRowEvent, textColour)
+                BasicEditHint(rowData, onRowEvent)
             }
 
             DataFieldType.BOOLEAN.ordinal -> {
@@ -416,14 +401,12 @@ fun SelectEditType(
             }
         }
     }
-
 }
 
 @Composable
 fun BasicEditHint(
     currentRowState: DataFieldRowState,
-    onRowEvent: (RowEvent) -> Unit,
-    textColour: Color,
+    onRowEvent: (RowEvent) -> Unit
 ) {
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
     val fieldHint =
@@ -432,7 +415,7 @@ fun BasicEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(bottom = Dimen.xxxSmall),
+            .padding(bottom = xxxSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -441,18 +424,18 @@ fun BasicEditHint(
                 .wrapContentHeight()
                 .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
-                textColor = textColour,
+                textColor = MaterialTheme.colors.subtitleTextColour,
                 backgroundColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
+                focusedIndicatorColor = Color.Transparent,
             ),
             value = hintText,
             placeholder = {
                 Text(
                     text = fieldHint!!,
-                    color = if (hintText.text.isBlank()) textColour else Color.Black,
+                    color = if (hintText.text.isBlank()) MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Normal
                 )
             },
             onValueChange = { newText ->
@@ -481,10 +464,10 @@ private fun BooleanEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = xSmall, top = Dimen.zero, end = xSmall, bottom = xSmall),
+            .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        //boolean text fields for editable
+        // boolean text fields for editable
         TransparentTextField(
             modifier = Modifier.weight(1f),
             text = firstText.value,
@@ -536,10 +519,10 @@ private fun TriStateEditHint(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(start = xSmall, top = Dimen.zero, end = xSmall, bottom = xSmall),
+            .padding(start = xSmall, top = zero, end = xSmall, bottom = xSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        //boolean text fields for editable
+        // boolean text fields for editable
         TransparentTextField(
             modifier = Modifier.weight(1f),
             text = firstText.value,
@@ -617,7 +600,7 @@ private fun HideEditRow(
                 .padding(end = xxSmall),
             text = stringResource(R.string.hideEditRowText),
             color = MaterialTheme.colors.primary.copy(alpha = 0.7f),
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1
         )
         Icon(
             imageVector = Icons.Default.ArrowUpward,

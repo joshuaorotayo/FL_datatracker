@@ -6,7 +6,6 @@ import com.jorotayo.fl_datatracker.domain.model.MyObjectBox
 import io.objectbox.BoxStore
 import io.objectbox.android.Admin
 
-
 object ObjectBox {
     private lateinit var boxStore: BoxStore
     lateinit var admin: Admin
@@ -23,8 +22,7 @@ object ObjectBox {
         }
     }
 
-
-    fun get(): BoxStore {
+    fun boxStore(): BoxStore {
         return boxStore
     }
 }

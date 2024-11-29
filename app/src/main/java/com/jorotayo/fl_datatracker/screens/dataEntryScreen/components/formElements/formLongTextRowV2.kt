@@ -1,8 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,14 +12,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -31,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
@@ -66,8 +64,7 @@ fun formLongTextRowV2(
     data: DataItem,
     setDataValue: (String) -> Unit,
 ): String {
-    //define any local variables
-    val textColour = if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
+    // define any local variables
     val maxChar = 200
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataValue)) }
 
@@ -75,15 +72,15 @@ fun formLongTextRowV2(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.surface)
             .padding(small)
     ) {
         Text(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(bottom = Dimen.xxSmall),
             text = data.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.subtitleTextColour,
         )
         // Data Field Name Data Capture
 
@@ -96,44 +93,38 @@ fun formLongTextRowV2(
                         stringResource(id = R.string.edit_long_text),
                         data.fieldName
                     ),
-                    tint = textColour
+                    tint = MaterialTheme.colors.primary
                 )
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .sizeIn(maxHeight = with(LocalDensity.current) {
-                    (lineHeight * 5).toDp()
-                }),
+                .sizeIn(
+                    maxHeight = with(LocalDensity.current) {
+                        (lineHeight * 5).toDp()
+                    }
+                ),
             value = text,
             onValueChange = { newText ->
                 setText(newText.ofMaxLength(maxLength = maxChar))
                 setDataValue(text.text)
             },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                textColor = MaterialTheme.colors.onSurface
-            ),
             maxLines = 4,
             placeholder = {
                 (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else "Please enter content for field: ${data.fieldName}")?.let {
                     Text(
                         text = it,
-                        color = if (text.text.isBlank()) textColour else MaterialTheme.colors.onSurface,
-                        textAlign = TextAlign.Start
+                        color = MaterialTheme.colors.subtitleTextColour,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
         )
-        //Max Chars count
+        // Max Chars count
         Text(
             text = "${text.text.length} / $maxChar",
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.caption,
-            color = Color.Gray,
+            color = MaterialTheme.colors.subtitleTextColour,
             modifier = Modifier
                 .fillMaxWidth()
         )

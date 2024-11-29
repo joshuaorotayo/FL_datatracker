@@ -39,9 +39,11 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import kotlinx.coroutines.launch
 
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
+    name = "Dark Mode"
+)
 @Preview(
     showBackground = true,
     name = "Light Mode"
@@ -65,7 +67,6 @@ fun PreviewBasicDeleteDataDialog() {
     }
 }
 
-
 @Composable
 fun BasicDeleteDataDialog(
     modifier: Modifier,
@@ -74,7 +75,6 @@ fun BasicDeleteDataDialog(
     state: MutableState<Boolean>,
     data: Data,
 ) {
-
     val scope = rememberCoroutineScope()
 
     if (state.value) {
@@ -96,8 +96,7 @@ fun BasicDeleteDataDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = small)
-                )
-                {
+                ) {
                     Icon(
                         modifier = Modifier
                             .padding(horizontal = small),
@@ -133,8 +132,7 @@ fun BasicDeleteDataDialog(
                     Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
-                )
-                {
+                ) {
                     TextButton(onClick = {
                         state.value = false
                     }) {

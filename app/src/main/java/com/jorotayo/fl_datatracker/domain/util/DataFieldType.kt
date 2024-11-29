@@ -23,7 +23,6 @@ enum class DataFieldType(val type: String, val image: ImageVector) {
     IMAGE(type = "Image", image = Icons.Default.Image),
     LIST(type = "List", image = Icons.Default.List);
 
-
     override fun toString(): String {
         return type
     }

@@ -62,7 +62,6 @@ fun PreviewFormCountRowV2() {
             setDataValue = {}
         )
     }
-
 }
 
 @Composable
@@ -76,13 +75,11 @@ fun formCountRowV2(
     val headerColour =
         if (isSystemInDarkTheme()) darkSurfaceHeadingColour else lightSurfaceHeadingColour
 
-
     Column(
         modifier = Modifier
             .padding(xSmall)
             .fillMaxWidth()
             .wrapContentSize()
-            .background(MaterialTheme.colors.surface)
     ) {
         Text(
             modifier = Modifier
@@ -141,8 +138,8 @@ fun formCountRowV2(
                             unChanged.value = false
                             setDataValue(count.value.toString())
                         }
-                    })
-                {
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Default.Remove,
                         contentDescription = stringResource(id = R.string.decrement_description),
@@ -202,7 +199,6 @@ fun formCountRowV2(
             }
         }
     }
-
 
     return count.value.toString()
 }

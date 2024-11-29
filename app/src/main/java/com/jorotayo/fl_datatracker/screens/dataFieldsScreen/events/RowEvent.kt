@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events
 
-
 sealed class RowEvent {
     data class ToggleRow(val index: Long) : RowEvent()
     data class EditFieldName(val index: Long, val value: String) : RowEvent()

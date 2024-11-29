@@ -1,8 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,20 +14,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.google.gson.Gson
 import com.jorotayo.fl_datatracker.domain.model.DataItem
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewFormListRowV4() {
     FL_DatatrackerTheme {
@@ -56,7 +49,6 @@ fun formListRowV4(
     data: DataRowState,
     setDataValue: (String) -> Unit,
 ): String {
-
     val textFields =
         rememberSaveable { mutableStateOf(getDataStringToList(data.dataItem.dataValue)) }
 
@@ -67,7 +59,6 @@ fun formListRowV4(
     LazyColumn(
         modifier = Modifier
             .padding(xSmall)
-            .background(MaterialTheme.colors.surface)
             .fillMaxWidth()
             .height(Dp(columnHeight.value))
     ) {
@@ -120,7 +111,6 @@ fun formListRowV4(
                     columnHeight.value -= itemHeight
                     number.value--
                     textFields.value = deleteValueAtIndex(textFields.value, index)
-                    Log.d("formListRowV2", getDataMapToString(textFields.value))
                 },
                 clearField = {
                     textFields.value[index] = ""
@@ -170,10 +160,7 @@ private fun getDataStringToList(textsFieldsString: String): HashMap<Int, String>
     return if (textsFieldsString.isBlank()) {
         hashMapOf<Int, String>(0 to "")
     } else {
-        Log.d("json", "getDataStringToList: $textsFieldsString")
         val mapType = HashMap<Int, String>().javaClass
         gson.fromJson(textsFieldsString, mapType)
     }
 }
-
-

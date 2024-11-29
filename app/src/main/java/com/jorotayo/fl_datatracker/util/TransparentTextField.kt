@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.util
 
-import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,19 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import com.jorotayo.fl_datatracker.ui.DefaultDualPreview
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 
-
-@Preview(showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode")
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultDualPreview
 @Composable
 fun PreviewTransparentTextField() {
     FL_DatatrackerTheme {
-        TransparentTextField(text = "",
+        TransparentTextField(
+            text = "",
             placeholder = "Value",
             label = "Option",
             modifier = Modifier,
@@ -42,10 +38,8 @@ fun TransparentTextField(
     label: String,
     modifier: Modifier,
     onValueChange: (String) -> Unit,
-    singleLine: Boolean = false,
+    singleLine: Boolean = false
 ) {
-
-
     val textColour = if (isSystemInDarkTheme()) Color.Gray else MaterialTheme.colors.primary
 
     Box(
@@ -86,5 +80,4 @@ fun TransparentTextField(
             }
         )
     }
-
 }

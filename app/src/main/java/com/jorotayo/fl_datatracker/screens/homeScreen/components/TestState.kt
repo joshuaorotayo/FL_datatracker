@@ -5,6 +5,6 @@ import com.jorotayo.fl_datatracker.domain.model.TestRowItem
 import io.objectbox.Box
 
 data class TestState(
-    val _itemsBox: Box<TestRowItem> = ObjectBox.get().boxFor(TestRowItem::class.java),
+    val _itemsBox: Box<TestRowItem> = ObjectBox.boxStore().boxFor(TestRowItem::class.java),
     val itemsList: List<TestRowItem> = _itemsBox.all.toList(),
 )

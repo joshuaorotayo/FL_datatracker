@@ -36,7 +36,6 @@ fun PreviewDataItem() {
     DataItem(viewModel = hiltViewModel())
 }
 
-
 @Composable
 fun DataItem(
     viewModel: HomeScreenViewModel

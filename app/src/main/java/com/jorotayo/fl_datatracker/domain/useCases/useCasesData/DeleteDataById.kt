@@ -5,7 +5,7 @@ import com.jorotayo.fl_datatracker.domain.repository.DataRepository
 class DeleteDataById(
     private val repository: DataRepository,
 ) {
-    suspend operator fun invoke(dataId: Long) {
+    operator fun invoke(dataId: Long) {
         return repository.deleteDataById(dataId)
     }
 }

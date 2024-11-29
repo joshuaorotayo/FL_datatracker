@@ -12,12 +12,28 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.ImageSearch
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +49,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
 
-
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -43,7 +58,6 @@ fun ImageBottomActionSheet(
     onTakeImage: (isCamera: Boolean) -> Unit,
     setDataValue: (String) -> Unit,
 ) {
-
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -100,9 +114,7 @@ fun ImageBottomActionSheet(
         sheetState = state,
         sheetBackgroundColor = MaterialTheme.colors.background,
         sheetContent = {
-
             Column {
-
                 BottomActionOptions { isCamera ->
                     scope.launch {
                         state.hide()
@@ -111,7 +123,6 @@ fun ImageBottomActionSheet(
                         val cameraPermissionGranted =
                             checkAndRequestCameraPermission(context, cameraPermission, launcher)
                         if (cameraPermissionGranted) {
-
                             getTmpFileUri(context).let { uri ->
                                 latestTmpUri = uri
                                 cameraLauncher.launch(uri)
@@ -157,24 +168,20 @@ fun getTmpFileUri(context: Context): Uri {
     return FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
 }
 
-
 @Composable
 fun BottomActionOptions(
     onTakeImage: (Boolean) -> Unit,
 ) {
-
     Column(
         modifier = Modifier.wrapContentHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-
             Text(
                 modifier = Modifier,
                 text = stringResource(id = R.string.image_selection_dialog_msg),
@@ -185,14 +192,14 @@ fun BottomActionOptions(
                     .fillMaxWidth()
                     .padding(start = small, end = small, bottom = xxSmall, top = xxSmall),
                 horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
+            ) {
                 Button(
                     modifier = Modifier
                         .wrapContentWidth(),
                     onClick = {
                         onTakeImage(true)
-                    }) {
+                    }
+                ) {
                     Text(
                         text = "Camera"
                     )

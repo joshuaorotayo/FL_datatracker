@@ -6,12 +6,27 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -54,11 +69,10 @@ fun PreviewFormImageRowV4() {
             data = dataItem,
             onClick = {},
             showBottomSheet =
-            { modalBottomSheetState }
+            { modalBottomSheetState.isVisible }
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -67,7 +81,6 @@ fun formImageRowV4(
     onClick: () -> Unit,
     showBottomSheet: (ModalBottomSheetState) -> Unit,
 ): String {
-
     val imageUri = remember {
         mutableStateOf(data.dataItem.dataValue.toUri())
     }
@@ -76,8 +89,7 @@ fun formImageRowV4(
         modifier = Modifier
             .padding(xSmall)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .background(MaterialTheme.colors.surface),
+            .wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -86,6 +98,7 @@ fun formImageRowV4(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
+            style = typography.subtitle1,
             color = MaterialTheme.colors.onSurface,
         )
         Log.d("formImageRowV4", data.dataItem.dataValue)
@@ -109,69 +122,71 @@ fun formImageRowV4(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .align(Alignment.CenterHorizontally),
-                        onClick =
-                        {
-                            showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
-                            onClick()
-                        },
-                    )
+                    onClick =
                     {
-                        Text(text = "Add image")
-                    }
-                }
-
-            }
-            AnimatedVisibility(imageUri.value.toString().contains("content", ignoreCase = true)) {
-                Column(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .padding(bottom = Dimen.xxSmall)
-                        .fillMaxWidth(0.8f)
+                        showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
+                        onClick()
+                    },
                 ) {
-                    Button(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .align(Alignment.End),
-                        onClick = {
-                            //clear image
-                        },
+                    Text(
+                        text = "Add image",
+                        style = typography.h2
                     )
-                    {
-                        Text(
-                            text = "-",
-                            style = MaterialTheme.typography.h6
-                        )
-                    }
-                    Image(
-                        modifier = Modifier
-                            .size(160.dp)
-                            .padding(bottom = Dimen.xxSmall)
-                            .align(Alignment.CenterHorizontally),
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest
-                                .Builder(LocalContext.current)
-                                .crossfade(true)
-                                .data(data = imageUri.value)
-                                .build()
-                        ),
-                        contentDescription = "Image for ${data.dataItem.fieldName}"
-                    )
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .align(Alignment.CenterHorizontally),
-                        onClick = {
-                            ModalBottomSheetState(ModalBottomSheetValue.Expanded)
-                            showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
-                            onClick()
-                        },
-                    )
-                    {
-                        Text(text = "Add image")
-                    }
                 }
             }
         }
+        AnimatedVisibility(imageUri.value.toString().contains("content", ignoreCase = true)) {
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .padding(bottom = Dimen.xxSmall)
+                    .fillMaxWidth(0.8f)
+            ) {
+                Button(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.End),
+                    onClick = {
+                        // clear image
+                    },
+                ) {
+                    Text(
+                        text = "-",
+                        style = typography.h6
+                    )
+                }
+                Image(
+                    modifier = Modifier
+                        .size(160.dp)
+                        .padding(bottom = Dimen.xxSmall)
+                        .align(Alignment.CenterHorizontally),
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .crossfade(true)
+                            .data(data = imageUri.value)
+                            .build()
+                    ),
+                    contentDescription = "Image for ${data.dataItem.fieldName}"
+                )
+                Button(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .align(Alignment.CenterHorizontally),
+                    onClick = {
+                        ModalBottomSheetState(ModalBottomSheetValue.Expanded)
+                        showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
+                        onClick()
+                    },
+                ) {
+                    Text(
+                        text = "Add image",
+                        style = typography.h2
+                    )
+                }
+            }
+        }
+    }
 
     Spacer(
         modifier = Modifier

@@ -1,7 +1,6 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,8 +41,7 @@ import com.jorotayo.fl_datatracker.util.Dimen
 fun PreviewFormImageDialog() {
     FL_DatatrackerTheme {
         FormImageDialog(
-            onDismiss = {},
-            modifier = Modifier
+            onDismiss = {}
         )
     }
 }
@@ -51,9 +49,7 @@ fun PreviewFormImageDialog() {
 @Composable
 fun FormImageDialog(
     onDismiss: () -> Unit,
-    modifier: Modifier,
 ) {
-
     Dialog(
         onDismissRequest = {
             onDismiss()
@@ -62,11 +58,9 @@ fun FormImageDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .background(MaterialTheme.colors.surface),
+                .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,14 +84,19 @@ fun FormImageDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = Dimen.small, end = Dimen.small, bottom = Dimen.xxSmall, top = Dimen.xxSmall),
+                    .padding(
+                        start = Dimen.small,
+                        end = Dimen.small,
+                        bottom = Dimen.xxSmall,
+                        top = Dimen.xxSmall
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
+            ) {
                 Button(
                     modifier = Modifier
                         .wrapContentWidth(),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(
                         text = "Camera"
                     )
@@ -112,7 +111,8 @@ fun FormImageDialog(
                 Button(
                     modifier = Modifier
                         .wrapContentWidth(),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(
                         text = "Gallery"
                     )
