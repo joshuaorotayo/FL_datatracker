@@ -6,5 +6,5 @@ import io.objectbox.Box
 
 data class TestState(
     val _itemsBox: Box<TestRowItem> = ObjectBox.boxStore().boxFor(TestRowItem::class.java),
-    val itemsList: List<TestRowItem> = _itemsBox.all.toList(),
+    val itemsList: List<TestRowItem> = _itemsBox.all.toList()
 )

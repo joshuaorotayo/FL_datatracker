@@ -21,7 +21,7 @@ data class DataItem(
     var third: String = "",
     var isEnabled: Boolean = true,
     var fieldDescription: String? = "Enter value for $fieldName",
-    var dataValue: String = "",
+    var dataValue: String = ""
 )
 
 class InvalidDataItemException(message: String) : Exception(message)

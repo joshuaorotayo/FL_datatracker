@@ -74,7 +74,7 @@ fun BasicDeleteRowDialog(
     confirmDelete: (DataField) -> Unit,
     scaffold: ScaffoldState,
     dialogIsVisible: Boolean,
-    dataField: DataField,
+    dataField: DataField
 ) {
     val scope = rememberCoroutineScope()
 
@@ -134,7 +134,8 @@ fun BasicDeleteRowDialog(
                     modifier = Modifier
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(small),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(
                         modifier = Modifier,
                         text = "Cancel",
@@ -146,7 +147,8 @@ fun BasicDeleteRowDialog(
                     modifier = Modifier
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(small),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { /*TODO*/ }
+                ) {
                     Text(
                         modifier = Modifier,
                         text = "Delete DataField",

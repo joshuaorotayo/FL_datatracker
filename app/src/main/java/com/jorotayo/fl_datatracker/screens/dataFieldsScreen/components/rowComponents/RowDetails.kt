@@ -53,6 +53,7 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.bodyTextColour
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.twentyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -163,7 +164,7 @@ fun RowDetails(
                 Checkbox(
                     modifier = Modifier
                         .size(small)
-                        .fillMaxWidth(0.5f),
+                        .fillMaxWidth(fiftyPercent),
                     checked = isRowEnabled.value,
                     enabled = true,
                     onCheckedChange = {
@@ -173,14 +174,16 @@ fun RowDetails(
                     colors = CheckboxDefaults.colors(
                         checkmarkColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary,
                         uncheckedColor = textColour,
-                        checkedColor = textColour,
+                        checkedColor = textColour
                     )
                 )
                 IconButton(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f),
+                        .fillMaxWidth(fiftyPercent),
                     onClick = {
-                        onDataFieldEvent(DataFieldEvent.ShowDeleteDataFieldDialog(rowData.value.dataField))
+                        onDataFieldEvent(
+                            DataFieldEvent.ShowDeleteDataFieldDialog(rowData.value.dataField)
+                        )
                     }
                 ) {
                     Icon(
@@ -247,7 +250,6 @@ fun SelectHintType(
         }
 
         else -> {
-
         }
     }
 }
@@ -262,7 +264,7 @@ fun BasicVisibleHint(
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier.padding(start = small),
@@ -288,7 +290,7 @@ fun BasicVisibleHint(
                 modifier = Modifier,
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_row_hint),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -327,12 +329,12 @@ private fun BooleanHintRow(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            },
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_bool_value),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -375,7 +377,7 @@ private fun TriStateHintRow(
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_tristate_value),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -411,7 +413,6 @@ fun SelectEditType(
             }
 
             else -> {
-
             }
         }
     }
@@ -441,7 +442,7 @@ fun BasicEditHint(
                 textColor = MaterialTheme.colors.subtitleTextColour,
                 backgroundColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent
             ),
             value = hintText,
             placeholder = {
@@ -522,7 +523,7 @@ private fun BooleanEditHint(
 @Composable
 private fun TriStateEditHint(
     currentRowState: DataFieldRowState,
-    onRowEvent: (RowEvent) -> Unit,
+    onRowEvent: (RowEvent) -> Unit
 ) {
     val firstText = remember { mutableStateOf(currentRowState.dataField.first) }
     val secondText = remember { mutableStateOf(currentRowState.dataField.second) }

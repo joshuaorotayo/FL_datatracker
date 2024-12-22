@@ -13,7 +13,7 @@ sealed class MainScreens(
     val route: String,
     val title: String,
     val pageDescription: String? = "",
-    val icon: ImageVector = Icons.Filled.Close,
+    val icon: ImageVector = Icons.Filled.Close
 ) {
     object Welcome : MainScreens(
         route = "onboarding_screen",

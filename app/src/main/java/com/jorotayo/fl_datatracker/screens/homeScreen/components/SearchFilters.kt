@@ -59,33 +59,33 @@ fun SearchFilters() {
             Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(horizontal = xSmall, vertical = xxxSmall),
+                .padding(horizontal = xSmall, vertical = xxxSmall)
         ) {
             Row(
                 modifier =
                 Modifier
                     .fillMaxWidth()
                     .padding(top = xxSmall),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     modifier = Modifier.padding(start = xSmall, end = xxxSmall),
                     imageVector = Icons.Default.ManageSearch,
                     tint = MaterialTheme.colors.primary,
-                    contentDescription = "Icon for search filters",
+                    contentDescription = "Icon for search filters"
                 )
                 Text(
                     text = "Enable and disable search filters",
                     style = MaterialTheme.typography.subtitle1,
                     color = MaterialTheme.colors.subtitleTextColour,
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Start
                 )
             }
             FlowRow(
                 modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = xxxSmall),
+                    .padding(top = xxxSmall)
             ) {
                 for (filter in filterList()) {
                     SearchFilter(filter = filter)
@@ -110,7 +110,7 @@ fun SearchFilter(filter: Filters) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     tint = MaterialTheme.colors.onPrimary,
-                    contentDescription = "Checked filter for ${filter.filterName}",
+                    contentDescription = "Checked filter for ${filter.filterName}"
                 )
             }
         },
@@ -119,32 +119,32 @@ fun SearchFilter(filter: Filters) {
             selectedContainerColor = MaterialTheme.colors.primary.copy(alpha = 0.9f),
             selectedLabelColor = Color.White,
             containerColor = MaterialTheme.colors.primary.copy(alpha = 0.25f),
-            labelColor = MaterialTheme.colors.subtitleTextColour,
+            labelColor = MaterialTheme.colors.subtitleTextColour
         ),
         elevation =
         FilterChipDefaults.elevatedFilterChipElevation(
             elevation = zero,
-            pressedElevation = xSmall,
-        ),
+            pressedElevation = xSmall
+        )
     )
 }
 
 fun filterList(): List<Filters> {
     val filterList = mutableListOf<Filters>()
     filterList.add(
-        Filters("Field Name"),
+        Filters("Field Name")
     )
     filterList.add(
-        Filters("Field Value"),
+        Filters("Field Value")
     )
     filterList.add(
-        Filters("Data value"),
+        Filters("Data value")
     )
     filterList.add(
-        Filters("Meeting Name"),
+        Filters("Meeting Name")
     )
     filterList.add(
-        Filters("DataFieldName"),
+        Filters("DataFieldName")
     )
     return filterList
 }

@@ -37,6 +37,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.iconSize
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -44,7 +45,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 import java.util.Calendar
 import java.util.Date
-
 
 @DefaultPreviews
 @Composable
@@ -66,7 +66,6 @@ fun minimalDateField(
     rowHint: String,
     isError: Boolean
 ): String {
-
     // Fetching the Local Context
     val mContext = LocalContext.current
 
@@ -94,7 +93,6 @@ fun minimalDateField(
         mContext,
         { _: DatePicker, year: Int, month: Int, mDayOfMonth: Int ->
             mDate.value = formattedDateString(mDayOfMonth, month, year)
-
         },
         mYear,
         mMonth,
@@ -104,12 +102,10 @@ fun minimalDateField(
     var cardElevation by remember { mutableStateOf(xSmall) }
     val focusManager = LocalFocusManager.current
 
-
     Column(
         modifier = Modifier
             .wrapContentSize()
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -119,9 +115,13 @@ fun minimalDateField(
                     cardElevation = if (it.isFocused) medium else xSmall
                 },
             shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && (cardElevation == medium)) colors.surface.copy(
-                alpha = 0.5f
-            ) else colors.surface,
+            backgroundColor = if (!isDarkMode() && (cardElevation == medium)) {
+                colors.surface.copy(
+                    alpha = fiftyPercent
+                )
+            } else {
+                colors.surface
+            },
             elevation = if (isDarkMode()) cardElevation else zero
         ) {
             Column(
@@ -134,7 +134,6 @@ fun minimalDateField(
                         }
                     )
             ) {
-
                 Text(
                     text = rowHeader,
                     style = typography.body1,
@@ -147,7 +146,6 @@ fun minimalDateField(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Icon(
                         modifier = Modifier
                             .size(iconSize)

@@ -21,6 +21,5 @@ fun MemberForm() {
             .fillMaxSize()
             .background(MaterialTheme.colors.surface)
     ) {
-
     }
 }

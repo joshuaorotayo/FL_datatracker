@@ -37,9 +37,8 @@ fun PreviewMinimalBooleanField() {
 @Composable
 fun minimalBooleanField(
     rowHeader: String,
-    isError: Boolean,
+    isError: Boolean
 ): String {
-
     var cardElevation by remember { mutableStateOf(Dimen.xSmall) }
     var checked by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -47,11 +46,10 @@ fun minimalBooleanField(
     Column(
         modifier = Modifier
             .wrapContentSize()
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(Dimen.fiftyPercent)
                 .wrapContentHeight()
                 .padding(Dimen.xxSmall)
                 .onFocusChanged {
@@ -59,9 +57,13 @@ fun minimalBooleanField(
                         if (it.isFocused) Dimen.medium else Dimen.xSmall
                 },
             shape = RoundedCornerShape(Dimen.xSmall),
-            backgroundColor = if (!isDarkMode() && cardElevation == Dimen.medium) MaterialTheme.colors.surface.copy(
-                alpha = 0.5f
-            ) else MaterialTheme.colors.surface,
+            backgroundColor = if (!isDarkMode() && cardElevation == Dimen.medium) {
+                MaterialTheme.colors.surface.copy(
+                    alpha = Dimen.fiftyPercent
+                )
+            } else {
+                MaterialTheme.colors.surface
+            },
             elevation = if (isDarkMode()) cardElevation else Dimen.zero
         ) {
             Column(
@@ -82,9 +84,13 @@ fun minimalBooleanField(
                     },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colors.primary,
-                        checkedTrackColor = MaterialTheme.colors.primary.copy(alpha = 0.5f),
+                        checkedTrackColor = MaterialTheme.colors.primary.copy(
+                            alpha = Dimen.fiftyPercent
+                        ),
                         uncheckedThumbColor = MaterialTheme.colors.onSurface,
-                        uncheckedTrackColor = MaterialTheme.colors.onSurface.copy(alpha = 0.5f),
+                        uncheckedTrackColor = MaterialTheme.colors.onSurface.copy(
+                            alpha = Dimen.fiftyPercent
+                        )
                     )
                 )
             }

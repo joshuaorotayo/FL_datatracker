@@ -39,7 +39,6 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
 
-
 @DefaultPreviews
 @Composable
 fun PreviewMinimalShortTextField() {
@@ -61,7 +60,6 @@ fun minimalShortTextField(
     rowHint: String,
     isError: Boolean
 ): String {
-
     val (text, setText) = remember { mutableStateOf("") }
     var cardElevation by remember { mutableStateOf(xSmall) }
     val focusManager = LocalFocusManager.current
@@ -77,9 +75,13 @@ fun minimalShortTextField(
                     cardElevation = if (it.isFocused) medium else xSmall
                 },
             shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && (cardElevation == medium)) colors.surface.copy(
-                alpha = 0.5f
-            ) else colors.surface,
+            backgroundColor = if (!isDarkMode() && (cardElevation == medium)) {
+                colors.surface.copy(
+                    alpha = Dimen.fiftyPercent
+                )
+            } else {
+                colors.surface
+            },
             elevation = if (isDarkMode()) cardElevation else zero
         ) {
             Column(modifier = Modifier.padding(xxSmall)) {
@@ -131,7 +133,7 @@ fun minimalShortTextField(
             text = "${text.length} / ${Dimen.shortTextMaxChars}",
             textAlign = TextAlign.End,
             style = typography.caption,
-            color = if (text.length < Dimen.shortTextMaxChars) Color.Gray else Color.Red,
+            color = if (text.length < Dimen.shortTextMaxChars) Color.Gray else Color.Red
         )
     }
     return text

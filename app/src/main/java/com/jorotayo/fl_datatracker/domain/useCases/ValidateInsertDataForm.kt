@@ -5,7 +5,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 class ValidateInsertDataForm {
     operator fun invoke(
         fieldNames: List<String>,
-        dataForm: DataEntryScreenState,
+        dataForm: DataEntryScreenState
     ): Pair<Boolean, DataEntryScreenState> {
         var newForm = dataForm
         var noErrors = true

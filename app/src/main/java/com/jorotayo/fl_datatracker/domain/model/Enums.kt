@@ -42,7 +42,6 @@ class MemberStatusConverter : PropertyConverter<MemberStatus?, Int> {
     override fun convertToDatabaseValue(entityProperty: MemberStatus?): Int {
         return entityProperty?.value ?: 1
     }
-
 }
 
 enum class Sonta(val value: Int, val ministry: String) {

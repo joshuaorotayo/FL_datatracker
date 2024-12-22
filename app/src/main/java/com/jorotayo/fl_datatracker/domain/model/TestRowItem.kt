@@ -6,5 +6,5 @@ import io.objectbox.annotation.Id
 @Entity
 data class TestRowItem(
     @Id
-    var testRowId: Long = 0,
+    var testRowId: Long = 0
 )

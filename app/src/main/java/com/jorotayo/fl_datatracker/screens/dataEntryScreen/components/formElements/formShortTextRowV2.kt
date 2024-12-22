@@ -62,7 +62,7 @@ fun PreviewFormShortTextRowV2() {
 @Composable
 fun formShortTextRowV2(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     if (isSystemInDarkTheme()) Color.DarkGray else MaterialTheme.colors.primary
     val maxChar = 50
@@ -103,7 +103,7 @@ fun formShortTextRowV2(
                         text = stringResource(id = R.string.short_row_error),
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.caption,
-                        color = Color.Red,
+                        color = Color.Red
                     )
                     Icon(
                         modifier = Modifier,
@@ -164,7 +164,7 @@ fun formShortTextRowV2(
                 text = "${text.text.length} / $maxChar",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.caption,
-                color = Color.Gray,
+                color = Color.Gray
             )
         }
     }

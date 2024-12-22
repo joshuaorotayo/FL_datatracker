@@ -25,13 +25,16 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.components.ButtonState
+import com.jorotayo.fl_datatracker.util.components.ButtonType
 
 @DefaultPreviews
 @Composable
 fun PreviewTemplateScreen() {
     FL_DatatrackerTheme {
         TemplateScreen(
-            state = TemplateState(), viewModel = templatePreview
+            state = TemplateState(),
+            viewModel = templatePreview
         )
     }
 }
@@ -46,7 +49,6 @@ fun TemplateView() {
     }
 
     TemplateScreen(viewModel = viewModel, state = state)
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -57,46 +59,54 @@ fun TemplateScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
 
-    Scaffold(topBar = {
-        Column(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(top = Dimen.large)
-        ) {
-            HeaderRow()
-        }
-    }, content = { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-        ) {
-            LazyColumn(
+    Scaffold(
+        topBar = {
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = Dimen.xSmall, bottom = Dimen.bottomBarPadding),
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(top = Dimen.large)
             ) {
-
+                HeaderRow()
             }
-
-            DefaultSnackbar(
+        },
+        content = { innerPadding ->
+            Box(
                 modifier = Modifier
-                    .align(Alignment.Center),
-                snackbarHostState = scaffoldState.snackbarHostState,
-                onDismiss = {
-                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                    if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
-                            "Restore"
-                        ) == true
-                    ) {
-                        //function
-                    }
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background)
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = Dimen.xSmall, bottom = Dimen.bottomBarPadding)
+                ) {
+                    ButtonState(
+                        modifier = Modifier,
+                        type = ButtonType.PRIMARY,
+                        label = "Test Button",
+                        enabled = false,
+                        onClick = { viewModel.onAddMembersClicked() }
+                    )
                 }
-            )
+
+                DefaultSnackbar(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    snackbarHostState = scaffoldState.snackbarHostState,
+                    onDismiss = {
+                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                        if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
+                                "Restore"
+                            ) == true
+                        ) {
+                            // function
+                        }
+                    }
+                )
+            }
         }
-    }
     )
 }
 

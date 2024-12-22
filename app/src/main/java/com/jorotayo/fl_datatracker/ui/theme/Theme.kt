@@ -38,7 +38,7 @@ private val darkColours = darkColors(
     background = md_theme_dark_background,
     onBackground = md_theme_white,
     surface = md_theme_dark_background, // elevation xxxSmall
-    onSurface = md_theme_white,
+    onSurface = md_theme_white
 )
 
 val Colors.highLightColours: Color

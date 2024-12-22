@@ -79,9 +79,13 @@ fun minimalCountField(
                 cardElevation = if (it.isFocused) Dimen.medium else xSmall
             },
         shape = RoundedCornerShape(xSmall),
-        backgroundColor = if (!isDarkMode() && (cardElevation == Dimen.medium)) colors.surface.copy(
-            alpha = 0.5f
-        ) else colors.surface,
+        backgroundColor = if (!isDarkMode() && (cardElevation == Dimen.medium)) {
+            colors.surface.copy(
+                alpha = Dimen.fiftyPercent
+            )
+        } else {
+            colors.surface
+        },
         elevation = if (isDarkMode()) cardElevation else Dimen.zero
     ) {
         Column(
@@ -89,7 +93,6 @@ fun minimalCountField(
                 .padding(Dimen.xxSmall)
                 .fillMaxWidth()
         ) {
-
             Text(
                 text = rowHeader,
                 style = MaterialTheme.typography.body1,
@@ -113,7 +116,7 @@ fun minimalCountField(
                         text = stringResource(id = R.string.count_row_error),
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.caption,
-                        color = Color.Red,
+                        color = Color.Red
                     )
                     Icon(
                         modifier = Modifier
@@ -132,7 +135,7 @@ fun minimalCountField(
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f),
+                        .fillMaxWidth(Dimen.fiftyPercent),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -160,7 +163,9 @@ fun minimalCountField(
                             .weight(3f),
                         value = count.intValue.toString(),
                         maxLines = 1,
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        ),
                         placeholder = {
                             Text(
                                 text = if (count.intValue == 0) "0" else count.intValue.toString(),

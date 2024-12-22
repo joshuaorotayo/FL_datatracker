@@ -10,7 +10,7 @@ data class Data(
     var dataPresetId: Long = 0,
     var name: String = "",
     var lastEditedTime: String = "",
-    var createdTime: String = "",
+    var createdTime: String = ""
 )
 
 class InvalidDataException(message: String) : Exception(message)

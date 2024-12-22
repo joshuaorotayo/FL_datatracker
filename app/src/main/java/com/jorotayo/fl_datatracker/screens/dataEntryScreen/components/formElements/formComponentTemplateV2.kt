@@ -53,7 +53,7 @@ fun formComponentTemplateV2(
                     .fillMaxWidth(),
                 text = fieldName,
                 textAlign = Start,
-                color = Gray,
+                color = Gray
             )
         }
         Row(

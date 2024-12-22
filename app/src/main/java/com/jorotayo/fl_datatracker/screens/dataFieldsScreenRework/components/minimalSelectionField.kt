@@ -37,11 +37,12 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreenRework.DataFieldsRewo
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.medium
+import com.jorotayo.fl_datatracker.util.Dimen.ninetyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.Dimen.zero
-
 
 @DefaultPreviews
 @Composable
@@ -65,7 +66,6 @@ fun minimalSelectionField(
     state: DataFieldsReworkState,
     selectionList: List<String>
 ): String {
-
     var expanded by remember { mutableStateOf(state.isDropdownExpanded) }
     var cardElevation by remember { mutableStateOf(xSmall) }
     val focusManager = LocalFocusManager.current
@@ -75,8 +75,7 @@ fun minimalSelectionField(
     Column(
         modifier = Modifier
             .wrapContentSize()
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -86,9 +85,13 @@ fun minimalSelectionField(
                     cardElevation = if (it.isFocused || state.isDropdownExpanded) medium else xSmall
                 },
             shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && cardElevation == medium) colors.surface.copy(
-                alpha = 0.5f
-            ) else colors.surface,
+            backgroundColor = if (!isDarkMode() && cardElevation == medium) {
+                colors.surface.copy(
+                    alpha = fiftyPercent
+                )
+            } else {
+                colors.surface
+            },
             elevation = if (isDarkMode()) cardElevation else zero
         ) {
             Column(
@@ -106,7 +109,8 @@ fun minimalSelectionField(
                     Column(
                         modifier = Modifier
                             .padding(xxSmall)
-                            .fillMaxWidth(0.9f)
+                            .fillMaxWidth()
+                            .fillMaxWidth(ninetyPercent)
                     ) {
                         Text(
                             text = rowHeader,
@@ -125,7 +129,6 @@ fun minimalSelectionField(
                             .padding(vertical = xxSmall)
                             .fillMaxWidth()
                     ) {
-
                         Icon(
                             modifier = Modifier
                                 .size(medium),
@@ -170,12 +173,4 @@ fun minimalSelectionField(
         }
     }
     return selectedItem
-}
-
-@Composable
-fun SelectionDropDown(
-    items: List<String>,
-    expandDropdown: (String?) -> Unit
-) {
-
 }

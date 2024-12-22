@@ -62,8 +62,7 @@ fun minimalListField(
     Column(
         modifier = Modifier
             .wrapContentSize()
-    )
-    {
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,16 +72,19 @@ fun minimalListField(
                     cardElevation = if (it.isFocused) Dimen.medium else xSmall
                 },
             shape = RoundedCornerShape(xSmall),
-            backgroundColor = if (!isDarkMode() && (cardElevation == Dimen.medium)) MaterialTheme.colors.surface.copy(
-                alpha = 0.5f
-            ) else MaterialTheme.colors.surface,
+            backgroundColor = if (!isDarkMode() && (cardElevation == Dimen.medium)) {
+                MaterialTheme.colors.surface.copy(
+                    alpha = Dimen.fiftyPercent
+                )
+            } else {
+                MaterialTheme.colors.surface
+            },
             elevation = if (isDarkMode()) cardElevation else Dimen.zero
         ) {
             Column(
                 modifier = Modifier
                     .wrapContentSize()
-            )
-            {
+            ) {
                 LazyColumn(
                     modifier = Modifier
                         .padding(xSmall)
@@ -99,7 +101,7 @@ fun minimalListField(
                                     .fillMaxWidth(),
                                 text = rowHeader,
                                 textAlign = TextAlign.Start,
-                                color = DarkGray,
+                                color = DarkGray
                             )
                         }
                     }

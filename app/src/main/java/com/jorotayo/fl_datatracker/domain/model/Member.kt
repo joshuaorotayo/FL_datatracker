@@ -23,5 +23,3 @@ data class Member(
     var bacentaLeader: Boolean = false,
     var constituencyOverseer: Boolean = false
 )
-
-

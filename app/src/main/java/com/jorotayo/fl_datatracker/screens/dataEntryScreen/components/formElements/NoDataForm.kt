@@ -60,7 +60,7 @@ fun NoDataForm(
                 modifier = Modifier.size(96.dp),
                 imageVector = Icons.Default.AddBox,
                 tint = MaterialTheme.colors.primary,
-                contentDescription = stringResource(id = R.string.no_data_fields_msg_icon),
+                contentDescription = stringResource(id = R.string.no_data_fields_msg_icon)
             )
             Text(
                 modifier = Modifier,

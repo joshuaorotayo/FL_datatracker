@@ -116,7 +116,6 @@ fun DataFieldRowV2(
             MaterialTheme.colors.primary.copy(thirtyPercent)
         }
     ) {
-
         Column(
             modifier = Modifier.padding(xSmall)
         ) {
@@ -125,7 +124,7 @@ fun DataFieldRowV2(
                     .padding(start = small)
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
                     modifier = Modifier.weight(1.5f),
@@ -147,7 +146,6 @@ fun DataFieldRowV2(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-
 
                 Row(
                     modifier = Modifier
@@ -202,10 +200,13 @@ fun DataFieldRowV2(
                             onRowEvent(RowEvent.ToggleRow(currentDataField.dataFieldId))
                         },
                         colors = CheckboxDefaults.colors(
-                            checkmarkColor = if (isSystemInDarkTheme())
-                                MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary,
+                            checkmarkColor = if (isSystemInDarkTheme()) {
+                                MaterialTheme.colors.primary
+                            } else {
+                                MaterialTheme.colors.onPrimary
+                            },
                             uncheckedColor = textColour,
-                            checkedColor = textColour,
+                            checkedColor = textColour
                         )
                     )
                     IconButton(
@@ -239,7 +240,6 @@ fun DataFieldRowV2(
         }
     }
 }
-
 
 @Composable
 fun SelectHintType(
@@ -285,7 +285,7 @@ fun SelectHintType(
         }
 
         else -> {
-            //do nothing
+            // do nothing
         }
     }
 }
@@ -300,7 +300,7 @@ fun BasicVisibleHint(
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier.padding(start = small),
@@ -326,7 +326,7 @@ fun BasicVisibleHint(
                 modifier = Modifier,
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_row_hint),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -365,12 +365,12 @@ private fun BooleanHintRow(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            },
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_bool_value),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -414,7 +414,7 @@ private fun TriStateHintRow(
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.amend_tristate_value),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -450,7 +450,6 @@ fun SelectEditType(
             }
 
             else -> {
-
             }
         }
     }
@@ -461,8 +460,10 @@ fun BasicEditHint(
     currentRowState: DataFieldRowState,
     onRowEvent: (RowEvent) -> Unit
 ) {
-    val (hintText,
-        setHintText) = remember { mutableStateOf(TextFieldValue("")) }
+    val (
+        hintText,
+        setHintText
+    ) = remember { mutableStateOf(TextFieldValue("")) }
     val fieldHint =
         if (currentRowState.dataField.fieldHint.isNullOrBlank()) "Enter value for" else currentRowState.dataField.fieldHint
     Row(
@@ -481,14 +482,17 @@ fun BasicEditHint(
                 textColor = MaterialTheme.colors.subtitleTextColour,
                 backgroundColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent
             ),
             value = hintText,
             placeholder = {
                 Text(
                     text = fieldHint!!,
-                    color = if (hintText.text.isBlank())
-                        MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
+                    color = if (hintText.text.isBlank()) {
+                        MaterialTheme.colors.bodyTextColour
+                    } else {
+                        MaterialTheme.colors.subtitleTextColour
+                    },
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Normal
                 )
@@ -563,7 +567,7 @@ private fun BooleanEditHint(
 @Composable
 private fun TriStateEditHint(
     currentRowState: DataFieldRowState,
-    onRowEvent: (RowEvent) -> Unit,
+    onRowEvent: (RowEvent) -> Unit
 ) {
     val firstText = remember { mutableStateOf(currentRowState.dataField.first) }
     val secondText = remember { mutableStateOf(currentRowState.dataField.second) }
@@ -664,4 +668,3 @@ private fun HideEditRow(
         )
     }
 }
-

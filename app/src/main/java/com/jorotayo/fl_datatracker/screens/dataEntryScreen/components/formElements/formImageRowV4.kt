@@ -46,7 +46,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun PreviewFormImageRowV4() {
     FL_DatatrackerTheme {
-
         val dataItem = DataRowState(
             DataItem(
                 presetId = 0,
@@ -72,7 +71,7 @@ fun formImageRowV4(
     data: DataRowState,
     sheetState: ModalBottomSheetState,
     onClick: () -> Unit,
-    function: () -> Unit,
+    function: () -> Unit
 ): String {
     val scope = rememberCoroutineScope()
 
@@ -94,7 +93,7 @@ fun formImageRowV4(
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
             style = typography.subtitle1,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.onSurface
         )
         Log.d("formImageRowV4", data.dataItem.dataValue)
         AnimatedVisibility(visible = !imageUri.value.toString().contains("content")) {
@@ -115,7 +114,7 @@ fun formImageRowV4(
                 )
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
+                        .fillMaxWidth(Dimen.fiftyPercent)
                         .align(Alignment.CenterHorizontally),
                     onClick =
                     {
@@ -123,7 +122,7 @@ fun formImageRowV4(
                             sheetState.show()
                         }
                         onClick()
-                    },
+                    }
                 ) {
                     Text(
                         text = "Add image",
@@ -145,7 +144,7 @@ fun formImageRowV4(
                         .align(Alignment.End),
                     onClick = {
                         // clear image
-                    },
+                    }
                 ) {
                     Text(
                         text = "-",
@@ -174,7 +173,7 @@ fun formImageRowV4(
                         /*ModalBottomSheetState(ModalBottomSheetValue.Expanded)
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
                         onClick()*/
-                    },
+                    }
                 ) {
                     Text(
                         text = "Add image",

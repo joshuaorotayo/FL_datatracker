@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +12,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -32,10 +32,13 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.DataItem
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
+import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import kotlin.math.floor
 
 @DefaultPreviews
@@ -84,7 +87,7 @@ fun PreviewFormRadioRowV2() {
 @Composable
 fun formRadioRowV2(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     val options = listOf(data.dataItem.first, data.dataItem.second, data.dataItem.third)
 
@@ -115,20 +118,21 @@ fun formRadioRowV2(
     val onSelectionChange = { text: String ->
         selectedOption = text
     }
-    if (data.dataItem.dataValue == "") {
-        Column(
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(small)
+    ) {
+        Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(small)
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.subtitleTextColour,
-            )
+                .fillMaxWidth(),
+            text = data.dataItem.fieldName,
+            textAlign = TextAlign.Start,
+            color = colors.subtitleTextColour
+        )
+        if (data.dataItem.dataValue.isBlank()) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,50 +140,37 @@ fun formRadioRowV2(
                 text = "No options provided for ${data.dataItem.fieldName}. " +
                         "Please edit the Data Field and provide values",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.primary,
+                style = typography.body1,
+                color = colors.primary
             )
         }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(small)
-        ) {
-            Text(
+
+        if (data.hasError && data.dataItem.dataValue.isBlank()) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = data.dataItem.fieldName,
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.subtitleTextColour,
-            )
-
-            AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
-                Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = small, end = small, top = 5.dp),
-                        text = stringResource(id = R.string.radio_row_error),
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Red,
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .padding(end = 10.dp),
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = stringResource(id = R.string.row_error_description),
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
+                        .padding(start = small, end = small, top = 5.dp),
+                    text = stringResource(id = R.string.radio_row_error),
+                    textAlign = TextAlign.Start,
+                    style = typography.caption,
+                    color = Color.Red
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = stringResource(id = R.string.row_error_description),
+                    tint = colors.primary
+                )
             }
+        }
 
+        if (data.dataItem.first.isNotBlank() && data.dataItem.second.isNotBlank() && data.dataItem.dataValue.isNotBlank()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -192,44 +183,87 @@ fun formRadioRowV2(
                     modifier = Modifier
                         .fillMaxWidth(0.6f),
                     shape = RoundedCornerShape(medium),
-                    elevation = xSmall
+                    elevation = if (isDarkMode()) Dimen.zero else xxSmall
                 ) {
                     Row(
                         modifier = Modifier
                             .wrapContentSize()
                     ) {
-                        options.forEach { text ->
-                            if (text.isNotBlank()) {
-                                Text(
-                                    text = text,
-                                    style = MaterialTheme.typography.body1,
-                                    color = if (text == selectedOption) Color.White else MaterialTheme.colors.primary,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .clickable {
-                                            onSelectionChange(text)
-                                            setDataValue(selectedOption)
-                                        }
-                                        .background(
-                                            if (text == selectedOption) {
-                                                MaterialTheme.colors.primary
-                                            } else {
-                                                MaterialTheme.colors.surface
-                                            }
-                                        )
-                                        .padding(
-                                            vertical = xSmall,
-                                            horizontal = 5.dp,
-                                        ),
+                        Text(
+                            text = data.dataItem.first,
+                            style = typography.body1,
+                            color = if (data.dataItem.first == selectedOption) Color.White else colors.primary,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    onSelectionChange(data.dataItem.first)
+                                    setDataValue(selectedOption)
+                                }
+                                .background(
+                                    if (data.dataItem.first == selectedOption) {
+                                        colors.primary
+                                    } else {
+                                        colors.surface
+                                    }
                                 )
-                            }
+                                .padding(
+                                    vertical = xSmall,
+                                    horizontal = 5.dp
+                                )
+                        )
+                        Text(
+                            text = data.dataItem.second,
+                            style = typography.body1,
+                            color = if (data.dataItem.second == selectedOption) Color.White else colors.primary,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    onSelectionChange(data.dataItem.second)
+                                    setDataValue(selectedOption)
+                                }
+                                .background(
+                                    if (data.dataItem.second == selectedOption) {
+                                        colors.primary
+                                    } else {
+                                        colors.surface
+                                    }
+                                )
+                                .padding(
+                                    vertical = xSmall,
+                                    horizontal = 5.dp
+                                )
+                        )
+                        if (data.dataItem.third.isNotBlank()) {
+                            Text(
+                                text = data.dataItem.third,
+                                style = typography.body1,
+                                color = if (data.dataItem.third == selectedOption) Color.White else colors.primary,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        onSelectionChange(data.dataItem.third)
+                                        setDataValue(selectedOption)
+                                    }
+                                    .background(
+                                        if (data.dataItem.third == selectedOption) {
+                                            colors.primary
+                                        } else {
+                                            colors.surface
+                                        }
+                                    )
+                                    .padding(
+                                        vertical = xSmall,
+                                        horizontal = 5.dp
+                                    )
+                            )
                         }
                     }
                 }
             }
         }
     }
-
     return selectedOption
 }

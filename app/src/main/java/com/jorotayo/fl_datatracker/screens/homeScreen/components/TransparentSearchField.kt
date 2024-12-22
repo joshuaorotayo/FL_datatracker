@@ -23,7 +23,7 @@ fun TransparentSearchField(
     singleLine: Boolean = false,
     onFocusChange: (FocusState) -> Unit,
     leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     TextField(
         value = text,

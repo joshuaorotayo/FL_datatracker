@@ -74,7 +74,7 @@ fun PreviewFormImageRowV3() {
 fun formImageRowV3(
     data: DataRowState,
     onClick: () -> Unit,
-    showBottomSheet: (ModalBottomSheetState) -> Unit,
+    showBottomSheet: (ModalBottomSheetState) -> Unit
 ): String {
     val imageUri = remember {
         mutableStateOf(data.dataItem.dataValue.toUri())
@@ -94,7 +94,7 @@ fun formImageRowV3(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.onSurface
         )
         Log.d("formImageRowV3", data.dataItem.dataValue)
         AnimatedVisibility(visible = data.dataItem.dataValue.isBlank()) {
@@ -115,13 +115,13 @@ fun formImageRowV3(
                 )
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
+                        .fillMaxWidth(Dimen.fiftyPercent)
                         .align(Alignment.CenterHorizontally),
                     onClick = {
                         ModalBottomSheetState(ModalBottomSheetValue.Expanded)
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
                         onClick()
-                    },
+                    }
                 ) {
                     Text(text = "Add image")
                 }
@@ -154,7 +154,7 @@ fun formImageRowV3(
                         .align(Alignment.End),
                     onClick = {
                         // clear image
-                    },
+                    }
                 ) {
                     Text(
                         text = "-",
@@ -177,13 +177,13 @@ fun formImageRowV3(
                 )
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
+                        .fillMaxWidth(Dimen.fiftyPercent)
                         .align(Alignment.CenterHorizontally),
                     onClick = {
                         ModalBottomSheetState(ModalBottomSheetValue.Expanded)
                         showBottomSheet(ModalBottomSheetState(ModalBottomSheetValue.Expanded))
                         onClick()
-                    },
+                    }
                 ) {
                     Text(text = "Add image")
                 }

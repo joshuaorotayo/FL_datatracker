@@ -86,17 +86,15 @@ fun MainScreen() {
                 .fillMaxHeight()
                 .padding(bottom = Dimen.bottomBarPadding + xSmall)
         ) {
-        MainNavGraph(navController, sheetState)
+            MainNavGraph(navController, sheetState)
         }
     }
     ImageBottomActionSheet(
         state = sheetState,
         scope = scope,
         onTakeImage = {
-
         },
         setDataValue = {
-
         }
     )
 }
@@ -176,7 +174,7 @@ fun RowScope.BottomNavItem(
 fun RowScope.AnimatedBottomNavItem(
     mainScreens: MainScreens,
     currentDestination: NavDestination?,
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     val trimmedRoute = trimRoute(currentDestination?.route.toString())
     val itemSelected =
@@ -243,7 +241,7 @@ fun RowScope.AnimatedBottomNavItem(
 fun RowScope.ChipBottomNavItem(
     mainScreens: MainScreens,
     currentDestination: NavDestination?,
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     val trimmedRoute = trimRoute(currentDestination?.route.toString())
     val itemSelected =

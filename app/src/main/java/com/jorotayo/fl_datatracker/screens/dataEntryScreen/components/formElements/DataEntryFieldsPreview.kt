@@ -39,7 +39,7 @@ fun DataEntryFieldsPreview() {
                 third = "",
                 isEnabled = true,
                 fieldDescription = "",
-                dataValue = "0",
+                dataValue = "0"
             )
         )
 

@@ -18,8 +18,9 @@ class AppRepositoryImpl(
     private val presetRepository: PresetRepository
 ) : AppRepository {
 
-    //Datafield Repository Methods
+    // Datafield Repository Methods
     override fun addDataField(dataField: DataField) = fieldRepository.addDataField(dataField)
+
     override fun insertDataField(dataField: DataField): Long =
         fieldRepository.insertDataField(dataField)
 
@@ -33,6 +34,7 @@ class AppRepositoryImpl(
         fieldRepository.deleteDataFields(dataFields)
 
     override fun getDataFields(): List<DataField> = fieldRepository.getDataFields()
+
     override fun getDataFieldById(dataFieldId: Long): DataField =
         fieldRepository.getDataFieldById(dataFieldId)
 
@@ -47,8 +49,13 @@ class AppRepositoryImpl(
 
     override fun getDataFieldNames(): List<String> = fieldRepository.getDataFieldNames()
 
-    //Data Item Repository Methods
+    // Data Item Repository Methods
     override fun addDataItem(dataItem: DataItem): Long = dataItemRepository.addDataItem(dataItem)
+
+    override fun addDataItems(dataItems: List<DataItem>) = dataItemRepository.addDataItems(
+        dataItems
+    )
+
     override fun removeDataItem(dataItem: DataItem): Boolean =
         dataItemRepository.removeDataItem(dataItem)
 
@@ -71,7 +78,7 @@ class AppRepositoryImpl(
     override fun getDataItemsEnabledByPresetId(dataPresetId: Long): List<DataItem> =
         dataItemRepository.getDataItemsEnabledByPresetId(dataPresetId)
 
-    //Data Repository Methods
+    // Data Repository Methods
     override fun addData(data: Data): Long = dataRepository.addData(data)
     override fun updateData(data: Data): Long = dataRepository.updateData(data)
     override fun getData(): List<Data> = dataRepository.getData()
@@ -83,11 +90,11 @@ class AppRepositoryImpl(
 
     override fun validateInsertDataForm(
         fieldNames: List<String>,
-        dataForm: DataEntryScreenState,
+        dataForm: DataEntryScreenState
     ): Pair<Boolean, DataEntryScreenState> =
         dataRepository.validateInsertDataForm(fieldNames, dataForm)
 
-    //Preset Repository Methods
+    // Preset Repository Methods
     override fun addPreset(preset: Preset) = presetRepository.addPreset(preset)
     override fun deletePreset(preset: Preset): Boolean = presetRepository.deletePreset(preset)
     override fun getPresetList(): List<Preset> = presetRepository.getPresetList()

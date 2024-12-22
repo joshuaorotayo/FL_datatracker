@@ -174,7 +174,7 @@ fun HomeScreenView(
                     }
                     AnimatedVisibility(visible = !state.isSearchVisible) {
                         TopBar(
-                            toggleSearchBar = { onHomeEvent(HomeScreenEvent.ToggleSearchBar) },
+                            toggleSearchBar = { onHomeEvent(HomeScreenEvent.ToggleSearchBar) }
                         )
                     }
                 }
@@ -267,7 +267,9 @@ fun HomeScreenView(
                                     SimpleDataRow(
                                         data = data,
                                         editData = {
-                                            navController.navigate(MainScreens.DataEntry.route + "?id=${data.dataId}")
+                                            navController.navigate(
+                                                MainScreens.DataEntry.route + "?id=${data.dataId}"
+                                            )
                                             onDataEvent(
                                                 DataEvent.UpdateDataId(
                                                     data.dataId

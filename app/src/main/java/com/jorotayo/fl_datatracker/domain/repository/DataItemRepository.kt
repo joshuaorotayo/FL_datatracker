@@ -6,6 +6,8 @@ interface DataItemRepository {
 
     fun addDataItem(dataItem: DataItem): Long
 
+    fun addDataItems(dataItems: List<DataItem>)
+
     fun removeDataItem(dataItem: DataItem): Boolean
 
     fun updateDataItem(dataItem: DataItem): Long

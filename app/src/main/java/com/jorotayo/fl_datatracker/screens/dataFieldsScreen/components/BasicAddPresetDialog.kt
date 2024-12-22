@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -35,13 +34,13 @@ import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R.string.Add_preset_dialog_icon
 import com.jorotayo.fl_datatracker.R.string.addPresetBtn
 import com.jorotayo.fl_datatracker.R.string.addPresetHeader
 import com.jorotayo.fl_datatracker.R.string.cancelText
 import com.jorotayo.fl_datatracker.R.string.enterPresetPlaceholder
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.darkSurfaceHeadingColour
 import com.jorotayo.fl_datatracker.ui.theme.lightSurfaceHeadingColour
@@ -53,19 +52,14 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import com.jorotayo.fl_datatracker.util.ofMaxLength
 
-@Preview(
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES,
-    name = "Dark Mode",
-)
-@Preview(showBackground = true, name = "Light Mode")
+@DefaultPreviews
 @Composable
 fun PreviewBasicAddPresetDialog() {
     FL_DatatrackerTheme {
         BasicAddPresetDialog(
             modifier = Modifier,
             addPreset = {},
-            toggleAddPresetDialog = {},
+            toggleAddPresetDialog = {}
         )
     }
 }
@@ -74,7 +68,7 @@ fun PreviewBasicAddPresetDialog() {
 fun BasicAddPresetDialog(
     modifier: Modifier,
     addPreset: (String) -> Unit,
-    toggleAddPresetDialog: () -> Unit,
+    toggleAddPresetDialog: () -> Unit
 ) {
     val (presetText, setText) = remember { mutableStateOf(TextFieldValue("")) }
     val maxChar = 30
@@ -89,13 +83,13 @@ fun BasicAddPresetDialog(
             .defaultMinSize(minWidth = 280.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(medium),
-        elevation = xSmall,
+        elevation = xSmall
     ) {
         Column(
             modifier
                 .background(colors.surface)
                 .padding(regular),
-            horizontalAlignment = CenterHorizontally,
+            horizontalAlignment = CenterHorizontally
         ) {
             Row(
                 modifier =
@@ -103,7 +97,7 @@ fun BasicAddPresetDialog(
                     .fillMaxWidth()
                     .padding(bottom = small),
                 verticalAlignment = CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
                     modifier =
@@ -111,7 +105,7 @@ fun BasicAddPresetDialog(
                         .padding(end = xxSmall),
                     imageVector = Icons.Default.AddBox,
                     contentDescription = stringResource(id = Add_preset_dialog_icon),
-                    tint = colors.primary,
+                    tint = colors.primary
                 )
                 Text(
                     modifier =
@@ -120,7 +114,7 @@ fun BasicAddPresetDialog(
                     text = stringResource(addPresetHeader),
                     textAlign = TextAlign.Center,
                     style = typography.h5,
-                    color = headerColour,
+                    color = headerColour
                 )
             }
             TextField(
@@ -138,7 +132,7 @@ fun BasicAddPresetDialog(
                         text = stringResource(enterPresetPlaceholder),
                         style = typography.h6,
                         color = colors.onSurface,
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     )
                 },
                 onValueChange = {
@@ -150,8 +144,8 @@ fun BasicAddPresetDialog(
                     focusedIndicatorColor = Transparent,
                     unfocusedIndicatorColor = Transparent,
                     disabledIndicatorColor = Transparent,
-                    textColor = colors.onSurface,
-                ),
+                    textColor = colors.onSurface
+                )
             )
             Text(
                 text = "${presetText.text.length} / $maxChar",
@@ -162,23 +156,23 @@ fun BasicAddPresetDialog(
                 Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
-                    .background(Transparent),
+                    .background(Transparent)
             )
             Row(
                 Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
                 OutlinedButton(
                     border = BorderStroke(Dimen.one, colors.primary),
                     modifier = Modifier,
                     shape = RoundedCornerShape(small),
-                    onClick = toggleAddPresetDialog,
+                    onClick = toggleAddPresetDialog
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(cancelText),
-                        color = colors.onSurface,
+                        color = colors.onSurface
                     )
                 }
                 Button(
@@ -187,12 +181,12 @@ fun BasicAddPresetDialog(
                     onClick = {
                         Log.i("testoing", "BasicAddPresetDialog: addddd")
                         addPreset(presetText.text)
-                    },
+                    }
                 ) {
                     Text(
                         modifier = Modifier,
                         text = stringResource(addPresetBtn),
-                        color = colors.onPrimary,
+                        color = colors.onPrimary
                     )
                 }
             }

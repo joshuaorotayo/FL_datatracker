@@ -112,7 +112,6 @@ fun SettingsScreen(
                     .fillMaxSize()
             ) {
                 item {
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -165,7 +164,6 @@ fun SettingsScreen(
                 snackbarHostState = scaffoldState.snackbarHostState,
                 onDismiss = {
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                    // TODO: snackbar method
                     /*if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
                             "Restore"
                         ) == true
@@ -181,5 +179,4 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsScreenView(modifier: Modifier = Modifier) {
-
 }

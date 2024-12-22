@@ -11,7 +11,7 @@ sealed class SettingScreens(
     val route: String,
     val settingName: String,
     val settingDescription: String = "",
-    val settingIcon: ImageVector = Icons.Filled.Close,
+    val settingIcon: ImageVector = Icons.Filled.Close
 ) {
     object DataFieldSettings : SettingScreens(
         route = "data_field_settings",

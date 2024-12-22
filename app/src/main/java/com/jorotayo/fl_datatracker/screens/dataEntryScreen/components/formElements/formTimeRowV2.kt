@@ -60,7 +60,7 @@ fun PreviewFormTimeRowV2() {
 @Composable
 fun formTimeRowV2(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     // Fetching local context
     val mContext = LocalContext.current
@@ -113,7 +113,7 @@ fun formTimeRowV2(
                     text = stringResource(id = R.string.time_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,
-                    color = Color.Red,
+                    color = Color.Red
                 )
                 Icon(
                     modifier = Modifier,
@@ -151,8 +151,11 @@ fun formTimeRowV2(
                     )
                     .wrapContentWidth(),
                 text = mTime.value.ifBlank { "HH:MM" },
-                color = if (mTime.value.isBlank())
-                    MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
+                color = if (mTime.value.isBlank()) {
+                    MaterialTheme.colors.bodyTextColour
+                } else {
+                    MaterialTheme.colors.subtitleTextColour
+                },
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1
             )

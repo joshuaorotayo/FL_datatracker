@@ -27,7 +27,7 @@ class DataRepositoryImpl @Inject constructor() : DataRepository {
 
     override fun validateInsertDataForm(
         fieldNames: List<String>,
-        dataForm: DataEntryScreenState,
+        dataForm: DataEntryScreenState
     ): Pair<Boolean, DataEntryScreenState> {
         var newForm = dataForm
         var noErrors = true

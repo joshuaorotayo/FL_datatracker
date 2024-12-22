@@ -66,7 +66,7 @@ fun PreviewFormImageRowV2() {
 
 @Composable
 fun formImageRowV2(
-    data: DataRowState,
+    data: DataRowState
 ): String {
     val maxChar = 50
     val (text, setText) = remember { mutableStateOf(TextFieldValue(data.dataItem.dataValue)) }
@@ -104,7 +104,7 @@ fun formImageRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = headerColour,
+            color = headerColour
         )
         AnimatedVisibility(visible = !imageChanged.value) {
             Image(

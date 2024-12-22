@@ -61,7 +61,7 @@ fun PreviewFormNameHeader() {
 @Composable
 fun FormNameHeader(
     setName: (String) -> Unit,
-    data: DataEntryScreenState,
+    data: DataEntryScreenState
 ) {
     val focusManager = LocalFocusManager.current
     val nameText = remember { mutableStateOf(TextFieldValue(data.dataName)) }
@@ -75,7 +75,9 @@ fun FormNameHeader(
             .wrapContentHeight()
             .padding(start = xxSmall, top = xSmall, end = xxSmall, bottom = zero)
     ) {
-        AnimatedVisibility(visible = data.nameError || (data.dataName.isBlank() && data.formSubmitted)) {
+        AnimatedVisibility(
+            visible = data.nameError || (data.dataName.isBlank() && data.formSubmitted)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,7 +90,7 @@ fun FormNameHeader(
                     text = data.nameErrorMsg,
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.h6,
-                    color = Color.Red,
+                    color = Color.Red
                 )
                 Icon(
                     modifier = Modifier,
@@ -134,7 +136,7 @@ fun FormNameHeader(
                     onNext = {
                         focusManager.moveFocus(FocusDirection.Down)
                     }
-                ),
+                )
             )
         }
     }

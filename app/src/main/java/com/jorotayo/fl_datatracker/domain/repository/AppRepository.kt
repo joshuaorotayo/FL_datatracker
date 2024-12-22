@@ -9,7 +9,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 
 interface AppRepository {
 
-    //Datafield Repository Methods
+    // DataField Repository Methods
 
     fun addDataField(dataField: DataField)
 
@@ -33,9 +33,11 @@ interface AppRepository {
 
     fun getDataFieldNames(): List<String>
 
-    //Data Item Repository Methods
+    // Data Item Repository Methods
 
     fun addDataItem(dataItem: DataItem): Long
+
+    fun addDataItems(dataItems: List<DataItem>)
 
     fun removeDataItem(dataItem: DataItem): Boolean
 
@@ -53,7 +55,7 @@ interface AppRepository {
 
     fun getDataItemsEnabledByPresetId(dataPresetId: Long): List<DataItem>
 
-    //Data Repository Methods
+    // Data Repository Methods
     fun addData(data: Data): Long
 
     fun updateData(data: Data): Long
@@ -70,10 +72,10 @@ interface AppRepository {
 
     fun validateInsertDataForm(
         fieldNames: List<String>,
-        dataForm: DataEntryScreenState,
+        dataForm: DataEntryScreenState
     ): Pair<Boolean, DataEntryScreenState>
 
-    //Preset Repository Methods
+    // Preset Repository Methods
 
     @Throws(InvalidPresetException::class)
     fun addPreset(preset: Preset)

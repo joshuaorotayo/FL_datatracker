@@ -49,7 +49,7 @@ fun PreviewSimpleDataRow() {
 fun SimpleDataRow(
     data: Data,
     editData: () -> Unit,
-    deleteData: (Data) -> Unit,
+    deleteData: (Data) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -108,6 +108,5 @@ fun SimpleDataRow(
                 tint = colors.primary
             )
         }
-
     }
 }

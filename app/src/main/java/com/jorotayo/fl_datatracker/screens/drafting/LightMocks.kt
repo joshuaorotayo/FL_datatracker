@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -32,13 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxLarge
 import com.jorotayo.fl_datatracker.util.Dimen.xxxLarge
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
-
 
 @Preview(
     showBackground = true,
@@ -47,22 +48,21 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 )
 @Composable
 fun PreviewFLLScreens() {
-
     FL_DatatrackerTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(240, 239, 239, 255))
+                .background(color = colors.background)
 
         ) {
             LightColumnUI()
             LightRoundedTopBar(
                 Modifier.align(Alignment.TopCenter),
-                textColour = Color.Red.copy(alpha = 0.5f)
+                textColour = Color.Red.copy(alpha = fiftyPercent)
             )
             LightRoundedBottomBar(
                 Modifier.align(Alignment.BottomCenter),
-                textColour = Color.Red.copy(alpha = 0.5f),
+                textColour = Color.Red.copy(alpha = fiftyPercent),
                 backColour = Color.White
             )
         }
@@ -75,20 +75,20 @@ fun LightColumnUI() {
         modifier = Modifier
             .fillMaxSize()
             .padding(start = small, top = xxLarge, end = small)
-    )
-    {
+    ) {
         Surface(
             modifier = Modifier
                 .clip(RoundedCornerShape(small))
                 .fillMaxWidth()
                 .height(100.dp),
-            color = MaterialTheme.colors.background,
+            color = colors.background,
             shape = RoundedCornerShape(
                 xSmall
-            ),
+            )
         ) {
             Column(
                 modifier = Modifier
+                    .background(colors.surface)
                     .fillMaxWidth()
                     .padding(xSmall)
             ) {
@@ -113,7 +113,7 @@ fun LightColumnUI() {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "",
-                tint = Color.Red.copy(alpha = 0.5f)
+                tint = Color.Red.copy(alpha = fiftyPercent)
             )
         }
 
@@ -131,14 +131,11 @@ fun LightColumnUI() {
                     shape = RoundedCornerShape(small),
                     color = Color.White
                 ) {
-
                 }
             }
         }
-
     }
 }
-
 
 @Composable
 fun LightRoundedTopBar(modifier: Modifier, textColour: Color) {
@@ -161,13 +158,13 @@ fun LightRoundedTopBar(modifier: Modifier, textColour: Color) {
                 text = "Page Name",
                 color = textColour,
                 fontSize = 14.sp,
-                modifier = Modifier.padding(end = medium),
+                modifier = Modifier.padding(end = medium)
             )
             Surface(
                 modifier = Modifier
                     .wrapContentSize(),
                 color = Color(240, 239, 239, 255),
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Row(modifier = Modifier) {
                     Text(
@@ -179,7 +176,7 @@ fun LightRoundedTopBar(modifier: Modifier, textColour: Color) {
                             top = xxxSmall,
                             bottom = xxxSmall,
                             end = xxxLarge
-                        ),
+                        )
                     )
                 }
             }
@@ -202,7 +199,8 @@ fun LightRoundedBottomBar(modifier: Modifier, backColour: Color, textColour: Col
         Row(
             modifier = Modifier
                 .background(backColour)
-                .padding(small), Arrangement.SpaceAround
+                .padding(small),
+            Arrangement.SpaceAround
         ) {
             Icon(
                 imageVector = Icons.Default.Menu,
@@ -222,5 +220,3 @@ fun LightRoundedBottomBar(modifier: Modifier, backColour: Color, textColour: Col
         }
     }
 }
-
-

@@ -47,5 +47,4 @@ class MemberRepository @Inject constructor() {
         membersBox.remove(members)
 
     fun updateMember(member: Member) = membersBox.put(member)
-
 }

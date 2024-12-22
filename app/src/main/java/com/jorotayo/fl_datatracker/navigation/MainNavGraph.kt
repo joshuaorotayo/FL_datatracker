@@ -5,8 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,7 +18,6 @@ import com.jorotayo.fl_datatracker.screens.settings.DataFieldSettings
 import com.jorotayo.fl_datatracker.screens.settings.DisplaySettings
 import com.jorotayo.fl_datatracker.screens.settings.FAQsList
 import com.jorotayo.fl_datatracker.screens.settings.SettingsScreen
-import com.jorotayo.fl_datatracker.screens.settings.SettingsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -29,7 +26,6 @@ fun MainNavGraph(
     navController: NavHostController,
     sheetState: ModalBottomSheetState
 ) {
-
     NavHost(
         navController = navController,
         route = "main_nav",
@@ -46,7 +42,7 @@ fun MainNavGraph(
                 ) {
                     type = NavType.IntType
                     defaultValue = -1
-                },
+                }
             )
         ) {
             DataEntryScreen(
@@ -73,10 +69,7 @@ fun MainNavGraph(
                 DataFieldSettings()
             }
             composable(route = SettingScreens.DisplaySettings.route) {
-                val settingsViewModel = hiltViewModel<SettingsViewModel>()
-                DisplaySettings(
-                    uiState = settingsViewModel.uiState.collectAsState().value
-                )
+                DisplaySettings()
             }
             composable(route = SettingScreens.FAQsList.route) {
                 FAQsList()

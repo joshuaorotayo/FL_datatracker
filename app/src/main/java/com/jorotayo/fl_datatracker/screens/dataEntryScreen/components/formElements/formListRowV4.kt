@@ -47,7 +47,7 @@ fun PreviewFormListRowV4() {
 @Composable
 fun formListRowV4(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     val textFields =
         rememberSaveable { mutableStateOf(getDataStringToList(data.dataItem.dataValue)) }
@@ -55,7 +55,6 @@ fun formListRowV4(
     val number = rememberSaveable { mutableStateOf(textFields.value.size) }
     val itemHeight = 65f
     val columnHeight = rememberSaveable { mutableStateOf(75F + (itemHeight * number.value)) }
-
 
     LazyColumn(
         modifier = Modifier
@@ -73,7 +72,7 @@ fun formListRowV4(
                         .fillMaxWidth(),
                     text = data.dataItem.fieldName,
                     textAlign = TextAlign.Start,
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colors.onSurface
                 )
             }
         }

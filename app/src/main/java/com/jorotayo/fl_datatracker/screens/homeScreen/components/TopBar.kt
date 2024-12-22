@@ -33,7 +33,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 private fun PreviewTopBar() {
     FL_DatatrackerTheme {
         TopBar(
-            toggleSearchBar = {},
+            toggleSearchBar = {}
         )
     }
 }
@@ -48,7 +48,7 @@ fun TopBar(toggleSearchBar: () -> Unit) {
                 .fillMaxWidth()
                 .padding(small),
             Arrangement.SpaceBetween,
-            Alignment.CenterVertically,
+            Alignment.CenterVertically
         ) {
             AnimatedVisibility(!isSearchExpanded) {
                 Text(
@@ -59,7 +59,7 @@ fun TopBar(toggleSearchBar: () -> Unit) {
                     text = "FL DataTracker",
                     color = MaterialTheme.colors.primary,
                     style = typography.h1,
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Start
                 )
             }
             androidx.compose.material.Surface(
@@ -67,14 +67,14 @@ fun TopBar(toggleSearchBar: () -> Unit) {
                 Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(xSmall),
-                color = MaterialTheme.colors.surface,
+                color = MaterialTheme.colors.surface
             ) {
                 Row(
                     modifier =
                     Modifier
                         .padding(start = xxSmall),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "Search",
@@ -88,7 +88,7 @@ fun TopBar(toggleSearchBar: () -> Unit) {
                         icon = Icons.Default.Search,
                         tint = MaterialTheme.colors.primary,
                         contentDescription = "Search Icon to toggle Search Bar and search for Data",
-                        onClick = toggleSearchBar,
+                        onClick = toggleSearchBar
                     )
                 }
             }

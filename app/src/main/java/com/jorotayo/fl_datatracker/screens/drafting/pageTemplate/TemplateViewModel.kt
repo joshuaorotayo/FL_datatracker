@@ -18,7 +18,7 @@ class TemplateViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     override fun initView() {
-//        sharedSettingService.showDashboardNavBar(false)
+        sharedSettingService.showDashboardNavBar(false)
     }
 
     override fun onAddMembersClicked() {

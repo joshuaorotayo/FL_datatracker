@@ -16,7 +16,7 @@ import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 @Composable
 fun TestRow(
     number: Int,
-    deleteRow: () -> Unit,
+    deleteRow: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -26,7 +26,7 @@ fun TestRow(
     ) {
         Text(
             modifier = Modifier
-                .weight(0.5f),
+                .weight(fiftyPercent),
             text = "Item Number: $number",
             color = Color.Black
         )

@@ -47,9 +47,9 @@ private fun PreviewSearchBar() {
                     dataId = 0,
                     createdTime = "Yesterday",
                     lastEditedTime = "Today",
-                    name = "Simple Service Test",
-                ),
-            ),
+                    name = "Simple Service Test"
+                )
+            )
         )
     }
 }
@@ -57,7 +57,7 @@ private fun PreviewSearchBar() {
 @Composable
 fun SearchBar(
     onHomeEvent: (HomeScreenEvent) -> Unit,
-    searchState: HomeScreenState,
+    searchState: HomeScreenState
 ) {
     Row(
         modifier =
@@ -65,13 +65,13 @@ fun SearchBar(
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(top = xSmall),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
             onClick = {
                 // Back arrow to close search View
                 onHomeEvent(HomeScreenEvent.ToggleSearchBar)
-            },
+            }
         ) {
             Icon(
                 modifier =
@@ -80,7 +80,7 @@ fun SearchBar(
                     .padding(start = small),
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Close Search View",
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colors.primary
             )
         }
         Card(
@@ -105,7 +105,7 @@ fun SearchBar(
                         modifier = Modifier,
                         text = searchState.hint,
                         style = typography.h2,
-                        color = MaterialTheme.colors.onSurface,
+                        color = MaterialTheme.colors.onSurface
                     )
                 },
                 onValueChange = {
@@ -117,10 +117,10 @@ fun SearchBar(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    textColor = MaterialTheme.colors.onSurface,
+                    textColor = MaterialTheme.colors.onSurface
                 ),
                 leadingIcon = {
-                },
+                }
             )
         }
     }

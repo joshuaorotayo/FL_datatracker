@@ -21,7 +21,6 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEven
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DismissDeleteDataFieldDialog
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.DismissPresetDropdown
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ExpandPresetDropdown
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.InitScreen
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.RestoreDeletedField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.SaveDataField
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.DataFieldEvent.ShowDeleteDataFieldDialog
@@ -64,22 +63,11 @@ class DataFieldsViewModel @Inject constructor(
         mutableStateOf(userPreferenceStore.getString(CURRENT_PRESET) ?: "Default")
     private var currentPreset = repository.getPresetByPresetName(currentPresetName.value)
 
-    /*
-        private var _uiState = mutableStateOf(
-            DataFieldScreenState(
-                presetList = repository.getPresetList(),
-                currentPreset = currentPreset,
-                dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
-            )
-        )
-        val uiState: MutableState<DataFieldScreenState> = _uiState
-    */
-
     private val _state = MutableStateFlow(
         DataFieldScreenState(
             presetList = repository.getPresetList(),
             currentPreset = currentPreset,
-            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
+            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
         )
     )
     val state = _state.asStateFlow()
@@ -91,7 +79,6 @@ class DataFieldsViewModel @Inject constructor(
 
     fun onDataFieldEvent(event: DataFieldEvent) {
         when (event) {
-            is InitScreen -> onInitScreen()
             is RestoreDeletedField -> onRestoreDataField()
             is ExpandPresetDropdown -> onExpandPresetDropdown()
             is DismissPresetDropdown -> onDismissPresetDropdown()
@@ -104,7 +91,7 @@ class DataFieldsViewModel @Inject constructor(
         }
     }
 
-    private fun onInitScreen() {
+    init {
         val presetList = repository.getPresetList()
         if (presetList.isEmpty()) {
             repository.addPreset(
@@ -120,7 +107,7 @@ class DataFieldsViewModel @Inject constructor(
         _state.value = state.value.copy(
             presetList = repository.getPresetList(),
             currentPreset = currentPreset,
-            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
+            dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
         )
     }
 
@@ -332,7 +319,7 @@ class DataFieldsViewModel @Inject constructor(
                         isAddDataFieldVisible = false,
                         presetList = presets,
                         currentPreset = newPreset,
-                        dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId),
+                        dataFields = repository.getDataFieldsByPresetId(currentPreset.presetId)
                     )
                     userPreferenceStore.setString(Pair(CURRENT_PRESET, newPreset.presetName))
                     _eventFlow.emit(ShowSnackbar("Preset: ${newPreset.presetName} added!"))
@@ -397,7 +384,7 @@ class DataFieldsViewModel @Inject constructor(
             presetList = repository.getPresetList(),
             currentPreset = newPreset,
             isAddDataFieldVisible = false,
-            isPresetDropDownMenuExpanded = false,
+            isPresetDropDownMenuExpanded = false
         )
     }
 

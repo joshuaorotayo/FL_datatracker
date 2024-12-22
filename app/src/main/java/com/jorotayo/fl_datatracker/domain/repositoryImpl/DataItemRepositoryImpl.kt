@@ -13,6 +13,9 @@ class DataItemRepositoryImpl @Inject constructor() : DataItemRepository {
     override fun addDataItem(dataItem: DataItem): Long =
         dataItemBox.put(dataItem)
 
+    override fun addDataItems(dataItems: List<DataItem>) =
+        dataItemBox.put(dataItems)
+
     override fun removeDataItem(dataItem: DataItem): Boolean =
         dataItemBox.remove(dataItem)
 
@@ -38,5 +41,4 @@ class DataItemRepositoryImpl @Inject constructor() : DataItemRepository {
 
     override fun getDataItemsEnabledByPresetId(dataPresetId: Long): List<DataItem> =
         dataItemBox.query(DataItem_.presetId.equal(dataPresetId)).build().find()
-
 }

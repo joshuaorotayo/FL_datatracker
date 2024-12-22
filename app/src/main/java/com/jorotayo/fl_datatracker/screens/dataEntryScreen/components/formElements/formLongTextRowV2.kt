@@ -65,7 +65,7 @@ fun PreviewFormLongTextRowV2() {
 @Composable
 fun formLongTextRowV2(
     data: DataItem,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     // define any local variables
     val maxChar = 200
@@ -83,7 +83,7 @@ fun formLongTextRowV2(
                 .padding(bottom = Dimen.xxSmall),
             text = data.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.subtitleTextColour,
+            color = MaterialTheme.colors.subtitleTextColour
         )
         // Data Field Name Data Capture
 
@@ -113,8 +113,13 @@ fun formLongTextRowV2(
             },
             maxLines = 4,
             placeholder = {
-                (if (data.fieldDescription?.isBlank() == true) data.fieldDescription else
-                    "Please enter content for field: ${data.fieldName}")?.let {
+                (
+                        if (data.fieldDescription?.isBlank() == true) {
+                            data.fieldDescription
+                        } else {
+                            "Please enter content for field: ${data.fieldName}"
+                        }
+                        )?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colors.subtitleTextColour,

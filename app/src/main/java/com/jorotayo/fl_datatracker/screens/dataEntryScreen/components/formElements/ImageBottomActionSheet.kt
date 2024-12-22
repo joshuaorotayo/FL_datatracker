@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -58,7 +57,7 @@ fun ImageBottomActionSheet(
     state: ModalBottomSheetState,
     scope: CoroutineScope,
     onTakeImage: (isCamera: Boolean) -> Unit,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ) {
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -147,7 +146,7 @@ fun ImageBottomActionSheet(
 fun checkAndRequestCameraPermission(
     context: Context,
     permission: String,
-    launcher: ManagedActivityResultLauncher<String, Boolean>,
+    launcher: ManagedActivityResultLauncher<String, Boolean>
 ): Boolean {
     val permissionCheckResult = ContextCompat.checkSelfPermission(context, permission)
 
@@ -176,7 +175,7 @@ fun getTmpFileUri(context: Context): Uri {
 
 @Composable
 fun BottomActionOptions(
-    onTakeImage: (Boolean) -> Unit,
+    onTakeImage: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -224,7 +223,7 @@ fun BottomActionOptions(
                         .wrapContentWidth(),
                     onClick = {
                         onTakeImage(false)
-                    },
+                    }
                 ) {
                     Text(
                         text = "Gallery"

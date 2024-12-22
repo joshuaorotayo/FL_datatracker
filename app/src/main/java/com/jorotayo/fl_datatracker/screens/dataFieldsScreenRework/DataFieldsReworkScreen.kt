@@ -54,7 +54,8 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 fun PreviewDataFieldsScreenRework() {
     FL_DatatrackerTheme {
         DataFieldsReworkScreen(
-            state = DataFieldsReworkState(), viewModel = dataFieldsReworkPreview
+            state = DataFieldsReworkState(),
+            viewModel = dataFieldsReworkPreview
         )
     }
 }
@@ -69,7 +70,6 @@ fun DataFieldsReworkView() {
     }*/
 
     DataFieldsReworkScreen(viewModel = viewModel, state = state)
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -136,8 +136,7 @@ fun DataFieldsReworkScreen(
                 visible = state.isAddMembersFormShowing,
                 enter = fadeIn(animationSpec = tween(durationMillis = 500)),
                 exit = fadeOut(animationSpec = tween(durationMillis = 300))
-            )
-            {
+            ) {
                 Column {
                     for (i in 1..4) {
                         minimalShortTextField(
@@ -159,7 +158,7 @@ fun DataFieldsReworkScreen(
                             "Restore"
                         ) == true
                     ) {
-                        //function
+                        // function
                     }
                 }
             )
@@ -177,7 +176,6 @@ private fun HeaderRow() {
         textAlign = TextAlign.Start
     )
 }
-
 
 @Composable
 fun AddMembers(onAddMembersClick: () -> Unit) {
@@ -207,6 +205,5 @@ fun AddMembersForm(viewModel: DataFieldsReworkInterface, state: DataFieldsRework
         contentColor = Color.Blue,
         shape = RoundedCornerShape(small)
     ) {
-
     }
 }

@@ -80,7 +80,6 @@ import com.jorotayo.fl_datatracker.util.examplePopulatedDataEntry
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @DefaultPreviews
@@ -112,7 +111,6 @@ fun PreviewEmptyDataEntryScreen() {
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -176,7 +174,7 @@ fun DataEntryScreenView(
     sheetState: ModalBottomSheetState,
     uiState: UiState<DataEntryScreenState>,
     onDataEvent: (DataEvent) -> Unit,
-    listState: LazyListState,
+    listState: LazyListState
 ) {
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -190,11 +188,9 @@ fun DataEntryScreenView(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            //ui Content
+            // ui Content
             when (uiState) {
-
                 UiState.Loading -> {
-
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Center),
@@ -223,7 +219,6 @@ fun DataEntryScreenView(
                     ) {
                         HeaderRow()
                         DataFormHeadings(uiState.data)
-
 
                         Card(
                             modifier = Modifier
@@ -403,9 +398,12 @@ fun DataEntryScreenView(
                                             containerColor = colors.primary
                                         ),
                                         onClick = {
-                                            onDataEvent(DataEvent.ValidateInsertDataForm(uiState.data))
+                                            onDataEvent(
+                                                DataEvent.ValidateInsertDataForm(uiState.data)
+                                            )
                                             onDataEvent(DataEvent.FormSubmitted)
-                                        }) {
+                                        }
+                                    ) {
                                         Text(
                                             text = stringResource(id = R.string.save_data_btn),
                                             color = colors.onPrimary
@@ -433,7 +431,6 @@ fun DataEntryScreenView(
     }
 }
 
-
 @Composable
 private fun HeaderRow() {
     Row(
@@ -454,7 +451,7 @@ private fun HeaderRow() {
 
 @Composable
 private fun DataFormHeadings(
-    uiState: DataEntryScreenState,
+    uiState: DataEntryScreenState
 ) {
     Row(
         modifier = Modifier,
@@ -478,7 +475,7 @@ private fun DataFormHeadings(
             .fillMaxWidth()
             .padding(
                 start = small,
-                end = small,
+                end = small
             ),
         text = stringResource(id = R.string.data_entry_form_header),
         color = colors.subtitleTextColour,

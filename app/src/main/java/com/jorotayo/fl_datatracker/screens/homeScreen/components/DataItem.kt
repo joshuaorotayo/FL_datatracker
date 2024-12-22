@@ -108,7 +108,7 @@ fun DataItem(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = preacher,
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     )
                 }
                 Row(
@@ -118,7 +118,7 @@ fun DataItem(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = location,
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -138,7 +138,7 @@ fun DataItem(
                             .size(48.dp),
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit data for meeting",
-                        tint = MaterialTheme.colors.primary.copy(0.6f),
+                        tint = MaterialTheme.colors.primary.copy(0.6f)
                     )
                 }
             }

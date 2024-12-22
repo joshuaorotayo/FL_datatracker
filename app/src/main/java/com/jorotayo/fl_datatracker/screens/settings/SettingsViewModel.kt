@@ -4,6 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DataFieldSettings
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DisplaySettings
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.FAQsList
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.ToggleDarkMode
 import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +21,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     userPreferenceStore: UserPreferenceStore
 ) : ViewModel() {
-    val useSystemDarkLightMode =
+
+    private val useSystemDarkLightMode =
         userPreferenceStore.getBoolean(SettingsKeys.USE_DEVICE_DARK_MODE_SETTINGS)
 
     private val _uiState = MutableStateFlow(
@@ -33,29 +38,33 @@ class SettingsViewModel @Inject constructor(
 
     fun onSettingEvent(event: SettingEvent) {
         when (event) {
-            SettingEvent.DataFieldSettings -> onDataFieldSettings()
-            SettingEvent.DisplaySettings -> onDisplaySettings()
-            SettingEvent.FAQsList -> onFAQsList()
+            is DataFieldSettings -> onDataFieldSettings()
+            is DisplaySettings -> onDisplaySettings()
+            is FAQsList -> onFAQsList()
+            is ToggleDarkMode -> onToggleDarkMode()
         }
-
     }
 
-    fun onDataFieldSettings() {
+    private fun onDataFieldSettings() {
         viewModelScope.launch {
             _navigationEvent.emit(SettingNavigation.DataFieldSettings)
         }
     }
 
-    fun onDisplaySettings() {
+    private fun onDisplaySettings() {
         viewModelScope.launch {
             _navigationEvent.emit(SettingNavigation.DisplaySettings)
         }
     }
 
-    fun onFAQsList() {
+    private fun onFAQsList() {
         viewModelScope.launch {
             _navigationEvent.emit(SettingNavigation.FAQsList)
         }
+    }
+
+    private fun onToggleDarkMode() {
+        // todo
     }
 
     sealed class SettingNavigation {

@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.homeScreen.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,25 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.domain.model.Data
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.regular
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
 import kotlinx.coroutines.launch
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 fun PreviewBasicDeleteDataDialog() {
     val mutableValue = remember { mutableStateOf(true) }
@@ -73,7 +64,7 @@ fun BasicDeleteDataDialog(
     confirmDelete: (Data) -> Unit,
     scaffold: ScaffoldState,
     state: MutableState<Boolean>,
-    data: Data,
+    data: Data
 ) {
     val scope = rememberCoroutineScope()
 

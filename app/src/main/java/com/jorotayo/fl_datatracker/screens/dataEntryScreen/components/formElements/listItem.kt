@@ -58,7 +58,7 @@ fun listItem(
     deleteItem: () -> Unit,
     clearField: () -> Unit,
     lastItem: Boolean,
-    index: Int,
+    index: Int
 ): String {
     val maxChar = 20
     val (text, setText) = mutableStateOf(itemValue)

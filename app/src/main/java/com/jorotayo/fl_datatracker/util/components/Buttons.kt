@@ -24,6 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
@@ -114,7 +115,6 @@ private fun PreviewButtons() {
     }
 }
 
-
 /**
  * Button that uses the primary colour as an outline and surface as a background
  */
@@ -127,7 +127,13 @@ private fun PrimaryButton(buttonState: ButtonState) {
         shape = RoundedCornerShape(FULLY_ROUNDED),
         border = BorderStroke(
             one,
-            if (buttonState.enabled) colors.primary else colors.primary.copy(alpha = 0.5f)
+            if (buttonState.enabled) {
+                colors.primary
+            } else {
+                colors.primary.copy(
+                    alpha = Dimen.fiftyPercent
+                )
+            }
         ),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = colors.primary,
@@ -160,11 +166,17 @@ private fun SecondaryButton(buttonState: ButtonState) {
         shape = RoundedCornerShape(FULLY_ROUNDED),
         border = BorderStroke(
             one,
-            if (buttonState.enabled) colors.primary else colors.primary.copy(alpha = 0.5f)
+            if (buttonState.enabled) {
+                colors.primary
+            } else {
+                colors.primary.copy(
+                    alpha = Dimen.fiftyPercent
+                )
+            }
         ),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Transparent,
-            contentColor = colors.primary,
+            contentColor = colors.primary
         ),
         modifier = buttonState.modifier.semantics {
             contentDescription = buttonState.buttonContentDescription ?: buttonState.label ?: ""

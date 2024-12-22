@@ -48,7 +48,7 @@ fun PreviewFormImageDialog() {
 
 @Composable
 fun FormImageDialog(
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     Dialog(
         onDismissRequest = {
@@ -71,7 +71,9 @@ fun FormImageDialog(
                     modifier = Modifier
                         .padding(end = 10.dp),
                     imageVector = Icons.Default.Image,
-                    contentDescription = stringResource(id = R.string.description_image_selection_icon)
+                    contentDescription = stringResource(
+                        id = R.string.description_image_selection_icon
+                    )
                 )
                 Text(
                     text = stringResource(id = R.string.image_selection_dialog_header)

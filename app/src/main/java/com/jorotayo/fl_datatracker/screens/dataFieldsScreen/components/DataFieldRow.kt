@@ -57,6 +57,7 @@ import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.events.RowEvent
 import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.states.DataFieldRowState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -94,7 +95,7 @@ fun DataFieldRow(
     currentDataField: DataField,
     onRowEvent: (RowEvent) -> Unit,
     rowIndex: Long,
-    deleteIcon: () -> Unit,
+    deleteIcon: () -> Unit
 ) {
     val textColour = if (isSystemInDarkTheme()) Color.Gray else MaterialTheme.colors.primary
     var expanded by remember { mutableStateOf(false) }
@@ -105,7 +106,11 @@ fun DataFieldRow(
     val isHintVisible = remember { mutableStateOf(true) }
     val isEditOptionsVisible = remember { mutableStateOf(false) }
     val isRowEnabled = remember { mutableStateOf(currentRowState.value.dataField.isEnabled) }
-    val (text, setText) = remember { mutableStateOf(TextFieldValue(currentRowState.value.dataField.fieldName)) }
+    val (text, setText) = remember {
+        mutableStateOf(
+            TextFieldValue(currentRowState.value.dataField.fieldName)
+        )
+    }
     val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue("")) }
     val firstText = remember { mutableStateOf("") }
     val secondText = remember { mutableStateOf("") }
@@ -187,7 +192,7 @@ fun DataFieldRow(
                         Icon(
                             imageVector = Default.ArrowDropDown,
                             contentDescription = stringResource(R.string.dataField_type_dropdown),
-                            tint = textColour.copy(alpha = 0.5f)
+                            tint = textColour.copy(alpha = fiftyPercent)
                         )
                     }
                     DataFieldTypeDropDown(
@@ -213,7 +218,7 @@ fun DataFieldRow(
                         colors = CheckboxDefaults.colors(
                             checkmarkColor = if (isSystemInDarkTheme()) MaterialTheme.colors.primary else MaterialTheme.colors.onPrimary,
                             uncheckedColor = textColour,
-                            checkedColor = textColour,
+                            checkedColor = textColour
                         )
                     )
                     IconButton(
@@ -236,7 +241,7 @@ fun DataFieldRow(
                 VisibleHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
             AnimatedVisibility(
-                visible = (currentRowState.value.dataField.dataFieldType <= LONG_TEXT || currentRowState.value.dataField.dataFieldType >= IMAGE) && !isHintVisible.value && isEditOptionsVisible.value
+                visible = ((currentRowState.value.dataField.dataFieldType <= LONG_TEXT) || (currentRowState.value.dataField.dataFieldType >= IMAGE)) && !isHintVisible.value && isEditOptionsVisible.value
             ) {
                 HiddenHintRow(
                     currentDataField,
@@ -258,7 +263,9 @@ fun DataFieldRow(
             ) {
                 TriStateHintRow(textColour, currentDataField, isHintVisible, isEditOptionsVisible)
             }
-            AnimatedVisibility(currentRowState.value.dataField.dataFieldType == BOOLEAN && isEditOptionsVisible.value) {
+            AnimatedVisibility(
+                currentRowState.value.dataField.dataFieldType == BOOLEAN && isEditOptionsVisible.value
+            ) {
                 BooleanHintRow(firstText, currentRowState, onRowEvent, secondText)
             }
             AnimatedVisibility(
@@ -291,7 +298,7 @@ private fun DataFieldTypeDropDown(
             .wrapContentHeight()
             .background(MaterialTheme.colors.background),
         expanded = expandedMenu2,
-        onDismissRequest = { expandedMenu2 = false },
+        onDismissRequest = { expandedMenu2 = false }
     ) {
         items.forEachIndexed { index, s ->
             DropdownMenuItem(onClick = {
@@ -338,7 +345,7 @@ private fun VisibleHintRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = small, end = xxxSmall),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "Hint: ",
@@ -361,7 +368,7 @@ private fun VisibleHintRow(
                 modifier = Modifier,
                 imageVector = Default.Edit,
                 contentDescription = stringResource(R.string.amend_row_hint),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -387,7 +394,7 @@ private fun HideEditRow(
             modifier = Modifier
                 .padding(end = xxSmall),
             text = stringResource(R.string.hideEditRowText),
-            color = textColour.copy(alpha = 0.5f)
+            color = textColour.copy(alpha = fiftyPercent)
         )
         Icon(
             modifier = Modifier,
@@ -430,12 +437,12 @@ private fun BooleanHintRow(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            },
+            }
         ) {
             Icon(
                 imageVector = Default.Edit,
                 contentDescription = stringResource(R.string.amend_bool_value),
-                tint = textColour,
+                tint = textColour
             )
         }
     }
@@ -536,12 +543,12 @@ private fun TriStateHintRow(
             onClick = {
                 isHintVisible.value = false
                 isEditOptionsVisible.value = true
-            },
+            }
         ) {
             Icon(
                 imageVector = Default.Edit,
                 contentDescription = stringResource(R.string.amend_tristate_value),
-                tint = textColour,
+                tint = textColour
             )
         }
     }

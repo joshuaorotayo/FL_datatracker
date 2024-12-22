@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.screens.settings
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -26,6 +25,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,9 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -45,31 +46,28 @@ import com.jorotayo.fl_datatracker.util.Dimen.xSmall
 import com.jorotayo.fl_datatracker.util.Dimen.xxxSmall
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode"
-)
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode"
-)
+@DefaultPreviews
 @Composable
 private fun PreviewDisplaySettings() {
     FL_DatatrackerTheme {
-        DisplaySettings(
-            uiState = DisplayUiState(
-                isSystemDarkLightEnabled = false,
-                isLightShowing = false
-            )
-        )
+        DisplaySettings()
     }
 }
 
 @Composable
-fun DisplaySettings(
-    uiState: DisplayUiState
+fun DisplaySettings() {
+    val viewModel = hiltViewModel<SettingsViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+
+    val onDisplaySettingEvent = viewModel::onSettingEvent
+
+    DisplaySettingsView(uiState, onDisplaySettingEvent)
+}
+
+@Composable
+fun DisplaySettingsView(
+    uiState: DisplayUiState,
+    onDisplaySettingEvent: (event: SettingEvent) -> Unit
 ) {
     val isLightMode = isSystemInDarkTheme().not()
     var showingLightMode by remember { mutableStateOf(isLightMode) }
@@ -77,8 +75,7 @@ fun DisplaySettings(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.background)
-    )
-    {
+    ) {
         Column {
             Text(
                 modifier = Modifier
@@ -184,7 +181,7 @@ fun DisplaySettings(
                     Divider(modifier = Modifier.fillMaxWidth())
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
                     ) {
                         Text(
                             modifier = Modifier
@@ -209,7 +206,6 @@ fun DisplaySettings(
                         text = "This will follow the system colours to set the light and dark mode for the app",
                         color = colors.secondary
                     )
-
                 }
             }
         }

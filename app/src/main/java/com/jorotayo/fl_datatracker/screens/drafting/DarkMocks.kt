@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.util.Dimen
 
-
 @Preview(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -52,11 +51,11 @@ fun PreviewFLLScreensDark() {
             DarkColumnUI()
             DarkRoundedTopBar(
                 Modifier.align(Alignment.TopCenter),
-                textColour = Color.Red.copy(alpha = 0.5f)
+                textColour = Color.Red.copy(alpha = Dimen.fiftyPercent)
             )
             DarkRoundedBottomBar(
                 Modifier.align(Alignment.BottomCenter),
-                textColour = Color.Red.copy(alpha = 0.5f),
+                textColour = Color.Red.copy(alpha = Dimen.fiftyPercent),
                 backColour = Color.Black
             )
         }
@@ -69,8 +68,7 @@ fun DarkColumnUI() {
         modifier = Modifier
             .fillMaxSize()
             .padding(start = Dimen.small, top = Dimen.xxLarge, end = Dimen.small)
-    )
-    {
+    ) {
         Surface(
             modifier = Modifier
                 .clip(RoundedCornerShape(Dimen.small))
@@ -80,7 +78,7 @@ fun DarkColumnUI() {
             elevation = 3.dp,
             shape = RoundedCornerShape(
                 Dimen.xSmall
-            ),
+            )
         ) {
             Column(
                 modifier = Modifier
@@ -106,7 +104,7 @@ fun DarkColumnUI() {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "",
-                tint = Color.Red.copy(alpha = 0.5f)
+                tint = Color.Red.copy(alpha = Dimen.fiftyPercent)
             )
         }
     }
@@ -119,9 +117,9 @@ fun CentreScrollerUI(backColourUi: Color, textColourUi: Color) {
             .fillMaxSize()
             .padding(top = Dimen.xxxLarge, bottom = Dimen.medium)
     ) {
-
         LazyColumn(
-            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(
                 Dimen.xSmall
             )
         ) {
@@ -171,7 +169,8 @@ fun DarkRoundedTopBar(modifier: Modifier, textColour: Color) {
                     .clip(
                         RoundedCornerShape(Dimen.small)
                     )
-                    .background(MaterialTheme.colors.surface), elevation = Dimen.xSmall
+                    .background(MaterialTheme.colors.surface),
+                elevation = Dimen.xSmall
             ) {
                 Text(
                     modifier = Modifier.padding(
@@ -202,7 +201,8 @@ fun DarkRoundedBottomBar(modifier: Modifier, backColour: Color, textColour: Colo
         Row(
             modifier = Modifier
                 .background(backColour)
-                .padding(Dimen.small), Arrangement.SpaceAround
+                .padding(Dimen.small),
+            Arrangement.SpaceAround
         ) {
             Icon(
                 imageVector = Icons.Default.Menu,

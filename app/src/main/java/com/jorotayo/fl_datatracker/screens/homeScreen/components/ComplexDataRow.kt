@@ -55,7 +55,7 @@ fun PreviewComplexDataRow() {
 fun ComplexDataRow(
     data: Data,
     editData: () -> Unit,
-    last: Boolean,
+    last: Boolean
 ) {
     val textColor = if (isSystemInDarkTheme()) Color.Gray else Color.DarkGray
 
@@ -115,7 +115,12 @@ fun ComplexDataRow(
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
                         .weight(1f),
-                    text = if (dataItemsList.isEmpty()) "" else dataItemsList[0].fieldName + ": ${dataItemsList[0].dataValue}",
+                    text = if (dataItemsList.isEmpty()) {
+                        ""
+                    } else {
+                        dataItemsList[0].fieldName + ": " +
+                                dataItemsList[0].dataValue
+                    },
                     // text = "field one",
                     color = textColor,
                     style = MaterialTheme.typography.subtitle1,

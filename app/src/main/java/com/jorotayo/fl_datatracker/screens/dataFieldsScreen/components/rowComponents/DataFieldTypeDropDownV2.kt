@@ -52,7 +52,7 @@ fun DataFieldTypeDropDownV2(
         modifier = Modifier
             .wrapContentSize(),
         expanded = expanded,
-        onDismissRequest = dismissDropdown,
+        onDismissRequest = dismissDropdown
     ) {
         items.forEachIndexed { index, iconText ->
             DropdownMenuItem(onClick = {

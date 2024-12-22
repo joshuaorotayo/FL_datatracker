@@ -88,11 +88,31 @@ fun NewDataField(
     var _newDataField = remember { mutableStateOf(NewDataFieldState()) }
     val newDataField: State<NewDataFieldState> = _newDataField
 
-    val (nameText, setNameText) = remember { mutableStateOf(TextFieldValue(newDataField.value.fieldName)) }
-    val (hintText, setHintText) = remember { mutableStateOf(TextFieldValue(newDataField.value.fieldHint)) }
-    val (firstText, setFirstText) = remember { mutableStateOf(TextFieldValue(newDataField.value.firstValue)) }
-    val (secondText, setSecondText) = remember { mutableStateOf(TextFieldValue(newDataField.value.secondValue)) }
-    val (thirdText, setThirdText) = remember { mutableStateOf(TextFieldValue(newDataField.value.thirdValue)) }
+    val (nameText, setNameText) = remember {
+        mutableStateOf(
+            TextFieldValue(newDataField.value.fieldName)
+        )
+    }
+    val (hintText, setHintText) = remember {
+        mutableStateOf(
+            TextFieldValue(newDataField.value.fieldHint)
+        )
+    }
+    val (firstText, setFirstText) = remember {
+        mutableStateOf(
+            TextFieldValue(newDataField.value.firstValue)
+        )
+    }
+    val (secondText, setSecondText) = remember {
+        mutableStateOf(
+            TextFieldValue(newDataField.value.secondValue)
+        )
+    }
+    val (thirdText, setThirdText) = remember {
+        mutableStateOf(
+            TextFieldValue(newDataField.value.thirdValue)
+        )
+    }
     var expanded by remember { mutableStateOf(false) } // Dropdown Menu
 
     val focusManager = LocalFocusManager.current
@@ -167,7 +187,7 @@ fun NewDataField(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(onNext = {
                     focusManager.moveFocus(FocusDirection.Down)
-                }),
+                })
             )
             // Max Chars count
             Text(
@@ -198,12 +218,12 @@ fun NewDataField(
                 text = stringResource(R.string.select_data_field_type_caption),
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.body2,
-                color = Color.Gray,
+                color = Color.Gray
             )
             Box(
                 modifier = Modifier
                     .padding(top = xxSmall)
-                    .wrapContentSize(Alignment.Center),
+                    .wrapContentSize(Alignment.Center)
             ) {
                 Row(
                     modifier = Modifier
@@ -239,7 +259,7 @@ fun NewDataField(
                     onDismissRequest = { expanded = false },
                     modifier = Modifier
                         .wrapContentWidth()
-                        .background(MaterialTheme.colors.background),
+                        .background(MaterialTheme.colors.background)
                 ) {
                     items.forEachIndexed { index, s ->
                         DropdownMenuItem(onClick = {
@@ -285,7 +305,7 @@ fun NewDataField(
                         text = "Data Field Hint",
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.subtitle1,
-                        color = MaterialTheme.colors.subtitleTextColour,
+                        color = MaterialTheme.colors.subtitleTextColour
                     )
                     Text(
                         modifier = Modifier
@@ -294,7 +314,7 @@ fun NewDataField(
                         text = "Hint message shown in the text field for data types with text field",
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.bodyTextColour,
+                        color = MaterialTheme.colors.bodyTextColour
                     )
                     // Button Data capture
                     TextField(
@@ -325,7 +345,7 @@ fun NewDataField(
                                 text = "Enter hint text for " + DataFieldType.values()[newDataField.value.fieldType] + " Field",
                                 color = MaterialTheme.colors.bodyTextColour,
                                 textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.subtitle1
                             )
                         }
                     )
@@ -370,7 +390,11 @@ fun NewDataField(
                             label = "1st Value",
                             placeholder = firstText.text.ifBlank { "1st Value" },
                             onValueChange = { firstText ->
-                                setFirstText(TextFieldValue(firstText).ofMaxLength(maxLength = optionsMaxChars))
+                                setFirstText(
+                                    TextFieldValue(firstText).ofMaxLength(
+                                        maxLength = optionsMaxChars
+                                    )
+                                )
                                 _newDataField.value.firstValue = firstText
                             }
                         )
@@ -380,7 +404,11 @@ fun NewDataField(
                             label = "2nd Value",
                             placeholder = secondText.text.ifBlank { "2nd Value" },
                             onValueChange = { secondText ->
-                                setSecondText(TextFieldValue(secondText).ofMaxLength(maxLength = optionsMaxChars))
+                                setSecondText(
+                                    TextFieldValue(secondText).ofMaxLength(
+                                        maxLength = optionsMaxChars
+                                    )
+                                )
                                 _newDataField.value.secondValue = secondText
                             }
                         )
@@ -416,7 +444,11 @@ fun NewDataField(
                             label = "1st Value",
                             placeholder = firstText.text.ifBlank { "1st Value" },
                             onValueChange = { firstText ->
-                                setFirstText(TextFieldValue(firstText).ofMaxLength(maxLength = optionsMaxChars))
+                                setFirstText(
+                                    TextFieldValue(firstText).ofMaxLength(
+                                        maxLength = optionsMaxChars
+                                    )
+                                )
                                 _newDataField.value.firstValue = firstText
                             }
                         )
@@ -426,7 +458,11 @@ fun NewDataField(
                             label = "2nd Value",
                             placeholder = secondText.text.ifBlank { "2nd Value" },
                             onValueChange = { secondText ->
-                                setSecondText(TextFieldValue(secondText).ofMaxLength(maxLength = optionsMaxChars))
+                                setSecondText(
+                                    TextFieldValue(secondText).ofMaxLength(
+                                        maxLength = optionsMaxChars
+                                    )
+                                )
                                 _newDataField.value.secondValue = secondText
                             }
                         )
@@ -436,7 +472,11 @@ fun NewDataField(
                             label = "3rd Value",
                             placeholder = thirdText.text.ifBlank { "3rd Text" },
                             onValueChange = { thirdText ->
-                                setThirdText(TextFieldValue(thirdText).ofMaxLength(maxLength = optionsMaxChars))
+                                setThirdText(
+                                    TextFieldValue(thirdText).ofMaxLength(
+                                        maxLength = optionsMaxChars
+                                    )
+                                )
                                 _newDataField.value.thirdValue = thirdText
                             }
                         )

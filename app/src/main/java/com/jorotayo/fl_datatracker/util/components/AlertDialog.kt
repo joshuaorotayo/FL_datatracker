@@ -34,6 +34,7 @@ import com.jorotayo.fl_datatracker.R
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.medium
 import com.jorotayo.fl_datatracker.util.Dimen.one
 import com.jorotayo.fl_datatracker.util.Dimen.optionsMaxChars
@@ -121,9 +122,8 @@ fun AlertDialogLayout(
                 DismissBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
                 ConfirmBtn(modifier = Modifier.weight(1f), alertDialogState = alertDialogState)
             }
-        },
-
-        )
+        }
+    )
     /* {
          Surface(
              modifier = Modifier.fillMaxWidth(),
@@ -253,7 +253,7 @@ fun DialogTextField(alertDialogState: AlertDialogState) {
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = colors.surface,
             focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = colors.primary.copy(alpha = 0.5F),
+            unfocusedIndicatorColor = colors.primary.copy(alpha = fiftyPercent),
             disabledIndicatorColor = Color.Transparent,
             textColor = colors.onSurface
         )
@@ -269,7 +269,8 @@ private fun DismissBtn(
         modifier = modifier,
         border = BorderStroke(one, colors.primary),
         shape = RoundedCornerShape(small),
-        onClick = { alertDialogState.dismissButtonOnClick?.let { it() } }) {
+        onClick = { alertDialogState.dismissButtonOnClick?.let { it() } }
+    ) {
         Text(
             modifier = Modifier,
             text = alertDialogState.dismissButtonLabel!!,
@@ -286,7 +287,8 @@ private fun ConfirmBtn(
     Button(
         modifier = modifier,
         shape = RoundedCornerShape(small),
-        onClick = { alertDialogState.confirmButtonOnClick() }) {
+        onClick = { alertDialogState.confirmButtonOnClick() }
+    ) {
         Text(
             modifier = Modifier,
             text = alertDialogState.confirmButtonLabel,
@@ -302,4 +304,3 @@ private fun hasEditField(alertDialogState: AlertDialogState) =
     alertDialogState.editFieldFunction != null
 
 private fun hasImageIcon(alertDialogState: AlertDialogState) = alertDialogState.imageIcon != null
-

@@ -67,7 +67,7 @@ fun PreviewFormCountRowV2() {
 @Composable
 fun formCountRowV2(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     var count = remember { mutableStateOf(0) }
     var unChanged = remember { mutableStateOf(true) }
@@ -87,7 +87,7 @@ fun formCountRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = headerColour,
+            color = headerColour
         )
 
         AnimatedVisibility(visible = data.hasError && unChanged.value) {
@@ -103,7 +103,7 @@ fun formCountRowV2(
                     text = stringResource(id = R.string.count_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,
-                    color = Color.Red,
+                    color = Color.Red
                 )
                 Icon(
                     modifier = Modifier
@@ -122,7 +122,7 @@ fun formCountRowV2(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.5f),
+                    .fillMaxWidth(Dimen.fiftyPercent),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -151,7 +151,9 @@ fun formCountRowV2(
                         .weight(3f),
                     value = count.value.toString(),
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
                     placeholder = {
                         Text(
                             text = if (count.value == 0) "0" else count.value.toString(),

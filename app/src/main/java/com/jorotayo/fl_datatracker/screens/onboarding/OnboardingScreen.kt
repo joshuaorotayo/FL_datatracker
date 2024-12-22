@@ -54,6 +54,8 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.util.Dimen
+import com.jorotayo.fl_datatracker.util.Dimen.fiftyPercent
+import com.jorotayo.fl_datatracker.util.Dimen.fortyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.sixtyPercent
 import com.jorotayo.fl_datatracker.util.Dimen.xLarge
 import com.jorotayo.fl_datatracker.util.Dimen.xxLarge
@@ -73,7 +75,8 @@ fun PreviewOnBoardingScreen() {
                     image = Icons.Default.SwapHoriz,
                     title = "Kelly",
                     description = "Donell"
-                ), OnboardingScreenData(
+                ),
+                OnboardingScreenData(
                     image = Icons.Default.SwapHoriz,
                     title = "Kelly",
                     description = "Donell"
@@ -89,7 +92,7 @@ fun PreviewOnBoardingScreen() {
 fun OnboardingScreen(
     onBoardingEvent: (OnboardingEvent) -> Unit,
     finishOnboarding: () -> Unit,
-    pages: List<OnboardingScreenData>,
+    pages: List<OnboardingScreenData>
 ) {
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
@@ -109,8 +112,8 @@ fun OnboardingScreen(
             ) {
                 Image(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .fillMaxHeight(0.4f),
+                        .fillMaxWidth(fiftyPercent)
+                        .fillMaxHeight(fortyPercent),
                     imageVector = pages[page].image,
                     contentDescription = "Pager Image",
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
@@ -218,7 +221,7 @@ fun OnBoardingComplete(
     pagerState: PagerState,
     onboardingEvent: (OnboardingEvent) -> Unit,
     modifier: Modifier,
-    lastIndex: Int,
+    lastIndex: Int
 ) {
     AnimatedVisibility(
         modifier = Modifier.fillMaxWidth(),
@@ -228,7 +231,7 @@ fun OnBoardingComplete(
             modifier = modifier
                 .padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             val checkedState = remember { mutableStateOf(false) }
             Text(
@@ -258,7 +261,7 @@ fun FinishButton(
     modifier: Modifier,
     pagerState: PagerState,
     lastIndex: Int,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -285,7 +288,6 @@ fun FinishButton(
     }
 }
 
-
 @OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @DefaultPreviews
 @Composable
@@ -300,7 +302,8 @@ fun PreviewOnBoardingScreen2() {
                     image = Icons.Default.SwapHoriz,
                     title = "Kelly Donell",
                     description = randomString
-                ), OnboardingScreenData(
+                ),
+                OnboardingScreenData(
                     image = Icons.Default.SwapHoriz,
                     title = "Kelly",
                     description = "Donell"
@@ -316,7 +319,7 @@ fun PreviewOnBoardingScreen2() {
 fun OnboardingScreen2(
     onBoardingEvent: (OnboardingEvent) -> Unit,
     finishOnboarding: () -> Unit,
-    pages: List<OnboardingScreenData>,
+    pages: List<OnboardingScreenData>
 ) {
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
@@ -344,8 +347,8 @@ fun OnboardingScreen2(
                 Spacer(modifier = Modifier.height(xxxLarge))
                 Image(
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .fillMaxHeight(Dimen.fortyPercent),
+                        .fillMaxWidth(fiftyPercent)
+                        .fillMaxHeight(fortyPercent),
 //                        .background(shape = RoundedCornerShape(small), color = MaterialTheme.colors.background),
                     imageVector = pages[page].image,
                     contentDescription = "Pager Image",

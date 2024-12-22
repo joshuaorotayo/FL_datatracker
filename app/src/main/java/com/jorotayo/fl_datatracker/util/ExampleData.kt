@@ -155,7 +155,9 @@ val shortData: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Short String",
         dataValue = ""
-    ), hasError = false, errorMsg = ""
+    ),
+    hasError = false,
+    errorMsg = ""
 )
 
 val LongData: DataRowState = DataRowState(
@@ -171,7 +173,9 @@ val LongData: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Long Text",
         dataValue = ""
-    ), hasError = false, errorMsg = ""
+    ),
+    hasError = false,
+    errorMsg = ""
 )
 
 val two_options: DataRowState = DataRowState(
@@ -187,7 +191,9 @@ val two_options: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Two Options",
         dataValue = ""
-    ), hasError = false, errorMsg = ""
+    ),
+    hasError = false,
+    errorMsg = ""
 )
 
 val date: DataRowState = DataRowState(
@@ -203,7 +209,9 @@ val date: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Date Field",
         dataValue = ""
-    ), hasError = false, errorMsg = ""
+    ),
+    hasError = false,
+    errorMsg = ""
 )
 
 val timeData: DataRowState = DataRowState(
@@ -219,7 +227,9 @@ val timeData: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Time data",
         dataValue = ""
-    ), hasError = false, errorMsg = "Robert"
+    ),
+    hasError = false,
+    errorMsg = "Robert"
 )
 
 val count: DataRowState = DataRowState(
@@ -235,7 +245,9 @@ val count: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Count data",
         dataValue = ""
-    ), hasError = false, errorMsg = "Robert"
+    ),
+    hasError = false,
+    errorMsg = "Robert"
 )
 
 val three_options: DataRowState = DataRowState(
@@ -251,7 +263,9 @@ val three_options: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Three Options",
         dataValue = ""
-    ), hasError = false, errorMsg = "Robert"
+    ),
+    hasError = false,
+    errorMsg = "Robert"
 )
 
 val imageData: DataRowState = DataRowState(
@@ -267,7 +281,9 @@ val imageData: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "Image Item",
         dataValue = ""
-    ), hasError = false, errorMsg = "Robert"
+    ),
+    hasError = false,
+    errorMsg = "Robert"
 )
 
 val listData: DataRowState = DataRowState(
@@ -283,25 +299,27 @@ val listData: DataRowState = DataRowState(
         isEnabled = true,
         fieldDescription = "List Item",
         dataValue = ""
-    ), hasError = false, errorMsg = "Robert"
+    ),
+    hasError = false,
+    errorMsg = "Robert"
 )
 
 val examplePopulatedDataEntry =
     UiState.Success(
-    DataEntryScreenState(
-        dataRows = mutableListOf(
-            shortData, LongData, two_options, date, timeData, count, three_options, imageData,
-            listData
-        ),
-        currentDataId = 0,
-        dataName = "Test Data",
-        nameError = false,
-        nameErrorMsg = "",
-        formSubmitted = false,
-        currentImageIndex = 0,
-        presetSetting = Preset(
-            presetId = 0,
-            presetName = "Default"
+        DataEntryScreenState(
+            dataRows = mutableListOf(
+                shortData, LongData, two_options, date, timeData, count, three_options, imageData,
+                listData
+            ),
+            currentDataId = 0,
+            dataName = "Test Data",
+            nameError = false,
+            nameErrorMsg = "",
+            formSubmitted = false,
+            currentImageIndex = 0,
+            presetSetting = Preset(
+                presetId = 0,
+                presetName = "Default"
+            )
         )
-    )
     )

@@ -70,9 +70,9 @@ fun MembersPanel(modifier: Modifier, totalCount: Int) {
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Content(Modifier.weight(xxxSmall.value), "Sheep")
-                    Spacer(modifier = Modifier.weight(0.5f))
+                    Spacer(modifier = Modifier.weight(Dimen.fiftyPercent))
                     Content(Modifier.weight(xxxSmall.value), "Deer")
-                    Spacer(modifier = Modifier.weight(0.5f))
+                    Spacer(modifier = Modifier.weight(Dimen.fiftyPercent))
                     Content(Modifier.weight(xxxSmall.value), "Goat")
                 }
 

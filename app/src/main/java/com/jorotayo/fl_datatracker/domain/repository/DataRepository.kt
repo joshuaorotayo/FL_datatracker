@@ -21,6 +21,6 @@ interface DataRepository {
 
     fun validateInsertDataForm(
         fieldNames: List<String>,
-        dataForm: DataEntryScreenState,
+        dataForm: DataEntryScreenState
     ): Pair<Boolean, DataEntryScreenState>
 }

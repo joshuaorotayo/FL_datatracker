@@ -61,7 +61,7 @@ fun PreviewFormDateRowV2() {
 @Composable
 fun formDateRowV2(
     data: DataRowState,
-    setDataValue: (String) -> Unit,
+    setDataValue: (String) -> Unit
 ): String {
     // Fetching the Local Context
     val mContext = LocalContext.current
@@ -108,7 +108,7 @@ fun formDateRowV2(
                 .fillMaxWidth(),
             text = data.dataItem.fieldName,
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.subtitleTextColour,
+            color = MaterialTheme.colors.subtitleTextColour
         )
 
         AnimatedVisibility(visible = data.hasError && data.dataItem.dataValue.isBlank()) {
@@ -123,7 +123,7 @@ fun formDateRowV2(
                     text = stringResource(id = R.string.date_row_error),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.caption,
-                    color = Color.Red,
+                    color = Color.Red
                 )
                 Icon(
                     modifier = Modifier,
@@ -161,8 +161,11 @@ fun formDateRowV2(
                     )
                     .wrapContentWidth(),
                 text = mDate.value.ifBlank { "DDnd Month, Year" },
-                color = if (mDate.value.isBlank())
-                    MaterialTheme.colors.bodyTextColour else MaterialTheme.colors.subtitleTextColour,
+                color = if (mDate.value.isBlank()) {
+                    MaterialTheme.colors.bodyTextColour
+                } else {
+                    MaterialTheme.colors.subtitleTextColour
+                },
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body1
             )

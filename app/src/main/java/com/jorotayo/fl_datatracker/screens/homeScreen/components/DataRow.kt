@@ -47,7 +47,7 @@ fun PreviewDataRow() {
 @Composable
 fun DataRow(
     data: Data,
-    editData: () -> Unit,
+    editData: () -> Unit
 ) {
     Card(
         modifier = Modifier.run {
@@ -56,7 +56,7 @@ fun DataRow(
                 .background(colors.surface)
         },
         shape = RoundedCornerShape(xSmall),
-        elevation = Dimen.small,
+        elevation = Dimen.small
     ) {
         Row(
             modifier = Modifier
