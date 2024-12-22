@@ -16,6 +16,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -27,10 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DataFieldSettings
-import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DisplaySettings
 import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.FAQsList
 import com.jorotayo.fl_datatracker.screens.settings.SettingsViewModel.SettingNavigation
 import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
@@ -47,14 +46,14 @@ import com.jorotayo.fl_datatracker.util.Dimen.small
 @Composable
 private fun PreviewSettingsScreen() {
     FL_DatatrackerTheme {
-        SettingsScreen(
-            navController = rememberNavController()
+        SettingsScreenView(
+            scaffoldState = rememberScaffoldState(),
+            onSettingEvent = {}
         )
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreen(
     navController: NavController
@@ -65,7 +64,6 @@ fun SettingsScreen(
     val scaffoldState = rememberScaffoldState()
 
     val onSettingEvent = viewModel::onSettingEvent
-
     LaunchedEffect(key1 = true) {
         viewModel.navigationEvent.collect { event ->
             when (event) {
@@ -92,6 +90,18 @@ fun SettingsScreen(
             }
         }
     }
+
+    SettingsScreenView(scaffoldState, onSettingEvent)
+
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Composable
+fun SettingsScreenView(
+    scaffoldState: ScaffoldState,
+    onSettingEvent: (SettingEvent) -> Unit
+) {
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -141,14 +151,12 @@ fun SettingsScreen(
                         Column {
                             SettingRow(
                                 setting = SettingScreens.DisplaySettings,
-                                onSettingSelected = { onSettingEvent(DisplaySettings) }
+                                onSettingSelected = { }
                             )
-                            SettingDivider()
                             SettingRow(
                                 setting = SettingScreens.DataFieldSettings,
                                 onSettingSelected = { onSettingEvent(DataFieldSettings) }
                             )
-                            SettingDivider()
                             SettingRow(
                                 setting = SettingScreens.FAQsList,
                                 onSettingSelected = { onSettingEvent(FAQsList) }
@@ -165,18 +173,14 @@ fun SettingsScreen(
                 onDismiss = {
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                     /*if (scaffoldState.snackbarHostState.currentSnackbarData?.actionLabel?.contains(
-                            "Restore"
-                        ) == true
-                    ) {
-                            viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
+                        "Restore"
+                    ) == true
+                ) {
+                        viewModel.onDataEvent(DataFieldEvent.RestoreDeletedField)
 
-                    }*/
+                }*/
                 }
             )
         }
     }
-}
-
-@Composable
-fun SettingsScreenView(modifier: Modifier = Modifier) {
 }
