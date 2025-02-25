@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jorotayo.fl_datatracker.navigation.SettingScreens
 import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DataFieldSettings
+import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.DisplaySettings
 import com.jorotayo.fl_datatracker.screens.settings.SettingEvent.FAQsList
 import com.jorotayo.fl_datatracker.screens.settings.SettingsViewModel.SettingNavigation
 import com.jorotayo.fl_datatracker.screens.settings.states.DisplayUiState
@@ -151,7 +152,7 @@ fun SettingsScreenView(
                         Column {
                             SettingRow(
                                 setting = SettingScreens.DisplaySettings,
-                                onSettingSelected = { }
+                                onSettingSelected = { onSettingEvent(DisplaySettings) }
                             )
                             SettingRow(
                                 setting = SettingScreens.DataFieldSettings,

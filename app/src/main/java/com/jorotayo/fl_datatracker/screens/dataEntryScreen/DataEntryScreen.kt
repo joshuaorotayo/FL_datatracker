@@ -71,6 +71,7 @@ import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElemen
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
+import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
@@ -194,7 +195,7 @@ fun DataEntryScreenView(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Center),
-                        color = colors.onPrimary
+                        color = if (isDarkMode()) colors.onPrimary else colors.primary
                     )
                 }
 

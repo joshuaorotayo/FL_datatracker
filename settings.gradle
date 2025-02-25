@@ -1,3 +1,4 @@
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -5,7 +6,13 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            from(files('app/libs.versions.toml'))
+        }
+    }
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()

@@ -20,7 +20,7 @@ val md_theme_white = Color(color = 0xFFFFFFFF)
 
 val md_theme_light_background = Color(color = 0xFFFFFFFF)
 val md_theme_light_onBackground = Color(color = 0xFF000000)
-val md_theme_light_surface = Color(color = 0xFFF6F6F6) // off white
+val md_theme_light_surface = Color(color = 0xFFF8F8F8) // off white
 val md_theme_light_onSurface = Color(color = 0xFF000000)
 
 val md_theme_dark_primary = Color(color = 0xFFB02D21)
