@@ -72,7 +72,6 @@ import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.DefaultSnackbar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
 import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.ui.theme.subtitleTextColour
 import com.jorotayo.fl_datatracker.util.Dimen.large
 import com.jorotayo.fl_datatracker.util.Dimen.small
 import com.jorotayo.fl_datatracker.util.Dimen.xSmall
@@ -128,7 +127,7 @@ fun DataEntryScreen(
 
     val scaffoldState = rememberScaffoldState()
 
-    val onTakeImage = remember { mutableStateOf(true) }
+    remember { mutableStateOf(true) }
 
     val listState = rememberLazyListState()
 
@@ -466,7 +465,7 @@ private fun DataFormHeadings(
                 stringResource(id = R.string.enter_data_header),
                 uiState.presetSetting.presetName
             ),
-            color = colors.subtitleTextColour,
+            color = colors.primary,
             style = typography.h3,
             textAlign = TextAlign.Start
         )
@@ -479,7 +478,7 @@ private fun DataFormHeadings(
                 end = small
             ),
         text = stringResource(id = R.string.data_entry_form_header),
-        color = colors.subtitleTextColour,
+        color = colors.primary,
         style = typography.h3,
         textAlign = TextAlign.Start
     )
@@ -495,7 +494,7 @@ private fun DataFormHeadings(
             uiState.dataRows.size
         ),
         style = typography.h3,
-        color = colors.subtitleTextColour
+        color = colors.primary
     )
 }
 
