@@ -1,6 +1,6 @@
 package com.jorotayo.fl_datatracker
 
-import com.jorotayo.fl_datatracker.domain.model.DataField
+import com.jorotayo.fl_datatracker.data.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.MyObjectBox
 import com.jorotayo.fl_datatracker.domain.util.DataFieldType
 import io.objectbox.BoxStore

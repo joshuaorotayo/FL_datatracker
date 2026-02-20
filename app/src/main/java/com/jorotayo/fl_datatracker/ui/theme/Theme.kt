@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.jorotayo.fl_datatracker.util.SharedSettingService
+import com.jorotayo.fl_datatracker.ui.util.SharedSettingService
 
 /**
  * Material 3 Light Color Scheme

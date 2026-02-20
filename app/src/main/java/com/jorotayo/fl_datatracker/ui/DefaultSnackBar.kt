@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.util.Dimen.small
+import com.jorotayo.fl_datatracker.ui.util.Dimen.small
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)

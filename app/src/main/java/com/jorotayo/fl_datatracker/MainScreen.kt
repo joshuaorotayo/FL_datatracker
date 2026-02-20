@@ -1,292 +1,288 @@
 package com.jorotayo.fl_datatracker
 
-import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
-import com.jorotayo.fl_datatracker.navigation.MainScreens
-import com.jorotayo.fl_datatracker.screens.dataEntryScreen.components.formElements.ImageBottomActionSheet
+import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
-import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerTheme
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
-import com.jorotayo.fl_datatracker.util.Dimen
-import com.jorotayo.fl_datatracker.util.Dimen.small
-import com.jorotayo.fl_datatracker.util.Dimen.xSmall
-import com.jorotayo.fl_datatracker.util.Dimen.xxSmall
-import com.jorotayo.fl_datatracker.util.SharedSettingService
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@DefaultPreviews
+// =============================================================================
+// NAV ITEM DEFINITION
+// =============================================================================
+
+data class BottomNavItem(
+    val route: String,
+    val title: String,
+    val icon: ImageVector,
+    val description: String
+)
+
+val bottomNavItems = listOf(
+    BottomNavItem("home", "Home", Icons.Default.Home, "Home screen"),
+    BottomNavItem("dataForm", "Forms", Icons.Default.ViewList, "Data forms"),
+    BottomNavItem("dataEntry", "Entry", Icons.Default.DateRange, "Data entry"),
+    BottomNavItem("settings", "Settings", Icons.Default.Settings, "Settings")
+)
+
+// =============================================================================
+// MAIN SCREEN
+// =============================================================================
+
+// Screens that should NOT show the bottom bar
+private val screensWithoutBottomBar = listOf(
+    Screen.Onboarding.route
+)
+
 @Composable
-fun BottomBarPreview() {
-    FL_DatatrackerTheme {
-        BottomBar(
-            navController = rememberNavController()
+fun MainScreen() {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val showBottomBar = currentRoute !in screensWithoutBottomBar
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            if (showBottomBar) {
+                FloatingBottomBar(navController = navController)
+            }
+        }
+    ) { paddingValues ->
+        MainNavGraph(
+            navController = navController,
+            // Change to Screen.Onboarding.route if onboarding isn't complete
+            startDestination = Screen.Home.route,
+            modifier = Modifier.padding(paddingValues)
         )
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun MainScreen() {
-    val scope = rememberCoroutineScope()
-    val navController = rememberNavController()
-    val showNavBar = SharedSettingService.showingDashboardNavBar.observeAsState()
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+// =============================================================================
+// FLOATING BOTTOM BAR
+// =============================================================================
 
-    Scaffold(
-        bottomBar = {
-            AnimatedVisibility(visible = showNavBar.value == true) {
-                BottomBar(navController = navController)
-            }
-        }
-    ) {
-        Column(
+@DefaultPreviews
+@Composable
+fun PreviewFloatingBottomBar() {
+    FL_DatatrackerThemeNew {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(bottom = Dimen.bottomBarPadding + xSmall)
+                .height(120.dp)
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            MainNavGraph(navController, sheetState)
+            FloatingBottomBar(navController = rememberNavController())
         }
     }
-    ImageBottomActionSheet(
-        state = sheetState,
-        scope = scope,
-        onTakeImage = {
-        },
-        setDataValue = {
-        }
-    )
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
-private fun getModalState(value: Boolean?): ModalBottomSheetState {
-    val result = if (value == true) ModalBottomSheetValue.Expanded else ModalBottomSheetValue.Hidden
-    return rememberModalBottomSheetState(initialValue = result)
-}
-
-@Composable
-fun BottomBar(navController: NavHostController) {
-    val mainScreens = listOf(
-        MainScreens.DataFieldsMainScreens,
-        MainScreens.HomeMainScreens,
-        MainScreens.DataEntry,
-        MainScreens.Settings
-    )
+fun FloatingBottomBar(
+    navController: NavHostController,
+    items: List<BottomNavItem> = bottomNavItems
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val selectedIndex = items.indexOfFirst { item ->
+        currentDestination?.hierarchy?.any { it.route == item.route } == true
+    }.coerceAtLeast(0)
 
-    BottomNavigation(
+    // Track x-offsets of each item so the bubble can slide between them
+    val itemOffsets = remember { mutableListOf<Float>().apply { repeat(items.size) { add(0f) } } }
+    val itemWidths = remember { mutableListOf<Float>().apply { repeat(items.size) { add(0f) } } }
+    val density = LocalDensity.current
+
+    // Animate bubble x position
+    val targetOffset = if (itemOffsets.isNotEmpty() && itemOffsets[selectedIndex] != 0f)
+        with(density) { itemOffsets[selectedIndex].toDp() }
+    else 0.dp
+
+    val targetWidth = if (itemWidths.isNotEmpty() && itemWidths[selectedIndex] != 0f)
+        with(density) { itemWidths[selectedIndex].toDp() }
+    else 64.dp
+
+    val animatedBubbleOffset: Dp by animateDpAsState(
+        targetValue = targetOffset,
+        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
+        label = "bubble_offset"
+    )
+    val animatedBubbleWidth: Dp by animateDpAsState(
+        targetValue = targetWidth,
+        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
+        label = "bubble_width"
+    )
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = xxSmall),
-        backgroundColor = colors.background,
-        elevation = Dimen.zero
+            .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
-        mainScreens.forEach { screen ->
-            AnimatedBottomNavItem(
-                mainScreens = screen,
-                currentDestination = currentDestination,
-                navController = navController
-            )
+        // The floating pill container
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(
+                    elevation = 12.dp,
+                    shape = RoundedCornerShape(28.dp),
+                    ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                )
+                .clip(RoundedCornerShape(28.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(vertical = 8.dp, horizontal = 8.dp)
+        ) {
+            // Sliding bubble — sits behind the icons
+            if (animatedBubbleOffset > 0.dp || selectedIndex == 0) {
+                Box(
+                    modifier = Modifier
+                        .offset(x = animatedBubbleOffset)
+                        .width(animatedBubbleWidth)
+                        .height(44.dp)
+                        .clip(RoundedCornerShape(22.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                )
+            }
+
+            // Nav items row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items.forEachIndexed { index, item ->
+                    val isSelected = index == selectedIndex
+                    FloatingNavItem(
+                        item = item,
+                        isSelected = isSelected,
+                        onPositioned = { offset, width ->
+                            itemOffsets[index] = offset
+                            itemWidths[index] = width
+                        },
+                        onClick = {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 }
 
-@Composable
-fun RowScope.BottomNavItem(
-    mainScreens: MainScreens,
-    currentDestination: NavDestination?,
-    navController: NavHostController
-) {
-    val trimmedRoute = trimRoute(currentDestination?.route.toString())
-    val itemSelected =
-        currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
-    BottomNavigationItem(
-        label = {
-            Text(
-                modifier = Modifier.padding(top = xSmall),
-                text = mainScreens.title,
-                style = typography.body1
-            )
-        },
-        icon = {
-            Icon(
-                imageVector = mainScreens.icon,
-                contentDescription = mainScreens.pageDescription
-            )
-        },
-        selected = itemSelected,
-        unselectedContentColor = colors.secondary,
-        selectedContentColor = colors.primary,
-        onClick = {
-            navController.navigate(mainScreens.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        },
-        modifier = Modifier.height(80.dp)
-    )
-}
+// =============================================================================
+// INDIVIDUAL NAV ITEM
+// =============================================================================
 
 @Composable
-fun RowScope.AnimatedBottomNavItem(
-    mainScreens: MainScreens,
-    currentDestination: NavDestination?,
-    navController: NavHostController
+private fun FloatingNavItem(
+    item: BottomNavItem,
+    isSelected: Boolean,
+    onPositioned: (offsetX: Float, width: Float) -> Unit,
+    onClick: () -> Unit
 ) {
-    val trimmedRoute = trimRoute(currentDestination?.route.toString())
-    val itemSelected =
-        currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
-
-    val scale = 1f
-
-    val animatedScale: Float by animateFloatAsState(
-        targetValue = scale,
-        animationSpec = TweenSpec(
-            durationMillis = 700,
-            easing = FastOutSlowInEasing
-        ),
-        label = "Nav Bar Icon size animation"
+    val iconAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0.45f,
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+        label = "icon_alpha_${item.route}"
     )
-    val animatedVisibleColor by animateColorAsState(
-        targetValue = if (isDarkMode()) Color.White.copy(0.3f) else Color.Black.copy(0.3f),
-        animationSpec = TweenSpec(
-            durationMillis = 700,
-            easing = FastOutSlowInEasing
-        ),
-        label = "Nav Bar visible color animation"
+    val textAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0.55f,
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+        label = "text_alpha_${item.route}"
     )
 
-    val animatedHiddenColor by animateColorAsState(
-        targetValue = colors.primary,
-        animationSpec = TweenSpec(
-            durationMillis = 700,
-            easing = FastOutSlowInEasing
-        ),
-        label = "Nav Bar color animation"
-    )
-
-    BottomNavigationItem(
-        label = {
-            Text(
-                modifier = Modifier.padding(top = small),
-                text = mainScreens.title,
-                style = typography.body1,
-                fontSize = typography.body1.fontSize * scale
-            )
-        },
-        icon = {
-            Icon(
-                modifier = Modifier.scale(animatedScale),
-                imageVector = mainScreens.icon,
-                contentDescription = mainScreens.pageDescription
-            )
-        },
-        selected = itemSelected,
-        unselectedContentColor = animatedVisibleColor,
-        selectedContentColor = animatedHiddenColor,
-        onClick = {
-            navController.navigate(mainScreens.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
+    Column(
+        modifier = Modifier
+            .onGloballyPositioned { coords ->
+                onPositioned(
+                    coords.positionInParent().x,
+                    coords.size.width.toFloat()
+                )
             }
-        },
-        modifier = Modifier.wrapContentHeight()
-    )
-}
-
-@Composable
-fun RowScope.ChipBottomNavItem(
-    mainScreens: MainScreens,
-    currentDestination: NavDestination?,
-    navController: NavHostController
-) {
-    val trimmedRoute = trimRoute(currentDestination?.route.toString())
-    val itemSelected =
-        currentDestination?.hierarchy?.any { trimmedRoute == mainScreens.route } == true
-
-    val scale = if (itemSelected) 1.3f else 1f
-
-    BottomNavigationItem(
-
-        label = {
-            Text(
-                text = mainScreens.title,
-                style = typography.body2,
-                fontSize = typography.body2.fontSize * scale,
-                color = colors.secondary
+            .clip(RoundedCornerShape(22.dp))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick
             )
-        },
-        icon = {
-            Icon(
-                imageVector = mainScreens.icon,
-                contentDescription = mainScreens.pageDescription
-            )
-        },
-        selected = itemSelected,
-        unselectedContentColor = colors.surface.copy(01f),
-        selectedContentColor = colors.primary,
-        onClick = {
-            navController.navigate(mainScreens.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        },
-        modifier = Modifier.height(80.dp)
-    )
-}
-
-/**
- * Trims and adjusts routes to show the correctly selected item
- */
-fun trimRoute(route: String): String {
-    return if (route.contains("?id=")) {
-        route.substringBefore("?id=", route)
-    } else if (route.contains("settings")) {
-        "settings_screen"
-    } else {
-        route
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        Icon(
+            imageVector = item.icon,
+            contentDescription = item.description,
+            modifier = Modifier.size(22.dp),
+            tint = MaterialTheme.colorScheme.primary.copy(alpha = iconAlpha)
+        )
+        Text(
+            text = item.title,
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+            ),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = textAlpha)
+        )
     }
+}
+
+// =============================================================================
+// HELPER
+// =============================================================================
+
+private fun NavHostController.isCurrentRoute(route: String): Boolean {
+    val currentDestination = currentBackStackEntry?.destination
+    return currentDestination?.hierarchy?.any { it.route == route } == true
 }
