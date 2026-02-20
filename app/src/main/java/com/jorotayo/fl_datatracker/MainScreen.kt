@@ -14,15 +14,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -66,8 +67,8 @@ data class BottomNavItem(
 val bottomNavItems = listOf(
     BottomNavItem("home", "Home", Icons.Default.Home, "Home screen"),
     BottomNavItem("dataForm", "Forms", Icons.Default.ViewList, "Data forms"),
-    BottomNavItem("dataEntry", "Entry", Icons.Default.DateRange, "Data entry"),
-    BottomNavItem("settings", "Settings", Icons.Default.Settings, "Settings")
+    BottomNavItem("dataEntry", "Entry", Icons.Default.EditNote, "Data entry")
+//    BottomNavItem("settings", "Settings", Icons.Default.Settings, "Settings")
 )
 
 // =============================================================================
@@ -87,20 +88,24 @@ fun MainScreen() {
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            if (showBottomBar) {
-                FloatingBottomBar(navController = navController)
+    FL_DatatrackerThemeNew {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                if (showBottomBar) {
+                    FloatingBottomBar(navController = navController)
+                }
             }
+        ) { paddingValues ->
+            MainNavGraph(
+                navController = navController,
+                // Change to Screen.Onboarding.route if onboarding isn't complete
+                startDestination = Screen.Home.route,
+                modifier = Modifier
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+                    .statusBarsPadding()
+            )
         }
-    ) { paddingValues ->
-        MainNavGraph(
-            navController = navController,
-            // Change to Screen.Onboarding.route if onboarding isn't complete
-            startDestination = Screen.Home.route,
-            modifier = Modifier.padding(paddingValues)
-        )
     }
 }
 
@@ -163,7 +168,8 @@ fun FloatingBottomBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .navigationBarsPadding()
+            .padding(horizontal = 20.dp)
     ) {
         // The floating pill container
         Box(
@@ -185,7 +191,7 @@ fun FloatingBottomBar(
                     modifier = Modifier
                         .offset(x = animatedBubbleOffset)
                         .width(animatedBubbleWidth)
-                        .height(44.dp)
+                        .height(60.dp)
                         .clip(RoundedCornerShape(22.dp))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                 )

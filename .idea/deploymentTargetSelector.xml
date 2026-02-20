@@ -25,6 +25,12 @@
       <SelectionState runConfigName="PreviewImprovedDataFieldsScreen - LightMode">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="LoadingScreenDarkPreview - Loading — Dark">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="LoadingScreenLightPreview - Loading — Light">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
