@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker
 
 import android.app.Application
+import com.jorotayo.fl_datatracker.data.model.MyObjectBox
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxDataFieldRepository
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxPresetRepository
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxRecordRepository
@@ -25,11 +26,11 @@ class DataTrackerApp : Application() {
     val recordRepository: RecordRepository by lazy {
         ObjectBoxRecordRepository(store)
     }
-//
-//    override fun onCreate() {
-//        super.onCreate()
-//        store = MyObjectBox.builder()
-//            .androidContext(this)
-//            .build()
-//    }
+
+    override fun onCreate() {
+        super.onCreate()
+        store = MyObjectBox.builder()
+            .androidContext(this)
+            .build()
+    }
 }
