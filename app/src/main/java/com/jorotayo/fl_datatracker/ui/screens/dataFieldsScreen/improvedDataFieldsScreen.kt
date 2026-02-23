@@ -22,12 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components.DataFieldCard
@@ -41,6 +43,7 @@ import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXSmall
+import com.jorotayo.fl_datatracker.ui.util.components.loading.LoadingScreen
 
 @DefaultPreviews
 @Composable
@@ -109,6 +112,21 @@ fun PreviewImprovedDataFieldsScreen() {
                     )
                 )
             )
+        )
+    }
+}
+
+@Composable
+fun DataFormScreen() {
+    val viewModel = hiltViewModel<DataFormViewModel>()
+    val state by viewModel.state.collectAsState()
+
+    if (state.isLoading) {
+        LoadingScreen()
+    } else {
+        ImprovedDataFieldsScreen(
+            state = state,
+            onEvent = viewModel::onEvent
         )
     }
 }

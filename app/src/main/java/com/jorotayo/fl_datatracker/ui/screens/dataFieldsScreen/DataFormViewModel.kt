@@ -22,7 +22,7 @@ class DataFormViewModel @Inject constructor(
     private val deleteField: DeleteFieldUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DataFormState())
+    private val _state = MutableStateFlow(DataFieldsState())
     val state = _state.asStateFlow()
 
     fun onEvent(event: DataFormEvent) {
