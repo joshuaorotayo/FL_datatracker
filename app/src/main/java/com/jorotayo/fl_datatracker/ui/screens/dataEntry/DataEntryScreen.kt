@@ -215,7 +215,9 @@ fun BooleanField(
                             modifier = Modifier.size(18.dp)
                         )
                     }
-                } else null
+                } else {
+                    null
+                }
             )
             FilterChip(
                 selected = !value,
@@ -230,7 +232,9 @@ fun BooleanField(
                             modifier = Modifier.size(18.dp)
                         )
                     }
-                } else null
+                } else {
+                    null
+                }
             )
         }
     }
@@ -319,7 +323,6 @@ fun TimeField(
         }
     }
 }
-
 
 // =============================================================================
 // NEW FIELDS
@@ -724,13 +727,14 @@ fun TriStateField(
                                 modifier = Modifier.size(18.dp)
                             )
                         }
-                    } else null
+                    } else {
+                        null
+                    }
                 )
             }
         }
     }
 }
-
 
 // =============================================================================
 // PREVIEW — FULL SCREEN EXERCISING ALL COMPONENTS
@@ -901,9 +905,15 @@ fun AllFieldsPreviewScreen(
             ) {
                 OutlinedButton(
                     onClick = {
-                        shortText = ""; longText = ""; booleanValue = false
-                        selectedDate = ""; selectedTime = ""
-                        countValue = 0; listItems = listOf(""); imageUri = null; triState = -1
+                        shortText = "";
+                        longText = "";
+                        booleanValue = false
+                        selectedDate = "";
+                        selectedTime = ""
+                        countValue = 0;
+                        listItems = listOf("");
+                        imageUri = null;
+                        triState = -1
                     },
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(vertical = 16.dp)

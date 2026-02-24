@@ -83,7 +83,6 @@ private val samplePages = listOf(
     )
 )
 
-
 // =============================================================================
 // PREVIEW
 // =============================================================================
@@ -230,7 +229,7 @@ fun OnboardingScreenView(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center,
 
-                            ) {
+                        ) {
                             Text(
                                 text = "Don't show this again",
                                 style = MaterialTheme.typography.bodyMedium,
@@ -374,8 +373,11 @@ private fun PageIndicatorDot(
         label = "indicator_width"
     )
     val color by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary
-        else MaterialTheme.colorScheme.outlineVariant,
+        targetValue = if (isSelected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.outlineVariant
+        },
         animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
         label = "indicator_color"
     )

@@ -1,12 +1,6 @@
 package com.jorotayo.fl_datatracker.ui.screens.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,12 +9,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -107,7 +101,7 @@ private val sampleRecords = listOf(
 @Composable
 fun PreviewHomeScreen() {
     FL_DatatrackerThemeNew {
-        Surface(modifier = Modifier.fillMaxSize()) {  // ← add Surface + fillMaxSize
+        Surface(modifier = Modifier.fillMaxSize()) { // ← add Surface + fillMaxSize
             HomeScreenView(
                 state = HomeState(
                     records = sampleRecords,
@@ -123,7 +117,7 @@ fun PreviewHomeScreen() {
 @Composable
 fun PreviewHomeScreenEmpty() {
     FL_DatatrackerThemeNew {
-        Surface(modifier = Modifier.fillMaxSize()) {  // ← add Surface + fillMaxSize
+        Surface(modifier = Modifier.fillMaxSize()) { // ← add Surface + fillMaxSize
             HomeScreenView(state = HomeState(showDeleteDialog = true))
         }
     }
@@ -151,11 +145,10 @@ fun HomeScreen() {
         }
     }
 
-
-        HomeScreenView(
-            state = state.value,
-            onEvent = viewModel::onEvent,
-        )
+    HomeScreenView(
+        state = state.value,
+        onEvent = viewModel::onEvent,
+    )
 }
 
 // =============================================================================
@@ -178,7 +171,6 @@ fun HomeScreenView(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         if (state.filteredRecords.isEmpty()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 HomeHeader(
@@ -270,7 +262,6 @@ private fun RecordList(
 // HEADER — title + expandable search
 // =============================================================================
 
-
 @Composable
 private fun HomeHeader(
     state: HomeState,
@@ -281,77 +272,56 @@ private fun HomeHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp)
-            .statusBarsPadding()
-//            .animateContentSize(
-//                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
-//            )
+            .padding(horizontal = 8.dp)
+            .padding(top = 20.dp)
     ) {
-
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = "Records",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                if (state.records.isNotEmpty()) {
-                    Text(
-                        text = "${state.records.size} total entries",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            Surface(
-                shape = CircleShape,
-                color = if (state.isSearchActive)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surfaceVariant,
-                modifier = Modifier
-                    .size(44.dp)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onEvent(HomeEvent.ToggleSearch) }
+        
+        if (!state.isSearchActive) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = if (state.isSearchActive) Icons.Default.Clear
-                        else Icons.Default.Search,
-                        contentDescription = if (state.isSearchActive) "Close search"
-                        else "Open search",
-                        modifier = Modifier.size(20.dp),
-                        tint = if (state.isSearchActive)
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        else
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                Column {
+                    Text(
+                        text = "Records",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
+                    if (state.records.isNotEmpty()) {
+                        Text(
+                            text = "${state.records.size} total entries",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onEvent(HomeEvent.ToggleSearch) }
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Open search",
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
-        }
-
-        AnimatedVisibility(
-            visible = state.isSearchActive,
-            enter = expandVertically(
-                animationSpec = tween(300, easing = FastOutSlowInEasing)
-            ) + fadeIn(animationSpec = tween(300)),
-            exit = shrinkVertically(
-                animationSpec = tween(250, easing = FastOutSlowInEasing)
-            ) + fadeOut(animationSpec = tween(200))
-        ) {
+        } else {
             Column {
-                Spacer(modifier = Modifier.height(12.dp))
                 OutlinedTextField(
                     value = state.searchQuery,
                     onValueChange = { onEvent(HomeEvent.SearchQueryChanged(it)) },
@@ -370,14 +340,12 @@ private fun HomeHeader(
                         )
                     },
                     trailingIcon = {
-                        if (state.searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { onEvent(HomeEvent.ClearSearch) }) {
-                                Icon(
-                                    Icons.Default.Clear,
-                                    contentDescription = "Clear",
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
+                        IconButton(onClick = { onEvent(HomeEvent.ToggleSearch) }) {
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = "Close search",
+                                modifier = Modifier.size(18.dp)
+                            )
                         }
                     },
                     singleLine = true,
@@ -404,7 +372,6 @@ private fun HomeHeader(
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
 
 // =============================================================================
 // DATE SECTION HEADER
@@ -532,8 +499,11 @@ private fun EmptyHomeContent(isFiltering: Boolean) {
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        imageVector = if (isFiltering) Icons.Default.Search
-                        else Icons.Default.History,
+                        imageVector = if (isFiltering) {
+                            Icons.Default.Search
+                        } else {
+                            Icons.Default.History
+                        },
                         contentDescription = null,
                         modifier = Modifier.size(36.dp),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
@@ -548,8 +518,11 @@ private fun EmptyHomeContent(isFiltering: Boolean) {
             )
 
             Text(
-                text = if (isFiltering) "Try a different search term"
-                else "Tap the button below to create your first entry",
+                text = if (isFiltering) {
+                    "Try a different search term"
+                } else {
+                    "Tap the button below to create your first entry"
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

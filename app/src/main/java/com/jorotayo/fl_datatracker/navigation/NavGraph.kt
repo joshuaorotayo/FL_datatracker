@@ -13,6 +13,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormScreen
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeScreen
 import com.jorotayo.fl_datatracker.ui.screens.onboarding.OnboardingScreen
 
@@ -93,15 +94,7 @@ fun MainNavGraph(
         }
 
         composable(route = Screen.DataForm.route) {
-            // ImprovedDataFieldsScreen(
-            //     state = ...,
-            //     onEvent = { event ->
-            //         when (event) {
-            //             is DataFieldsEvent.AddField -> { ... }
-            //             else -> { ... }
-            //         }
-            //     }
-            // )
+            DataFormScreen()
         }
 
         composable(

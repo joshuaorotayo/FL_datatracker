@@ -27,7 +27,9 @@ class SaveRecordUseCase(
                 val result = validateEntry(field, value)
                 if (result.isFailure) {
                     field.fieldId to (result.exceptionOrNull()?.message ?: "Invalid value")
-                } else null
+                } else {
+                    null
+                }
             }
             .toMap()
 

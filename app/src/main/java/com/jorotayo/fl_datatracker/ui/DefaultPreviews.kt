@@ -15,5 +15,4 @@ import androidx.compose.ui.tooling.preview.Preview
     showBackground = true,
     showSystemUi = true
 )
-
 annotation class DefaultPreviews

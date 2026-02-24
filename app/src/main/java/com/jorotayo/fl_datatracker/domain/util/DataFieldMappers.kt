@@ -3,7 +3,6 @@ package com.jorotayo.fl_datatracker.domain.util
 import com.jorotayo.fl_datatracker.data.model.DataField
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
 
-
 /**
  * Converts a [DataField] entity into its corresponding [DataFieldUiState].
  *
@@ -120,12 +119,3 @@ fun DataField.applyUiState(state: DataFieldUiState): DataField = when (state) {
 
     is DataFieldUiState.DynamicList -> copy(first = state.items.toDelimited())
 }
-
-
-
-
-
-
-
-
-

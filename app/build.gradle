@@ -144,14 +144,16 @@ dependencies {
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 
     // ObjectBox
-    debugImplementation('io.objectbox:objectbox-android-objectbrowser:3.6.0')
-    releaseImplementation('io.objectbox:objectbox-android:3.6.0')
+    debugImplementation('io.objectbox:objectbox-android-objectbrowser:3.8.0')
+    releaseImplementation('io.objectbox:objectbox-android:3.8.0')
 
     // Coil Image Picker
     implementation('io.coil-kt:coil-compose:2.4.0')
 
     testImplementation "org.mockito:mockito-core:5.5.0"
     testImplementation 'org.robolectric:robolectric:4.9'
+
+    implementation "com.getkeepsafe.relinker:relinker:1.4.5"
 }
 
 apply plugin: 'io.objectbox'

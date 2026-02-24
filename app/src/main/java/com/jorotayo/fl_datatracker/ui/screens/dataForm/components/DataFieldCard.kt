@@ -57,8 +57,11 @@ fun DataFieldCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isActive) MaterialTheme.colorScheme.surfaceVariant
-            else MaterialTheme.colorScheme.surface
+            containerColor = if (isActive) {
+                MaterialTheme.colorScheme.surfaceVariant
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (isActive) spacingXXXSmall else spacingNone
@@ -97,8 +100,11 @@ fun DataFieldCard(
                         Text(
                             text = field.name,
                             style = MaterialTheme.typography.titleMedium,
-                            color = if (isActive) MaterialTheme.colorScheme.onSurface
-                            else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if (isActive) {
+                                MaterialTheme.colorScheme.onSurface
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
                         )
                         Text(
                             text = field.type.displayName,
@@ -117,11 +123,17 @@ fun DataFieldCard(
                         onToggleActive()
                     }) {
                         Icon(
-                            imageVector = if (isActive) Icons.Default.CheckCircle
-                            else Icons.Default.RadioButtonUnchecked,
+                            imageVector = if (isActive) {
+                                Icons.Default.CheckCircle
+                            } else {
+                                Icons.Default.RadioButtonUnchecked
+                            },
                             contentDescription = if (isActive) "Active" else "Inactive",
-                            tint = if (isActive) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = if (isActive) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
                         )
                     }
 
@@ -160,20 +172,29 @@ fun DataFieldCard(
             FieldType.BOOLEAN -> BooleanOptionsDialog(
                 initialOptions = field.booleanOptions,
                 onDismiss = { showHintDialog = false },
-                onSave = { options -> onBooleanOptionsUpdate(options); showHintDialog = false }
+                onSave = { options ->
+                    onBooleanOptionsUpdate(options);
+                    showHintDialog = false
+                }
             )
 
             FieldType.TRISTATE -> TristateOptionsDialog(
                 initialOptions = field.tristateOptions,
                 onDismiss = { showHintDialog = false },
-                onSave = { options -> onTristateOptionsUpdate(options); showHintDialog = false }
+                onSave = { options ->
+                    onTristateOptionsUpdate(options);
+                    showHintDialog = false
+                }
             )
 
             else -> TextHintDialog(
                 initialHint = field.hint,
                 fieldName = field.name,
                 onDismiss = { showHintDialog = false },
-                onSave = { newHint -> onHintUpdate(newHint); showHintDialog = false }
+                onSave = { newHint ->
+                    onHintUpdate(newHint);
+                    showHintDialog = false
+                }
             )
         }
     }

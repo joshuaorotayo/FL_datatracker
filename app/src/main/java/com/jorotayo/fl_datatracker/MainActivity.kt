@@ -11,12 +11,15 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
@@ -51,26 +54,26 @@ class MainActivity : ComponentActivity() {
     lateinit var navigationManager: NavigationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         var keepSplashOnScreen = true
         val delay = 1000L
 
         installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
         Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, delay)
 
-
         super.onCreate(savedInstanceState)
 
-        var startDestination = Screen.Home.route  // default
+        var startDestination = Screen.Home.route // default
 
         lifecycleScope.launch {
             sharedSettingService.initialiseValues()
             val onboardingComplete = sharedSettingService.isOnboardingComplete()
-            startDestination = if (onboardingComplete) Screen.Home.route
-            else Screen.Onboarding.route
+            startDestination = if (onboardingComplete) {
+                Screen.Home.route
+            } else {
+                Screen.Onboarding.route
+            }
 
             setContent {
-
                 val themeViewModel: ThemeViewModel = hiltViewModel()
                 val useDeviceDarkMode by themeViewModel.useDeviceDarkMode.collectAsState()
                 val systemInDarkTheme = isSystemInDarkTheme()
@@ -78,7 +81,6 @@ class MainActivity : ComponentActivity() {
                 val darkTheme = if (useDeviceDarkMode) systemInDarkTheme else false
 
                 FL_DatatrackerThemeNew(darkTheme = darkTheme) {
-
                     val navController = rememberNavController()
                     val context = LocalContext.current
 
@@ -99,7 +101,6 @@ class MainActivity : ComponentActivity() {
                                         navController.popBackStack()
                                     }
                                 }
-
                             }
                         }
                     }

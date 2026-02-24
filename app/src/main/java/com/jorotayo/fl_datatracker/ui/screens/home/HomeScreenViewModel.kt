@@ -137,9 +137,12 @@ class HomeScreenViewModel @Inject constructor(
                     s.copy(
                         isLoading = false,
                         records = records,
-                        filteredRecords = if (s.searchQuery.isBlank()) records
-                        else records.filter {
-                            it.title.contains(s.searchQuery, ignoreCase = true)
+                        filteredRecords = if (s.searchQuery.isBlank()) {
+                            records
+                        } else {
+                            records.filter {
+                                it.title.contains(s.searchQuery, ignoreCase = true)
+                            }
                         }
                     )
                 }

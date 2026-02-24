@@ -1,9 +1,6 @@
 package com.jorotayo.fl_datatracker.ui.util.components
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -84,22 +81,20 @@ fun FloatingBottomBar(
     val itemWidths = remember { mutableListOf<Float>().apply { repeat(items.size) { add(0f) } } }
     val density = LocalDensity.current
 
-    val targetOffset = if (itemOffsets.isNotEmpty() && itemOffsets[selectedIndex] != 0f)
+    val targetOffset = if (itemOffsets.isNotEmpty() && itemOffsets[selectedIndex] != 0f) {
         with(density) { itemOffsets[selectedIndex].toDp() }
-    else 0.dp
+    } else {
+        0.dp
+    }
 
-    val targetWidth = if (itemWidths.isNotEmpty() && itemWidths[selectedIndex] != 0f)
+    val targetWidth = if (itemWidths.isNotEmpty() && itemWidths[selectedIndex] != 0f) {
         with(density) { itemWidths[selectedIndex].toDp() }
-    else 64.dp
+    } else {
+        64.dp
+    }
 
-    val animatedBubbleOffset: Dp by animateDpAsState(
-        targetValue = targetOffset,
-        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
-    )
-    val animatedBubbleWidth: Dp by animateDpAsState(
-        targetValue = targetWidth,
-        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
-    )
+    val animatedBubbleOffset: Dp = targetOffset
+    val animatedBubbleWidth: Dp = targetWidth
 
     Box(
         modifier = Modifier
@@ -172,8 +167,8 @@ private fun FloatingNavItem(
     onPositioned: (offsetX: Float, width: Float) -> Unit,
     onClick: () -> Unit
 ) {
-    val iconAlpha by animateFloatAsState(if (isSelected) 1f else 0.45f)
-    val textAlpha by animateFloatAsState(if (isSelected) 1f else 0.55f)
+    val iconAlpha = if (isSelected) 1f else 0.45f
+    val textAlpha = if (isSelected) 1f else 0.55f
 
     Column(
         modifier = Modifier

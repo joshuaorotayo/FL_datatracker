@@ -2,7 +2,6 @@ package com.jorotayo.fl_datatracker.domain.usecase
 
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
 
-
 class ValidateFieldEntryUseCase {
     /**
      * Validates a raw string value against the rules for the given field type.
@@ -22,13 +21,17 @@ class ValidateFieldEntryUseCase {
             // Boolean always has a value (true/false default), never invalid
             is DataFieldUiState.Boolean -> Result.success(Unit)
 
-            is DataFieldUiState.Date -> if (value.isBlank())
+            is DataFieldUiState.Date -> if (value.isBlank()) {
                 Result.failure(IllegalArgumentException("${field.label}: please select a date."))
-            else Result.success(Unit)
+            } else {
+                Result.success(Unit)
+            }
 
-            is DataFieldUiState.Time -> if (value.isBlank())
+            is DataFieldUiState.Time -> if (value.isBlank()) {
                 Result.failure(IllegalArgumentException("${field.label}: please select a time."))
-            else Result.success(Unit)
+            } else {
+                Result.success(Unit)
+            }
 
             is DataFieldUiState.Count -> {
                 val parsed = value.replace(",", "").toIntOrNull()
@@ -48,31 +51,41 @@ class ValidateFieldEntryUseCase {
 
             is DataFieldUiState.TriState -> {
                 val selected = value.toIntOrNull() ?: -1
-                if (selected < 0)
+                if (selected < 0) {
                     Result.failure(IllegalArgumentException("${field.label}: please select an option."))
-                else Result.success(Unit)
+                } else {
+                    Result.success(Unit)
+                }
             }
 
-            is DataFieldUiState.Image -> if (value.isBlank())
+            is DataFieldUiState.Image -> if (value.isBlank()) {
                 Result.failure(IllegalArgumentException("${field.label}: please select an image."))
-            else Result.success(Unit)
+            } else {
+                Result.success(Unit)
+            }
 
             is DataFieldUiState.DynamicList -> {
                 val items = value.split("|").filter { it.isNotBlank() }
-                if (items.isEmpty())
+                if (items.isEmpty()) {
                     Result.failure(IllegalArgumentException("${field.label}: please add at least one item."))
-                else Result.success(Unit)
+                } else {
+                    Result.success(Unit)
+                }
             }
         }
     }
 
     private fun validateNotBlank(value: String, label: String): Result<Unit>? =
-        if (value.isBlank())
+        if (value.isBlank()) {
             Result.failure(IllegalArgumentException("$label cannot be blank."))
-        else null
+        } else {
+            null
+        }
 
     private fun validateMaxLength(value: String, max: Int, label: String): Result<Unit>? =
-        if (value.length > max)
+        if (value.length > max) {
             Result.failure(IllegalArgumentException("$label cannot exceed $max characters."))
-        else null
+        } else {
+            null
+        }
 }

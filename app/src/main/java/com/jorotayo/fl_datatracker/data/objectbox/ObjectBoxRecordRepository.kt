@@ -93,6 +93,5 @@ class ObjectBoxRecordRepository @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-
     override fun getAllRecords(): List<DataRecord> = recordBox.all
 }

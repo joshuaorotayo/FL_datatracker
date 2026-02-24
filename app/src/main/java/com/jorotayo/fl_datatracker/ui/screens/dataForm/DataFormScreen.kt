@@ -145,6 +145,7 @@ fun DataFormScreenView(
     ) { paddingValues ->
         if (state.fields.isEmpty()) {
             NoDataFieldScreen(
+                modifier = Modifier.padding(paddingValues),
                 onAddFieldClick = { onEvent(DataFormEvent.AddField) }
             )
         } else {

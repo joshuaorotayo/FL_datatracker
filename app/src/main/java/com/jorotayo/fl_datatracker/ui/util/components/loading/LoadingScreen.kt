@@ -88,8 +88,8 @@ fun LoadingScreen(
             .background(
                 Brush.radialGradient(
                     colors = listOf(
-                        colorScheme.surface,      // lighter centre
-                        colorScheme.background    // deeper edges
+                        colorScheme.surface, // lighter centre
+                        colorScheme.background // deeper edges
                     ),
                     center = Offset(0.5f, 0.4f),
                     radius = 1400f
@@ -97,7 +97,6 @@ fun LoadingScreen(
             ),
         contentAlignment = Alignment.Center
     ) {
-
         // ── Decorative blobs using theme primaries ────────────────────────
         DecorativeBlobs(
             primaryColor = colorScheme.primary,
@@ -147,7 +146,6 @@ private fun DecorativeBlobs(
     val blobAlpha = if (darkTheme) 0.22f else 0.13f
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         // Top-left — primary (deep burgundy / light coral)
         Box(
             modifier = Modifier

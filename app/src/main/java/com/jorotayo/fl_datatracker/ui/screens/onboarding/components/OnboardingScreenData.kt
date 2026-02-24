@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 // =============================================================================
 
 data class OnboardingScreenData(
-    val image: ImageVector,           // fallback vector icon
-    val imageRes: Int? = null,        // optional drawable res (R.drawable.xxx)
+    val image: ImageVector, // fallback vector icon
+    val imageRes: Int? = null, // optional drawable res (R.drawable.xxx)
     val title: String,
     val description: String
 )

@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker
 
 import android.app.Application
+import com.getkeepsafe.relinker.ReLinker
 import com.jorotayo.fl_datatracker.data.model.MyObjectBox
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxDataFieldRepository
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxPresetRepository
@@ -10,6 +11,7 @@ import com.jorotayo.fl_datatracker.data.repository.PresetRepository
 import com.jorotayo.fl_datatracker.data.repository.RecordRepository
 import dagger.hilt.android.HiltAndroidApp
 import io.objectbox.BoxStore
+import io.objectbox.android.AndroidObjectBrowser
 
 @HiltAndroidApp
 class DataTrackerApp : Application() {
@@ -31,6 +33,12 @@ class DataTrackerApp : Application() {
         super.onCreate()
         store = MyObjectBox.builder()
             .androidContext(this)
+            .androidReLinker { context: android.content.Context, library: String -> 
+                ReLinker.loadLibrary(context, library) 
+            }
             .build()
+        if (BuildConfig.DEBUG) {
+            AndroidObjectBrowser(store).start(this)
+        }
     }
 }

@@ -125,7 +125,6 @@ fun FormFieldComponentsPreview(
                 .padding(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             // ── Preset selector ────────────────────────────────────────────────
             Column(
                 modifier = Modifier.padding(top = 8.dp),
@@ -178,7 +177,9 @@ fun FormFieldComponentsPreview(
                                             tint = MaterialTheme.colorScheme.primary
                                         )
                                     }
-                                } else null
+                                } else {
+                                    null
+                                }
                             )
                         }
                     }
@@ -272,9 +273,15 @@ fun FormFieldComponentsPreview(
             ) {
                 OutlinedButton(
                     onClick = {
-                        shortText = ""; longText = ""; booleanValue = false
-                        selectedDate = ""; selectedTime = ""
-                        countValue = 0; listItems = listOf(""); imageUri = null; triState = -1
+                        shortText = "";
+                        longText = "";
+                        booleanValue = false
+                        selectedDate = "";
+                        selectedTime = ""
+                        countValue = 0;
+                        listItems = listOf("");
+                        imageUri = null;
+                        triState = -1
                     },
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(vertical = 16.dp)

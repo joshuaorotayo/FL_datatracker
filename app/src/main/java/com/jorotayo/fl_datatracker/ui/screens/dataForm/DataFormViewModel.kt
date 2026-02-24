@@ -103,7 +103,6 @@ class DataFormViewModel @Inject constructor(
 
                 val existingDomainFields = _state.value.fields.map { it.toDataField(presetId) }
                 saveField(domainField, existingDomainFields)
-
             } catch (e: Exception) {
                 // Rollback on error
                 _state.update { s ->
@@ -211,7 +210,6 @@ class DataFormViewModel @Inject constructor(
             }
         }
     }
-
 }
 
 /**

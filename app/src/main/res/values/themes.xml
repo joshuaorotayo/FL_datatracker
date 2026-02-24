@@ -2,8 +2,8 @@
 <resources>
 
     <style name="Theme.FL_Datatracker" parent="Theme.Material3.Light.NoActionBar">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+        <item name="android:statusBarColor">#F5F5F5FF</item>
+        <item name="android:navigationBarColor">#F5F5F5FF</item>
         <item name="colorPrimary">#c0392b</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorPrimaryVariant">#890001</item>

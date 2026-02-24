@@ -21,5 +21,4 @@ object DataEntryModule {
         repo: RecordRepository,
         validate: ValidateFieldEntryUseCase
     ) = SaveRecordUseCase(repo, validate)
-
 }
