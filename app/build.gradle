@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
+    id 'com.google.devtools.ksp'
     id "io.gitlab.arturbosch.detekt" version "1.23.7"
     id "org.jlleitschuh.gradle.ktlint" version "11.5.1"
 }
@@ -33,6 +33,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        incremental = true
     }
 
     kotlin {
@@ -56,10 +57,6 @@ android {
         }
     }
     namespace 'com.jorotayo.fl_datatracker'
-
-    kapt {
-        correctErrorTypes true
-    }
 }
 
 ktlint{
@@ -115,16 +112,14 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
 
     // Dagger - Hilt
-    implementation 'com.google.dagger:hilt-android:2.46.1'
-    kapt 'com.google.dagger:hilt-compiler:2.46.1'
+    implementation 'com.google.dagger:hilt-android:2.51.1'
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
 
     // For instrumentation tests
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
-    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46.1'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.51.1'
 
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
-    kaptTest 'com.google.dagger:hilt-compiler:2.46.1'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.51.1'
 
     // Kotlin Extensions and Coroutines support for Room
     implementation 'androidx.room:room-ktx:2.5.2'

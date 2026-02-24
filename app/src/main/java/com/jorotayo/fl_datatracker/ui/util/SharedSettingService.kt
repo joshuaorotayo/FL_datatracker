@@ -1,8 +1,8 @@
 package com.jorotayo.fl_datatracker.ui.util
 
-import androidx.lifecycle.MutableLiveData
 import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,20 +10,25 @@ import javax.inject.Singleton
 class SharedSettingService @Inject constructor(
     private val userPreferenceStore: UserPreferenceStore
 ) {
-    fun initialiseValues() {
+    suspend fun initialiseValues() {
         if (!userPreferenceStore.getBoolean(SettingsKeys.ONBOARDING_COMPLETE)) {
-            userPreferenceStore.setBoolean(Pair(SettingsKeys.ONBOARDING_COMPLETE, false))
-            userPreferenceStore.setBoolean(Pair(SettingsKeys.USE_DEVICE_DARK_MODE_SETTINGS, true))
-            userPreferenceStore.setString(Pair(SettingsKeys.CURRENT_PRESET, "Default"))
+            userPreferenceStore.setBoolean(
+                SettingsKeys.ONBOARDING_COMPLETE to false,
+                SettingsKeys.USE_DEVICE_DARK_MODE_SETTINGS to true,
+            )
+            userPreferenceStore.setString(
+                SettingsKeys.CURRENT_PRESET to "Default"
+            )
         }
     }
 
-    fun showDashboardNavBar(show: Boolean) {
-        showingDashboardNavBar.postValue(show)
-    }
+    fun isOnboardingCompleteFlow(): Flow<Boolean> =
+        userPreferenceStore.getBooleanFlow(SettingsKeys.ONBOARDING_COMPLETE)
 
-    companion object {
-        val useDeviceDarkModeSettings: MutableLiveData<Boolean> = MutableLiveData(true)
-        val showingDashboardNavBar: MutableLiveData<Boolean> = MutableLiveData(true)
+    suspend fun isOnboardingComplete(): Boolean =
+        userPreferenceStore.getBoolean(SettingsKeys.ONBOARDING_COMPLETE)
+
+    suspend fun setOnboardingComplete() {
+        userPreferenceStore.setBoolean(SettingsKeys.ONBOARDING_COMPLETE to true)
     }
 }

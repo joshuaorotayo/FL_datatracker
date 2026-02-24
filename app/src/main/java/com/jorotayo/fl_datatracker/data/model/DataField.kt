@@ -12,7 +12,7 @@ import io.objectbox.annotation.Unique
 @Entity
 data class DataField(
     @Id
-    var dataFieldId: Long,
+    var dataFieldId: Long = 0L,
     var presetId: Long,
     @Unique(onConflict = ConflictStrategy.REPLACE)
     var fieldName: String = "",
@@ -22,7 +22,6 @@ data class DataField(
     var second: String = "",
     var third: String = "",
     var fieldHint: String? = "Enter value for $fieldName",
-    var isEnabled: Boolean = true
+    var isEnabled: Boolean = true,
+    var isActive: Boolean = true
 )
-
-class InvalidDataFieldException(message: String) : Exception(message)

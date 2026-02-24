@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components
+package com.jorotayo.fl_datatracker.ui.screens.dataForm.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -21,7 +21,7 @@ data class DataFieldUi(
     val id: Long = 0,
     val name: String,
     val type: FieldType,
-    val hint: String,
+    val hint: String = "",
     val booleanOptions: List<String> = emptyList(),
     val tristateOptions: List<String> = emptyList(),
     val isActive: Boolean = true

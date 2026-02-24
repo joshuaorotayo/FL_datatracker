@@ -8,6 +8,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
-import com.jorotayo.fl_datatracker.ui.theme.isDarkMode
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Loading Screen
@@ -52,7 +52,7 @@ fun LoadingScreen(
     message: String = "Loading"
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    val darkTheme = isDarkMode()
+    val darkTheme = isSystemInDarkTheme()
 
     // ── Entrance fade-in ──────────────────────────────────────────────────
     val enterAlpha by animateFloatAsState(

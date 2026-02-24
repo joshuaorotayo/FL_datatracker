@@ -1,14 +1,12 @@
 package com.jorotayo.fl_datatracker.ui.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +18,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -69,7 +68,6 @@ import com.jorotayo.fl_datatracker.navigation.NavCommand.Back
 import com.jorotayo.fl_datatracker.navigation.NavCommand.ToRoute
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
-import com.jorotayo.fl_datatracker.ui.util.components.loading.LoadingScreen
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -109,28 +107,15 @@ private val sampleRecords = listOf(
 @Composable
 fun PreviewHomeScreen() {
     FL_DatatrackerThemeNew {
-        HomeScreenView(
-            state = HomeState(
-                records = sampleRecords,
-                filteredRecords = sampleRecords,
-                showDeleteDialog = true
+        Surface(modifier = Modifier.fillMaxSize()) {  // ← add Surface + fillMaxSize
+            HomeScreenView(
+                state = HomeState(
+                    records = sampleRecords,
+                    filteredRecords = sampleRecords,
+                    showDeleteDialog = true
+                )
             )
-        )
-    }
-}
-
-@DefaultPreviews
-@Composable
-fun PreviewLoadingHomeScreen() {
-    FL_DatatrackerThemeNew {
-        HomeScreenView(
-            state = HomeState(
-                records = sampleRecords,
-                filteredRecords = sampleRecords,
-                isLoading = true,
-                showDeleteDialog = true
-            )
-        )
+        }
     }
 }
 
@@ -138,7 +123,9 @@ fun PreviewLoadingHomeScreen() {
 @Composable
 fun PreviewHomeScreenEmpty() {
     FL_DatatrackerThemeNew {
-        HomeScreenView(state = HomeState(showDeleteDialog = true))
+        Surface(modifier = Modifier.fillMaxSize()) {  // ← add Surface + fillMaxSize
+            HomeScreenView(state = HomeState(showDeleteDialog = true))
+        }
     }
 }
 
@@ -165,14 +152,10 @@ fun HomeScreen() {
     }
 
 
-    if (state.value.isLoading) {
-        LoadingScreen()
-    } else {
         HomeScreenView(
             state = state.value,
-            onEvent = viewModel::onEvent
+            onEvent = viewModel::onEvent,
         )
-    }
 }
 
 // =============================================================================
@@ -184,7 +167,7 @@ fun HomeScreen() {
 fun HomeScreenView(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit = {},
-    onNavigateToEntry: (presetId: Long) -> Unit = {}
+    onNavigateToEntry: (presetId: Long) -> Unit = {},
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -194,13 +177,9 @@ fun HomeScreenView(
         if (state.isSearchActive) focusRequester.requestFocus()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+
         if (state.filteredRecords.isEmpty()) {
-            // ── Empty state — plain Column, no scroll needed ──────────────
             Column(modifier = Modifier.fillMaxSize()) {
                 HomeHeader(
                     state = state,
@@ -214,7 +193,6 @@ fun HomeScreenView(
                 EmptyHomeContent(isFiltering = state.searchQuery.isNotBlank())
             }
         } else {
-            // ── Records — header pinned as first LazyColumn item ──────────
             RecordList(
                 state = state,
                 focusRequester = focusRequester,
@@ -226,7 +204,6 @@ fun HomeScreenView(
             )
         }
 
-        // ── FAB — always anchored to bottom-end of the Box ────────────────
         ExtendedFloatingActionButton(
             onClick = { onNavigateToEntry(0L) },
             icon = { Icon(Icons.Default.Add, contentDescription = null) },
@@ -235,12 +212,10 @@ fun HomeScreenView(
             contentColor = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
-                .padding(16.dp)
+                .padding(end = 16.dp, bottom = 16.dp)
         )
     }
 }
-
 // =============================================================================
 // RECORD LIST — self-contained LazyColumn with header as first item
 // =============================================================================
@@ -254,15 +229,17 @@ private fun RecordList(
     onKeyboardDone: () -> Unit
 ) {
     val grouped = state.filteredRecords.groupBy { formatDateHeader(it.createdAt) }
+    val listState = rememberLazyListState()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
             start = 16.dp,
-            end = 16.dp
-//            bottom = 100.dp  // clear the FAB
+            end = 16.dp,
+            bottom = 100.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        state = listState
     ) {
         // Header scrolls with the list
         item(key = "header") {
@@ -293,6 +270,7 @@ private fun RecordList(
 // HEADER — title + expandable search
 // =============================================================================
 
+
 @Composable
 private fun HomeHeader(
     state: HomeState,
@@ -304,12 +282,14 @@ private fun HomeHeader(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .animateContentSize(
-                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
-            )
+            .padding(top = 16.dp)
+            .statusBarsPadding()
+//            .animateContentSize(
+//                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+//            )
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
 
+        Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -424,6 +404,7 @@ private fun HomeHeader(
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
 
 // =============================================================================
 // DATE SECTION HEADER

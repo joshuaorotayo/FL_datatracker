@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "4:8299800936051592944",
-      "lastPropertyId": "9:357742363258178427",
+      "lastPropertyId": "10:6737769630563384686",
       "name": "DataField",
       "properties": [
         {
@@ -54,6 +54,11 @@
         {
           "id": "9:357742363258178427",
           "name": "isEnabled",
+          "type": 1
+        },
+        {
+          "id": "10:6737769630563384686",
+          "name": "isActive",
           "type": 1
         }
       ],

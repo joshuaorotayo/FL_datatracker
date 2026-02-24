@@ -1,9 +1,12 @@
 package com.jorotayo.fl_datatracker.ui.screens.onboarding
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +36,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -41,6 +46,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.screens.onboarding.components.OnboardingScreenData
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
@@ -85,7 +92,7 @@ private val samplePages = listOf(
 @Composable
 fun PreviewOnboardingScreen() {
     FL_DatatrackerThemeNew {
-        OnboardingScreen(
+        OnboardingScreenView(
             state = OnboardingScreenState(),
             pages = samplePages,
             onEvent = {}
@@ -96,10 +103,20 @@ fun PreviewOnboardingScreen() {
 // =============================================================================
 // SCREEN
 // =============================================================================
+@Composable
+fun OnboardingScreen() {
+    val viewModel = hiltViewModel<OnboardingViewModel>()
+    val state = viewModel.state.collectAsState()
+
+    OnboardingScreenView(
+        state = state.value,
+        onEvent = viewModel::onEvent
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(
+fun OnboardingScreenView(
     state: OnboardingScreenState,
     pages: List<OnboardingScreenData> = samplePages,
     onEvent: (OnboardingEvent) -> Unit
@@ -111,109 +128,149 @@ fun OnboardingScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            verticalArrangement = Arrangement.SpaceBetween
+                .padding(paddingValues)
         ) {
-            // Skip button — hidden on last page
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                if (!isLastPage) {
-                    TextButton(onClick = { onEvent(OnboardingEvent.SaveOnBoarding) }) {
-                        Text(
-                            text = "Skip",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-
-            // Pager
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentPadding = PaddingValues(horizontal = 32.dp),
-                pageSpacing = 16.dp
-            ) { page ->
-                OnboardingPage(data = pages[page])
-            }
-
-            // Bottom controls
+            // ── Main layout ───────────────────────────────────────────────
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Page indicators — tap any dot to jump to that page
-                PageIndicatorRow(
-                    pageCount = pages.size,
-                    currentPage = pagerState.currentPage,
-                    onDotClick = { index ->
-                        scope.launch { pagerState.animateScrollToPage(index) }
-                    }
-                )
+                // Reserve space at top so pager isn't squished —
+                // Skip button floats over this area
+                Spacer(modifier = Modifier.height(48.dp))
 
-                // Navigation buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                // Pager fills remaining space
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentPadding = PaddingValues(horizontal = 32.dp),
+                    pageSpacing = 16.dp
+                ) { page ->
+                    OnboardingPage(data = pages[page])
+                }
+
+                // Bottom controls
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Back button — hidden on first page
-                    if (pagerState.currentPage > 0) {
-                        OutlinedButton(
+                    PageIndicatorRow(
+                        pageCount = pages.size,
+                        currentPage = pagerState.currentPage,
+                        onDotClick = { index ->
+                            scope.launch { pagerState.animateScrollToPage(index) }
+                        }
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (pagerState.currentPage > 0) {
+                            OutlinedButton(
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                    }
+                                },
+                                modifier = Modifier.weight(1f),
+                                contentPadding = PaddingValues(vertical = 16.dp)
+                            ) {
+                                Text("Back", style = MaterialTheme.typography.labelLarge)
+                            }
+                        }
+
+                        Button(
                             onClick = {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                if (isLastPage) {
+                                    onEvent(OnboardingEvent.GetStarted)
+                                } else {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    }
                                 }
                             },
                             modifier = Modifier.weight(1f),
-                            contentPadding = PaddingValues(vertical = 16.dp)
+                            contentPadding = PaddingValues(vertical = 16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
                         ) {
-                            Text("Back", style = MaterialTheme.typography.labelLarge)
+                            if (isLastPage) {
+                                Icon(
+                                    Icons.Default.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Get Started", style = MaterialTheme.typography.labelLarge)
+                            } else {
+                                Text("Next", style = MaterialTheme.typography.labelLarge)
+                            }
                         }
                     }
 
-                    // Next / Get Started button
-                    Button(
-                        onClick = {
-                            if (isLastPage) {
-                                onEvent(OnboardingEvent.SaveOnBoarding)
-                            } else {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                                }
-                            }
-                        },
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(vertical = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
-                    ) {
-                        if (isLastPage) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                    // ── Don't show again checkbox — only on last page ──────
+                    AnimatedVisibility(visible = isLastPage) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.medium)
+                                .clickable { onEvent(OnboardingEvent.ToggleDontShowAgain) }
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+
+                            ) {
+                            Text(
+                                text = "Don't show this again",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Get Started", style = MaterialTheme.typography.labelLarge)
-                        } else {
-                            Text("Next", style = MaterialTheme.typography.labelLarge)
+                            Checkbox(
+                                modifier = Modifier.padding(start = 8.dp),
+                                checked = state.dontShowAgain,
+                                onCheckedChange = { onEvent(OnboardingEvent.ToggleDontShowAgain) },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = MaterialTheme.colorScheme.primary,
+                                    uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
                         }
                     }
+                }
+            }
+            if (!isLastPage) {
+                Spacer(modifier = Modifier.height(48.dp))
+            }
+
+            // ── Skip floats over the top of the pager ─────────────────────
+            AnimatedVisibility(
+                visible = !isLastPage,
+                modifier = Modifier.align(Alignment.TopEnd),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                TextButton(
+                    onClick = {
+                        scope.launch { pagerState.animateScrollToPage(pages.lastIndex) }
+                    },
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "Skip",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }

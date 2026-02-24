@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components
+package com.jorotayo.fl_datatracker.ui.screens.dataForm.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

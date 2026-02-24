@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen
+package com.jorotayo.fl_datatracker.ui.screens.dataForm
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,11 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
-import com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components.DataFieldCard
-import com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components.DataFieldUi
-import com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components.FieldType
-import com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components.NoDataFieldScreen
-import com.jorotayo.fl_datatracker.ui.screens.dataFieldsScreen.components.PresetSelectorCard
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldCard
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldUi
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DeleteFieldDialog
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.FieldType
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.FieldUpdate
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.NoDataFieldScreen
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.PresetSelectorCard
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMassive
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
@@ -45,71 +47,43 @@ import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXSmall
 import com.jorotayo.fl_datatracker.ui.util.components.loading.LoadingScreen
 
+// =============================================================================
+// PREVIEW
+// =============================================================================
+
 @DefaultPreviews
 @Composable
-fun PreviewImprovedDataFieldsScreen() {
+fun PreviewDataFormScreen() {
     FL_DatatrackerThemeNew {
-        ImprovedDataFieldsScreen(
-            state = DataFieldsState(
+        DataFormScreenView(
+            state = DataFormState(
                 presets = listOf(Preset(0L, "Default"), Preset(1L, "Custom")),
                 selectedPreset = Preset(0L, "Default"),
                 fields = listOf(
                     DataFieldUi(
                         id = 1L,
-                        name = "String",
+                        name = "Name",
                         type = FieldType.SHORT_TEXT,
-                        hint = "Enter String for short text",
+                        hint = "Enter name"
                     ),
-                    DataFieldUi(
-                        id = 2L,
-                        name = "Long Text",
-                        type = FieldType.LONG_TEXT,
-                        hint = "Enter String for Long text",
-                    ),
+                    DataFieldUi(id = 2L, name = "Notes", type = FieldType.LONG_TEXT, hint = ""),
                     DataFieldUi(
                         id = 3L,
-                        name = "Boolean",
+                        name = "Active",
                         type = FieldType.BOOLEAN,
-                        hint = "Select boolean option",
                         booleanOptions = listOf("Yes", "No")
                     ),
                     DataFieldUi(
                         id = 4L,
-                        name = "Tristate",
+                        name = "Priority",
                         type = FieldType.TRISTATE,
-                        hint = "Select option for triple text",
-                        tristateOptions = listOf("Yes", "Maybe", "No")
+                        tristateOptions = listOf("Low", "Med", "High")
                     ),
-                    DataFieldUi(
-                        id = 5L,
-                        name = "Count",
-                        type = FieldType.COUNT,
-                        hint = "Enter Count",
-                    ),
-                    DataFieldUi(
-                        id = 6L,
-                        name = "Image",
-                        type = FieldType.IMAGE,
-                        hint = "Select Image",
-                    ),
-                    DataFieldUi(
-                        id = 7L,
-                        name = "Date",
-                        type = FieldType.DATE,
-                        hint = "Enter date",
-                    ),
-                    DataFieldUi(
-                        id = 8L,
-                        name = "Time",
-                        type = FieldType.TIME,
-                        hint = "Enter time",
-                    ),
-                    DataFieldUi(
-                        id = 9L,
-                        name = "List",
-                        type = FieldType.LIST,
-                        hint = "Enter List of items",
-                    )
+                    DataFieldUi(id = 5L, name = "Score", type = FieldType.COUNT, hint = "0–100"),
+                    DataFieldUi(id = 6L, name = "Photo", type = FieldType.IMAGE, hint = ""),
+                    DataFieldUi(id = 7L, name = "Date", type = FieldType.DATE, hint = ""),
+                    DataFieldUi(id = 8L, name = "Time", type = FieldType.TIME, hint = ""),
+                    DataFieldUi(id = 9L, name = "Tags", type = FieldType.LIST, hint = "")
                 )
             )
         )
@@ -124,7 +98,7 @@ fun DataFormScreen() {
     if (state.isLoading) {
         LoadingScreen()
     } else {
-        ImprovedDataFieldsScreen(
+        DataFormScreenView(
             state = state,
             onEvent = viewModel::onEvent
         )
@@ -133,12 +107,21 @@ fun DataFormScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImprovedDataFieldsScreen(
-    state: DataFieldsState,
-    onEvent: (DataFieldsEvent) -> Unit = {}
+fun DataFormScreenView(
+    state: DataFormState,
+    onEvent: (DataFormEvent) -> Unit = {}
 ) {
-    var selectedPresetName by remember {
+    var selectedPresetName by remember(state.selectedPreset) {
         mutableStateOf(state.selectedPreset?.presetName ?: "Default")
+    }
+
+    // Delete confirmation dialog
+    if (state.showDeleteFieldDialog && state.fieldToDelete != null) {
+        DeleteFieldDialog(
+            fieldName = state.fieldToDelete.name,
+            onConfirm = { onEvent(DataFormEvent.ConfirmDeleteField) },
+            onDismiss = { onEvent(DataFormEvent.DismissDeleteDialog) }
+        )
     }
 
     Scaffold(
@@ -153,7 +136,7 @@ fun ImprovedDataFieldsScreen(
         floatingActionButton = {
             if (state.fields.isNotEmpty()) {
                 ExtendedFloatingActionButton(
-                    onClick = { onEvent(DataFieldsEvent.AddField) },
+                    onClick = { onEvent(DataFormEvent.AddField) },
                     icon = { Icon(Icons.Default.Add, contentDescription = null) },
                     text = { Text("Add Field", style = MaterialTheme.typography.labelLarge) }
                 )
@@ -162,9 +145,7 @@ fun ImprovedDataFieldsScreen(
     ) { paddingValues ->
         if (state.fields.isEmpty()) {
             NoDataFieldScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
+                onAddFieldClick = { onEvent(DataFormEvent.AddField) }
             )
         } else {
             LazyColumn(
@@ -174,17 +155,19 @@ fun ImprovedDataFieldsScreen(
                 contentPadding = PaddingValues(spacingMedium),
                 verticalArrangement = Arrangement.spacedBy(spacingSmall)
             ) {
+                // Preset Selector
                 item {
                     PresetSelectorCard(
                         selectedPreset = selectedPresetName,
                         presets = state.presets,
                         onPresetSelected = { preset ->
                             selectedPresetName = preset.presetName
-                            onEvent(DataFieldsEvent.SelectPreset(preset))
+                            onEvent(DataFormEvent.SelectPreset(preset))
                         }
                     )
                 }
 
+                // Section Header
                 item {
                     Row(
                         modifier = Modifier
@@ -215,32 +198,42 @@ fun ImprovedDataFieldsScreen(
                     }
                 }
 
-                items(state.fields) { field ->
+                // Data Fields List
+                items(state.fields, key = { it.id }) { field ->
                     DataFieldCard(
                         field = field,
-                        onDelete = { onEvent(DataFieldsEvent.DeleteField(field)) },
-                        onToggleActive = { onEvent(DataFieldsEvent.ToggleFieldActive(field)) },
-                        onHintUpdate = { hint -> onEvent(DataFieldsEvent.UpdateHint(field, hint)) },
-                        onBooleanOptionsUpdate = { opts ->
+                        onDelete = {
+                            onEvent(DataFormEvent.RequestDeleteField(field))
+                        },
+                        onToggleActive = {
+                            onEvent(DataFormEvent.UpdateField(field, FieldUpdate.ToggleActive))
+                        },
+                        onHintUpdate = { newHint ->
+                            onEvent(DataFormEvent.UpdateField(field, FieldUpdate.Hint(newHint)))
+                        },
+                        onBooleanOptionsUpdate = { options ->
                             onEvent(
-                                DataFieldsEvent.UpdateBooleanOptions(
+                                DataFormEvent.UpdateField(
                                     field,
-                                    opts
+                                    FieldUpdate.BooleanOptions(options)
                                 )
                             )
                         },
-                        onTristateOptionsUpdate = { opts ->
+                        onTristateOptionsUpdate = { options ->
                             onEvent(
-                                DataFieldsEvent.UpdateTristateOptions(
+                                DataFormEvent.UpdateField(
                                     field,
-                                    opts
+                                    FieldUpdate.TristateOptions(options)
                                 )
                             )
                         }
                     )
                 }
 
-                item { Spacer(modifier = Modifier.height(spacingMassive)) }
+                // Bottom padding for FAB
+                item {
+                    Spacer(modifier = Modifier.height(spacingMassive))
+                }
             }
         }
     }

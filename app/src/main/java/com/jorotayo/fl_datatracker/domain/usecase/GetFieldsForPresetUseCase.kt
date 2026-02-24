@@ -1,8 +1,7 @@
 package com.jorotayo.fl_datatracker.domain.usecase
 
+import com.jorotayo.fl_datatracker.data.model.DataField
 import com.jorotayo.fl_datatracker.data.repository.DataFieldRepository
-import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
-import com.jorotayo.fl_datatracker.domain.util.toUiStateList
 
 class GetFieldsForPresetUseCase(
     private val repository: DataFieldRepository
@@ -10,6 +9,6 @@ class GetFieldsForPresetUseCase(
     /**
      * Returns fields as UI state, ready for the composables.
      */
-    operator fun invoke(presetId: Long): List<DataFieldUiState> =
-        repository.getFieldsForPreset(presetId).toUiStateList()
+    operator fun invoke(presetId: Long): List<DataField> =
+        repository.getFieldsForPreset(presetId)
 }
