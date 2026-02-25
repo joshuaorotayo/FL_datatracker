@@ -19,4 +19,5 @@ sealed class DataFormEvent {
     data object DismissDeleteDialog : DataFormEvent()
 
     data class SaveField(val field: DataFieldUi) : DataFormEvent()
+    data object DismissToast : DataFormEvent()
 }

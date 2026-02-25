@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker
 import android.app.Application
 import com.getkeepsafe.relinker.ReLinker
 import com.jorotayo.fl_datatracker.data.model.MyObjectBox
+import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxDataFieldRepository
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxPresetRepository
 import com.jorotayo.fl_datatracker.data.objectbox.ObjectBoxRecordRepository
@@ -33,12 +34,26 @@ class DataTrackerApp : Application() {
         super.onCreate()
         store = MyObjectBox.builder()
             .androidContext(this)
-            .androidReLinker { context: android.content.Context, library: String -> 
-                ReLinker.loadLibrary(context, library) 
+            .androidReLinker { context: android.content.Context, library: String ->
+                ReLinker.loadLibrary(context, library)
             }
             .build()
         if (BuildConfig.DEBUG) {
             AndroidObjectBrowser(store).start(this)
+        }
+
+        seedDefaultPreset()
+    }
+
+    /**
+     * Creates the "Default" preset on first install.
+     * Checks if any presets exist before inserting so it only runs once —
+     * reinstalling the app clears ObjectBox so it will reseed correctly.
+     */
+    private fun seedDefaultPreset() {
+        val presets = presetRepository.getAllPresets()
+        if (presets.isEmpty()) {
+            presetRepository.savePreset(Preset(presetName = "Default"))
         }
     }
 }

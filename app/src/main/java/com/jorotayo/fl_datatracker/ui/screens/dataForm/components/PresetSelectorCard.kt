@@ -23,8 +23,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.jorotayo.fl_datatracker.data.model.Preset
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXSmall
+import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXXSmall
+
+
+// =============================================================================
+// PREVIEW
+// =============================================================================
+
+@OptIn(ExperimentalMaterial3Api::class)
+@DefaultPreviews
+@Composable
+fun PreviewPresetSelectorCard() {
+    FL_DatatrackerThemeNew {
+        PresetSelectorCard(
+            selectedPreset = "Default",
+            presets = listOf(Preset(0L, "Default"), Preset(1L, "Custom")),
+            onPresetSelected = {}
+        )
+    }
+}
+
+
+// =============================================================================
+// PresetSelectorCard
+// =============================================================================
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +85,7 @@ fun PresetSelectorCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
+                        modifier = Modifier.padding(bottom = spacingXXXSmall),
                         text = "Active Preset",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer

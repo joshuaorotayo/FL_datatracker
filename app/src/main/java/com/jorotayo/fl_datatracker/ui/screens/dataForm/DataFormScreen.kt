@@ -1,6 +1,7 @@
 package com.jorotayo.fl_datatracker.ui.screens.dataForm
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,9 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.AddDataFieldSheet
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldCard
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldUi
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DeleteFieldDialog
@@ -46,6 +49,7 @@ import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXSmall
 import com.jorotayo.fl_datatracker.ui.util.components.loading.LoadingScreen
+import com.jorotayo.fl_datatracker.ui.util.components.toasts.AppToast
 
 // =============================================================================
 // PREVIEW
@@ -115,7 +119,143 @@ fun DataFormScreenView(
         mutableStateOf(state.selectedPreset?.presetName ?: "Default")
     }
 
-    // Delete confirmation dialog
+    var showAddFieldSheet by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                if (state.fields.isNotEmpty()) {
+                    TopAppBar(
+                        modifier = Modifier.padding(top = spacingMedium),
+                        title = {
+                            Text(
+                                "Data Fields", style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background
+                        )
+                    )
+                }
+            },
+            floatingActionButton = {
+                if (state.fields.isNotEmpty()) {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            showAddFieldSheet = true
+                        },   // was: onEvent(DataFormEvent.AddField)
+                        icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                        text = { Text("Add Field", style = MaterialTheme.typography.labelLarge) }
+                    )
+                }
+            }
+        ) { paddingValues ->
+            if (state.fields.isEmpty()) {
+                NoDataFieldScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    onAddFieldClick = {
+                        showAddFieldSheet = true
+                    }   // was: onEvent(DataFormEvent.AddField)
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentPadding = PaddingValues(spacingMedium),
+                    verticalArrangement = Arrangement.spacedBy(spacingSmall)
+                ) {
+                    // Preset Selector
+                    item {
+                        PresetSelectorCard(
+                            selectedPreset = selectedPresetName,
+                            presets = state.presets,
+                            onPresetSelected = { preset ->
+                                selectedPresetName = preset.presetName
+                                onEvent(DataFormEvent.SelectPreset(preset))
+                            }
+                        )
+                    }
+
+                    // Section Header
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = spacingXSmall),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Fields",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Surface(
+                                shape = MaterialTheme.shapes.small,
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ) {
+                                Text(
+                                    text = "${state.fields.size} fields",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    modifier = Modifier.padding(
+                                        horizontal = spacingSmall,
+                                        vertical = spacingXXSmall
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    // Data Fields List
+                    items(state.fields, key = { it.id }) { field ->
+                        DataFieldCard(
+                            field = field,
+                            onDelete = {
+                                onEvent(DataFormEvent.RequestDeleteField(field))
+                            },
+                            onToggleActive = {
+                                onEvent(DataFormEvent.UpdateField(field, FieldUpdate.ToggleActive))
+                            },
+                            onHintUpdate = { newHint ->
+                                onEvent(DataFormEvent.UpdateField(field, FieldUpdate.Hint(newHint)))
+                            },
+                            onBooleanOptionsUpdate = { options ->
+                                onEvent(
+                                    DataFormEvent.UpdateField(
+                                        field,
+                                        FieldUpdate.BooleanOptions(options)
+                                    )
+                                )
+                            },
+                            onTristateOptionsUpdate = { options ->
+                                onEvent(
+                                    DataFormEvent.UpdateField(
+                                        field,
+                                        FieldUpdate.TristateOptions(options)
+                                    )
+                                )
+                            }
+                        )
+                    }
+
+                    // Bottom padding for FAB
+                    item {
+                        Spacer(modifier = Modifier.height(spacingMassive))
+                    }
+                }
+            }
+        }
+    }
+
+    AppToast(
+        data = state.toast,
+        onDismiss = { onEvent(DataFormEvent.DismissToast) }
+    )
+
     if (state.showDeleteFieldDialog && state.fieldToDelete != null) {
         DeleteFieldDialog(
             fieldName = state.fieldToDelete.name,
@@ -124,118 +264,13 @@ fun DataFormScreenView(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Data Fields", style = MaterialTheme.typography.titleLarge) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
-        },
-        floatingActionButton = {
-            if (state.fields.isNotEmpty()) {
-                ExtendedFloatingActionButton(
-                    onClick = { onEvent(DataFormEvent.AddField) },
-                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                    text = { Text("Add Field", style = MaterialTheme.typography.labelLarge) }
-                )
+    if (showAddFieldSheet) {
+        AddDataFieldSheet(
+            onDismiss = { showAddFieldSheet = false },
+            onSave = { newField ->
+                onEvent(DataFormEvent.SaveField(newField))
+                showAddFieldSheet = false
             }
-        }
-    ) { paddingValues ->
-        if (state.fields.isEmpty()) {
-            NoDataFieldScreen(
-                modifier = Modifier.padding(paddingValues),
-                onAddFieldClick = { onEvent(DataFormEvent.AddField) }
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(spacingMedium),
-                verticalArrangement = Arrangement.spacedBy(spacingSmall)
-            ) {
-                // Preset Selector
-                item {
-                    PresetSelectorCard(
-                        selectedPreset = selectedPresetName,
-                        presets = state.presets,
-                        onPresetSelected = { preset ->
-                            selectedPresetName = preset.presetName
-                            onEvent(DataFormEvent.SelectPreset(preset))
-                        }
-                    )
-                }
-
-                // Section Header
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = spacingXSmall),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Fields",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Surface(
-                            shape = MaterialTheme.shapes.small,
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ) {
-                            Text(
-                                text = "${state.fields.size} fields",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(
-                                    horizontal = spacingSmall,
-                                    vertical = spacingXXSmall
-                                )
-                            )
-                        }
-                    }
-                }
-
-                // Data Fields List
-                items(state.fields, key = { it.id }) { field ->
-                    DataFieldCard(
-                        field = field,
-                        onDelete = {
-                            onEvent(DataFormEvent.RequestDeleteField(field))
-                        },
-                        onToggleActive = {
-                            onEvent(DataFormEvent.UpdateField(field, FieldUpdate.ToggleActive))
-                        },
-                        onHintUpdate = { newHint ->
-                            onEvent(DataFormEvent.UpdateField(field, FieldUpdate.Hint(newHint)))
-                        },
-                        onBooleanOptionsUpdate = { options ->
-                            onEvent(
-                                DataFormEvent.UpdateField(
-                                    field,
-                                    FieldUpdate.BooleanOptions(options)
-                                )
-                            )
-                        },
-                        onTristateOptionsUpdate = { options ->
-                            onEvent(
-                                DataFormEvent.UpdateField(
-                                    field,
-                                    FieldUpdate.TristateOptions(options)
-                                )
-                            )
-                        }
-                    )
-                }
-
-                // Bottom padding for FAB
-                item {
-                    Spacer(modifier = Modifier.height(spacingMassive))
-                }
-            }
-        }
+        )
     }
 }

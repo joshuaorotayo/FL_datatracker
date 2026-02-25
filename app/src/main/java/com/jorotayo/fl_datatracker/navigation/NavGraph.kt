@@ -37,7 +37,7 @@ sealed class Screen(
         route = "dataForm",
         showBottomBar = true,
         icon = Icons.Default.List,
-        title = "Data Form"
+        title = "Data Forms"
     )
 
     object Home : Screen(
@@ -49,7 +49,7 @@ sealed class Screen(
 
     object DataEntry : Screen(
         "dataEntry?recordId={recordId}",
-        showBottomBar = false,
+        showBottomBar = true,
         icon = Icons.Default.EditNote,
         title = "Data Entry"
     ) {

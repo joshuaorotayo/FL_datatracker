@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components
+package com.jorotayo.fl_datatracker.ui.screens.dataEntry
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -905,14 +905,14 @@ fun AllFieldsPreviewScreen(
             ) {
                 OutlinedButton(
                     onClick = {
-                        shortText = "";
-                        longText = "";
+                        shortText = ""
+                        longText = ""
                         booleanValue = false
-                        selectedDate = "";
+                        selectedDate = ""
                         selectedTime = ""
-                        countValue = 0;
-                        listItems = listOf("");
-                        imageUri = null;
+                        countValue = 0
+                        listItems = listOf("")
+                        imageUri = null
                         triState = -1
                     },
                     modifier = Modifier.weight(1f),

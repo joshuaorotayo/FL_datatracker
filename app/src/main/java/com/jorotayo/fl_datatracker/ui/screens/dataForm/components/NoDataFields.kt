@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.ui.screens.dataForm.components
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -68,7 +68,8 @@ fun NoDataFieldScreen(
     Card(
         modifier = modifier
             .fillMaxSize()
-            .padding(Dimensions.spacingMedium),
+            .padding(Dimensions.spacingMedium)
+            .systemBarsPadding(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
@@ -84,101 +85,104 @@ fun NoDataFieldScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Large icon
+            Surface(
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CreateNewFolder,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(Dimensions.spacingLarge)
+                        .size(Dimensions.iconXLarge)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
+
+            // Text content
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(Dimensions.spacingLarge),
+                verticalArrangement = Arrangement.spacedBy(Dimensions.spacingXSmall),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Large icon
-                Surface(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CreateNewFolder,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(Dimensions.spacingLarge)
-                            .size(Dimensions.iconXLarge)
-                    )
-                }
-
-                // Text content
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(Dimensions.spacingXSmall),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "No Data Fields Yet",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Text(
-                        text = "Create your first data field to start organizing your information",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = Dimensions.spacingMedium)
-                    )
-                }
-
-                // Call to action button
-                Button(
-                    onClick = onAddFieldClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Dimensions.componentButton),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        modifier = Modifier.size(Dimensions.iconSmall)
-                    )
-                    Spacer(modifier = Modifier.width(Dimensions.spacingXSmall))
-                    Text(
-                        "Add Your First Field",
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
-
-                // Optional: Quick tips
-                Divider(
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    modifier = Modifier.padding(vertical = Dimensions.spacingSmall)
+                Text(
+                    text = "No Data Fields Yet",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
                 )
 
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(Dimensions.spacingXSmall),
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Quick Tips:",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                Text(
+                    text = "Create your first data field to start organizing your information",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = Dimensions.spacingMedium)
+                )
+            }
 
-                    QuickTipItem(
-                        text = "Choose from text, date, time, boolean, and more field types"
-                    )
-                    QuickTipItem(
-                        text = "Add custom hints to guide data entry"
-                    )
-                    QuickTipItem(
-                        text = "Toggle fields active or inactive anytime"
-                    )
-                }
+            Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
+
+            // Call to action button
+            Button(
+                onClick = onAddFieldClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimensions.componentButton),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                    modifier = Modifier.size(Dimensions.iconSmall)
+                )
+                Spacer(modifier = Modifier.width(Dimensions.spacingXSmall))
+                Text(
+                    "Add Your First Field",
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+
+
+            Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
+
+
+            // Optional: Quick tips
+            Divider(
+                color = MaterialTheme.colorScheme.outlineVariant,
+                modifier = Modifier.padding(vertical = Dimensions.spacingSmall)
+            )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Dimensions.spacingXSmall),
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Quick Tips:",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                QuickTipItem(
+                    text = "Choose from text, date, time, boolean, and more field types"
+                )
+                QuickTipItem(
+                    text = "Add custom hints to guide data entry"
+                )
+                QuickTipItem(
+                    text = "Toggle fields active or inactive anytime"
+                )
             }
         }
     }
 }
+
 
 @Composable
 private fun QuickTipItem(
@@ -204,6 +208,7 @@ private fun QuickTipItem(
         )
     }
 }
+
 
 /**
  * COLOR SCHEME USED:

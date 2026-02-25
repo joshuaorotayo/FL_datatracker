@@ -43,16 +43,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.BooleanField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.CountField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.DateField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.ImageField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.ListField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.LongTextField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.ShortTextField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.TimeField
-import com.jorotayo.fl_datatracker.screens.dataFieldsScreen.components.TriStateField
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.BooleanField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.CountField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DateField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.ImageField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.ListField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.LongTextField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.ShortTextField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.TimeField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.TriStateField
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 
 private val samplePresets = listOf("Default", "Medical", "Fitness", "Finance")
@@ -273,14 +273,14 @@ fun FormFieldComponentsPreview(
             ) {
                 OutlinedButton(
                     onClick = {
-                        shortText = "";
-                        longText = "";
+                        shortText = ""
+                        longText = ""
                         booleanValue = false
-                        selectedDate = "";
+                        selectedDate = ""
                         selectedTime = ""
-                        countValue = 0;
-                        listItems = listOf("");
-                        imageUri = null;
+                        countValue = 0
+                        listItems = listOf("")
+                        imageUri = null
                         triState = -1
                     },
                     modifier = Modifier.weight(1f),

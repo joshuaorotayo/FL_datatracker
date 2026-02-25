@@ -1,6 +1,5 @@
 package com.jorotayo.fl_datatracker.ui.screens.home
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -9,12 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -62,13 +61,16 @@ import com.jorotayo.fl_datatracker.navigation.NavCommand.Back
 import com.jorotayo.fl_datatracker.navigation.NavCommand.ToRoute
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
+import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
 // =============================================================================
 // PREVIEW
 // =============================================================================
+
 
 private val sampleRecords = listOf(
     DataRecord(
@@ -97,11 +99,12 @@ private val sampleRecords = listOf(
     ),
 )
 
+
 @DefaultPreviews
 @Composable
 fun PreviewHomeScreen() {
     FL_DatatrackerThemeNew {
-        Surface(modifier = Modifier.fillMaxSize()) { // ← add Surface + fillMaxSize
+        Surface(modifier = Modifier.fillMaxSize()) {
             HomeScreenView(
                 state = HomeState(
                     records = sampleRecords,
@@ -113,28 +116,33 @@ fun PreviewHomeScreen() {
     }
 }
 
+
 @DefaultPreviews
 @Composable
 fun PreviewHomeScreenEmpty() {
     FL_DatatrackerThemeNew {
-        Surface(modifier = Modifier.fillMaxSize()) { // ← add Surface + fillMaxSize
+        Surface(modifier = Modifier.fillMaxSize()) {
             HomeScreenView(state = HomeState(showDeleteDialog = true))
         }
     }
 }
 
+
 // =============================================================================
 // HOME SCREEN — ViewModel entry point
 // =============================================================================
+
 
 @Composable
 fun HomeScreen() {
     val viewModel = hiltViewModel<HomeScreenViewModel>()
     val state = viewModel.state.collectAsState()
 
+
     val navController = rememberNavController()
     val navigationManager = hiltViewModel<HomeScreenViewModel>().navigationManager
     // or inject via a wrapper — see below
+
 
     LaunchedEffect(Unit) {
         navigationManager.commands.collect { command ->
@@ -151,9 +159,11 @@ fun HomeScreen() {
     )
 }
 
+
 // =============================================================================
 // HOME SCREEN VIEW
 // =============================================================================
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -165,6 +175,7 @@ fun HomeScreenView(
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
 
     LaunchedEffect(state.isSearchActive) {
         if (state.isSearchActive) focusRequester.requestFocus()
@@ -211,6 +222,7 @@ fun HomeScreenView(
 // =============================================================================
 // RECORD LIST — self-contained LazyColumn with header as first item
 // =============================================================================
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -273,13 +285,15 @@ private fun HomeHeader(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-            .padding(top = 20.dp)
+            .systemBarsPadding()
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         if (!state.isSearchActive) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = spacingMedium),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -438,6 +452,7 @@ private fun RecordCard(
                 }
             }
 
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = record.title.ifBlank { "Untitled Record" },
@@ -455,6 +470,7 @@ private fun RecordCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+
 
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 IconButton(onClick = onEdit, modifier = Modifier.size(36.dp)) {
@@ -478,9 +494,11 @@ private fun RecordCard(
     }
 }
 
+
 // =============================================================================
 // EMPTY STATE
 // =============================================================================
+
 
 @Composable
 private fun EmptyHomeContent(isFiltering: Boolean) {
@@ -511,11 +529,13 @@ private fun EmptyHomeContent(isFiltering: Boolean) {
                 }
             }
 
+
             Text(
                 text = if (isFiltering) "No matching records" else "No records yet",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
+
 
             Text(
                 text = if (isFiltering) {
@@ -530,9 +550,11 @@ private fun EmptyHomeContent(isFiltering: Boolean) {
     }
 }
 
+
 // =============================================================================
 // DATE HELPERS
 // =============================================================================
+
 
 private fun formatDateHeader(timestamp: Long): String {
     val now = System.currentTimeMillis()
@@ -545,6 +567,7 @@ private fun formatDateHeader(timestamp: Long): String {
         else -> SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).format(Date(timestamp))
     }
 }
+
 
 private fun formatTime(timestamp: Long): String =
     SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(timestamp))

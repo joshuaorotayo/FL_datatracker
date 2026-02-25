@@ -12,6 +12,8 @@ import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldUi
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.FieldUpdate
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.toDataField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.toDataFieldUi
+import com.jorotayo.fl_datatracker.ui.util.components.toasts.AppToastData
+import com.jorotayo.fl_datatracker.ui.util.components.toasts.ToastMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,6 +49,7 @@ class DataFormViewModel @Inject constructor(
             DataFormEvent.AddField -> onAddField()
             DataFormEvent.ConfirmDeleteField -> onConfirmDeleteField()
             DataFormEvent.DismissDeleteDialog -> onDismissDeleteDialog()
+            DataFormEvent.DismissToast -> onDismissToast()
         }
     }
 
@@ -101,8 +104,7 @@ class DataFormViewModel @Inject constructor(
                 val presetId = _state.value.selectedPreset?.presetId ?: 0L
                 val domainField = updated.toDataField(presetId)
 
-                val existingDomainFields = _state.value.fields.map { it.toDataField(presetId) }
-                saveField(domainField, existingDomainFields)
+                saveField(domainField)
             } catch (e: Exception) {
                 // Rollback on error
                 _state.update { s ->
@@ -148,20 +150,47 @@ class DataFormViewModel @Inject constructor(
 
     private fun onSaveField(event: DataFormEvent.SaveField) {
         viewModelScope.launch {
-            try {
-                // ✅ FIX: Convert DataFieldUi to DataField (ObjectBox entity)
-                val presetId = _state.value.selectedPreset?.presetId ?: 0L
-                val domainField = event.field.toDataField(presetId)
-
-                val existingDomainFields = _state.value.fields.map { it.toDataField(presetId) }
-                saveField(domainField, existingDomainFields)
-
-                loadFieldsForPreset(presetId)
-            } catch (e: Exception) {
-                _state.update { it.copy(errorMessage = e.message) }
+            val presetId = _state.value.selectedPreset?.presetId ?: run {
+                _state.update {
+                    it.copy(
+                        toast = AppToastData(
+                            message = "No preset selected.",
+                            mode = ToastMode.ERROR
+                        )
+                    )
+                }
+                return@launch
             }
+
+            // Convert with the correct presetId
+            val domainField = event.field.toDataField(presetId)
+
+            // Use case returns Result — handle it directly, don't rely on try/catch
+            saveField(domainField)
+                .onSuccess {
+                    loadFieldsForPreset(presetId)
+                    _state.update {
+                        it.copy(
+                            toast = AppToastData(
+                                message = "\"${event.field.name}\" field created.",
+                                mode = ToastMode.INFO
+                            )
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            toast = AppToastData(
+                                message = error.message ?: "Failed to save field.",
+                                mode = ToastMode.ERROR
+                            )
+                        )
+                    }
+                }
         }
     }
+
 
     // ─────────────────────────────────────────────────────────────────────────
     // Helpers
@@ -209,6 +238,10 @@ class DataFormViewModel @Inject constructor(
                 _state.update { it.copy(errorMessage = e.message) }
             }
         }
+    }
+
+    private fun onDismissToast() {
+        _state.update { it.copy(toast = null) }
     }
 }
 

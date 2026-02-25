@@ -6,24 +6,24 @@ import com.jorotayo.fl_datatracker.data.repository.DataFieldRepository
 class SaveFieldUseCase(
     private val repository: DataFieldRepository
 ) {
-    /**
-     * Validates the field has a non-blank name and a unique name within the preset,
-     * then saves. Returns the field id on success.
-     */
-    operator fun invoke(field: DataField, existingFields: List<DataField>): Result<Long> {
+    operator fun invoke(field: DataField): Result<Long> {
         if (field.fieldName.isBlank()) {
             return Result.failure(IllegalArgumentException("Field name cannot be blank."))
         }
-        val isDuplicate = existingFields
-            .filter { it.dataFieldId != field.dataFieldId }
-            .any { it.fieldName.equals(field.fieldName.trim(), ignoreCase = true) }
 
-        if (isDuplicate) {
+        if (repository.fieldNameExistsInPreset(
+                name = field.fieldName,
+                presetId = field.presetId,
+                excludeId = field.dataFieldId
+            )
+        ) {
             return Result.failure(
                 IllegalArgumentException("A field named \"${field.fieldName}\" already exists in this preset.")
             )
         }
-        val id = repository.saveField(field.copy(fieldName = field.fieldName.trim()))
-        return Result.success(id)
+
+        return Result.success(
+            repository.saveField(field.copy(fieldName = field.fieldName.trim()))
+        )
     }
 }
