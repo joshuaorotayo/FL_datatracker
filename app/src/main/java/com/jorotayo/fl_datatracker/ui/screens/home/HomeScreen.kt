@@ -106,7 +106,7 @@ fun PreviewHomeScreen() {
     FL_DatatrackerThemeNew {
         Surface(modifier = Modifier.fillMaxSize()) {
             HomeScreenView(
-                state = HomeState(
+                state = HomeScreenState(
                     records = sampleRecords,
                     filteredRecords = sampleRecords,
                     showDeleteDialog = true
@@ -122,7 +122,7 @@ fun PreviewHomeScreen() {
 fun PreviewHomeScreenEmpty() {
     FL_DatatrackerThemeNew {
         Surface(modifier = Modifier.fillMaxSize()) {
-            HomeScreenView(state = HomeState(showDeleteDialog = true))
+            HomeScreenView(state = HomeScreenState(showDeleteDialog = true))
         }
     }
 }
@@ -168,9 +168,8 @@ fun HomeScreen() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreenView(
-    state: HomeState,
-    onEvent: (HomeEvent) -> Unit = {},
-    onNavigateToEntry: (presetId: Long) -> Unit = {},
+    state: HomeScreenState,
+    onEvent: (HomeEvent) -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -208,7 +207,7 @@ fun HomeScreenView(
         }
 
         ExtendedFloatingActionButton(
-            onClick = { onNavigateToEntry(0L) },
+            onClick = { onEvent(HomeEvent.NavigateToEntry()) },
             icon = { Icon(Icons.Default.Add, contentDescription = null) },
             text = { Text("New Entry", style = MaterialTheme.typography.labelLarge) },
             containerColor = MaterialTheme.colorScheme.primary,
@@ -227,7 +226,7 @@ fun HomeScreenView(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun RecordList(
-    state: HomeState,
+    state: HomeScreenState,
     focusRequester: FocusRequester,
     onEvent: (HomeEvent) -> Unit,
     onKeyboardDone: () -> Unit
@@ -276,7 +275,7 @@ private fun RecordList(
 
 @Composable
 private fun HomeHeader(
-    state: HomeState,
+    state: HomeScreenState,
     focusRequester: FocusRequester,
     onEvent: (HomeEvent) -> Unit,
     onKeyboardDone: () -> Unit
@@ -284,7 +283,7 @@ private fun HomeHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = spacingMedium)
             .systemBarsPadding()
     ) {
         Spacer(modifier = Modifier.height(8.dp))
@@ -313,27 +312,29 @@ private fun HomeHeader(
                         )
                     }
                 }
-
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) { onEvent(HomeEvent.ToggleSearch) }
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Open search",
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                if (state.records.isNotEmpty()) {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { onEvent(HomeEvent.ToggleSearch) }
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Open search",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
+
         } else {
             Column {
                 OutlinedTextField(

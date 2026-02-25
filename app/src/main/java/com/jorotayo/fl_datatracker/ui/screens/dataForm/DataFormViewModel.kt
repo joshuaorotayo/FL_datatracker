@@ -88,7 +88,7 @@ class DataFormViewModel @Inject constructor(
 
     /**
      * Single handler for all field property edits.
-     * Applies [event.update] to the matching field in-place and persists via [saveField].
+     * Applies [DataFormEvent.UpdateField] to the matching field in-place and persists via [saveField].
      */
     private fun onUpdateField(event: DataFormEvent.UpdateField) {
         val updated = applyUpdate(event.field, event.update)
@@ -244,28 +244,3 @@ class DataFormViewModel @Inject constructor(
         _state.update { it.copy(toast = null) }
     }
 }
-
-/**
- * ✅ ALL FIXES APPLIED:
- *
- * 1. Line 63 (SavePreset):
- *    - Passes just name (adjust if your use case needs 'existing' parameter)
- *
- * 2. Line 74 (DeletePreset):
- *    - Passes event.preset.presetId (Long) instead of event.preset (Preset)
- *
- * 3. Lines 96, 143 (SaveField):
- *    - Converts DataFieldUi to DataField using .toDataField(presetId)
- *    - Properly passes presetId from current state
- *
- * 4. Line 190 (GetFields):
- *    - Gets List<DataField> from use case
- *    - Converts to List<DataFieldUi> using .map { it.toDataFieldUi() }
- *    - Updates state with converted list
- *
- * NEXT STEPS:
- * 1. Add DataFieldUiAdapter.kt to your project
- * 2. Replace your ViewModel with this fixed version
- * 3. Verify your use case signatures match the comments
- * 4. Adjust if your SaveFieldUseCase needs existingFields parameter
- */

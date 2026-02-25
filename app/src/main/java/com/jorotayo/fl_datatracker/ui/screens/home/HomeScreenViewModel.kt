@@ -8,6 +8,8 @@ import com.jorotayo.fl_datatracker.domain.usecase.GetRecordEntriesUseCase
 import com.jorotayo.fl_datatracker.navigation.NavCommand
 import com.jorotayo.fl_datatracker.navigation.NavigationManager
 import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.ui.util.components.toasts.AppToastData
+import com.jorotayo.fl_datatracker.ui.util.components.toasts.ToastMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +27,7 @@ class HomeScreenViewModel @Inject constructor(
     private val deleteRecord: DeleteRecordUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeState(showDeleteDialog = true))
+    private val _state = MutableStateFlow(HomeScreenState(showDeleteDialog = true))
     val state = _state.asStateFlow()
 
     init {
@@ -42,6 +44,7 @@ class HomeScreenViewModel @Inject constructor(
             HomeEvent.ClearSearch -> onClearSearch()
             HomeEvent.ToggleSearch -> onToggleSearch()
             HomeEvent.DismissDeleteDialog -> onDismissDeleteDialog()
+            HomeEvent.DismissToast -> onDismissToast()
         }
     }
 
@@ -76,12 +79,23 @@ class HomeScreenViewModel @Inject constructor(
      * entry screen when no preset is specified.
      */
     private fun onNavigateToEntry(event: HomeEvent.NavigateToEntry) {
-        navigationManager.navigate(NavCommand.ToRoute(Screen.DataEntry.route(event.presetId)))
+        if (event.presetId == -1L) {
+            _state.update {
+                it.copy(
+                    toast = AppToastData(
+                        message = "There",
+                        mode = ToastMode.ERROR
+                    )
+                )
+            }
+        } else {
+            navigationManager.navigate(NavCommand.ToRoute(Screen.DataEntry.route(event.presetId)))
+        }
     }
 
     /**
-     * Filters [HomeState.records] against [event.query] (case-insensitive title
-     * match) and updates [HomeState.filteredRecords] on every keystroke.
+     * Filters [HomeScreenState.records] against [HomeScreenState.searchQuery] (case-insensitive title
+     * match) and updates [HomeScreenState.filteredRecords] on every keystroke.
      */
     private fun onSearchQueryChanged(event: HomeEvent.SearchQueryChanged) {
         _state.update { s ->
@@ -151,5 +165,10 @@ class HomeScreenViewModel @Inject constructor(
                 _state.update { it.copy(isLoading = false, error = e.message) }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun onDismissToast() {
+        _state.update { it.copy(toast = null) }
+
     }
 }
