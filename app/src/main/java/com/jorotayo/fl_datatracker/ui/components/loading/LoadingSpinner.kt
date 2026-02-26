@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.util.components.loading
+package com.jorotayo.fl_datatracker.ui.components.loading
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing

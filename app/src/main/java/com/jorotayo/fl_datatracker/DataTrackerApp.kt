@@ -12,7 +12,6 @@ import com.jorotayo.fl_datatracker.data.repository.PresetRepository
 import com.jorotayo.fl_datatracker.data.repository.RecordRepository
 import dagger.hilt.android.HiltAndroidApp
 import io.objectbox.BoxStore
-import io.objectbox.android.AndroidObjectBrowser
 
 @HiltAndroidApp
 class DataTrackerApp : Application() {
@@ -38,9 +37,6 @@ class DataTrackerApp : Application() {
                 ReLinker.loadLibrary(context, library)
             }
             .build()
-        if (BuildConfig.DEBUG) {
-            AndroidObjectBrowser(store).start(this)
-        }
 
         seedDefaultPreset()
     }

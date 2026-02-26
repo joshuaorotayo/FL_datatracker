@@ -26,10 +26,10 @@ import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.NavCommand
 import com.jorotayo.fl_datatracker.navigation.NavigationManager
 import com.jorotayo.fl_datatracker.navigation.Screen
+import com.jorotayo.fl_datatracker.ui.components.FloatingBottomBar
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 import com.jorotayo.fl_datatracker.ui.theme.ThemeViewModel
 import com.jorotayo.fl_datatracker.ui.util.SharedSettingService
-import com.jorotayo.fl_datatracker.ui.util.components.FloatingBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

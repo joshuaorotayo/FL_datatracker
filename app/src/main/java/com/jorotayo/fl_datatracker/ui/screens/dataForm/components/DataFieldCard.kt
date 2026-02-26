@@ -1,5 +1,6 @@
 package com.jorotayo.fl_datatracker.ui.screens.dataForm.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,10 +50,12 @@ fun DataFieldCard(
     onToggleActive: () -> Unit,
     onHintUpdate: (String) -> Unit = {},
     onBooleanOptionsUpdate: (List<String>) -> Unit = {},
-    onTristateOptionsUpdate: (List<String>) -> Unit = {}
+    onTristateOptionsUpdate: (List<String>) -> Unit = {},
+    onTypeChange: (FieldType) -> Unit = {}
 ) {
     var isActive by remember { mutableStateOf(field.isActive) }
     var showHintDialog by remember { mutableStateOf(false) }
+    var showTypeDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -85,11 +88,12 @@ fun DataFieldCard(
                     Surface(
                         shape = MaterialTheme.shapes.small,
                         color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.clickable { showTypeDialog = true }
                     ) {
                         Icon(
                             imageVector = field.type.icon,
-                            contentDescription = null,
+                            contentDescription = "Change field type",
                             modifier = Modifier
                                 .padding(spacingXSmall)
                                 .size(spacingMediumLarge)
@@ -167,13 +171,24 @@ fun DataFieldCard(
         }
     }
 
+    if (showTypeDialog) {
+        ChangeFieldTypeDialog(
+            currentType = field.type,
+            onDismiss = { showTypeDialog = false },
+            onTypeSelected = { newType ->
+                onTypeChange(newType)
+                showTypeDialog = false
+            }
+        )
+    }
+
     if (showHintDialog) {
         when (field.type) {
             FieldType.BOOLEAN -> BooleanOptionsDialog(
                 initialOptions = field.booleanOptions,
                 onDismiss = { showHintDialog = false },
                 onSave = { options ->
-                    onBooleanOptionsUpdate(options);
+                    onBooleanOptionsUpdate(options)
                     showHintDialog = false
                 }
             )
@@ -182,7 +197,7 @@ fun DataFieldCard(
                 initialOptions = field.tristateOptions,
                 onDismiss = { showHintDialog = false },
                 onSave = { options ->
-                    onTristateOptionsUpdate(options);
+                    onTristateOptionsUpdate(options)
                     showHintDialog = false
                 }
             )
@@ -192,7 +207,7 @@ fun DataFieldCard(
                 fieldName = field.name,
                 onDismiss = { showHintDialog = false },
                 onSave = { newHint ->
-                    onHintUpdate(newHint);
+                    onHintUpdate(newHint)
                     showHintDialog = false
                 }
             )

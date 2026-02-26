@@ -12,5 +12,3 @@ data class Preset(
     @Unique(onConflict = ConflictStrategy.FAIL)
     var presetName: String
 )
-
-class InvalidPresetException(message: String) : Exception(message)

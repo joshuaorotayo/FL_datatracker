@@ -11,13 +11,15 @@ sealed class DataFormEvent {
     data class DeletePreset(val preset: Preset) : DataFormEvent()
 
     // Field management
-    data object AddField : DataFormEvent()
+    object AddField : DataFormEvent()
     data class UpdateField(val field: DataFieldUi, val update: FieldUpdate) : DataFormEvent()
 
     data class RequestDeleteField(val field: DataFieldUi) : DataFormEvent()
-    data object ConfirmDeleteField : DataFormEvent()
+    object ConfirmDeleteField : DataFormEvent()
     data object DismissDeleteDialog : DataFormEvent()
 
     data class SaveField(val field: DataFieldUi) : DataFormEvent()
-    data object DismissToast : DataFormEvent()
+    object DismissToast : DataFormEvent()
+    data class ConfirmDeletePreset(val preset: Preset) : DataFormEvent()
+    object DismissDeletePresetDialog : DataFormEvent()
 }

@@ -8,12 +8,24 @@ import com.jorotayo.fl_datatracker.domain.usecase.GetFieldsForPresetUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetPresetsUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.SaveFieldUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.SavePresetUseCase
+import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
+import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.AddField
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.ConfirmDeleteField
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.ConfirmDeletePreset
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.DeletePreset
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.DismissDeleteDialog
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.DismissDeletePresetDialog
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.DismissToast
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.RequestDeleteField
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.SaveField
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.SavePreset
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.SelectPreset
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.UpdateField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldUi
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.FieldUpdate
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.toDataField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.toDataFieldUi
-import com.jorotayo.fl_datatracker.ui.util.components.toasts.AppToastData
-import com.jorotayo.fl_datatracker.ui.util.components.toasts.ToastMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,16 +52,18 @@ class DataFormViewModel @Inject constructor(
 
     fun onEvent(event: DataFormEvent) {
         when (event) {
-            is DataFormEvent.SelectPreset -> onSelectPreset(event)
-            is DataFormEvent.SavePreset -> onSavePreset(event)
-            is DataFormEvent.DeletePreset -> onDeletePreset(event)
-            is DataFormEvent.UpdateField -> onUpdateField(event)
-            is DataFormEvent.RequestDeleteField -> onRequestDeleteField(event)
-            is DataFormEvent.SaveField -> onSaveField(event)
-            DataFormEvent.AddField -> onAddField()
-            DataFormEvent.ConfirmDeleteField -> onConfirmDeleteField()
-            DataFormEvent.DismissDeleteDialog -> onDismissDeleteDialog()
-            DataFormEvent.DismissToast -> onDismissToast()
+            is SelectPreset -> onSelectPreset(event)
+            is SavePreset -> onSavePreset(event)
+            is DeletePreset -> onDeletePreset(event)
+            is ConfirmDeletePreset -> onConfirmDeletePreset(event)
+            is UpdateField -> onUpdateField(event)
+            is RequestDeleteField -> onRequestDeleteField(event)
+            is SaveField -> onSaveField(event)
+            AddField -> onAddField()
+            ConfirmDeleteField -> onConfirmDeleteField()
+            DismissDeleteDialog -> onDismissDeleteDialog()
+            DismissDeletePresetDialog -> onDismissDeletePresetDialog()
+            DismissToast -> onDismissToast()
         }
     }
 
@@ -57,17 +71,42 @@ class DataFormViewModel @Inject constructor(
     // Handlers
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun onSelectPreset(event: DataFormEvent.SelectPreset) {
+    private fun onSelectPreset(event: SelectPreset) {
         _state.update { it.copy(selectedPreset = event.preset) }
         loadFieldsForPreset(event.preset.presetId)
     }
 
-    private fun onSavePreset(event: DataFormEvent.SavePreset) {
+    private fun onSavePreset(event: SavePreset) {
         viewModelScope.launch {
             try {
                 val presets = getPresets()
                 savePreset(event.name, presets)
+                val updated = getPresets()
+                val newPreset = updated.firstOrNull { it.presetName == event.name }
+                _state.update { s ->
+                    s.copy(
+                        presets = updated,
+                        selectedPreset = newPreset ?: s.selectedPreset,
+                        fields = emptyList() // new preset always has no fields
+                    )
+                }
+            } catch (e: Exception) {
+                _state.update { it.copy(errorMessage = e.message) }
+            }
+        }
+    }
 
+    private fun onDeletePreset(event: DeletePreset) {
+        _state.update {
+            it.copy(presetToDelete = event.preset, showDeletePresetDialog = true)
+        }
+    }
+
+    private fun onConfirmDeletePreset(event: ConfirmDeletePreset) {
+        viewModelScope.launch {
+            try {
+                deletePreset(event.preset)
+                _state.update { it.copy(presetToDelete = null, showDeletePresetDialog = false) }
                 loadPresets()
             } catch (e: Exception) {
                 _state.update { it.copy(errorMessage = e.message) }
@@ -75,22 +114,15 @@ class DataFormViewModel @Inject constructor(
         }
     }
 
-    private fun onDeletePreset(event: DataFormEvent.DeletePreset) {
-        viewModelScope.launch {
-            try {
-                deletePreset(event.preset)
-                loadPresets()
-            } catch (e: Exception) {
-                _state.update { it.copy(errorMessage = e.message) }
-            }
-        }
+    private fun onDismissDeletePresetDialog() {
+        _state.update { it.copy(presetToDelete = null, showDeletePresetDialog = false) }
     }
 
     /**
      * Single handler for all field property edits.
      * Applies [DataFormEvent.UpdateField] to the matching field in-place and persists via [saveField].
      */
-    private fun onUpdateField(event: DataFormEvent.UpdateField) {
+    private fun onUpdateField(event: UpdateField) {
         val updated = applyUpdate(event.field, event.update)
 
         // Optimistic UI update
@@ -121,7 +153,7 @@ class DataFormViewModel @Inject constructor(
         // Navigate to field creation flow or show a dialog — wire to your nav here
     }
 
-    private fun onRequestDeleteField(event: DataFormEvent.RequestDeleteField) {
+    private fun onRequestDeleteField(event: RequestDeleteField) {
         _state.update { it.copy(fieldToDelete = event.field, showDeleteFieldDialog = true) }
     }
 
@@ -148,7 +180,7 @@ class DataFormViewModel @Inject constructor(
         _state.update { it.copy(fieldToDelete = null, showDeleteFieldDialog = false) }
     }
 
-    private fun onSaveField(event: DataFormEvent.SaveField) {
+    private fun onSaveField(event: SaveField) {
         viewModelScope.launch {
             val presetId = _state.value.selectedPreset?.presetId ?: run {
                 _state.update {
@@ -205,6 +237,7 @@ class DataFormViewModel @Inject constructor(
             is FieldUpdate.Hint -> field.copy(hint = update.value)
             is FieldUpdate.BooleanOptions -> field.copy(booleanOptions = update.options)
             is FieldUpdate.TristateOptions -> field.copy(tristateOptions = update.options)
+            is FieldUpdate.Type -> field.copy(type = update.type)
             FieldUpdate.ToggleActive -> field.copy(isActive = !field.isActive)
         }
 

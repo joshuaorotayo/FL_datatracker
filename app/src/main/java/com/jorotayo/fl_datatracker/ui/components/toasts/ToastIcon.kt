@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.util.components.toasts
+package com.jorotayo.fl_datatracker.ui.components.toasts
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector

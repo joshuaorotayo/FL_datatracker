@@ -4,12 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.usecase.DeleteRecordUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetAllRecordsUseCase
+import com.jorotayo.fl_datatracker.domain.usecase.GetFieldsForPresetUseCase
+import com.jorotayo.fl_datatracker.domain.usecase.GetPresetsUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetRecordEntriesUseCase
+import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
+import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.navigation.NavCommand
 import com.jorotayo.fl_datatracker.navigation.NavigationManager
 import com.jorotayo.fl_datatracker.navigation.Screen
-import com.jorotayo.fl_datatracker.ui.util.components.toasts.AppToastData
-import com.jorotayo.fl_datatracker.ui.util.components.toasts.ToastMode
+import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
+import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.ClearSearch
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.DeleteRecord
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.DismissDeleteDialog
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.DismissToast
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.NavigateToEntry
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.RequestDeleteRecord
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.SearchQueryChanged
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.SelectRecord
+import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.ToggleSearch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +37,10 @@ class HomeScreenViewModel @Inject constructor(
     val navigationManager: NavigationManager,
     private val getAllRecords: GetAllRecordsUseCase,
     private val getEntries: GetRecordEntriesUseCase,
-    private val deleteRecord: DeleteRecordUseCase
+    private val deleteRecord: DeleteRecordUseCase,
+    private val getFieldsForPreset: GetFieldsForPresetUseCase,
+    private val getPresets: GetPresetsUseCase,
+    private val userPreferenceStore: UserPreferenceStore
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeScreenState(showDeleteDialog = true))
@@ -32,31 +48,70 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         loadRecords()
+        observeCurrentPreset()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            is HomeEvent.DeleteRecord -> onDeleteRecord()
-            is HomeEvent.SelectRecord -> onSelectRecord(event)
-            is HomeEvent.NavigateToEntry -> onNavigateToEntry(event)
-            is HomeEvent.SearchQueryChanged -> onSearchQueryChanged(event)
-            is HomeEvent.RequestDeleteRecord -> onRequestDeleteRecord(event)
-            HomeEvent.ClearSearch -> onClearSearch()
-            HomeEvent.ToggleSearch -> onToggleSearch()
-            HomeEvent.DismissDeleteDialog -> onDismissDeleteDialog()
-            HomeEvent.DismissToast -> onDismissToast()
+            is DeleteRecord -> onDeleteRecord()
+            is SelectRecord -> onSelectRecord(event)
+            is NavigateToEntry -> onNavigateToEntry(event)
+            is SearchQueryChanged -> onSearchQueryChanged(event)
+            is RequestDeleteRecord -> onRequestDeleteRecord(event)
+            is ClearSearch -> onClearSearch()
+            is ToggleSearch -> onToggleSearch()
+            is DismissDeleteDialog -> onDismissDeleteDialog()
+            is DismissToast -> onDismissToast()
         }
     }
 
-    // ── Already implemented ───────────────────────────────────────────────────
+    private fun loadRecords() {
+        _state.update { it.copy(isLoading = true) }
+        getAllRecords.asFlow()
+            .onEach { records ->
+                _state.update { s ->
+                    s.copy(
+                        isLoading = false,
+                        records = records,
+                        filteredRecords = if (s.searchQuery.isBlank()) {
+                            records
+                        } else {
+                            records.filter {
+                                it.title.contains(s.searchQuery, ignoreCase = true)
+                            }
+                        }
+                    )
+                }
+            }
+            .catch { e ->
+                _state.update { it.copy(isLoading = false, error = e.message) }
+            }
+            .launchIn(viewModelScope)
+    }
 
+    private fun observeCurrentPreset() {
+        userPreferenceStore.getStringFlow(SettingsKeys.CURRENT_PRESET)
+            .onEach { savedId ->
+                val resolvedId = savedId.toLongOrNull()
+                    ?: getPresets().firstOrNull {
+                        it.presetName.equals(
+                            "default",
+                            ignoreCase = true
+                        )
+                    }?.presetId
+                    ?: getPresets().firstOrNull()?.presetId
+                    ?: -1L  // only reachable if the DB is completely empty
+                _state.update { it.copy(currentPresetId = resolvedId) }
+            }
+            .launchIn(viewModelScope)
+    }
     private fun onDeleteRecord() {
         deleteRecord.invoke(state.value.recordToDelete!!.recordId)
-        // Hide the confirmation dialog once the delete is committed
+        // Hide the confirmation dialog once delete is committed
         _state.update { it.copy(recordToDelete = null, showDeleteDialog = false) }
     }
 
-    private fun onSelectRecord(event: HomeEvent.SelectRecord) {
+    private fun onSelectRecord(event: SelectRecord) {
         navigationManager.navigate(NavCommand.ToRoute(Screen.DataEntry.route(event.record.recordId)))
     }
 
@@ -78,26 +133,41 @@ class HomeScreenViewModel @Inject constructor(
      * Navigates to a new blank entry for the given preset, or to the default
      * entry screen when no preset is specified.
      */
-    private fun onNavigateToEntry(event: HomeEvent.NavigateToEntry) {
-        if (event.presetId == -1L) {
+    private fun onNavigateToEntry(event: NavigateToEntry) {
+        val presetId = event.presetId
+            ?.takeIf { it != -1L }
+            ?: state.value.currentPresetId
+
+        val fields = getFieldsForPreset(presetId)
+
+        if (fields.isEmpty()) {
             _state.update {
                 it.copy(
                     toast = AppToastData(
-                        message = "There",
-                        mode = ToastMode.ERROR
+                        message = "\"${getPresetName(presetId)}\" has no data fields yet.",
+                        mode = ToastMode.WARNING,
+                        actionLabel = "Add fields →",
+                        onAction = {
+                            navigationManager.navigate(NavCommand.ToRoute(Screen.DataForm.route))
+                            onDismissToast()
+                        },
+                        durationMs = 6000L
                     )
                 )
             }
         } else {
-            navigationManager.navigate(NavCommand.ToRoute(Screen.DataEntry.route(event.presetId)))
+            navigationManager.navigate(NavCommand.ToRoute(Screen.DataEntry.route(presetId)))
         }
     }
+
+    private fun getPresetName(presetId: Long): String =
+        getPresets().firstOrNull { it.presetId == presetId }?.presetName ?: "This preset"
 
     /**
      * Filters [HomeScreenState.records] against [HomeScreenState.searchQuery] (case-insensitive title
      * match) and updates [HomeScreenState.filteredRecords] on every keystroke.
      */
-    private fun onSearchQueryChanged(event: HomeEvent.SearchQueryChanged) {
+    private fun onSearchQueryChanged(event: SearchQueryChanged) {
         _state.update { s ->
             s.copy(
                 searchQuery = event.query,
@@ -130,7 +200,7 @@ class HomeScreenViewModel @Inject constructor(
      * dialog. The actual deletion is deferred until [onDeleteRecord] is called
      * when the user confirms.
      */
-    private fun onRequestDeleteRecord(event: HomeEvent.RequestDeleteRecord) {
+    private fun onRequestDeleteRecord(event: RequestDeleteRecord) {
         _state.update { it.copy(recordToDelete = event.record, showDeleteDialog = true) }
     }
 
@@ -143,29 +213,6 @@ class HomeScreenViewModel @Inject constructor(
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
-    private fun loadRecords() {
-        _state.update { it.copy(isLoading = true) }
-        getAllRecords.asFlow()
-            .onEach { records ->
-                _state.update { s ->
-                    s.copy(
-                        isLoading = false,
-                        records = records,
-                        filteredRecords = if (s.searchQuery.isBlank()) {
-                            records
-                        } else {
-                            records.filter {
-                                it.title.contains(s.searchQuery, ignoreCase = true)
-                            }
-                        }
-                    )
-                }
-            }
-            .catch { e ->
-                _state.update { it.copy(isLoading = false, error = e.message) }
-            }
-            .launchIn(viewModelScope)
-    }
 
     private fun onDismissToast() {
         _state.update { it.copy(toast = null) }

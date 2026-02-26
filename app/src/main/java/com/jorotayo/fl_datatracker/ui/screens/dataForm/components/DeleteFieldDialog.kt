@@ -21,7 +21,7 @@ import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 
 @DefaultPreviews
 @Composable
-fun PreviewDataFormScreen() {
+fun PreviewDeleteFieldDialog() {
     FL_DatatrackerThemeNew {
         DeleteFieldDialog(
             fieldName = "Name",

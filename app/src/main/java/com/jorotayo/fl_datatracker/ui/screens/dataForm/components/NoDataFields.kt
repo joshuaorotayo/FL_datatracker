@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CreateNewFolder
@@ -68,8 +68,7 @@ fun NoDataFieldScreen(
     Card(
         modifier = modifier
             .fillMaxSize()
-            .padding(Dimensions.spacingMedium)
-            .systemBarsPadding(),
+            .padding(Dimensions.spacingMedium),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
@@ -148,9 +147,7 @@ fun NoDataFieldScreen(
                 )
             }
 
-
             Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
-
 
             // Optional: Quick tips
             Divider(
@@ -158,26 +155,32 @@ fun NoDataFieldScreen(
                 modifier = Modifier.padding(vertical = Dimensions.spacingSmall)
             )
 
-            Column(
+            LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(Dimensions.spacingXSmall),
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "Quick Tips:",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                item {
 
-                QuickTipItem(
-                    text = "Choose from text, date, time, boolean, and more field types"
-                )
-                QuickTipItem(
-                    text = "Add custom hints to guide data entry"
-                )
-                QuickTipItem(
-                    text = "Toggle fields active or inactive anytime"
-                )
+                    Text(
+                        text = "Quick Tips:",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                item {
+                    Column {
+                        QuickTipItem(
+                            text = "Choose from text, date, time, boolean, and more field types"
+                        )
+                        QuickTipItem(
+                            text = "Add custom hints to guide data entry"
+                        )
+                        QuickTipItem(
+                            text = "Toggle fields active or inactive anytime"
+                        )
+                    }
+                }
             }
         }
     }

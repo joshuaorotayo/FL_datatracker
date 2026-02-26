@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.util.components
+package com.jorotayo.fl_datatracker.ui.components
 
 
 import androidx.compose.foundation.background

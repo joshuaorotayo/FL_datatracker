@@ -1,4 +1,4 @@
-package com.jorotayo.fl_datatracker.ui.util.components.toasts
+package com.jorotayo.fl_datatracker.ui.components.toasts
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
