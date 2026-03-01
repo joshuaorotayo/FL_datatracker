@@ -8,6 +8,8 @@ import com.jorotayo.fl_datatracker.domain.usecase.GetFieldsForPresetUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetPresetsUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.SaveFieldUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.SavePresetUseCase
+import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
+import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.AddField
@@ -40,7 +42,8 @@ class DataFormViewModel @Inject constructor(
     private val deletePreset: DeletePresetUseCase,
     private val getFields: GetFieldsForPresetUseCase,
     private val saveField: SaveFieldUseCase,
-    private val deleteField: DeleteFieldUseCase
+    private val deleteField: DeleteFieldUseCase,
+    private val preferenceStore: UserPreferenceStore   // ← injected to persist selection
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DataFormState())
@@ -68,12 +71,19 @@ class DataFormViewModel @Inject constructor(
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Handlers
+    // Preset selection — persists to DataStore so HomeScreen can read it
     // ─────────────────────────────────────────────────────────────────────────
 
     private fun onSelectPreset(event: SelectPreset) {
         _state.update { it.copy(selectedPreset = event.preset) }
         loadFieldsForPreset(event.preset.presetId)
+
+        // Persist the selection so GetSelectedPresetUseCase can read it
+        viewModelScope.launch {
+            preferenceStore.setString(
+                SettingsKeys.CURRENT_PRESET to event.preset.presetId.toString()
+            )
+        }
     }
 
     private fun onSavePreset(event: SavePreset) {
@@ -83,11 +93,19 @@ class DataFormViewModel @Inject constructor(
                 savePreset(event.name, presets)
                 val updated = getPresets()
                 val newPreset = updated.firstOrNull { it.presetName == event.name }
+
+                // Persist the newly created preset as the current selection
+                newPreset?.let {
+                    preferenceStore.setString(
+                        SettingsKeys.CURRENT_PRESET to it.presetId.toString()
+                    )
+                }
+
                 _state.update { s ->
                     s.copy(
                         presets = updated,
                         selectedPreset = newPreset ?: s.selectedPreset,
-                        fields = emptyList() // new preset always has no fields
+                        fields = emptyList()
                     )
                 }
             } catch (e: Exception) {
@@ -107,6 +125,8 @@ class DataFormViewModel @Inject constructor(
             try {
                 deletePreset(event.preset)
                 _state.update { it.copy(presetToDelete = null, showDeletePresetDialog = false) }
+                // loadPresets will re-select the first available preset (Default)
+                // and persist it, so CURRENT_PRESET stays valid after deletion
                 loadPresets()
             } catch (e: Exception) {
                 _state.update { it.copy(errorMessage = e.message) }
@@ -118,27 +138,16 @@ class DataFormViewModel @Inject constructor(
         _state.update { it.copy(presetToDelete = null, showDeletePresetDialog = false) }
     }
 
-    /**
-     * Single handler for all field property edits.
-     * Applies [DataFormEvent.UpdateField] to the matching field in-place and persists via [saveField].
-     */
     private fun onUpdateField(event: UpdateField) {
         val updated = applyUpdate(event.field, event.update)
-
-        // Optimistic UI update
         _state.update { s ->
             s.copy(fields = s.fields.map { if (it.id == updated.id) updated else it })
         }
-
         viewModelScope.launch {
             try {
-                // ✅ FIX: Convert DataFieldUi to DataField (ObjectBox entity)
                 val presetId = _state.value.selectedPreset?.presetId ?: 0L
-                val domainField = updated.toDataField(presetId)
-
-                saveField(domainField)
+                saveField(updated.toDataField(presetId))
             } catch (e: Exception) {
-                // Rollback on error
                 _state.update { s ->
                     s.copy(
                         fields = s.fields.map { if (it.id == event.field.id) event.field else it },
@@ -150,7 +159,7 @@ class DataFormViewModel @Inject constructor(
     }
 
     private fun onAddField() {
-        // Navigate to field creation flow or show a dialog — wire to your nav here
+        // Wire to nav or sheet here
     }
 
     private fun onRequestDeleteField(event: RequestDeleteField) {
@@ -193,12 +202,7 @@ class DataFormViewModel @Inject constructor(
                 }
                 return@launch
             }
-
-            // Convert with the correct presetId
-            val domainField = event.field.toDataField(presetId)
-
-            // Use case returns Result — handle it directly, don't rely on try/catch
-            saveField(domainField)
+            saveField(event.field.toDataField(presetId))
                 .onSuccess {
                     loadFieldsForPreset(presetId)
                     _state.update {
@@ -223,15 +227,10 @@ class DataFormViewModel @Inject constructor(
         }
     }
 
-
     // ─────────────────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Applies a [FieldUpdate] to a [DataFieldUi] and returns the updated copy.
-     * Keeping this pure makes it easy to test independently.
-     */
     private fun applyUpdate(field: DataFieldUi, update: FieldUpdate): DataFieldUi =
         when (update) {
             is FieldUpdate.Hint -> field.copy(hint = update.value)
@@ -241,19 +240,38 @@ class DataFormViewModel @Inject constructor(
             FieldUpdate.ToggleActive -> field.copy(isActive = !field.isActive)
         }
 
+    /**
+     * Loads all presets, restores or seeds the current selection, and persists
+     * the resolved id back to DataStore so it is always valid after this call.
+     */
     private fun loadPresets() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             try {
                 val presets = getPresets()
+                val currentPresetId =
+                    preferenceStore.getString(SettingsKeys.CURRENT_PRESET).toLongOrNull()
+
+                // Prefer the stored selection; fall back to the first preset (Default)
+                val selected = presets.firstOrNull { it.presetId == currentPresetId }
+                    ?: presets.firstOrNull()
+
+                // Persist whichever preset we resolved so the store is always fresh
+                selected?.let {
+                    preferenceStore.setString(
+                        SettingsKeys.CURRENT_PRESET to it.presetId.toString()
+                    )
+                }
+
                 _state.update { s ->
                     s.copy(
                         isLoading = false,
                         presets = presets,
-                        selectedPreset = s.selectedPreset ?: presets.firstOrNull()
+                        selectedPreset = selected
                     )
                 }
-                _state.value.selectedPreset?.let { loadFieldsForPreset(it.presetId) }
+
+                selected?.let { loadFieldsForPreset(it.presetId) }
             } catch (e: Exception) {
                 _state.update { it.copy(isLoading = false, errorMessage = e.message) }
             }
@@ -263,9 +281,7 @@ class DataFormViewModel @Inject constructor(
     private fun loadFieldsForPreset(presetId: Long) {
         viewModelScope.launch {
             try {
-                val domainFields = getFields(presetId)
-                val uiFields = domainFields.map { it.toDataFieldUi() }
-
+                val uiFields = getFields(presetId).map { it.toDataFieldUi() }
                 _state.update { it.copy(fields = uiFields) }
             } catch (e: Exception) {
                 _state.update { it.copy(errorMessage = e.message) }

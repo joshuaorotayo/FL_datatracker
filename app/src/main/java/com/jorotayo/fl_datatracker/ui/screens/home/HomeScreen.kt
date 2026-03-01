@@ -58,7 +58,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.jorotayo.fl_datatracker.data.model.DataRecord
 import com.jorotayo.fl_datatracker.navigation.NavCommand.Back
 import com.jorotayo.fl_datatracker.navigation.NavCommand.ToRoute
@@ -132,18 +132,16 @@ fun PreviewHomeScreenEmpty() {
 // =============================================================================
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
+    // Single ViewModel instance — reuse it for both state and navigationManager.
+    // Never call hiltViewModel() twice in the same composable; each call can
+    // return a different instance, which doubles up the observeAllRecords() flow
+    // and causes lag that compounds on every navigation to this screen.
     val viewModel = hiltViewModel<HomeScreenViewModel>()
     val state = viewModel.state.collectAsState()
 
-
-    val navController = rememberNavController()
-    val navigationManager = hiltViewModel<HomeScreenViewModel>().navigationManager
-    // or inject via a wrapper — see below
-
-
     LaunchedEffect(Unit) {
-        navigationManager.commands.collect { command ->
+        viewModel.navigationManager.commands.collect { command ->
             when (command) {
                 is ToRoute -> navController.navigate(command.route)
                 is Back -> navController.popBackStack()
@@ -153,7 +151,7 @@ fun HomeScreen() {
 
     HomeScreenView(
         state = state.value,
-        onEvent = viewModel::onEvent,
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -442,7 +440,6 @@ private fun RecordCard(
                 }
             }
 
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = record.title.ifBlank { "Untitled Record" },
@@ -521,13 +518,11 @@ private fun EmptyHomeContent(
                 }
             }
 
-
             Text(
                 text = if (isFiltering) "No matching records" else "No records yet",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
 
             Text(
                 text = if (isFiltering) {

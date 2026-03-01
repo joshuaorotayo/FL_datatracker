@@ -13,6 +13,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.jorotayo.fl_datatracker.navigation.Screen.DataEntry.editRoute
+import com.jorotayo.fl_datatracker.navigation.Screen.DataEntry.newRoute
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryScreen
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormScreen
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeScreen
 import com.jorotayo.fl_datatracker.ui.screens.onboarding.OnboardingScreen
@@ -20,6 +23,7 @@ import com.jorotayo.fl_datatracker.ui.screens.onboarding.OnboardingScreen
 // =============================================================================
 // ROUTES
 // =============================================================================
+
 sealed class Screen(
     val route: String,
     val showBottomBar: Boolean = false,
@@ -47,19 +51,25 @@ sealed class Screen(
         title = "Home"
     )
 
+    /**
+     * Two entry points share one destination:
+     *
+     *  • New record  → [newRoute]  — no args; DataEntryViewModel reads preset
+     *                                from UserPreferenceStore automatically.
+     *  • Edit record → [editRoute] — carries recordId; ViewModel loads the
+     *                                record then looks up its preset.
+     */
     object DataEntry : Screen(
-        "dataEntry?recordId={recordId}",
+        route = "dataEntry?recordId={recordId}",
         showBottomBar = true,
         icon = Icons.Default.EditNote,
         title = "Data Entry"
     ) {
-        fun route(recordId: Long? = null): String {
-            return if (recordId != null) {
-                "dataEntry?recordId=$recordId"
-            } else {
-                "dataEntry"
-            }
-        }
+        /** Navigate here to create a new record (preset comes from prefs). */
+        fun newRoute(): String = "dataEntry"
+
+        /** Navigate here to view/edit an existing record. */
+        fun editRoute(recordId: Long): String = "dataEntry?recordId=$recordId"
     }
 
     object Settings : Screen(
@@ -90,7 +100,7 @@ fun MainNavGraph(
         }
 
         composable(route = Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController)
         }
 
         composable(route = Screen.DataForm.route) {
@@ -102,16 +112,17 @@ fun MainNavGraph(
             arguments = listOf(
                 navArgument("recordId") {
                     type = NavType.LongType
-                    defaultValue = -1L
+                    defaultValue = -1L   // -1 = new record mode
                 }
             )
         ) { backStackEntry ->
+            val recordId = backStackEntry.arguments?.getLong("recordId")
+                ?.takeIf { it != -1L }  // convert sentinel back to null
 
-            backStackEntry.arguments?.getLong("recordId")
-
-//            DataEntryScreen(
-//                recordId = if (recordId == -1L) null else recordId
-//            )
+            DataEntryScreen(
+                recordId = recordId,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable(route = Screen.Settings.route) {

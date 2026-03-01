@@ -44,15 +44,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.BooleanField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.CountField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DateField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.ImageField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.ListField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.LongTextField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.ShortTextField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.TimeField
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.TriStateField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.BooleanField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.CountField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.DateField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ImageField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ListField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.LongTextField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ShortTextField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TimeField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TriStateField
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 
 private val samplePresets = listOf("Default", "Medical", "Fitness", "Finance")
@@ -226,13 +226,13 @@ fun FormFieldComponentsPreview(
                     DateField(
                         label = "Date",
                         value = selectedDate,
-                        onPickDate = {}
+                        onValueChange = {}
                     )
 
                     TimeField(
                         label = "Time",
                         value = selectedTime,
-                        onPickTime = {}
+                        onValueChange = {}
                     )
 
                     CountField(

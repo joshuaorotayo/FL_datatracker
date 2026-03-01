@@ -3,7 +3,7 @@ package com.jorotayo.fl_datatracker.domain.model
 import android.net.Uri
 
 /**
- * Sealed hierarchy of per-type UI state derived from a [DataField] entity.
+ * Sealed hierarchy of per-type UI state derived from a [DataFieldUiState] entity.
  * Each subclass carries only the data its composable actually needs.
  */
 sealed class DataFieldUiState {
@@ -62,7 +62,7 @@ sealed class DataFieldUiState {
         override val fieldId: Long,
         override val label: String,
         override val hint: String = "",
-        /** Three option labels stored in DataField.first / second / third. */
+        /** Three option labels stored in DataField. First / second / third. */
         val options: List<String> = listOf("Low", "Medium", "High"),
         /** -1 = nothing selected yet. */
         val selected: Int = -1

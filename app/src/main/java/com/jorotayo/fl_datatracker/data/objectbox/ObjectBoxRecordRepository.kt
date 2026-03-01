@@ -30,6 +30,12 @@ class ObjectBoxRecordRepository @Inject constructor(
             orderDesc(DataRecord_.createdAt) // newest first for Home screen
         }.find()
 
+    override fun getRecordById(recordId: Long): DataRecord =
+        recordBox.query {
+            equal(DataRecord_.recordId, recordId)
+        }.find().first()
+
+
     override fun getEntriesForRecord(recordId: Long): List<RecordEntry> =
         entryBox.query {
             equal(RecordEntry_.recordId, recordId)

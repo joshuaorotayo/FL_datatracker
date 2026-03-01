@@ -8,12 +8,12 @@ interface RecordRepository {
     fun getAllRecords(): List<DataRecord>
     fun observeAllRecords(): Flow<List<DataRecord>>
     fun getRecordsForPreset(presetId: Long): List<DataRecord>
+    fun getRecordById(recordId: Long): DataRecord?               // ← added
     fun getEntriesForRecord(recordId: Long): List<RecordEntry>
     fun saveRecord(
         record: DataRecord,
         entries: List<RecordEntry>,
         existingRecordId: Long? = null
     ): Result<Long>
-
     fun deleteRecord(recordId: Long)
 }
