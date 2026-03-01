@@ -87,8 +87,8 @@ sealed class Screen(
 @Composable
 fun MainNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    startDestination: String = Screen.Home.route
+    startDestination: String,
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,

@@ -10,15 +10,23 @@ import javax.inject.Singleton
 class SharedSettingService @Inject constructor(
     private val userPreferenceStore: UserPreferenceStore
 ) {
+    /**
+     * Seeds default preference values on first install only.
+     * The guard key is USE_DEVICE_DARK_MODE_SETTINGS — if it has never been
+     * written then this is a fresh install. ONBOARDING_COMPLETE is intentionally
+     * NOT written here; it stays absent (false) until the user actually completes
+     * onboarding, at which point [setOnboardingComplete] sets it to true.
+     */
     suspend fun initialiseValues() {
-        if (!userPreferenceStore.getBoolean(SettingsKeys.ONBOARDING_COMPLETE)) {
+        val alreadyInitialised = userPreferenceStore.getBoolean(
+            SettingsKeys.USE_DEVICE_DARK_MODE_SETTINGS
+        )
+        if (!alreadyInitialised) {
             userPreferenceStore.setBoolean(
-                SettingsKeys.ONBOARDING_COMPLETE to false,
-                SettingsKeys.USE_DEVICE_DARK_MODE_SETTINGS to true,
+                SettingsKeys.USE_DEVICE_DARK_MODE_SETTINGS to true
             )
-            userPreferenceStore.setString(
-                SettingsKeys.CURRENT_PRESET to "Default"
-            )
+            // ONBOARDING_COMPLETE is deliberately left absent so the app
+            // routes to onboarding. setOnboardingComplete() sets it to true.
         }
     }
 

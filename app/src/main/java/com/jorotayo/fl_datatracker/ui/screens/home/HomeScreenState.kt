@@ -4,6 +4,7 @@ import com.jorotayo.fl_datatracker.data.model.DataRecord
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 
 data class HomeScreenState(
+    val isLoading: Boolean = false,
     val currentPresetId: Long = -1L,
     val records: List<DataRecord> = emptyList(),
     val filteredRecords: List<DataRecord> = emptyList(),
@@ -11,7 +12,6 @@ data class HomeScreenState(
     val isSearchActive: Boolean = false,
     val selectedRecord: DataRecord? = null,
     val recordToDelete: DataRecord? = null,
-    val isLoading: Boolean = false,
     val error: String? = null,
     val showDeleteDialog: Boolean,
     val toast: AppToastData? = null
