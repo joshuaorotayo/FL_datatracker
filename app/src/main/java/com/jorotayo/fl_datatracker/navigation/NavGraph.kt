@@ -80,15 +80,14 @@ sealed class Screen(
     )
 }
 
-// =============================================================================
-// NAV GRAPH
-// =============================================================================
-
 @Composable
 fun MainNavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String,
-    navController: NavHostController
+    navController: NavHostController,
+    startDestination: String = Screen.Home.route,
+    // Activity-scoped ScaffoldViewModel passed down so screens write to the
+    // same instance that MainActivity reads from — hiltViewModel() inside
+    // NavHost would scope it to the back stack entry, a different instance.
 ) {
     NavHost(
         navController = navController,
@@ -100,7 +99,9 @@ fun MainNavGraph(
         }
 
         composable(route = Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(
+                navController = navController
+            )
         }
 
         composable(route = Screen.DataForm.route) {
@@ -112,12 +113,12 @@ fun MainNavGraph(
             arguments = listOf(
                 navArgument("recordId") {
                     type = NavType.LongType
-                    defaultValue = -1L   // -1 = new record mode
+                    defaultValue = -1L
                 }
             )
         ) { backStackEntry ->
             val recordId = backStackEntry.arguments?.getLong("recordId")
-                ?.takeIf { it != -1L }  // convert sentinel back to null
+                ?.takeIf { it != -1L }
 
             DataEntryScreen(
                 recordId = recordId,
@@ -126,7 +127,7 @@ fun MainNavGraph(
         }
 
         composable(route = Screen.Settings.route) {
-            // SettingsScreen()
+            // SettingsScreen(scaffoldViewModel = scaffoldViewModel)
         }
     }
 }

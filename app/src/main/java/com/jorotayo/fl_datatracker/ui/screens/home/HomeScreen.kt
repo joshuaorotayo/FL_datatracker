@@ -1,7 +1,8 @@
 package com.jorotayo.fl_datatracker.ui.screens.home
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,21 +31,18 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -64,6 +62,7 @@ import com.jorotayo.fl_datatracker.navigation.NavCommand.Back
 import com.jorotayo.fl_datatracker.navigation.NavCommand.ToRoute
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToast
+import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
 import java.text.SimpleDateFormat
@@ -71,7 +70,7 @@ import java.util.Date
 import java.util.Locale
 
 // =============================================================================
-// PREVIEW
+// SAMPLE DATA — shared across previews
 // =============================================================================
 
 private val sampleRecords = listOf(
@@ -101,16 +100,20 @@ private val sampleRecords = listOf(
     ),
 )
 
+// =============================================================================
+// PREVIEWS — all use HomeScreenView directly, no ViewModel needed
+// =============================================================================
+
 @DefaultPreviews
 @Composable
-fun PreviewHomeScreen() {
+private fun PreviewHomeScreenWithRecords() {
     FL_DatatrackerThemeNew {
         Surface(modifier = Modifier.fillMaxSize()) {
             HomeScreenView(
                 state = HomeScreenState(
                     records = sampleRecords,
                     filteredRecords = sampleRecords,
-                    showDeleteDialog = true
+                    showDeleteDialog = false
                 )
             )
         }
@@ -119,27 +122,109 @@ fun PreviewHomeScreen() {
 
 @DefaultPreviews
 @Composable
-fun PreviewHomeScreenEmpty() {
+private fun PreviewHomeScreenSearchActive() {
     FL_DatatrackerThemeNew {
         Surface(modifier = Modifier.fillMaxSize()) {
-            HomeScreenView(state = HomeScreenState(showDeleteDialog = true))
+            HomeScreenView(
+                state = HomeScreenState(
+                    records = sampleRecords,
+                    filteredRecords = sampleRecords.take(2),
+                    searchQuery = "Inspection",
+                    isSearchActive = true,
+                    showDeleteDialog = false
+                )
+            )
+        }
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewHomeScreenEmpty() {
+    FL_DatatrackerThemeNew {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            HomeScreenView(state = HomeScreenState(showDeleteDialog = false))
+        }
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewHomeScreenEmptyFiltered() {
+    FL_DatatrackerThemeNew {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            HomeScreenView(
+                state = HomeScreenState(
+                    records = sampleRecords,
+                    filteredRecords = emptyList(),
+                    searchQuery = "xyz",
+                    isSearchActive = true,
+                    showDeleteDialog = false
+                )
+            )
         }
     }
 }
 
 // =============================================================================
-// HOME SCREEN — ViewModel entry point
+// HOME SCREEN — stateful entry point, owns ViewModel + scaffold config + toast
 // =============================================================================
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    // Single ViewModel instance — reuse it for both state and navigationManager.
-    // Never call hiltViewModel() twice in the same composable; each call can
-    // return a different instance, which doubles up the observeAllRecords() flow
-    // and causes lag that compounds on every navigation to this screen.
     val viewModel = hiltViewModel<HomeScreenViewModel>()
-    val state = viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
+    // ── Shared scaffold config ────────────────────────────────────────────────
+    // Lambdas capture `state` so title subtitle and search icon visibility
+    // recompose automatically as records or search state changes.
+    // FAB and search icon are wired to ViewModel events directly here so
+    // HomeScreenView stays free of any event knowledge beyond its onEvent param.
+    SetScaffold(
+        title = {
+            Column {
+                Text(
+                    text = "Records",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                if (state.records.isNotEmpty()) {
+                    Text(
+                        text = "${state.records.size} total entries",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        },
+        actions = {
+            // Hide search icon when search bar is already open so they don't
+            // fight for the same space in the top bar
+            if (state.records.isNotEmpty() && !state.isSearchActive) {
+                IconButton(onClick = { viewModel.onEvent(HomeEvent.ToggleSearch) }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search records",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        },
+        fab = {
+            ExtendedFloatingActionButton(
+                onClick = { viewModel.onEvent(HomeEvent.NavigateToEntry()) },
+                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                text = { Text("New Entry", style = MaterialTheme.typography.labelLarge) },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        // showBottomBar defaults to true — bottom nav visible on this screen
+    )
+
+    // ── Navigation collector ──────────────────────────────────────────────────
     LaunchedEffect(Unit) {
         viewModel.navigationManager.commands.collect { command ->
             when (command) {
@@ -149,14 +234,23 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-    HomeScreenView(
-        state = state.value,
-        onEvent = viewModel::onEvent
-    )
+    // ── Content + toast ───────────────────────────────────────────────────────
+    // Toast is kept here rather than in HomeScreenView so the view stays
+    // preview-safe — previews don't need to supply a dismiss callback.
+    Box(modifier = Modifier.fillMaxSize()) {
+        HomeScreenView(
+            state = state,
+            onEvent = viewModel::onEvent
+        )
+        AppToast(
+            data = state.toast,
+            onDismiss = { viewModel.onEvent(HomeEvent.DismissToast) }
+        )
+    }
 }
 
 // =============================================================================
-// HOME SCREEN VIEW
+// HOME SCREEN VIEW — stateless and preview-safe, no ViewModel or Scaffold
 // =============================================================================
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -173,56 +267,118 @@ fun HomeScreenView(
         if (state.isSearchActive) focusRequester.requestFocus()
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            topBar = {
-                HomeTopBar(
-                    state = state,
-                    focusRequester = focusRequester,
-                    onEvent = onEvent,
-                    onKeyboardDone = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                    }
-                )
-            },
-            floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    onClick = { onEvent(HomeEvent.NavigateToEntry()) },
-                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                    text = { Text("New Entry", style = MaterialTheme.typography.labelLarge) },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-        ) { paddingValues ->
-            if (state.filteredRecords.isEmpty()) {
-                EmptyHomeContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    isFiltering = state.searchQuery.isNotBlank()
-                )
-            } else {
-                RecordList(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    state = state,
-                    onEvent = onEvent
-                )
-            }
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        // ── Search bar ────────────────────────────────────────────────────────
+        // Kept here rather than in SetScaffold because it needs FocusRequester
+        // and keyboard controllers which are Compose locals. Animating it as a
+        // Column child below the shared TopAppBar is cleaner than replacing the
+        // entire TopAppBar slot through ScaffoldViewModel.
+        AnimatedVisibility(
+            visible = state.isSearchActive,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            SearchBar(
+                query = state.searchQuery,
+                resultCount = state.filteredRecords.size,
+                focusRequester = focusRequester,
+                onQueryChange = { onEvent(HomeEvent.SearchQueryChanged(it)) },
+                onClose = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                    onEvent(HomeEvent.ToggleSearch)
+                },
+                onSearch = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }
+            )
         }
 
-        AppToast(
-            data = state.toast,
-            onDismiss = { onEvent(HomeEvent.DismissToast) }
-        )
+        // ── Records or empty state ────────────────────────────────────────────
+        if (state.filteredRecords.isEmpty()) {
+            EmptyHomeContent(
+                modifier = Modifier.fillMaxSize(),
+                isFiltering = state.searchQuery.isNotBlank()
+            )
+        } else {
+            RecordList(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                onEvent = onEvent
+            )
+        }
     }
 }
 
 // =============================================================================
-// RECORD LIST — self-contained LazyColumn with header as first item
+// SEARCH BAR — shown below the shared TopAppBar when isSearchActive is true
+// =============================================================================
+
+@Composable
+private fun SearchBar(
+    query: String,
+    resultCount: Int,
+    focusRequester: FocusRequester,
+    onQueryChange: (String) -> Unit,
+    onClose: () -> Unit,
+    onSearch: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = spacingMedium)
+            .padding(bottom = spacingMedium)
+    ) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = onQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+            placeholder = {
+                Text("Search records…", style = MaterialTheme.typography.bodyMedium)
+            },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
+                )
+            },
+            trailingIcon = {
+                IconButton(onClick = onClose) {
+                    Icon(
+                        Icons.Default.Clear,
+                        contentDescription = "Close search",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            },
+            singleLine = true,
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
+        )
+        if (query.isNotBlank()) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "$resultCount result${if (resultCount != 1) "s" else ""} for \"$query\"",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+// =============================================================================
+// RECORD LIST
 // =============================================================================
 
 @Composable
@@ -236,11 +392,7 @@ private fun RecordList(
 
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            bottom = 100.dp
-        ),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = listState
     ) {
@@ -256,122 +408,6 @@ private fun RecordList(
                 )
             }
         }
-    }
-}
-
-// =============================================================================
-// HEADER — title + expandable search
-// =============================================================================
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
-@Composable
-private fun HomeTopBar(
-    state: HomeScreenState,
-    focusRequester: FocusRequester,
-    onEvent: (HomeEvent) -> Unit,
-    onKeyboardDone: () -> Unit
-) {
-    if (state.isSearchActive) {
-        // Search mode — full-width search field in the top bar area
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = spacingMedium)
-                .padding(horizontal = spacingMedium, vertical = spacingMedium)
-        ) {
-            OutlinedTextField(
-                value = state.searchQuery,
-                onValueChange = { onEvent(HomeEvent.SearchQueryChanged(it)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                placeholder = {
-                    Text("Search records…", style = MaterialTheme.typography.bodyMedium)
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(20.dp)
-                    )
-                },
-                trailingIcon = {
-                    IconButton(onClick = { onEvent(HomeEvent.ToggleSearch) }) {
-                        Icon(
-                            Icons.Default.Clear,
-                            contentDescription = "Close search",
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-                },
-                singleLine = true,
-                shape = MaterialTheme.shapes.medium,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onKeyboardDone() }),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    cursorColor = MaterialTheme.colorScheme.primary
-                )
-            )
-            if (state.searchQuery.isNotBlank()) {
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "${state.filteredRecords.size} result${if (state.filteredRecords.size != 1) "s" else ""} for \"${state.searchQuery}\"",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-    } else {
-        TopAppBar(
-            modifier = Modifier.padding(top = spacingMedium),
-            title = {
-                Column {
-                    Text(
-                        text = "Records",
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    if (state.records.isNotEmpty()) {
-                        Text(
-                            text = "${state.records.size} total entries",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            },
-            actions = {
-                if (state.records.isNotEmpty()) {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { onEvent(HomeEvent.ToggleSearch) }
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Open search",
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.size(spacingMedium))
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
-            )
-        )
     }
 }
 
@@ -394,10 +430,7 @@ private fun DateSectionHeader(label: String) {
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.SemiBold
         )
-        Divider(
-            modifier = Modifier.weight(1f),
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
+        Divider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
     }
 }
 
@@ -413,9 +446,7 @@ private fun RecordCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
@@ -443,9 +474,7 @@ private fun RecordCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = record.title.ifBlank { "Untitled Record" },
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -457,7 +486,6 @@ private fun RecordCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
 
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 IconButton(onClick = onEdit, modifier = Modifier.size(36.dp)) {
@@ -481,7 +509,6 @@ private fun RecordCard(
     }
 }
 
-
 // =============================================================================
 // EMPTY STATE
 // =============================================================================
@@ -491,10 +518,7 @@ private fun EmptyHomeContent(
     modifier: Modifier = Modifier,
     isFiltering: Boolean
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -506,30 +530,21 @@ private fun EmptyHomeContent(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        imageVector = if (isFiltering) {
-                            Icons.Default.Search
-                        } else {
-                            Icons.Default.History
-                        },
+                        imageVector = if (isFiltering) Icons.Default.Search else Icons.Default.History,
                         contentDescription = null,
                         modifier = Modifier.size(36.dp),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
-
             Text(
                 text = if (isFiltering) "No matching records" else "No records yet",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
             Text(
-                text = if (isFiltering) {
-                    "Try a different search term"
-                } else {
-                    "Tap the button below to create your first entry"
-                },
+                text = if (isFiltering) "Try a different search term"
+                else "Tap the button below to create your first entry",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -537,11 +552,9 @@ private fun EmptyHomeContent(
     }
 }
 
-
 // =============================================================================
 // DATE HELPERS
 // =============================================================================
-
 
 private fun formatDateHeader(timestamp: Long): String {
     val now = System.currentTimeMillis()
@@ -554,7 +567,6 @@ private fun formatDateHeader(timestamp: Long): String {
         else -> SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).format(Date(timestamp))
     }
 }
-
 
 private fun formatTime(timestamp: Long): String =
     SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(timestamp))
