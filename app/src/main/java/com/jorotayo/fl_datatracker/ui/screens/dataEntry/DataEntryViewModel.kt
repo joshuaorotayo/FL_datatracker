@@ -8,7 +8,6 @@ import com.jorotayo.fl_datatracker.domain.usecase.GetPresetByIdUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetRecordWithEntriesUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetSelectedPresetUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.SaveRecordUseCase
-import com.jorotayo.fl_datatracker.domain.usecase.ValidateFieldEntryUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.ValidationException
 import com.jorotayo.fl_datatracker.domain.util.toUiState
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
@@ -26,8 +25,7 @@ class DataEntryViewModel @Inject constructor(
     private val getPresetById: GetPresetByIdUseCase,
     private val getFields: GetFieldsForPresetUseCase,
     private val getRecordWithEntries: GetRecordWithEntriesUseCase,
-    private val saveRecord: SaveRecordUseCase,
-    private val validateEntry: ValidateFieldEntryUseCase
+    private val saveRecord: SaveRecordUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DataEntryState())
@@ -37,6 +35,7 @@ class DataEntryViewModel @Inject constructor(
         when (event) {
             DataEntryEvent.LoadFromPreference -> onLoadFromPreference()
             is DataEntryEvent.LoadRecord -> onLoadRecord(event.recordId)
+            is DataEntryEvent.UpdateRecordName -> onUpdateRecordName(event.name)
             is DataEntryEvent.UpdateValue -> onUpdateValue(event.fieldId, event.value)
             DataEntryEvent.EnableEditing -> onEnableEditing()
             DataEntryEvent.Submit -> onSubmit()
@@ -44,10 +43,6 @@ class DataEntryViewModel @Inject constructor(
             DataEntryEvent.DismissToast -> onDismissToast()
         }
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // NEW record — resolve preset from DataStore preference
-    // ─────────────────────────────────────────────────────────────────────────
 
     private fun onLoadFromPreference() {
         viewModelScope.launch {
@@ -78,6 +73,7 @@ class DataEntryViewModel @Inject constructor(
                     preset = preset,
                     presetMissing = false,
                     fields = fields,
+                    recordName = "",
                     values = fields.defaultValues(),
                     errors = emptyMap(),
                     isReadOnly = false,
@@ -89,10 +85,6 @@ class DataEntryViewModel @Inject constructor(
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // EDIT record — opens read-only, unlocked by EnableEditing
-    // ─────────────────────────────────────────────────────────────────────────
-
     private fun onLoadRecord(recordId: Long) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
@@ -103,28 +95,19 @@ class DataEntryViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        toast = AppToastData(
-                            message = "Record not found.",
-                            mode = ToastMode.ERROR
-                        )
+                        toast = AppToastData(message = "Record not found.", mode = ToastMode.ERROR)
                     )
                 }
                 return@launch
             }
 
             val (record, entries) = result
-
-            // Check whether the preset that was used to create this record still exists
             val preset = getPresetById(record.presetId)
             val presetMissing = preset == null
 
-            // Only load field definitions if the preset still exists — we need them
-            // to render the typed composables. Without them we fall back to raw display.
             val fields = if (!presetMissing) {
                 getFields(record.presetId).map { it.toUiState() }
-            } else {
-                emptyList()
-            }
+            } else emptyList()
 
             val savedValues = entries.associate { it.dataFieldId to it.value }
 
@@ -135,6 +118,7 @@ class DataEntryViewModel @Inject constructor(
                     preset = preset,
                     presetMissing = presetMissing,
                     fields = fields,
+                    recordName = record.title,
                     values = savedValues,
                     errors = emptyMap(),
                     isReadOnly = true,
@@ -149,13 +133,7 @@ class DataEntryViewModel @Inject constructor(
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Unlock editing
-    // ─────────────────────────────────────────────────────────────────────────
-
     private fun onEnableEditing() {
-        // Guard: if the preset is missing, the Edit button should be greyed out
-        // in the UI but we double-check here in case it fires anyway.
         if (_state.value.presetMissing) {
             _state.update {
                 it.copy(
@@ -170,29 +148,31 @@ class DataEntryViewModel @Inject constructor(
         _state.update { it.copy(isReadOnly = false) }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Field value update
-    // ─────────────────────────────────────────────────────────────────────────
+    private fun onUpdateRecordName(name: String) {
+        _state.update { it.copy(recordName = name) }
+    }
 
     private fun onUpdateValue(fieldId: Long, value: String) {
         _state.update { s ->
             s.copy(
                 values = s.values + (fieldId to value),
-                errors = s.errors - fieldId   // clear error as soon as user edits
+                errors = s.errors - fieldId
             )
         }
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Submit
-    // ─────────────────────────────────────────────────────────────────────────
 
     private fun onSubmit() {
         val s = _state.value
         val presetId = s.preset?.presetId ?: return
 
         viewModelScope.launch {
-            saveRecord(presetId, s.fields, s.values)
+            saveRecord(
+                presetId = presetId,
+                fields = s.fields,
+                values = s.values,
+                recordName = s.recordName,
+                recordId = s.editingRecordId
+            )
                 .onSuccess {
                     _state.update {
                         it.copy(
@@ -221,13 +201,10 @@ class DataEntryViewModel @Inject constructor(
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Clear / dismiss
-    // ─────────────────────────────────────────────────────────────────────────
-
     private fun onClear() {
         _state.update { s ->
             s.copy(
+                recordName = "",
                 values = s.fields.defaultValues(),
                 errors = emptyMap()
             )
@@ -238,14 +215,6 @@ class DataEntryViewModel @Inject constructor(
         _state.update { it.copy(toast = null) }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Helpers
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Seeds a default value for every field so [values] is never sparse.
-     * Type-specific defaults mirror what each composable shows on first render.
-     */
     private fun List<DataFieldUiState>.defaultValues(): Map<Long, String> =
         associate { field ->
             field.fieldId to when (field) {

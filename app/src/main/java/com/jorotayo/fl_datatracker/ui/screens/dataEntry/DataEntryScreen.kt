@@ -53,6 +53,7 @@ import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.DateField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ImageField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ListField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.LongTextField
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.RecordNameField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ShortTextField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TimeField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TriStateField
@@ -189,6 +190,12 @@ fun DataEntryContent(
                             )
                         }
                     }
+
+                    RecordNameField(
+                        value = state.recordName,
+                        enabled = !state.isReadOnly && !state.presetMissing,
+                        onValueChange = { onEvent(DataEntryEvent.UpdateRecordName(it)) }
+                    )
 
                     Divider(color = MaterialTheme.colorScheme.outlineVariant)
 

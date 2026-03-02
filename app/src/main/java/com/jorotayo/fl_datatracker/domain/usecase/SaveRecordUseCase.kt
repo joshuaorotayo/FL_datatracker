@@ -10,26 +10,22 @@ class SaveRecordUseCase(
     private val recordRepository: RecordRepository,
     private val validateEntry: ValidateFieldEntryUseCase
 ) {
-    /**
-     * Validates every field value before saving.
-     * Returns a map of fieldId → error message if validation fails,
-     * or the saved record id on success.
-     */
     operator fun invoke(
         presetId: Long,
         fields: List<DataFieldUiState>,
-        values: Map<Long, String>
+        values: Map<Long, String>,
+        recordName: String,
+        recordId: Long? = null
     ): Result<Serializable> {
-        // Validate all fields and collect any errors
+
+        // Validate field values only — record name is optional
         val errors = fields
             .mapNotNull { field ->
                 val value = values[field.fieldId] ?: ""
                 val result = validateEntry(field, value)
                 if (result.isFailure) {
                     field.fieldId to (result.exceptionOrNull()?.message ?: "Invalid value")
-                } else {
-                    null
-                }
+                } else null
             }
             .toMap()
 
@@ -37,7 +33,12 @@ class SaveRecordUseCase(
             return Result.failure(ValidationException(errors))
         }
 
-        val record = DataRecord(presetId = presetId)
+        val record = DataRecord(
+            recordId = recordId ?: 0L,
+            presetId = presetId,
+            // Empty name falls back to "Untitled Record" — matches HomeScreen display
+            title = recordName.trim().ifBlank { "Untitled Record" }
+        )
         val entries = fields.map { field ->
             RecordEntry(
                 dataFieldId = field.fieldId,
