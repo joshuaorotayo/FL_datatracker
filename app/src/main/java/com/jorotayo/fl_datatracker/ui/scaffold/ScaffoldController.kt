@@ -1,21 +1,26 @@
 package com.jorotayo.fl_datatracker.ui.scaffold
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 
+@Stable
 class ScaffoldController {
 
-    var state by mutableStateOf(AppScaffoldState())
-        private set
+    private val _state = mutableStateOf(AppScaffoldState())
+
+    var state: AppScaffoldState
+        get() = _state.value
+        set(value) {
+            _state.value = value
+        }
 
     fun update(newState: AppScaffoldState) {
-        state = newState
+        _state.value = newState
     }
 
     fun reset() {
-        state = AppScaffoldState()
+        _state.value = AppScaffoldState()
     }
 }
 

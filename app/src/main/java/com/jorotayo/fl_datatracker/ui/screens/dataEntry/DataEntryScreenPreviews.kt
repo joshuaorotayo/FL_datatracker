@@ -45,7 +45,7 @@ private val sampleValues = mapOf(
 @Composable
 private fun PreviewDataEntryNew() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.NEW,
                 preset = samplePreset,
@@ -62,7 +62,7 @@ private fun PreviewDataEntryNew() {
 @Composable
 private fun PreviewDataEntryNewFilled() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.NEW,
                 preset = samplePreset,
@@ -79,7 +79,7 @@ private fun PreviewDataEntryNewFilled() {
 @Composable
 private fun PreviewDataEntryReadOnly() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.EDIT,
                 preset = samplePreset,
@@ -97,7 +97,7 @@ private fun PreviewDataEntryReadOnly() {
 @Composable
 private fun PreviewDataEntryPresetMissing() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.EDIT,
                 preset = null,
@@ -116,7 +116,7 @@ private fun PreviewDataEntryPresetMissing() {
 @Composable
 private fun PreviewDataEntryEditing() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.EDIT,
                 preset = samplePreset,
@@ -134,7 +134,7 @@ private fun PreviewDataEntryEditing() {
 @Composable
 private fun PreviewDataEntryWithErrors() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.NEW,
                 preset = samplePreset,
@@ -155,7 +155,7 @@ private fun PreviewDataEntryWithErrors() {
 @Composable
 private fun PreviewDataEntrySuccessToast() {
     FL_DatatrackerThemeNew {
-        DataEntryContent(
+        DataEntryView(
             state = DataEntryState(
                 mode = DataEntryMode.NEW,
                 preset = samplePreset,

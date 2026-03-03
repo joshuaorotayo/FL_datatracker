@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,11 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,9 +42,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
-import com.jorotayo.fl_datatracker.ui.components.loading.LoadingScreen
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToast
+import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
+import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
+import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.BooleanField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.CountField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.DateField
@@ -57,25 +59,190 @@ import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.RecordNameFie
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ShortTextField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TimeField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TriStateField
-import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXSmall
 
 // =============================================================================
-// ENTRY POINT
+// PREVIEWS
 // =============================================================================
 
-/**
- * @param recordId  Non-null → edit/view an existing record.
- *                  Null     → create a new record using the preset stored in
- *                             UserPreferenceStore (no argument needed).
- */
+private val samplePreset = Preset(presetId = 1L, presetName = "Daily Inspection")
+
+private val sampleFields = listOf(
+    DataFieldUiState.ShortText(fieldId = 1L, label = "Location", hint = "Warehouse B"),
+    DataFieldUiState.LongText(fieldId = 2L, label = "Notes", hint = "Some notes..."),
+    DataFieldUiState.Boolean(fieldId = 3L, label = "Completed"),
+    DataFieldUiState.Count(fieldId = 4L, label = "Issues Found", min = 0, max = 20),
+    DataFieldUiState.TriState(
+        fieldId = 5L,
+        label = "Priority",
+        options = listOf("Low", "Medium", "High")
+    ),
+)
+
+private val sampleValues = mapOf(
+    1L to "Warehouse B",
+    2L to "Everything looks good.",
+    3L to "true",
+    4L to "2",
+    5L to "1"
+)
+
+@DefaultPreviews
+@Composable
+private fun PreviewDataEntryNew() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.NEW,
+                preset = samplePreset,
+                fields = sampleFields,
+                values = mapOf(1L to "", 2L to "", 3L to "false", 4L to "0", 5L to "-1"),
+                recordName = "",
+                isReadOnly = false
+            )
+        )
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewDataEntryFilled() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.NEW,
+                preset = samplePreset,
+                fields = sampleFields,
+                values = sampleValues,
+                recordName = "Morning Round",
+                isReadOnly = false
+            )
+        )
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewDataEntryReadOnly() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.EDIT,
+                preset = samplePreset,
+                fields = sampleFields,
+                values = sampleValues,
+                recordName = "Morning Round",
+                isReadOnly = true,
+                editingRecordId = 42L
+            )
+        )
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewDataEntryPresetMissing() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.EDIT,
+                preset = null,
+                presetMissing = true,
+                fields = emptyList(),
+                values = mapOf(1L to "Warehouse B", 2L to "Some notes"),
+                recordName = "Old Record",
+                isReadOnly = true,
+                editingRecordId = 7L
+            )
+        )
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewDataEntryWithErrors() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.NEW,
+                preset = samplePreset,
+                fields = sampleFields,
+                values = mapOf(1L to "", 2L to "", 3L to "false", 4L to "0", 5L to "-1"),
+                recordName = "",
+                isReadOnly = false,
+                errors = mapOf(1L to "This field cannot be empty")
+            )
+        )
+    }
+}
+
+@DefaultPreviews
+@Composable
+private fun PreviewDataEntrySuccessToast() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.NEW,
+                preset = samplePreset,
+                fields = sampleFields,
+                values = sampleValues,
+                recordName = "Morning Round",
+                isReadOnly = false,
+                toast = AppToastData(message = "Record saved successfully.", mode = ToastMode.INFO)
+            )
+        )
+    }
+}
+
+// =============================================================================
+// ENTRY POINT — stateful, owns ViewModel + scaffold config + toast
+// =============================================================================
+
 @Composable
 fun DataEntryScreen(
     recordId: Long? = null,
     onNavigateBack: () -> Unit = {},
-    viewModel: DataEntryViewModel = hiltViewModel()
 ) {
+    val viewModel = hiltViewModel<DataEntryViewModel>()
+    val state by viewModel.state.collectAsState()
+
+    // ── Shared scaffold config ────────────────────────────────────────────────
+    // navigationIcon wires back navigation into the shared TopAppBar.
+    // actions shows the edit button only in read-only EDIT mode.
+    // showBottomBar = false — bottom nav hidden on this screen.
+    SetScaffold(
+        title = {
+            Text(
+                text = if (state.mode == DataEntryMode.EDIT) "View Entry" else "New Entry",
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        },
+        actions = {
+            if (state.mode == DataEntryMode.EDIT && state.isReadOnly) {
+                EditButton(
+                    enabled = !state.presetMissing,
+                    onClick = { viewModel.onEvent(DataEntryEvent.EnableEditing) }
+                )
+            }
+        },
+        showBottomBar = false
+    )
+
+    // ── Load trigger ──────────────────────────────────────────────────────────
     LaunchedEffect(recordId) {
         if (recordId != null) {
             viewModel.onEvent(DataEntryEvent.LoadRecord(recordId))
@@ -84,195 +251,153 @@ fun DataEntryScreen(
         }
     }
 
-    val state by viewModel.state.collectAsState()
+//    if (state.isLoading) {
+//        LoadingScreen()
+//        return
+//    }
 
-    if (state.isLoading) {
-        LoadingScreen()
-        return
+    // ── Content + toast ───────────────────────────────────────────────────────
+    Box(modifier = Modifier.fillMaxSize()) {
+        DataEntryView(
+            state = state,
+            onEvent = viewModel::onEvent
+        )
+        AppToast(
+            data = state.toast,
+            onDismiss = { viewModel.onEvent(DataEntryEvent.DismissToast) }
+        )
     }
-
-    DataEntryContent(
-        state = state,
-        onNavigateBack = onNavigateBack,
-        onEvent = viewModel::onEvent
-    )
 }
 
 // =============================================================================
-// STATELESS CONTENT
+// DATA ENTRY VIEW — stateless and preview-safe, no ViewModel or Scaffold
 // =============================================================================
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DataEntryContent(
+fun DataEntryView(
     state: DataEntryState,
-    onNavigateBack: () -> Unit = {},
     onEvent: (DataEntryEvent) -> Unit = {}
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.padding(top = spacingMedium),
-                title = {
-                    Column {
-                        Text(
-                            "Data Entry", style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.Bold
-                            )
-                        )
-                    }
-                }, navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    if (state.mode == DataEntryMode.EDIT && state.isReadOnly) {
-                        EditButton(
-                            enabled = !state.presetMissing,
-                            onClick = { onEvent(DataEntryEvent.EnableEditing) }
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                )
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // ── Preset-missing warning ─────────────────────────────────────────────
+        AnimatedVisibility(
+            visible = state.presetMissing,
+            enter = fadeIn(),
+            exit = fadeOut()
         ) {
-            // ── Preset-missing warning ─────────────────────────────────────
-            AnimatedVisibility(
-                visible = state.presetMissing,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                PresetMissingBanner()
-            }
+            PresetMissingBanner()
+        }
 
-            // ── Form fields ────────────────────────────────────────────────
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+        // ── Form card ─────────────────────────────────────────────────────────
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                // Preset name chip — top right
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ) {
-                        Surface(
-                            shape = MaterialTheme.shapes.small,
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ) {
-                            Text(
-                                text = state.preset?.presetName ?: "Record",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(
-                                    horizontal = spacingSmall,
-                                    vertical = spacingXXSmall
-                                )
+                        Text(
+                            text = state.preset?.presetName ?: "Record",
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.padding(
+                                horizontal = spacingSmall,
+                                vertical = spacingXXSmall
                             )
-                        }
+                        )
                     }
+                }
 
-                    RecordNameField(
-                        value = state.recordName,
-                        enabled = !state.isReadOnly && !state.presetMissing,
-                        onValueChange = { onEvent(DataEntryEvent.UpdateRecordName(it)) }
-                    )
+                RecordNameField(
+                    value = state.recordName,
+                    enabled = !state.isReadOnly && !state.presetMissing,
+                    onValueChange = { onEvent(DataEntryEvent.UpdateRecordName(it)) }
+                )
 
-                    Divider(color = MaterialTheme.colorScheme.outlineVariant)
+                Divider(color = MaterialTheme.colorScheme.outlineVariant)
 
-                    if (state.presetMissing) {
-                        // Preset deleted — show raw saved data, no typed composables
-                        RawDataFallback(values = state.values)
-                    } else {
-                        state.fields.forEach { fieldState ->
-                            FormField(
-                                fieldState = fieldState,
-                                value = state.values[fieldState.fieldId] ?: "",
-                                error = state.errors[fieldState.fieldId],
-                                isReadOnly = state.isReadOnly,
-                                onEvent = onEvent
-                            )
-                        }
+                if (state.presetMissing) {
+                    RawDataFallback(values = state.values)
+                } else {
+                    state.fields.forEach { fieldState ->
+                        FormField(
+                            fieldState = fieldState,
+                            value = state.values[fieldState.fieldId] ?: "",
+                            error = state.errors[fieldState.fieldId],
+                            isReadOnly = state.isReadOnly,
+                            onEvent = onEvent
+                        )
                     }
                 }
             }
+        }
 
-            // ── Save / Clear — hidden in read-only mode ────────────────────
-            if (!state.isReadOnly && !state.presetMissing) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+        // ── Save / Clear — hidden in read-only mode ───────────────────────────
+        if (!state.isReadOnly && !state.presetMissing) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { onEvent(DataEntryEvent.Clear) },
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = { onEvent(DataEntryEvent.Clear) },
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(vertical = 16.dp)
-                    ) {
-                        Text("Clear", style = MaterialTheme.typography.labelLarge)
-                    }
+                    Text("Clear", style = MaterialTheme.typography.labelLarge)
+                }
 
-                    Button(
-                        onClick = { onEvent(DataEntryEvent.Submit) },
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(vertical = 16.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Save Entry", style = MaterialTheme.typography.labelLarge)
-                    }
+                Button(
+                    onClick = { onEvent(DataEntryEvent.Submit) },
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Save Entry", style = MaterialTheme.typography.labelLarge)
                 }
             }
         }
     }
-
-    AppToast(
-        data = state.toast,
-        onDismiss = { onEvent(DataEntryEvent.DismissToast) }
-    )
 }
 
 // =============================================================================
-// EDIT BUTTON — greyed out when preset is missing
+// EDIT BUTTON
 // =============================================================================
 
 @Composable
-private fun EditButton(
-    enabled: Boolean,
-    onClick: () -> Unit
-) {
+private fun EditButton(enabled: Boolean, onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Default.Edit,
             contentDescription = if (enabled) "Edit record" else "Editing disabled — preset deleted",
-            tint = if (enabled)
-                MaterialTheme.colorScheme.primary
-            else
-                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            tint = if (enabled) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         )
     }
 }
@@ -284,9 +409,7 @@ private fun EditButton(
 @Composable
 private fun PresetMissingBanner() {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -318,7 +441,7 @@ private fun PresetMissingBanner() {
 }
 
 // =============================================================================
-// RAW DATA FALLBACK (preset deleted — no typed composables available)
+// RAW DATA FALLBACK
 // =============================================================================
 
 @Composable
@@ -363,20 +486,28 @@ private fun FormField(
                 label = fieldState.label,
                 value = value,
                 onValueChange = {
-                    if (!isReadOnly) onEvent(DataEntryEvent.UpdateValue(fieldState.fieldId, it))
+                    if (!isReadOnly) onEvent(
+                        DataEntryEvent.UpdateValue(
+                            fieldState.fieldId,
+                            it
+                        )
+                    )
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.LongText -> LongTextField(
                 label = fieldState.label,
                 value = value,
                 onValueChange = {
-                    if (!isReadOnly) onEvent(DataEntryEvent.UpdateValue(fieldState.fieldId, it))
+                    if (!isReadOnly) onEvent(
+                        DataEntryEvent.UpdateValue(
+                            fieldState.fieldId,
+                            it
+                        )
+                    )
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.Boolean -> BooleanField(
                 label = fieldState.label,
                 value = value.toBooleanStrictOrNull() ?: false,
@@ -390,25 +521,32 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.Date -> DateField(
                 label = fieldState.label,
                 value = value,
                 onValueChange = {
-                    if (!isReadOnly) onEvent(DataEntryEvent.UpdateValue(fieldState.fieldId, it))
+                    if (!isReadOnly) onEvent(
+                        DataEntryEvent.UpdateValue(
+                            fieldState.fieldId,
+                            it
+                        )
+                    )
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.Time -> TimeField(
                 label = fieldState.label,
                 value = value,
                 onValueChange = {
-                    if (!isReadOnly) onEvent(DataEntryEvent.UpdateValue(fieldState.fieldId, it))
+                    if (!isReadOnly) onEvent(
+                        DataEntryEvent.UpdateValue(
+                            fieldState.fieldId,
+                            it
+                        )
+                    )
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.Count -> CountField(
                 label = fieldState.label,
                 value = value.toIntOrNull() ?: fieldState.min,
@@ -424,7 +562,6 @@ private fun FormField(
                 max = fieldState.max,
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.DynamicList -> ListField(
                 label = fieldState.label,
                 items = value.split("|").filter { it.isNotBlank() }.ifEmpty { listOf("") },
@@ -438,7 +575,6 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.Image -> ImageField(
                 label = fieldState.label,
                 imageUri = value.toUri(),
@@ -452,7 +588,6 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
-
             is DataFieldUiState.TriState -> TriStateField(
                 label = fieldState.label,
                 options = fieldState.options,
@@ -469,7 +604,6 @@ private fun FormField(
             )
         }
 
-        // Inline validation error shown beneath the field
         if (error != null) {
             Text(
                 text = error,
@@ -481,7 +615,6 @@ private fun FormField(
     }
 }
 
-// Null-safe URI parse
 private fun String.toUri(): Uri? =
     takeIf { it.isNotBlank() }?.let {
         try {

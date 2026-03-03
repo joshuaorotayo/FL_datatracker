@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
             // ✅ Create controller once at root
             val scaffoldController = remember { ScaffoldController() }
-            val scaffoldState = scaffoldController.state
+//            val scaffoldState = scaffoldController.state
 
             FL_DatatrackerThemeNew(darkTheme = darkTheme) {
 
@@ -108,12 +108,12 @@ class MainActivity : ComponentActivity() {
                                 topBar = {
                                     TopAppBar(
                                         modifier = Modifier.padding(top = spacingMedium),
-                                        title = { scaffoldState.title() },
+                                        title = { scaffoldController.state.title() },
                                         navigationIcon = {
-                                            scaffoldState.navigationIcon?.invoke()
+                                            scaffoldController.state.navigationIcon?.invoke()
                                         },
                                         actions = {
-                                            scaffoldState.actions?.invoke()
+                                            scaffoldController.state.actions?.invoke()
                                         },
                                         colors = TopAppBarDefaults.topAppBarColors(
                                             containerColor = MaterialTheme.colorScheme.background,
@@ -122,12 +122,12 @@ class MainActivity : ComponentActivity() {
                                     )
                                 },
                                 bottomBar = {
-                                    if (scaffoldState.showBottomBar) {
+                                    if (scaffoldController.state.showBottomBar) {
                                         FloatingBottomBar(navController = navController)
                                     }
                                 },
                                 floatingActionButton = {
-                                    scaffoldState.fab?.invoke()
+                                    scaffoldController.state.fab?.invoke()
                                 }
                             ) { paddingValues ->
 

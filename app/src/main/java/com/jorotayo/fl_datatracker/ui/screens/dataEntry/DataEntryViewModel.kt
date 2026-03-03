@@ -10,9 +10,12 @@ import com.jorotayo.fl_datatracker.domain.usecase.GetSelectedPresetUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.SaveRecordUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.ValidationException
 import com.jorotayo.fl_datatracker.domain.util.toUiState
+import com.jorotayo.fl_datatracker.navigation.NavCommand
+import com.jorotayo.fl_datatracker.navigation.NavigationManager
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,7 +28,8 @@ class DataEntryViewModel @Inject constructor(
     private val getPresetById: GetPresetByIdUseCase,
     private val getFields: GetFieldsForPresetUseCase,
     private val getRecordWithEntries: GetRecordWithEntriesUseCase,
-    private val saveRecord: SaveRecordUseCase
+    private val saveRecord: SaveRecordUseCase,
+    private val navigationManager: NavigationManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DataEntryState())
@@ -183,6 +187,8 @@ class DataEntryViewModel @Inject constructor(
                             )
                         )
                     }
+                    delay(2000)
+                    navigationManager.navigate(NavCommand.Back)
                 }
                 .onFailure { error ->
                     if (error is ValidationException) {

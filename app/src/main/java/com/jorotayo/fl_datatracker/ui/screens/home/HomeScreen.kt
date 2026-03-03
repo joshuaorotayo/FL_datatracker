@@ -58,11 +58,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jorotayo.fl_datatracker.data.model.DataRecord
-import com.jorotayo.fl_datatracker.navigation.NavCommand.Back
-import com.jorotayo.fl_datatracker.navigation.NavCommand.ToRoute
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToast
 import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
+import com.jorotayo.fl_datatracker.ui.screens.home.components.DeleteRecordDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
 import java.text.SimpleDateFormat
@@ -224,19 +223,6 @@ fun HomeScreen(navController: NavController) {
         // showBottomBar defaults to true — bottom nav visible on this screen
     )
 
-    // ── Navigation collector ──────────────────────────────────────────────────
-    LaunchedEffect(Unit) {
-        viewModel.navigationManager.commands.collect { command ->
-            when (command) {
-                is ToRoute -> navController.navigate(command.route)
-                is Back -> navController.popBackStack()
-            }
-        }
-    }
-
-    // ── Content + toast ───────────────────────────────────────────────────────
-    // Toast is kept here rather than in HomeScreenView so the view stays
-    // preview-safe — previews don't need to supply a dismiss callback.
     Box(modifier = Modifier.fillMaxSize()) {
         HomeScreenView(
             state = state,
@@ -246,6 +232,9 @@ fun HomeScreen(navController: NavController) {
             data = state.toast,
             onDismiss = { viewModel.onEvent(HomeEvent.DismissToast) }
         )
+        if (state.showDeleteDialog) {
+            DeleteRecordDialog(state = state, onEvent = viewModel::onEvent)
+        }
     }
 }
 
