@@ -35,12 +35,12 @@ import androidx.compose.ui.unit.sp
  * without requiring the Lottie dependency.
  *
  * If you have the Lottie library available, swap the [DotWave] composable
- * for a [LottieAnimation] call pointing at your own loading JSON file.
+ * for a LottieAnimation call pointing at your own loading JSON file.
  */
 @Composable
 fun AnimatedLoadingText(
-    text: String = "Loading",
     modifier: Modifier = Modifier,
+    text: String = "Loading",
     textColor: Color = Color.White,
     fontSize: TextUnit = 18.sp,
     dotSize: Dp = 6.dp,

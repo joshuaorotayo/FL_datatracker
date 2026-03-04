@@ -12,7 +12,6 @@ import com.jorotayo.fl_datatracker.domain.util.SettingsKeys
 import com.jorotayo.fl_datatracker.domain.util.UserPreferenceStore
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
-import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.AddField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.ConfirmDeleteField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.ConfirmDeletePreset
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.DeletePreset
@@ -23,6 +22,7 @@ import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.RequestDele
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.SaveField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.SavePreset
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.SelectPreset
+import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.ToggleAddFieldSheet
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.DataFormEvent.UpdateField
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.DataFieldUi
 import com.jorotayo.fl_datatracker.ui.screens.dataForm.components.FieldUpdate
@@ -62,7 +62,7 @@ class DataFormViewModel @Inject constructor(
             is UpdateField -> onUpdateField(event)
             is RequestDeleteField -> onRequestDeleteField(event)
             is SaveField -> onSaveField(event)
-            AddField -> onAddField()
+            ToggleAddFieldSheet -> onToggleAddFieldSheet()
             ConfirmDeleteField -> onConfirmDeleteField()
             DismissDeleteDialog -> onDismissDeleteDialog()
             DismissDeletePresetDialog -> onDismissDeletePresetDialog()
@@ -158,8 +158,8 @@ class DataFormViewModel @Inject constructor(
         }
     }
 
-    private fun onAddField() {
-        // Wire to nav or sheet here
+    private fun onToggleAddFieldSheet() {
+        _state.update { it.copy(showAddFieldSheet = !it.showAddFieldSheet) }
     }
 
     private fun onRequestDeleteField(event: RequestDeleteField) {
@@ -197,7 +197,8 @@ class DataFormViewModel @Inject constructor(
                         toast = AppToastData(
                             message = "No preset selected.",
                             mode = ToastMode.ERROR
-                        )
+                        ),
+                        showAddFieldSheet = !it.showAddFieldSheet
                     )
                 }
                 return@launch
@@ -210,7 +211,8 @@ class DataFormViewModel @Inject constructor(
                             toast = AppToastData(
                                 message = "\"${event.field.name}\" field created.",
                                 mode = ToastMode.INFO
-                            )
+                            ),
+                            showAddFieldSheet = !it.showAddFieldSheet
                         )
                     }
                 }
@@ -220,7 +222,8 @@ class DataFormViewModel @Inject constructor(
                             toast = AppToastData(
                                 message = error.message ?: "Failed to save field.",
                                 mode = ToastMode.ERROR
-                            )
+                            ),
+                            showAddFieldSheet = !it.showAddFieldSheet
                         )
                     }
                 }

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.KeyboardDoubleArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,7 +46,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
-import com.jorotayo.fl_datatracker.ui.components.toasts.AppToast
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
@@ -60,6 +60,7 @@ import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.ShortTextFiel
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TimeField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.TriStateField
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
+import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingSmall
 import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingXXSmall
 
@@ -239,7 +240,8 @@ fun DataEntryScreen(
                 )
             }
         },
-        showBottomBar = false
+        showBottomBar = true,
+        toast = state.toast
     )
 
     // ── Load trigger ──────────────────────────────────────────────────────────
@@ -251,20 +253,11 @@ fun DataEntryScreen(
         }
     }
 
-//    if (state.isLoading) {
-//        LoadingScreen()
-//        return
-//    }
-
     // ── Content + toast ───────────────────────────────────────────────────────
     Box(modifier = Modifier.fillMaxSize()) {
         DataEntryView(
             state = state,
             onEvent = viewModel::onEvent
-        )
-        AppToast(
-            data = state.toast,
-            onDismiss = { viewModel.onEvent(DataEntryEvent.DismissToast) }
         )
     }
 }
@@ -338,6 +331,8 @@ fun DataEntryView(
 
                 if (state.presetMissing) {
                     RawDataFallback(values = state.values)
+                } else if (state.fields.isEmpty()) {
+                    DataFieldsEmptyBanner()
                 } else {
                     state.fields.forEach { fieldState ->
                         FormField(
@@ -353,7 +348,7 @@ fun DataEntryView(
         }
 
         // ── Save / Clear — hidden in read-only mode ───────────────────────────
-        if (!state.isReadOnly && !state.presetMissing) {
+        if (!state.isReadOnly && !state.presetMissing && state.fields.isNotEmpty()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -374,12 +369,36 @@ fun DataEntryView(
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
                     Icon(
-                        Icons.Default.Check,
+                        imageVector = Icons.Default.Check,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Save Entry", style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
+
+        // ── Navigate To DataFields when Preset fields are empty ───────────────────────────
+        if (state.fields.isEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Button(
+                    onClick = { onEvent(DataEntryEvent.NavigateToDataFields) },
+                    modifier = Modifier.weight(0.5f),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardDoubleArrowLeft,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Add Data Fields", style = MaterialTheme.typography.labelLarge)
                 }
             }
         }
@@ -441,6 +460,49 @@ private fun PresetMissingBanner() {
 }
 
 // =============================================================================
+// Empty Data Fields Banner
+// =============================================================================
+
+@Composable
+private fun DataFieldsEmptyBanner() {
+    Column(
+        modifier = Modifier,
+        verticalArrangement = Arrangement.spacedBy(spacingMedium),
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.ErrorOutline,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.size(20.dp)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(
+                        text = "No Datafields in Preset",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                    Text(
+                        text = "The currently selected preset has no data fields." +
+                                "Please add Data Fields in the Data Fields screen to add a record entry.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+            }
+        }
+    }
+}
+
+// =============================================================================
 // RAW DATA FALLBACK
 // =============================================================================
 
@@ -495,6 +557,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.LongText -> LongTextField(
                 label = fieldState.label,
                 value = value,
@@ -508,6 +571,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.Boolean -> BooleanField(
                 label = fieldState.label,
                 value = value.toBooleanStrictOrNull() ?: false,
@@ -521,6 +585,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.Date -> DateField(
                 label = fieldState.label,
                 value = value,
@@ -534,6 +599,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.Time -> TimeField(
                 label = fieldState.label,
                 value = value,
@@ -547,6 +613,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.Count -> CountField(
                 label = fieldState.label,
                 value = value.toIntOrNull() ?: fieldState.min,
@@ -562,6 +629,7 @@ private fun FormField(
                 max = fieldState.max,
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.DynamicList -> ListField(
                 label = fieldState.label,
                 items = value.split("|").filter { it.isNotBlank() }.ifEmpty { listOf("") },
@@ -575,6 +643,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.Image -> ImageField(
                 label = fieldState.label,
                 imageUri = value.toUri(),
@@ -588,6 +657,7 @@ private fun FormField(
                 },
                 enabled = !isReadOnly
             )
+
             is DataFieldUiState.TriState -> TriStateField(
                 label = fieldState.label,
                 options = fieldState.options,

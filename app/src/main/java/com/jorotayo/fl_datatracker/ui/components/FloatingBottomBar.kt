@@ -66,8 +66,7 @@ fun FloatingBottomBar(
     items: List<Screen> = listOf(
         Screen.DataForm,
         Screen.Home,
-        Screen.DataEntry,
-        Screen.Settings
+        Screen.DataEntry
     )
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()

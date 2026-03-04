@@ -12,8 +12,18 @@ import com.jorotayo.fl_datatracker.domain.usecase.ValidationException
 import com.jorotayo.fl_datatracker.domain.util.toUiState
 import com.jorotayo.fl_datatracker.navigation.NavCommand
 import com.jorotayo.fl_datatracker.navigation.NavigationManager
+import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.Clear
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.DismissToast
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.EnableEditing
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.LoadFromPreference
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.LoadRecord
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.NavigateToDataFields
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.Submit
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.UpdateRecordName
+import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.UpdateValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,14 +47,15 @@ class DataEntryViewModel @Inject constructor(
 
     fun onEvent(event: DataEntryEvent) {
         when (event) {
-            DataEntryEvent.LoadFromPreference -> onLoadFromPreference()
-            is DataEntryEvent.LoadRecord -> onLoadRecord(event.recordId)
-            is DataEntryEvent.UpdateRecordName -> onUpdateRecordName(event.name)
-            is DataEntryEvent.UpdateValue -> onUpdateValue(event.fieldId, event.value)
-            DataEntryEvent.EnableEditing -> onEnableEditing()
-            DataEntryEvent.Submit -> onSubmit()
-            DataEntryEvent.Clear -> onClear()
-            DataEntryEvent.DismissToast -> onDismissToast()
+            LoadFromPreference -> onLoadFromPreference()
+            is LoadRecord -> onLoadRecord(event.recordId)
+            is UpdateRecordName -> onUpdateRecordName(event.name)
+            is UpdateValue -> onUpdateValue(event.fieldId, event.value)
+            NavigateToDataFields -> onNavigateToDataFields()
+            EnableEditing -> onEnableEditing()
+            Submit -> onSubmit()
+            Clear -> onClear()
+            DismissToast -> onDismissToast()
         }
     }
 
@@ -80,7 +91,7 @@ class DataEntryViewModel @Inject constructor(
                     recordName = "",
                     values = fields.defaultValues(),
                     errors = emptyMap(),
-                    isReadOnly = false,
+                    isReadOnly = fields.isEmpty(),
                     editingRecordId = null,
                     isSaved = false,
                     toast = null
@@ -163,6 +174,10 @@ class DataEntryViewModel @Inject constructor(
                 errors = s.errors - fieldId
             )
         }
+    }
+
+    private fun onNavigateToDataFields() {
+        navigationManager.navigate(NavCommand.ToRoute(Screen.DataForm.route))
     }
 
     private fun onSubmit() {

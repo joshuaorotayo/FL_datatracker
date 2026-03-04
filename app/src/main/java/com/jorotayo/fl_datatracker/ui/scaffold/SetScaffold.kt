@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.ui.scaffold
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 
 @Composable
 fun SetScaffold(
@@ -9,7 +10,8 @@ fun SetScaffold(
     navigationIcon: (@Composable () -> Unit)? = null,
     actions: (@Composable () -> Unit)? = null,
     fab: (@Composable () -> Unit)? = null,
-    showBottomBar: Boolean = true
+    showBottomBar: Boolean = true,
+    toast: AppToastData? = null
 ) {
     val scaffoldController = LocalScaffoldController.current
 
@@ -20,14 +22,9 @@ fun SetScaffold(
                 navigationIcon = navigationIcon,
                 actions = actions,
                 fab = fab,
-                showBottomBar = showBottomBar
+                showBottomBar = showBottomBar,
+                toast = toast
             )
         )
     }
-
-//    DisposableEffect(Unit) {
-//        onDispose {
-//            scaffoldController.reset()
-//        }
-//    }
 }

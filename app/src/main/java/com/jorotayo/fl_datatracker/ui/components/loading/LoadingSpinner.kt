@@ -8,6 +8,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +20,21 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
+import com.jorotayo.fl_datatracker.ui.util.Dimensions.spacingMedium
+
+// =============================================================================
+// PREVIEW
+// =============================================================================
+
+@DefaultPreviews
+@Composable
+fun PreviewLoadingSpinner(modifier: Modifier = Modifier) {
+    FL_DatatrackerThemeNew {
+        LoadingSpinner()
+    }
+}
 
 /**
  * A reusable animated loading spinner with two concentric arcs rotating
@@ -70,7 +86,9 @@ fun LoadingSpinner(
         label = "sweep"
     )
 
-    Canvas(modifier = modifier.size(size)) {
+    Canvas(modifier = modifier
+        .padding(spacingMedium)
+        .size(size)) {
         val strokePx = strokeWidth.toPx()
         val halfStroke = strokePx / 2f
 

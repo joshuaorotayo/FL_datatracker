@@ -14,13 +14,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,12 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jorotayo.fl_datatracker.navigation.MainNavGraph
 import com.jorotayo.fl_datatracker.navigation.NavCommand
 import com.jorotayo.fl_datatracker.navigation.NavigationManager
 import com.jorotayo.fl_datatracker.ui.components.FloatingBottomBar
+import com.jorotayo.fl_datatracker.ui.components.toasts.AppToast
 import com.jorotayo.fl_datatracker.ui.scaffold.LocalScaffoldController
 import com.jorotayo.fl_datatracker.ui.scaffold.ScaffoldController
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
@@ -68,9 +67,7 @@ class MainActivity : ComponentActivity() {
             val useDeviceDarkMode by themeViewModel.useDeviceDarkMode.collectAsState()
             val darkTheme = if (useDeviceDarkMode) isSystemInDarkTheme() else false
 
-            // ✅ Create controller once at root
             val scaffoldController = remember { ScaffoldController() }
-//            val scaffoldState = scaffoldController.state
 
             FL_DatatrackerThemeNew(darkTheme = darkTheme) {
 
@@ -89,12 +86,12 @@ class MainActivity : ComponentActivity() {
                                 navigationManager.commands.collect { command ->
                                     when (command) {
                                         is NavCommand.ToRoute -> navController.navigate(command.route) {
-                                            command.popUpTo?.let { popUpToRoute ->
-                                                popUpTo(popUpToRoute) {
-                                                    inclusive = command.inclusive
-                                                }
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
                                             }
+
                                             launchSingleTop = true
+                                            restoreState = true
                                         }
 
                                         NavCommand.Back -> {
@@ -131,11 +128,24 @@ class MainActivity : ComponentActivity() {
                                 }
                             ) { paddingValues ->
 
-                                MainNavGraph(
-                                    navController = navController,
-                                    startDestination = destination.route,
-                                    modifier = Modifier.padding(paddingValues)
-                                )
+                                Box(modifier = Modifier.fillMaxSize()) {
+
+                                    MainNavGraph(
+                                        navController = navController,
+                                        startDestination = destination.route,
+                                        modifier = Modifier.padding(paddingValues)
+                                    )
+
+                                    scaffoldController.state.toast?.let { toastData ->
+                                        AppToast(
+                                            data = toastData,
+                                            onDismiss = { scaffoldController.clearToast() },
+                                            modifier = Modifier
+                                                .align(Alignment.BottomCenter)
+                                                .padding(bottom = 96.dp)
+                                        )
+                                    }
+                                }
                             }
                         }
 
@@ -151,11 +161,10 @@ class MainActivity : ComponentActivity() {
                                     .background(MaterialTheme.colorScheme.background),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.EditNote,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(72.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                Text(
+                                    text = "Data Tracker",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                         }

@@ -59,7 +59,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jorotayo.fl_datatracker.data.model.DataRecord
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
-import com.jorotayo.fl_datatracker.ui.components.toasts.AppToast
 import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
 import com.jorotayo.fl_datatracker.ui.screens.home.components.DeleteRecordDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
@@ -219,7 +218,8 @@ fun HomeScreen(navController: NavController) {
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
-        }
+        },
+        toast = state.toast
         // showBottomBar defaults to true — bottom nav visible on this screen
     )
 
@@ -228,10 +228,10 @@ fun HomeScreen(navController: NavController) {
             state = state,
             onEvent = viewModel::onEvent
         )
-        AppToast(
+        /*AppToast(
             data = state.toast,
             onDismiss = { viewModel.onEvent(HomeEvent.DismissToast) }
-        )
+        )*/
         if (state.showDeleteDialog) {
             DeleteRecordDialog(state = state, onEvent = viewModel::onEvent)
         }

@@ -14,5 +14,6 @@ data class DataFormState(
     val fieldToDelete: DataFieldUi? = null,
     val showDeletePresetDialog: Boolean = false,
     val presetToDelete: Preset? = null,
-    val toast: AppToastData? = null
+    val toast: AppToastData? = null,
+    val showAddFieldSheet: Boolean = false
 )

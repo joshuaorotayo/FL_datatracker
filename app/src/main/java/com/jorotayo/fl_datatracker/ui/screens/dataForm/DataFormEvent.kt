@@ -11,7 +11,7 @@ sealed class DataFormEvent {
     data class DeletePreset(val preset: Preset) : DataFormEvent()
 
     // Field management
-    object AddField : DataFormEvent()
+    object ToggleAddFieldSheet : DataFormEvent()
     data class UpdateField(val field: DataFieldUi, val update: FieldUpdate) : DataFormEvent()
 
     data class RequestDeleteField(val field: DataFieldUi) : DataFormEvent()

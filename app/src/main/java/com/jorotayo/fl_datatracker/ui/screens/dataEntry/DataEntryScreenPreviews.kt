@@ -132,6 +132,25 @@ private fun PreviewDataEntryEditing() {
 
 @DefaultPreviews
 @Composable
+private fun PreviewDataEntryNoDataFieldsInPreset() {
+    FL_DatatrackerThemeNew {
+        DataEntryView(
+            state = DataEntryState(
+                mode = DataEntryMode.NEW,
+                preset = samplePreset,
+                recordName = "",
+                isReadOnly = true,
+                errors = mapOf(
+                    1L to "This field cannot be empty",
+                    5L to "Please select an option"
+                )
+            )
+        )
+    }
+}
+
+@DefaultPreviews
+@Composable
 private fun PreviewDataEntryWithErrors() {
     FL_DatatrackerThemeNew {
         DataEntryView(

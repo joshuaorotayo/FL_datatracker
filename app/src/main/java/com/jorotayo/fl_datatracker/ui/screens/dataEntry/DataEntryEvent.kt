@@ -5,6 +5,7 @@ sealed class DataEntryEvent {
     data class LoadRecord(val recordId: Long) : DataEntryEvent()
     data class UpdateRecordName(val name: String) : DataEntryEvent()
     data class UpdateValue(val fieldId: Long, val value: String) : DataEntryEvent()
+    object NavigateToDataFields : DataEntryEvent()
     object EnableEditing : DataEntryEvent()
     object Submit : DataEntryEvent()
     object Clear : DataEntryEvent()
