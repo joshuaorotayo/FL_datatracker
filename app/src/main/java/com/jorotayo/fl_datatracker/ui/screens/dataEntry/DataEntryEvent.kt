@@ -10,4 +10,7 @@ sealed class DataEntryEvent {
     object Submit : DataEntryEvent()
     object Clear : DataEntryEvent()
     object DismissToast : DataEntryEvent()
+    object ShowPresetPicker : DataEntryEvent()
+    object DismissPresetPicker : DataEntryEvent()
+    data class SelectPreset(val presetId: Long) : DataEntryEvent()
 }

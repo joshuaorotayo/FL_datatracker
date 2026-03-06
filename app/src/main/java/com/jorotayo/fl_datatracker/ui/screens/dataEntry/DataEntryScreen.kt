@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,6 +25,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowLeft
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -235,7 +240,7 @@ fun DataEntryScreen(
         actions = {
             if (state.mode == DataEntryMode.EDIT && state.isReadOnly) {
                 EditButton(
-                    enabled = !state.presetMissing,
+                    enabled = !state.presetMissing && state.fields.isNotEmpty(),
                     onClick = { viewModel.onEvent(DataEntryEvent.EnableEditing) }
                 )
             }
@@ -305,19 +310,44 @@ fun DataEntryView(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
+                    // Replace the preset chip Surface with:
                     Surface(
+                        onClick = {
+                            if (!state.isReadOnly && !state.presetMissing) onEvent(
+                                DataEntryEvent.ShowPresetPicker
+                            )
+                        },
+                        enabled = !state.isReadOnly && !state.presetMissing,
                         shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = if (!state.isReadOnly && !state.presetMissing)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        contentColor = if (!state.isReadOnly && !state.presetMissing)
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                     ) {
-                        Text(
-                            text = state.preset?.presetName ?: "Record",
-                            style = MaterialTheme.typography.labelMedium,
+                        Row(
                             modifier = Modifier.padding(
                                 horizontal = spacingSmall,
                                 vertical = spacingXXSmall
+                            ),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = state.preset?.presetName ?: "Record",
+                                style = MaterialTheme.typography.labelMedium,
                             )
-                        )
+                            if (!state.isReadOnly && !state.presetMissing) {
+                                Icon(
+                                    imageVector = Icons.Default.SwapHoriz,
+                                    contentDescription = "Change preset",
+                                    modifier = Modifier.size(14.dp)
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -401,6 +431,16 @@ fun DataEntryView(
                     Text("Add Data Fields", style = MaterialTheme.typography.labelLarge)
                 }
             }
+        }
+
+        if (state.showPresetPicker) {
+            PresetPickerDialog(
+                availablePresets = state.availablePresets,
+                presetsWithFields = state.presetsWithFields,
+                currentPresetId = state.preset?.presetId,
+                onSelect = { onEvent(DataEntryEvent.SelectPreset(it)) },
+                onDismiss = { onEvent(DataEntryEvent.DismissPresetPicker) }
+            )
         }
     }
 }
@@ -685,6 +725,72 @@ private fun FormField(
     }
 }
 
+@Composable
+private fun PresetPickerDialog(
+    availablePresets: List<Preset>,
+    presetsWithFields: Set<Long>,
+    currentPresetId: Long?,
+    onSelect: (Long) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Change Preset") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = "Only presets with data fields can be selected. " +
+                            "Greyed-out presets have no fields configured.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(8.dp))
+                availablePresets.forEach { preset ->
+                    val hasFields = preset.presetId in presetsWithFields
+                    val isSelected = preset.presetId == currentPresetId
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if (hasFields) Modifier.clickable { onSelect(preset.presetId) }
+                                else Modifier
+                            )
+                            .padding(vertical = 10.dp, horizontal = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = preset.presetName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (hasFields)
+                                MaterialTheme.colorScheme.onSurface
+                            else
+                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                        )
+                        if (isSelected) {
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = "Selected",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                        if (!hasFields) {
+                            Text(
+                                text = "No fields",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
+}
 private fun String.toUri(): Uri? =
     takeIf { it.isNotBlank() }?.let {
         try {

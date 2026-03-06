@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.ui.screens.dataEntry
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
+import com.jorotayo.fl_datatracker.domain.usecase.GetAllPresetsWithFieldCountsUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetFieldsForPresetUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetPresetByIdUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetRecordWithEntriesUseCase
@@ -39,6 +40,7 @@ class DataEntryViewModel @Inject constructor(
     private val getFields: GetFieldsForPresetUseCase,
     private val getRecordWithEntries: GetRecordWithEntriesUseCase,
     private val saveRecord: SaveRecordUseCase,
+    private val getAllPresetsWithFieldCounts: GetAllPresetsWithFieldCountsUseCase,
     private val navigationManager: NavigationManager
 ) : ViewModel() {
 
@@ -51,6 +53,9 @@ class DataEntryViewModel @Inject constructor(
             is LoadRecord -> onLoadRecord(event.recordId)
             is UpdateRecordName -> onUpdateRecordName(event.name)
             is UpdateValue -> onUpdateValue(event.fieldId, event.value)
+            is DataEntryEvent.ShowPresetPicker -> onShowPresetPicker()
+            is DataEntryEvent.DismissPresetPicker -> _state.update { it.copy(showPresetPicker = false) }
+            is DataEntryEvent.SelectPreset -> onSelectPreset(event.presetId)
             NavigateToDataFields -> onNavigateToDataFields()
             EnableEditing -> onEnableEditing()
             Submit -> onSubmit()
@@ -160,6 +165,17 @@ class DataEntryViewModel @Inject constructor(
             }
             return
         }
+        if (_state.value.fields.isEmpty()) {
+            _state.update {
+                it.copy(
+                    toast = AppToastData(
+                        message = "Cannot edit: this record's preset has no data fields configured.",
+                        mode = ToastMode.ERROR
+                    )
+                )
+            }
+            return
+        }
         _state.update { it.copy(isReadOnly = false) }
     }
 
@@ -173,6 +189,36 @@ class DataEntryViewModel @Inject constructor(
                 values = s.values + (fieldId to value),
                 errors = s.errors - fieldId
             )
+        }
+    }
+
+    private fun onShowPresetPicker() {
+        viewModelScope.launch {
+            val (presets, withFields) = getAllPresetsWithFieldCounts()
+            _state.update {
+                it.copy(
+                    showPresetPicker = true,
+                    availablePresets = presets,
+                    presetsWithFields = withFields
+                )
+            }
+        }
+    }
+
+    private fun onSelectPreset(presetId: Long) {
+        viewModelScope.launch {
+            val preset = getPresetById(presetId) ?: return@launch
+            val fields = getFields(presetId).map { it.toUiState() }
+            _state.update {
+                it.copy(
+                    showPresetPicker = false,
+                    preset = preset,
+                    presetMissing = false,
+                    fields = fields,
+                    values = fields.defaultValues(),
+                    errors = emptyMap()
+                )
+            }
         }
     }
 
