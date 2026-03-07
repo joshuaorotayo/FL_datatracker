@@ -11,5 +11,4 @@ sealed class HomeEvent {
     object ToggleSearch : HomeEvent()
     object ClearSearch : HomeEvent()
     object DismissDeleteDialog : HomeEvent()
-    object DismissToast : HomeEvent()
 }

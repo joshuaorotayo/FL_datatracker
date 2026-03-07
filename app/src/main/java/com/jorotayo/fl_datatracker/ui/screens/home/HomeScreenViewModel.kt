@@ -2,6 +2,7 @@ package com.jorotayo.fl_datatracker.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jorotayo.fl_datatracker.data.model.DataRecord
 import com.jorotayo.fl_datatracker.data.repository.RecordRepository
 import com.jorotayo.fl_datatracker.domain.usecase.GetFieldsForPresetUseCase
 import com.jorotayo.fl_datatracker.domain.usecase.GetSelectedPresetUseCase
@@ -13,17 +14,18 @@ import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.ClearSearch
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.DeleteRecord
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.DismissDeleteDialog
-import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.DismissToast
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.NavigateToEntry
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.RequestDeleteRecord
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.SearchQueryChanged
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.SelectRecord
 import com.jorotayo.fl_datatracker.ui.screens.home.HomeEvent.ToggleSearch
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +41,9 @@ class HomeScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeScreenState(showDeleteDialog = false))
     val state = _state.asStateFlow()
 
+    private val _toast = Channel<AppToastData>(Channel.BUFFERED)
+    val toastFlow = _toast.receiveAsFlow()
+
     init {
         observeRecords()
     }
@@ -53,7 +58,6 @@ class HomeScreenViewModel @Inject constructor(
             ToggleSearch -> onToggleSearch()
             ClearSearch -> onClearSearch()
             DismissDeleteDialog -> onDismissDeleteDialog()
-            DismissToast -> onDismissToast()
         }
     }
 
@@ -90,14 +94,12 @@ class HomeScreenViewModel @Inject constructor(
             val preset = getSelectedPreset()
 
             if (preset == null) {
-                _state.update {
-                    it.copy(
-                        toast = AppToastData(
-                            message = "No preset selected. Please set one up in Data Forms first.",
-                            mode = ToastMode.ERROR
-                        )
+                _toast.trySend(
+                    AppToastData(
+                        message = "No preset selected. Please set one up in Data Forms first.",
+                        mode = ToastMode.ERROR
                     )
-                }
+                )
                 return@launch
             }
 
@@ -105,14 +107,12 @@ class HomeScreenViewModel @Inject constructor(
             val activeFields = fields.filter { it.isActive }
 
             if (activeFields.isEmpty()) {
-                _state.update {
-                    it.copy(
-                        toast = AppToastData(
-                            message = "\"${preset.presetName}\" has no fields. Add fields in Data Forms before creating a record.",
-                            mode = ToastMode.ERROR
-                        )
+                _toast.trySend(
+                    AppToastData(
+                        message = "\"${preset.presetName}\" has no fields. Add fields in Data Forms before creating a record.",
+                        mode = ToastMode.ERROR
                     )
-                }
+                )
                 return@launch
             }
 
@@ -123,7 +123,7 @@ class HomeScreenViewModel @Inject constructor(
     /**
      * Record card edit tap — navigate to edit mode with the record's id.
      */
-    private fun onSelectRecord(record: com.jorotayo.fl_datatracker.data.model.DataRecord) {
+    private fun onSelectRecord(record: DataRecord) {
         navigationManager.navigate(
             NavCommand.ToRoute(Screen.DataEntry.editRoute(record.recordId))
         )
@@ -133,23 +133,25 @@ class HomeScreenViewModel @Inject constructor(
     // Delete
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun onRequestDeleteRecord(record: com.jorotayo.fl_datatracker.data.model.DataRecord) {
+    private fun onRequestDeleteRecord(record: DataRecord) {
         _state.update { it.copy(recordToDelete = record, showDeleteDialog = true) }
     }
 
-    private fun onDeleteRecord(record: com.jorotayo.fl_datatracker.data.model.DataRecord) {
+    private fun onDeleteRecord(record: DataRecord) {
         viewModelScope.launch {
             recordRepository.deleteRecord(record.recordId)
             _state.update {
                 it.copy(
                     recordToDelete = null,
-                    showDeleteDialog = false,
-                    toast = AppToastData(
-                        message = "\"${record.title.ifBlank { "Record" }}\" deleted.",
-                        mode = ToastMode.INFO
-                    )
+                    showDeleteDialog = false
                 )
             }
+            _toast.trySend(
+                AppToastData(
+                    message = "\"${record.title.ifBlank { "Record" }}\" deleted.",
+                    mode = ToastMode.INFO
+                )
+            )
         }
     }
 
@@ -188,18 +190,10 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Toast
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private fun onDismissToast() {
-        _state.update { it.copy(toast = null) }
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun List<com.jorotayo.fl_datatracker.data.model.DataRecord>.applyFilter(
+    private fun List<DataRecord>.applyFilter(
         query: String
     ) = if (query.isBlank()) this
     else filter { it.title.contains(query, ignoreCase = true) }

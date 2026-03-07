@@ -3,6 +3,7 @@ package com.jorotayo.fl_datatracker.ui.screens.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +45,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -59,6 +63,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jorotayo.fl_datatracker.data.model.DataRecord
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
+import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
 import com.jorotayo.fl_datatracker.ui.screens.home.components.DeleteRecordDialog
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
@@ -173,6 +178,13 @@ fun HomeScreen(navController: NavController) {
     val viewModel = hiltViewModel<HomeScreenViewModel>()
     val state by viewModel.state.collectAsState()
 
+    var currentToast by remember { mutableStateOf<AppToastData?>(null) }
+    LaunchedEffect(Unit) {
+        viewModel.toastFlow.collect { toastData ->
+            currentToast = null          // force recompose even if same message
+            currentToast = toastData
+        }
+    }
     // ── Shared scaffold config ────────────────────────────────────────────────
     // Lambdas capture `state` so title subtitle and search icon visibility
     // recompose automatically as records or search state changes.
@@ -219,8 +231,7 @@ fun HomeScreen(navController: NavController) {
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         },
-        toast = state.toast
-        // showBottomBar defaults to true — bottom nav visible on this screen
+        toast = currentToast
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -370,6 +381,7 @@ private fun SearchBar(
 // RECORD LIST
 // =============================================================================
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RecordList(
     modifier: Modifier = Modifier,
@@ -386,10 +398,13 @@ private fun RecordList(
         state = listState
     ) {
         grouped.forEach { (dateHeader, dayRecords) ->
-            item(key = "section_$dateHeader") {
+            stickyHeader(key = "header_$dateHeader") {
                 DateSectionHeader(dateHeader)
             }
-            items(dayRecords, key = { it.recordId }) { record ->
+            items(
+                items = dayRecords,
+                key = { "record_${it.recordId}" }  // globally unique, not just per-group
+            ) { record ->
                 RecordCard(
                     record = record,
                     onEdit = { onEvent(HomeEvent.SelectRecord(record)) },
@@ -399,7 +414,6 @@ private fun RecordList(
         }
     }
 }
-
 // =============================================================================
 // DATE SECTION HEADER
 // =============================================================================
@@ -427,6 +441,7 @@ private fun DateSectionHeader(label: String) {
 // RECORD CARD
 // =============================================================================
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordCard(
     record: DataRecord,
@@ -434,6 +449,7 @@ private fun RecordCard(
     onDelete: () -> Unit
 ) {
     Card(
+        onClick = onEdit,
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = MaterialTheme.shapes.medium

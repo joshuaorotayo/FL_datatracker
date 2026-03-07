@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
-import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
-import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import com.jorotayo.fl_datatracker.ui.theme.FL_DatatrackerThemeNew
 
 // =============================================================================
@@ -181,11 +179,7 @@ private fun PreviewDataEntrySuccessToast() {
                 fields = sampleFields,
                 values = sampleValues,
                 recordName = "Morning Round",
-                isReadOnly = false,
-                toast = AppToastData(
-                    message = "Record saved successfully.",
-                    mode = ToastMode.INFO
-                )
+                isReadOnly = false
             )
         )
     }

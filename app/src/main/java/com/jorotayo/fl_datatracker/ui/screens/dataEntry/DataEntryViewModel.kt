@@ -17,7 +17,6 @@ import com.jorotayo.fl_datatracker.navigation.Screen
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
 import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.Clear
-import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.DismissToast
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.EnableEditing
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.LoadFromPreference
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.LoadRecord
@@ -26,9 +25,11 @@ import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.Submit
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.UpdateRecordName
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.DataEntryEvent.UpdateValue
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,6 +48,9 @@ class DataEntryViewModel @Inject constructor(
     private val _state = MutableStateFlow(DataEntryState())
     val state = _state.asStateFlow()
 
+    private val _toast = Channel<AppToastData>(Channel.BUFFERED)
+    val toastFlow = _toast.receiveAsFlow()
+
     fun onEvent(event: DataEntryEvent) {
         when (event) {
             LoadFromPreference -> onLoadFromPreference()
@@ -60,7 +64,6 @@ class DataEntryViewModel @Inject constructor(
             EnableEditing -> onEnableEditing()
             Submit -> onSubmit()
             Clear -> onClear()
-            DismissToast -> onDismissToast()
         }
     }
 
@@ -74,13 +77,17 @@ class DataEntryViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        presetMissing = true,
-                        toast = AppToastData(
-                            message = "No preset selected. Please select a preset in Data Forms before creating a record.",
-                            mode = ToastMode.ERROR
-                        )
+                        presetMissing = true
                     )
                 }
+
+                _toast.trySend(
+                    AppToastData(
+                        message = "No preset selected. Please select a preset in Data Forms before creating a record.",
+                        mode = ToastMode.ERROR
+                    )
+                )
+
                 return@launch
             }
 
@@ -98,8 +105,7 @@ class DataEntryViewModel @Inject constructor(
                     errors = emptyMap(),
                     isReadOnly = fields.isEmpty(),
                     editingRecordId = null,
-                    isSaved = false,
-                    toast = null
+                    isSaved = false
                 )
             }
         }
@@ -113,11 +119,9 @@ class DataEntryViewModel @Inject constructor(
 
             if (result == null) {
                 _state.update {
-                    it.copy(
-                        isLoading = false,
-                        toast = AppToastData(message = "Record not found.", mode = ToastMode.ERROR)
-                    )
+                    it.copy(isLoading = false)
                 }
+                _toast.trySend(AppToastData(message = "Record not found.", mode = ToastMode.ERROR))
                 return@launch
             }
 
@@ -143,11 +147,15 @@ class DataEntryViewModel @Inject constructor(
                     errors = emptyMap(),
                     isReadOnly = true,
                     editingRecordId = recordId,
-                    isSaved = false,
-                    toast = if (presetMissing) AppToastData(
+                    isSaved = false
+                )
+            }
+            if (presetMissing) {
+                _toast.trySend(
+                    AppToastData(
                         message = "The preset used to create this record was deleted. Editing is disabled, but your data is preserved.",
                         mode = ToastMode.ERROR
-                    ) else null
+                    )
                 )
             }
         }
@@ -155,25 +163,21 @@ class DataEntryViewModel @Inject constructor(
 
     private fun onEnableEditing() {
         if (_state.value.presetMissing) {
-            _state.update {
-                it.copy(
-                    toast = AppToastData(
-                        message = "Cannot edit: the preset for this record no longer exists.",
-                        mode = ToastMode.ERROR
-                    )
+            _toast.trySend(
+                AppToastData(
+                    message = "Cannot edit: the preset for this record no longer exists.",
+                    mode = ToastMode.ERROR
                 )
-            }
+            )
             return
         }
         if (_state.value.fields.isEmpty()) {
-            _state.update {
-                it.copy(
-                    toast = AppToastData(
-                        message = "Cannot edit: this record's preset has no data fields configured.",
-                        mode = ToastMode.ERROR
-                    )
+            _toast.trySend(
+                AppToastData(
+                    message = "Cannot edit: this record's preset has no data fields configured.",
+                    mode = ToastMode.ERROR
                 )
-            }
+            )
             return
         }
         _state.update { it.copy(isReadOnly = false) }
@@ -240,14 +244,14 @@ class DataEntryViewModel @Inject constructor(
             )
                 .onSuccess {
                     _state.update {
-                        it.copy(
-                            isSaved = true,
-                            toast = AppToastData(
-                                message = "Record saved successfully.",
-                                mode = ToastMode.INFO
-                            )
-                        )
+                        it.copy(isSaved = true)
                     }
+                    _toast.trySend(
+                        AppToastData(
+                            message = "Record saved successfully.",
+                            mode = ToastMode.INFO
+                        )
+                    )
                     delay(2000)
                     navigationManager.navigate(NavCommand.Back)
                 }
@@ -255,14 +259,12 @@ class DataEntryViewModel @Inject constructor(
                     if (error is ValidationException) {
                         _state.update { it.copy(errors = error.errors) }
                     } else {
-                        _state.update {
-                            it.copy(
-                                toast = AppToastData(
-                                    message = error.message ?: "Failed to save record.",
-                                    mode = ToastMode.ERROR
-                                )
+                        _toast.trySend(
+                            AppToastData(
+                                message = error.message ?: "Failed to save record.",
+                                mode = ToastMode.ERROR
                             )
-                        }
+                        )
                     }
                 }
         }
@@ -276,10 +278,6 @@ class DataEntryViewModel @Inject constructor(
                 errors = emptyMap()
             )
         }
-    }
-
-    private fun onDismissToast() {
-        _state.update { it.copy(toast = null) }
     }
 
     private fun List<DataFieldUiState>.defaultValues(): Map<Long, String> =

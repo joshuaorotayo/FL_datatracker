@@ -43,6 +43,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +55,6 @@ import com.jorotayo.fl_datatracker.data.model.Preset
 import com.jorotayo.fl_datatracker.domain.model.DataFieldUiState
 import com.jorotayo.fl_datatracker.ui.DefaultPreviews
 import com.jorotayo.fl_datatracker.ui.components.toasts.AppToastData
-import com.jorotayo.fl_datatracker.ui.components.toasts.ToastMode
 import com.jorotayo.fl_datatracker.ui.scaffold.SetScaffold
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.BooleanField
 import com.jorotayo.fl_datatracker.ui.screens.dataEntry.components.CountField
@@ -195,8 +197,7 @@ private fun PreviewDataEntrySuccessToast() {
                 fields = sampleFields,
                 values = sampleValues,
                 recordName = "Morning Round",
-                isReadOnly = false,
-                toast = AppToastData(message = "Record saved successfully.", mode = ToastMode.INFO)
+                isReadOnly = false
             )
         )
     }
@@ -213,6 +214,14 @@ fun DataEntryScreen(
 ) {
     val viewModel = hiltViewModel<DataEntryViewModel>()
     val state by viewModel.state.collectAsState()
+
+    var currentToast by remember { mutableStateOf<AppToastData?>(null) }
+    LaunchedEffect(Unit) {
+        viewModel.toastFlow.collect { toastData ->
+            currentToast = null          // force recompose even if same message
+            currentToast = toastData
+        }
+    }
 
     // ── Shared scaffold config ────────────────────────────────────────────────
     // navigationIcon wires back navigation into the shared TopAppBar.
@@ -246,7 +255,7 @@ fun DataEntryScreen(
             }
         },
         showBottomBar = true,
-        toast = state.toast
+        toast = currentToast
     )
 
     // ── Load trigger ──────────────────────────────────────────────────────────
@@ -258,7 +267,7 @@ fun DataEntryScreen(
         }
     }
 
-    // ── Content + toast ───────────────────────────────────────────────────────
+    // ── Content ───────────────────────────────────────────────────────
     Box(modifier = Modifier.fillMaxSize()) {
         DataEntryView(
             state = state,

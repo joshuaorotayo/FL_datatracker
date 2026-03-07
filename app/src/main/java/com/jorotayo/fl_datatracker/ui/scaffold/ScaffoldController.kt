@@ -30,6 +30,10 @@ class ScaffoldController {
         _state.value = _state.value.copy(toast = null)
     }
 
+    fun updateToast(toast: AppToastData?) {
+        _state.value = _state.value.copy(toast = toast)
+    }
+
     fun reset() {
         _state.value = AppScaffoldState()
     }
